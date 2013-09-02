@@ -1,229 +1,192 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FREE javascript gantt - JSGantt HTML and CSS only</title>
+<script type="text/javascript" src="jsgantt.js"></script>
 <link rel="stylesheet" type="text/css" href="jsgantt.css"/>
-<script language="javascript" src="jsgantt.js"></script>
-<script language="javascript" src="graphics.js"></script>
 <style type="text/css">
 <!--
+body	{ font-size: 0.8em; }
+h3 { margin: 0px; font-size: 1em; }
+
 .style1 {color: #0000FF}
 
-.roundedCorner{display:block}
-.roundedCorner *{
-  display:block;
-  height:1px;
-  overflow:hidden;
-  font-size:.01em;
-  background:#0061ce}
-.roundedCorner1{
-  margin-left:3px;
-  margin-right:3px;
-  padding-left:1px;
-  padding-right:1px;
-  border-left:1px solid #91bbe9;
-  border-right:1px solid #91bbe9;
-  background:#3f88da}
-.roundedCorner2{
-  margin-left:1px;
-  margin-right:1px;
-  padding-right:1px;
-  padding-left:1px;
-  border-left:1px solid #e5effa;
-  border-right:1px solid #e5effa;
-  background:#307fd7}
-.roundedCorner3{
-  margin-left:1px;
-  margin-right:1px;
-  border-left:1px solid #307fd7;
-  border-right:1px solid #307fd7;}
-.roundedCorner4{
-  border-left:1px solid #91bbe9;
-  border-right:1px solid #91bbe9}
-.roundedCorner5{
-  border-left:1px solid #3f88da;
-  border-right:1px solid #3f88da}
 .roundedCornerfg{
-  background:#0061ce;}
+	padding: 5px 5px 5px 15px;
+	border-radius: 5px;
+	width:400px;
+	font-size: 1.3em;
+	font-weight: bold;
+	font-style: italic;
+	font-family: arial,helvetica;
+	text-transform: uppercase;
+	background: rgb(204,204,204);
+	background: linear-gradient(to bottom, rgba(204,204,204,1) 0%,rgba(238,238,238,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#eeeeee',GradientType=0 );
+}
 
+dt { float: left;
+	clear: left;
+	width: 60px;
+	text-align: right;
+	font-style: italic; }
+dt:after { content: ":"; }
+dd { margin: 0 0 0 70px;
+	padding: 0 0 0.5em 0; }
 
+.configlist dt {width: 170px;}
+.configlist dd {margin: 0 0 0 180px;}
+.dateconfiglist dt {width: 240px;}
+.dateconfiglist dd {margin: 0 0 0 250px;}
+
+.header {border-top: #bbbbbb 3px solid;
+	border-bottom: #cfcfcf 3px solid;
+	padding:5px 12px 5px 12px;
+	font-size: 1.8em;
+	font-weight: bold;
+	font-style: italic;
+	background: rgb(204,204,204);
+	background: linear-gradient(to bottom, rgba(204,204,204,1) 0%,rgba(238,238,238,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#eeeeee',GradientType=0 );
+	}
+.nav {border-bottom: #cfcfcf 1px solid;
+	background-color: #ffffff;
+	padding:2px 5px 2px 5px;
+	font-size: 1.1em;
+	font-weight: bold;
+	font-style: italic;}
+.nav ul { list-style-type:none;
+	margin:0;
+	padding:0;
+	overflow:hidden; }
+.nav li { float:left; }
+.nav a { display:block; padding-right: 20px;color: #656565;}
 -->
 </style>
-<title>FREE javascript gantt - JSGantt HTML and CSS only</title></head>
+</head>
 <body>
 
-    <!-- content goes here -->
-  <TABLE width="100%" cellpadding="0" cellspacing="0" style="position:absolute; top:0; left:0;"> 
-  <TBODY><TR>
-  
-    <TD bgcolor="#298eff" style="height:3px;"></TD></TR>
-
- 
-  <TR>
-    <TD bgcolor="#0061ce" style="padding-top:5px; padding-bottom:5px;"><FONT face="Arial,Helvetica" size="5" color="#FFFFFF"><I><STRONG>&nbsp;&nbsp;jsGantt - 1.2</STRONG></I></FONT></TD>
-
-  </TR>
-   <TR><TD bgcolor="#CFCFCF" style="height:3px;"></TD></TR>
-
-<TR>
-    <TD bgcolor="#ffffff" style="color:#444444;  text-decoration:none;"><FONT face="Arial,Helvetica" size="3" color="#FFFFFF"><I><STRONG>&nbsp;&nbsp;<a href="#tBugs">Bugs/Issues</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tDownload">Download</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tLicense">License</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tUsage">Usage</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tExamples">Examples</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tCredits">Credits</a> </STRONG></I></FONT></TD>
-
-  </TR>
-  <TR><TD bgcolor="#FFFFFF" style="height:2px;"></TD></TR>
-
-   <TR><TD bgcolor="#CFCFCF" style="height:1px;"></TD></TR>
-
-  </TBODY>
-
-</TABLE>
-<BR><BR>
-<BR>
-<BR>
-
-
-<FONT face="Arial,Helvetica" size="3">&nbsp;&nbsp;100% Free Javascript / CSS/ HTML Gantt chart control. Completely buzzword compliant including AJAX !</FONT><BR><BR>
-
-
-<div style="position:relative" class="gantt" id="GanttChartDIV"></div>
-<script>
-  // here's all the html code neccessary to display the chart object
-  // Future idea would be to allow XML file name to be passed in and chart tasks built from file.
-
-  var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
-
-	g.setShowRes(1); // Show/Hide Responsible (0/1)
-	g.setShowDur(1); // Show/Hide Duration (0/1)
-	g.setShowComp(1); // Show/Hide % Complete(0/1)
-   g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
-  if( g ) {
-
-    // Parameters             (pID, pName,                  pStart,      pEnd,        pColor,   pLink,          pMile, pRes,  pComp, pGroup, pParent, pOpen)
-	// use the XML file parser 
-	JSGantt.parseXML('project.xml',g)
-    g.Draw();	
-    g.DrawDependencies();
-
-  }
-
-  else
-
-  {
-
-    alert("not defined");
-
-  }
-
-</script>
-<BR>
-<FONT face="Arial,Helvetica" size="3">
-<strong>Basic Features</strong><BR>
+<div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
+<div class="header">jsGanttImproved - 1.0</div>
+<div class="nav">
 <ul>
-<li>Tasks & Collapsible Task Groups</li>
+<li><a href="#tBugs">Bugs/Issues</a></li>
+<li><a href="#tDownload">Download</a></li>
+<li><a href="#tLicense">License</a></li>
+<li><a href="#tUsage">Usage</a></li>
+<li><a href="#tOptions">Options</a></li>
+<li><a href="#tExamples">Examples</a></li>
+<li><a href="#tCredits">Credits</a></li>
+</ul>
+</div>
+</div>
+<p id="tTop" style="padding-top: 70px;">&nbsp;&nbsp;100% Free Javascript / CSS/ HTML Gantt chart control. Completely buzzword compliant including AJAX !</p>
+
+
+<div style="position:relative; " class="gantt" id="GanttChartDIV" ></div>
+
+<script type="text/javascript">
+
+	var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day' );
+
+	if( g ) {
+		g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+		g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
+		g.setDayMajorDateDisplayFormat('dd mon');
+		// use the XML file parser
+		JSGantt.parseXML('project.xml',g)
+
+		g.Draw();
+	} else {
+		alert("Error, unable to create Gantt Chart");
+	}
+</script>
+<h3>Basic Features</h3>
+<ul>
+<li>Tasks &amp; Collapsible Task Groups</li>
 <li>Multiple Dependencies</li>
 <li>Task Completion</li>
-<li>Task Color</li>
+<li>Task Style</li>
 <li>Milestones</li>
 <li>Resources</li>
 <li>No images needed</li>
 </ul>
 
-<strong>Advanced Features</strong><BR>
-</FONT><ul>
-<li><font size="3" face="Arial,Helvetica">Dynamic Loading of Tasks</font></li>
-<li><font size="3" face="Arial,Helvetica">Dynamic change of format </font>
+<h3>Advanced Features</h3>
+<ul>
+<li>Dynamic Loading of Tasks</li>
+<li>Dynamic change of format
   <ul>
     <li>Day</li>
     <li>Week</li>
     <li>Month</li>
     <li>Quarter</li>
-    <li>Hour</li>
-    <li>Minute</li>
   </ul>
 </li>
-<li><font size="3" face="Arial,Helvetica">Load Gantt from XML file</font></li>
+<li>Load Gantt from XML file</li>
 </ul>
-<FONT face="Arial,Helvetica" size="3"><BR>
-</FONT>
-<div style="width:400px;">
-  <b class="roundedCorner">
-  <b class="roundedCorner1"><b></b></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner5"></b></b>
+  <h2 class="roundedCornerfg" id="tBugs">Bugs/Issues</h2>
 
-  <div class="roundedCornerfg">
-  <a name="tBugs" />
-<table width="50%" >
-  <tr><td>
-<font face="Arial,Helvetica" size="3" color="#FFFFFF"><i><b>&nbsp;&nbsp;BUGS/ISSUES</b></i></font>
-</td></tr></table>
-</div>
-
-  <b class="roundedCorner">
-  <b class="roundedCorner5"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner1"><b></b></b></b>
-</div>
-<br>
-Current Issues:
+<br/>
+<h3>Current Issues:</h3>
 <ol>
 <li>Currently only one gantt chart is allowed per page. </li>
+<li>If the browser is viewing the page at anything other than 100% zoom then bars may not be sized or positioned correctly. </li>
 
-</ol><br>
-New in 1.2:
+</ol><br/>
+<h3>Changes/fixes in jsGanttImproved v1.0:</h3>
 <ul>
-<li>Support for half-days</li>
-<li>Hour/Minute format</li>
+<li>Multiple new display configuration options (see <a href="#tOptions">Configuration Options</a>)</li>
+<li>Hour/Minute format removed</li>
+<li>Width/positioning calculations for Month and Quarter views no longer assume 30/90 day periods</li>
+<li>Vast majority of look and feel now controllable via CSS</li>
+<li>Tool tips added to gantt chart bars</li>
+<li>New &quot;Notes&quot; field added for detailed task information to be displayed in tool tips</li>
+<li>Tasks can now be removed from as well as added to chart</li>
+<li>Tasks can now be sorted by parent task &amp; start time</li>
+<li>Dependencies no longer draw when the parent task is hidden</li>
+<li>Min/Max date calculations now correctly identify the date of first and last periods</li>
+<li>Current date/time now shown as a vertical blue line rather than period highlight</li>
+<li>Optimised chart structure to reduce number of elements required / ensure positioning match</li>
+<li>Chart pane width will change dynamically with containing element</li>
 </ul>
-<BR>
-<div style="width:400px;">
-  <b class="roundedCorner">
-  <b class="roundedCorner1"><b></b></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner5"></b></b>
-
-  <div class="roundedCornerfg"> <a name="tDownload" />
-  <table width="50%"><tr><td>
-<font face="Arial,Helvetica" size="3" color="#FFFFFF"><i><b>&nbsp;&nbsp;DOWNLOAD</b></i></font>
-</td></tr></table></div>
-
-  <b class="roundedCorner">
-  <b class="roundedCorner5"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner1"><b></b></b></b>
-</div>
-<a href="http://www.jsgantt.com/zip/">Click here to download the jsgantt</a> <br>
+<h2 class="roundedCornerfg" id="tDownload">Download</h2>
+<a href="http://www.jsgantt.com/zip/">Click here to download the jsgantt</a> <br/>
 You can download the latest bleeding edge version, request features and report issues at <a href="http://code.google.com/p/jsgantt/">http://code.google.com/p/jsgantt/</a>
-<br><br>
-<div style="width:400px;">
-  <b class="roundedCorner">
-  <b class="roundedCorner1"><b></b></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner5"></b></b>
 
-  <div class="roundedCornerfg"><a name="tLicense" />
-  <table width="50%"><tr><td>
-<font face="Arial,Helvetica" size="3" color="#FFFFFF"><i><b>&nbsp;&nbsp;LICENSE</b></i></font>
-</td></tr></table></div>
-
-  <b class="roundedCorner">
-  <b class="roundedCorner5"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner1"><b></b></b></b>
-</div>
-JSGantt is released under BSD license. If you require another license please contact <a href="mailto:shlomygantz@hotmail.com">shlomygantz@hotmail.com</a><br>
+ <h2 class="roundedCornerfg" id="tLicense">License</h2>
+JSGanttImproved is released under BSD license.<br/>
 If you plan to use it in a commercial product please consider donating the first sale to charity.
-<br><br>
+<br/><br/>
 <textarea cols="80" rows="5">
+* Copyright (c) 2013, Paul Geldart.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of Paul Geldart nor the names of its contributors
+*       may be used to endorse or promote products derived from this software
+*       without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY PAUL GELDART. ''AS IS'' AND ANY EXPRESS OR
+* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL SHLOMY GANTZ/BLUEBRICK INC. BE LIABLE FOR ANY DIRECT,
+* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This project is based on jsGantt 1.2 the original project license follows:
+
 * Copyright (c) 2008, Shlomy Gantz/BlueBrick Inc.
 * All rights reserved.
 *
@@ -248,257 +211,242 @@ If you plan to use it in a commercial product please consider donating the first
 * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</textarea><br><br>
-<div style="width:400px;">
-  <b class="roundedCorner">
-  <b class="roundedCorner1"><b></b></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner5"></b></b>
+</textarea>
 
-  <div class="roundedCornerfg"><a name="tUsage" />
-  <table width="50%"><tr>
-  <td>
-<font face="Arial,Helvetica" size="3" color="#FFFFFF"><i><b>&nbsp;&nbsp;USAGE</b></i></font>
-</td>
-</tr></table></div>
-
-  <b class="roundedCorner">
-  <b class="roundedCorner5"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner1"><b></b></b></b>
-</div>
-<p>1. Include JSGantt CSS and Javascript</p>
+  <h2 class="roundedCornerfg" id="tUsage">Usage</h2>
+<p>Creating a basic Gantt Chart</p>
+<ol>
+<li>Include JSGantt CSS and Javascript
 <pre class="style1">
 &lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
 &lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
 </pre>
-
-<p>2. Create a div element to hold the gantt chart</p>
+</li>
+<li>Create a div element to hold the gantt chart
 <pre class="style1">&lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;</pre>
-<p>3. Start a &lt;script&gt; block</p>
-<pre class="style1">&lt;script language="javascript"&gt;</pre>
-<p>4. Instantiate JSGantt using GanttChart()</p>
-<pre class="style1">var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
-
-    </pre>
-
-<p>GanttChart(<em>pGanttVar, pDiv, pFormat</em>)<br>
-  <em>pGanttVar</em>: (required) name of the variable assigned<br>
-  <em>pDiv</em>: (required) this is a DIV object created in HTML<br>
-  <em>pFormat</em>: (required) - used to indicate whether chart should be drawn in "day", "week", "month", or "quarter" format</p>
-<p>Customize the look and feel using the following setters<br><br>
-<pre class="style1">g.setShowRes(1); // Show/Hide Responsible (0/1)
-g.setShowDur(1); // Show/Hide Duration (0/1)
-g.setShowComp(1); // Show/Hide % Complete(0/1)
-g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
-g.setShowStartDate(1); // Show/Hide Start Date(0/1)
-g.setShowEndDate(1); // Show/Hide End Date(0/1)
-g.setDateInputFormat('mm/dd/yyyy')  // Set format of input dates ('mm/dd/yyyy', 'dd/mm/yyyy', 'yyyy-mm-dd')
-g.setDateDisplayFormat('mm/dd/yyyy') // Set format to display dates ('mm/dd/yyyy', 'dd/mm/yyyy', 'yyyy-mm-dd')
-g.setFormatArr("day","week","month","quarter") // Set format options (up to 4 : "minute","hour","day","week","month","quarter")
+</li>
+<li>Start a &lt;script&gt; block
+<pre class="style1">&lt;script type="text/javascript"&gt;</pre>
+</li>
+<li>Instantiate JSGantt using GanttChart()
+<pre class="style1">var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
 </pre>
-
-      </p>
-<p>5. Add Tasks using AddTaskItem()</p>
-<pre class="style1"> 
-g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',          '',          'ff0000', 'http://help.com', 0, 'Brian',     0, 1, 0, 1));
-g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2/10/2008', '2/10/2008', 'ff00ff', 'http://www.yahoo.com', 1, 'Shlomy',  100, 0, 1, 1, "121,122", "My Caption"));
+<p>Method definition:
+  <strong>GanttChart(<em>pDiv, pFormat</em>)</strong></p>
+  <dl>
+  <dt>pDiv</dt><dd>(required) this is a DIV object created in HTML</dd>
+  <dt>pFormat</dt><dd>(required) - used to indicate whether chart should be drawn in "day", "week", "month", or "quarter" format</dd>
+  </dl>
+</li>
+<li><p>Customize the look and feel using configuration methods (see <a href="#tOptions">Configuration Options</a>)</p></li>
+<li>Add Tasks
+<ol type="a"><li>using AddTaskItem()
+<pre class="style1">
+g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text' ));
+g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2013-02-20','2013-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1));
 </pre>
-
-TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend</em>)<br>
-<em>pID</em>: (required) is a unique ID used to identify each row for parent functions and for setting dom id for hiding/showing<br>
-<em>pName</em>: (required) is the task Label<br>
-<em>pStart</em>: (required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2/10/2008 12:00) for additional percision or half days.<br>
-<em>pEnd</em>: (required) the task end date, can enter empty date ('') for groups<br>
-<em>pColor</em>: (required) the html color for this task; e.g. '00ff00'<br>
-<em>pLink</em>: (optional) any http link navigated to when task bar is clicked.<br>
-<em>pMile</em>:(optional)   represent a milestone<br>
-<em>pRes</em>: (optional) resource name<br>
-<em>pComp</em>: (required) completion percent<br>
-<em>pGroup</em>: (optional) indicates whether this is a group(parent) - 0=NOT Parent; 1=IS Parent<br>
-<em>pParent</em>: (required) identifies a parent pID, this causes this task to be a child of identified task<br>
-<em>pOpen</em>: can be initially set to close folder when chart is first drawn<br>
-<em>pDepend</em>: optional list of id's this task is dependent on ... line drawn from dependent to this item<br>
-<em>pCaption</em>: optional caption that will be added after task bar if CaptionType set to "Caption"<br>
-
-*You should be able to add items to the chart in realtime via javascript and issuing "g.Draw()" command.
-
-<p>5a. Another way to add tasks is to use an external XML file with parseXML()</p>
-<pre class="style1"> 
+<p>Method definition:
+<strong>TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend</em>)</strong></p>
+<dl>
+<dt>pID</dt><dd>(required) a unique numeric ID used to identify each row</dd>
+<dt>pName</dt><dd>(required) the task Label</dd>
+<dt>pStart</dt><dd>(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2013-02-20 12:00) for additional precision or half days (not currently supported in Chrome).</dd>
+<dt>pEnd</dt><dd>(required) the task end date, can enter empty date ('') for groups</dd>
+<dt>pClass</dt><dd>(required) the css class for this task; defaults to "ggroupblack"</dd>
+<dt>pLink</dt><dd>(optional) any http link to be displayed in tool tip as the "More information" link.</dd>
+<dt>pMile</dt><dd>(optional) indicates whether this is a milestone task - Numeric; 1 = milestone, 0 = not milestone</dd>
+<dt>pRes</dt><dd>(optional) resource name</dd>
+<dt>pComp</dt><dd>(required) completion percent, numeric</dd>
+<dt>pGroup</dt><dd>(optional) indicates whether this is a group task(parent) - Numeric; 1 = group task, 0 = not group task</dd>
+<dt>pParent</dt><dd>(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0</dd>
+<dt>pOpen</dt><dd>(required) indicates whether a group task is open when chart is first drawn. Value must be set for all items but is only used by group tasks.  Numeric, 1 = open, 0 = closed</dd>
+<dt>pDepend</dt><dd>(optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item</dd>
+<dt>pCaption</dt><dd>(optional) caption that will be added after task bar if CaptionType set to "Caption"</dd>
+<dt>pNotes</dt><dd>(optional) Detailed task information that will be displayed in tool tip for this task</dd>
+</dl>
+</li>
+<li>using parseXML() with an external XML file
+<pre class="style1">
 JSGantt.parseXML("project.xml",g);
 </pre>
-The structure of the XML file:<br>
-<textarea name="textarea" cols="150" rows="10">
+<p>Method definition:
+  <strong>JSGantt.parseXML(<em>pFile, pGanttObj</em>)</strong></p>
+  <dl>
+  <dt>pFile</dt><dd>(required) this is the filename of the XML</dd>
+  <dt>pGanttObj</dt><dd>(required) a GanttChart object returned by a call to JSGantt.GanttChart()</dd>
+  </dl>
+<p>The structure of the XML file:</p>
+<blockquote>
+<textarea name="textarea" cols="60" rows="10">
 <project>
 <task>
-	<pID>10</pID>
+	<pID>25</pID>
 	<pName>WCF Changes</pName>
 	<pStart></pStart>
 	<pEnd></pEnd>
-	<pColor>0000ff</pColor>
+	<pClass>gtaskred</pClass>
 	<pLink></pLink>
 	<pMile>0</pMile>
 	<pRes></pRes>
 	<pComp>0</pComp>
 	<pGroup>1</pGroup>
-	<pParent>0</pParent>
+	<pParent>2</pParent>
 	<pOpen>1</pOpen>
-	<pDepend />
-</task>
-<task>
-	<pID>20</pID>
-	<pName>Move to WCF from remoting</pName>
-	<pStart>8/11/2008</pStart>
-	<pEnd>8/15/2008</pEnd>
-	<pColor>0000ff</pColor>
-	<pLink></pLink>
-	<pMile>0</pMile>
-	<pRes>Rich</pRes>
-	<pComp>10</pComp>
-	<pGroup>0</pGroup>
-	<pParent>10</pParent>
-	<pOpen>1</pOpen>
-	<pDepend></pDepend>
-</task>
-<task>
-	<pID>30</pID>
-	<pName>add Auditing</pName>
-	<pStart>8/19/2008</pStart>
-	<pEnd>8/21/2008</pEnd>
-	<pColor>0000ff</pColor>
-	<pLink></pLink>
-	<pMile>0</pMile>
-	<pRes>Mal</pRes>
-	<pComp>50</pComp>
-	<pGroup>0</pGroup>
-	<pParent>10</pParent>
-	<pOpen>1</pOpen>
-	<pDepend>20</pDepend>
+	<pDepend>2,24</pDepend>
+	<pCaption>A caption</pCaption>
+	<pNotes>Text - can include limited HTML</pNotes>
 </task>
 </project>
 </textarea>
+</blockquote>
+Field definitions are as described for the parameters to TaskItem above.
+</li></ol></li>
+<li><p>Call Draw()</p><pre class="style1">g.Draw();</pre>
+</li>
+<li><p>Close the &lt;script&gt; block</p><pre class="style1">&lt;/script&gt;</pre>
+</li>
+</ol>
 
-<p>6. Call Draw() and DrawDependencies()</p>
-<pre class="style1"> 
+<p>It is possible to add items to the chart in realtime via javascript using either direct method calls or additional XML files.
+It is also possible to delete tasks using RemoveTaskItem() method.</p>
+<pre class="style1">g.RemoveTaskItem(11);</pre>
+<p>Method definition:
+<strong>RemoveTaskItem(<em>pID</em>)</strong></p>
+<dl>
+<dt>pID</dt><dd>(required) the unique numeric ID of the item to be removed</dd>
+</dl>
+<p>If the task removed is a group item, all dependant tasks will also be removed. </p>
+<p>After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.</p>
 
-g.Draw();	
-g.DrawDependencies();
+<h2 class="roundedCornerfg" id="tOptions">Configuration Options</h2>
+<h3 id="tOptionsSwitches">Switches</h3>
+<p>Many of the features of jsGanttImproved can be customised through the use of setter methods available on the GanttChart object returned by a call to JSGantt.GanttChart()</p>
+<p>The following options take a single numeric parameter; a value of 1 will enable the describe functionality, 0 will disable it</p>
+<dl class="configlist">
+<dt id="setUseToolTip">setUseToolTip()</dt><dd>Controls the display of tool tip boxes, defaults to 1 (enabled)</dd>
+<dt id="setUseFade">setUseFade()</dt><dd>Controls use of the fade effect when showing/hiding tool tips, defaults to 1 (enabled)</dd>
+<dt id="setUseMove">setUseMove()</dt><dd>Controls use of the sliding effect when changing between different task tool tips, defaults to 1 (enabled)</dd>
+<dt id="setUseRowHlt">setUseRowHlt()</dt><dd>Controls the use of row mouseover highlighting, defaults to 1 (enabled)</dd>
+<dt id="setUseSort">setUseSort()</dt><dd>Controls whether the task list is sorted into parent task / start time order or is simply displayed in the order created, defaults to 1 (sort enabled)</dd>
+<dt id="setShowRes">setShowRes()</dt><dd>Controls whether the Resource column is displayed in the task list, defaults to 1 (show column)</dd>
+<dt id="setShowDur">setShowDur()</dt><dd>Controls whether the Task Duration column is displayed in the task list, defaults to 1 (show column)</dd>
+<dt id="setShowComp">setShowComp()</dt><dd>Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)</dd>
+<dt id="setShowStartDate">setShowStartDate()</dt><dd>Controls whether the Task Start Date column is displayed in the task list, defaults to 1 (show column)</dd>
+<dt id="setShowEndDate">setShowEndDate()</dt><dd>Controls whether the Task End Date column is displayed in the task list, defaults to 1 (show column)</dd>
+<dt id="setShowTaskInfoRes">setShowTaskInfoRes()</dt><dd>Controls whether the Resource information is displayed in the task tool tip, defaults to 1 (show information)</dd>
+<dt id="setShowTaskInfoDur">setShowTaskInfoDur()</dt><dd>Controls whether the Task Duration information is displayed in the task tool tip, defaults to 1 (show information)</dd>
+<dt id="setShowTaskInfoComp">setShowTaskInfoComp()</dt><dd>Controls whether the Percentage Complete information is displayed in the task tool tip, defaults to 1 (show information)</dd>
+<dt id="setShowTaskInfoStartDate">setShowTaskInfoStartDate()</dt><dd>Controls whether the Task Start Date information is displayed in the task tool tip, defaults to 1 (show information)</dd>
+<dt id="setShowTaskInfoEndDate">setShowTaskInfoEndDate()</dt><dd>Controls whether the Task End Date information is displayed in the task tool tip, defaults to 1 (show information)</dd>
+<dt id="setShowTaskInfoLink">setShowTaskInfoLink()</dt><dd>Controls whether the More Information link is displayed in the task tool tip, defaults to 0 (do NOT show link)</dd>
+<dt id="setShowTaskInfoNotes">setShowTaskInfoNotes()</dt><dd>Controls whether the Additional Notes data is displayed in the task tool tip, defaults to 1 (show notes)</dd>
+<dt id="setShowEndWeekDate">setShowEndWeekDate()</dt><dd>Controls whether the major heading in "Day" view displays the week end-date in the appropriate format (see <a href="#setDayMajorDateDisplayFormat">below</a>), defaults to 1 (show date)</dd>
+<dt id="setShowDeps">setShowDeps()</dt><dd>Controls display of dependancy lines, defaults to 1 (show dependencies)</dd>
+</dl>
+<h3 id="tOptionsKeys">Key Values</h3>
+<p>The following options enable functionality using a set of specific key values</p>
+<dl class="configlist">
+<dt id="setShowSelector">setShowSelector()</dt><dd>Controls where the format selector is displayed, accepts multiple parameters.<br/>Valid parameter values are &quot;Top&quot;, &quot;Bottom&quot;.<br/>Defaults to "Top".</dd>
+<dt id="setFormatArr">setFormatArr()</dt><dd>Controls which format options are shown in the format selector, accepts multiple parameters.<br/>Valid parameter values are &quot;Day&quot;, &quot;Week&quot;, &quot;Month&quot;, &quot;Quarter&quot;.<br/>Defaults to all valid values.</dd>
+<dt id="setCaptionType">setCaptionType()</dt><dd>Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter.<br/>Valid parameter values are &quot;None&quot;, &quot;Caption&quot;, &quot;Resource&quot;, &quot;Duration&quot;, &quot;Complete&quot;.<br/>Defaults to &quot;None&quot;</dd>
+<dt id="setDateInputFormat">setDateInputFormat()</dt><dd>Defines the input format used for dates in task creation, accepts a single parameter.<br/>Valid parameter values are &quot;yyyy-mm-dd&quot;, &quot;dd/mm/yyyy&quot;, &quot;mm/dd/yyyy&quot;.<br/>Defaults to &quot;yyyy-mm-dd&quot;</dd>
+<dt id="setScrollTo">setScrollTo()</dt><dd>Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value &quot;today&quot;<br/>Defaults to minimum display date</dd>
+</dl>
+<h3 id="tOptionsLayout">Layout</h3>
+<p>Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.</p>
+<p>Note that the task bar sizing code assumes the use of collapsed table borders 1px wide.</p>
+<dl class="configlist">
+<dt id="setDayColWidth">setDayColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Day" format. Defaults to 18.</dd>
+<dt id="setWeekColWidth">setWeekColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Week" format. Defaults to 36.</dd>
+<dt id="setMonthColWidth">setMonthColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Month" format. Defaults to 36.</dd>
+<dt id="setQuarterColWidth">setQuarterColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Quarter" format, although not mandatory it is recommended that this be set to a value divisible by 3. Defaults to 18.</dd>
+<dt id="setMinGpLen">setMinGpLen()</dt><dd>Group tasks have their task bars embellished with end points, this value specifies the width of one of these end points in pixels.  A short task bar&#39;s length will be rounded up to display either a single or both endpoints correctly. Defaults to 8.</dd>
+</dl>
+<h3 id="tOptionsFormatSpecifiers">Display Date Formats</h3>
+<p>Date display formats can be individually controlled. The methods used to set these display formats each take a single format string parameter.  The format string can be made up of the following components (case sensitive)</p>
+<blockquote>
+<dl>
+<dt>d</dt><dd>Day (1-31)</dd>
+<dt>dd</dt><dd>Day (01-31)</dd>
+<dt>day</dt><dd>Abbriviated day of week</dd>
+<dt>DAY</dt><dd>Day of week</dd>
+<dt>m</dt><dd>Month (1-12)</dd>
+<dt>mm</dt><dd>Month (01-12)</dd>
+<dt>mon</dt><dd>Abbriviated month text</dd>
+<dt>month</dt><dd>Full month text</dd>
+<dt>yy</dt><dd>Year, excluding century</dd>
+<dt>yyyy</dt><dd>Year</dd>
+<dt>q</dt><dd>Quarter (1-4)</dd>
+<dt>qq</dt><dd>Quarter (Q1-Q4)</dd>
+<dt>w</dt><dd>ISO Week number (1-53)</dd>
+<dt>ww</dt><dd>ISO Week number (01-53)</dd>
+<dt>week</dt><dd>Full ISO Week date format</dd>
+</dl>
+<p>separated by one of the following characters: <strong>&quot;/\-.,&#39;&lt;space&gt;</strong></p>
+<p>Any text between separators that does not match one of the components above will be output unchanged.</p>
+</blockquote>
+<p id="tOptionsDateFormats"The available date display methods are</p>
+<dl class="dateconfiglist">
+<dt id="setDateTaskTableDisplayFormat">setDateTaskTableDisplayFormat()</dt><dd>Date format used for start and end dates in the main task list. Defaults to 'dd/mm/yyyy'.</dd>
+<dt id="setDateTaskDisplayFormat">setDateTaskDisplayFormat()</dt><dd>Date format used for start and end dates in task tool tips. Defaults to 'dd month yyyy'.</dd>
+<dt id="setDayMajorDateDisplayFormat">setDayMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Day" format. Defaults to 'dd/mm/yyyy'.</dd>
+<dt id="setWeekMajorDateDisplayFormat">setWeekMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Week" format. Defaults to 'yyyy'.</dd>
+<dt id="setMonthMajorDateDisplayFormat">setMonthMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Month" format. Defaults to 'yyyy'.</dd>
+<dt id="setQuarterMajorDateDisplayFormat">setQuarterMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Year" format. Defaults to 'yyyy'.</dd>
+<dt id="setDayMinorDateDisplayFormat">setDayMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Day" format. Defaults to 'dd'.</dd>
+<dt id="setWeekMinjorDateDisplayFormat">setWeekMinjorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.</dd>
+<dt id="setMonthMinorDateDisplayFormat">setMonthMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.</dd>
+<dt id="setQuarterMinorDateDisplayFormat">setQuarterMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.</dd>
+</dl>
+<h3 id="tOptionsExamples">Example Options</h3>
+<p>The configuration options used in the example chart above are:</p>
 
+<pre class="style1">
+g.setCaptionType('Resource');
+g.setShowTaskInfoLink(1);
+g.setDayMajorDateDisplayFormat('dd mon');
 </pre>
 
-<br>
-<p>7. Close the &lt;script&gt; block</p>
-<pre class="style1">&lt;/script&gt;</pre>
-
-<br><br>
-Final code should look like
-<textarea name="textarea2" cols="150" rows="20">
+<p>Putting all this information together the final code to produce the chart above is as follows:</p>
+<textarea name="textarea2" cols="100" rows="20">
 &lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
 &lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
 &lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;
 &lt;script&gt;
 
-  var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
-  g.setShowRes(1); // Show/Hide Responsible (0/1)
-  g.setShowDur(1); // Show/Hide Duration (0/1)
-  g.setShowComp(1); // Show/Hide % Complete(0/1)
-  g.setCaptionType('Resource');  // Set to Show Caption
+ var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
 
-  if( g ) {
+ if( g ) {
+  g.setCaptionType('Resource');
+  g.setShowTaskInfoLink(1);
+  g.setDayMajorDateDisplayFormat('dd mon');
 
-    g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',          '',          'ff0000', 'http://help.com', 0, 'Brian',     0, 1, 0, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2/20/2008', '2/20/2008', 'ff00ff', 'http://www.yahoo.com', 1, 'Shlomy',  100, 0, 1, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',          '',          '00ff00', '', 0, 'Shlomy',   40, 1, 1, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2/21/2008', '3/9/2008',  '00ffff', 'http://www.yahoo.com', 0, 'Brian T.', 60, 0, 12, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '3/6/2008',  '3/11/2008', 'ff0000', 'http://help.com', 0, '',         60, 0, 12, 1,121));
-    g.AddTaskItem(new JSGantt.TaskItem(123, 'Task Functions',       '3/9/2008',  '3/29/2008', 'ff0000', 'http://help.com', 0, 'Anyone',   60, 0, 12, 1, 0, 'This is another caption'));
-    g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '3/24/2008', '3/25/2008', 'ffff00', 'http://help.com', 0, 'Brian',    20, 0, 0, 1,122));
-    g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',          '',          'ff0000', 'http://help.com', 0, 'Brian',     0, 1, 0, 1 ));
-    g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2/25/2008', '3/17/2008', 'ff00ff', 'http://help.com', 0, 'Brian',    30, 0, 3, 1, ,'Caption 1'));
-    g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '3/15/2008', '3/24/2008', '00ff00', 'http://help.com', 0, 'Shlomy',   40, 0, 3, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Taks Items',      '',          '',          '00ff00', 'http://help.com', 0, 'Someone',  40, 1, 3, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '3/6/2008',  '3/11/2008', '0000ff', 'http://help.com', 0, 'Brian',    60, 0, 33, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '3/9/2008',  '3/20/2008', '0000ff', 'http://help.com', 0, 'Brian',    60, 0, 33, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',          '',          '990000', 'http://help.com', 0, 'Anybody',  60, 1, 3, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '3/26/2008', '4/11/2008', 'ff0000', 'http://help.com', 0, 'Brian',    60, 0, 34, 1, "332,333"));
-    g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '4/12/2008', '5/18/2008', 'ff6666', 'http://help.com', 0, 'Brian',    60, 0, 34, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '5/13/2008', '5/17/2008', 'ff0000', 'http://help.com', 0, 'Brian',    60, 0, 34, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '5/17/2008', '6/04/2008', 'ff0000', 'http://help.com', 0, 'Brian',    60, 0, 34, 1));
-    g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '10/17/2008','12/04/2008','f600f6', 'http://help.com', 0, 'Brian',    30, 0, 3,  1));
+  JSGantt.parseXML('project.xml',g)
 
-
-
-    g.Draw();	
-    g.DrawDependencies();
-
-
-  }
-  else
-  {
-    alert("not defined");
-  }
+  g.Draw();
+ }
+ else
+ {
+  alert("Error, unable to create Gantt Chart");
+ }
 
 &lt;/script&gt;
-  </textarea>
-</p>
-<div style="width:400px;">
-  <b class="roundedCorner">
-  <b class="roundedCorner1"><b></b></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner5"></b></b>
+</textarea>
 
-  <div class="roundedCornerfg"><a name="tExamples"/>
-  <table width="50%">
-  <tr><td><font face="Arial,Helvetica" size="3" color="#FFFFFF"><i><b>&nbsp;&nbsp;ADDITIONAL DEMOS</b></i></font>
-</td></tr></table></div>
 
-  <b class="roundedCorner">
-  <b class="roundedCorner5"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner1"><b></b></b></b>
-</div>
-
-<p>
+<h2 class="roundedCornerfg" id="tExamples">Additional Demos</h2>
 <ul>
-<li><a href="index.htm">jsGantt</a></li>
+<li><a href="index.html">jsGantt</a></li>
 <li><a href="jsgantt_exExternalXML.html">jsGantt with external XML file</a></li>
-<li><a href="jsgantt_Minutes.html">jsGantt by minutes</a></li>
 </ul>
-</p>
 
 
 
-<div style="width:400px;">
-  <b class="roundedCorner">
-  <b class="roundedCorner1"><b></b></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner5"></b></b>
+<h2 class="roundedCornerfg" id="tCredits">Credits</h2>
 
-  <div class="roundedCornerfg"><a name="tCredits"/>
-  <table width="50%">
-  <tr><td><font face="Arial,Helvetica" size="3" color="#FFFFFF"><i><b>&nbsp;&nbsp;CREDITS</b></i></font>
-</td></tr></table></div>
-
-  <b class="roundedCorner">
-  <b class="roundedCorner5"></b>
-  <b class="roundedCorner4"></b>
-  <b class="roundedCorner3"></b>
-  <b class="roundedCorner2"><b></b></b>
-  <b class="roundedCorner1"><b></b></b></b>
-</div>
-
-<p>Developed by Shlomy Gantz and Brian Twidt<br>
-Contributed: Paul Labuschagne, Kevin Badgett, Ilan Admon<br>
+<p>Developed by Paul Geldart</p>
+<p>Based on jsGantt 1.2 developed by Shlomy Gantz and Brian Twidt<br/>
+Contributed: Paul Labuschagne, Kevin Badgett, Ilan Admon<br/>
 </p>
 
 </body>
