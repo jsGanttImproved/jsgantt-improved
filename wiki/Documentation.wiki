@@ -92,7 +92,7 @@ The structure of the XML file:
 </project>
 </code>
 
-Field definitions are as described for the parameters to [Documentation#a)_Using_AddTaskItem() TaskItem] above.
+Field definitions are as described for the parameters to [Documentation#a)_Using_AddTaskItem_() TaskItem] above.
 
 
 == Call Draw() ==
