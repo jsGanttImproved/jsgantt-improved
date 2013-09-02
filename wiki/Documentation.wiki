@@ -21,27 +21,27 @@ Creating a basic Gantt Chart
 <script type="text/javascript">
 </code>
 
-== Instantiate JSGantt using GanttChart() ==
+== Instantiate JSGantt using !GanttChart() ==
 <code language="javascript">
 var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
 </code>
 
-Method definition: *GanttChart(_pDiv_, _pFormat_)*
+Method definition: *!GanttChart(_pDiv_, _pFormat_)*
 || _pDiv:_ || (required) this is a DIV object created in HTML ||
-|| _pFormat:_ || ((required) used to indicate whether chart should be drawn in "day", "week", "month", or "quarter" format ||
+|| _pFormat:_ || (required) used to indicate whether chart should be drawn in "day", "week", "month", or "quarter" format ||
 
 == Customize the look and feel using configuration methods ==
 see [Documentation#Options Configuration Options] below
 
 == Add Tasks ==
-=== a) Using AddTaskItem() ===
+=== a) Using !AddTaskItem() ===
 <code language="javascript">
 g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text' ));
 g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2013-02-20','2013-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1));
 </code>
 
 Method definition:
-*TaskItem(_pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend_)*
+*!TaskItem(_pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend_)*
 ||_pID:_||(required) a unique numeric ID used to identify each row||
 ||_pName:_||(required) the task Label||
 ||_pStart:_||(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2013-02-20 12:00) for additional precision or half days (not currently supported in Chrome).||
@@ -55,7 +55,7 @@ Method definition:
 ||_pParent:_||(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0||
 ||_pOpen:_||(required) indicates whether a group task is open when chart is first drawn. Value must be set for all items but is only used by group tasks.  Numeric, 1 = open, 0 = closed||
 ||_pDepend:_||(optional) comma separated list of id's this task is dependent on. A line will be drawn from each listed task to this item||
-||_pCaption:_||(optional) caption that will be added after task bar if CaptionType set to "Caption"||
+||_pCaption:_||(optional) caption that will be added after task bar if !CaptionType set to "Caption"||
 ||_pNotes:_||(optional) Detailed task information that will be displayed in tool tip for this task||
 
 === b) using parseXML() with an external XML file ===
@@ -67,7 +67,7 @@ Method definition:
 *JSGantt.parseXML(_pFile_, _pGanttObj_)*
   
 ||_pFile:_||(required) this is the filename of the XML||
-||_pGanttObj:_||(required) a GanttChart object returned by a call to JSGantt.GanttChart()||
+||_pGanttObj:_||(required) a !GanttChart object returned by a call to JSGantt.!GanttChart()||
   
 The structure of the XML file:
 <code>
@@ -103,11 +103,11 @@ Field definitions are as described for the parameters to [Documentation#a)_Using
 
 == Updating an existing Gantt Chart ==
 
-It is also possible to delete tasks using RemoveTaskItem() method.
+It is also possible to delete tasks using !RemoveTaskItem() method.
 <code language="javascript">g.RemoveTaskItem(11);</code>
 
 Method definition:
-*RemoveTaskItem(_pID_)*
+*!RemoveTaskItem(_pID_)*
 
 ||_pID:_||(required) the unique numeric ID of the item to be removed||
 
@@ -117,7 +117,7 @@ After adding or removing tasks a call to "g.Draw()" must be made to redraw the c
 
 = Options =
 == Switches ==
-Many of the features of jsGanttImproved can be customised through the use of setter methods available on the GanttChart object returned by a call to JSGantt.GanttChart()
+Many of the features of jsGanttImproved can be customised through the use of setter methods available on the !GanttChart object returned by a call to JSGantt.!GanttChart()
 The following options take a single numeric parameter; a value of 1 will enable the describe functionality, 0 will disable it
 ||_setUseToolTip():_||Controls the display of tool tip boxes, defaults to 1 (enabled)||
 ||_setUseFade():_||Controls use of the fade effect when showing/hiding tool tips, defaults to 1 (enabled)||
@@ -141,11 +141,11 @@ The following options take a single numeric parameter; a value of 1 will enable 
 
 == Key Values ==
 The following options enable functionality using a set of specific key values
-||_setShowSelector():_||Controls where the format selector is displayed, accepts multiple parameters.<br/>Valid parameter values are "Top", "Bottom".<br/>Defaults to "Top".||
-||_setFormatArr():_||Controls which format options are shown in the format selector, accepts multiple parameters.<br/>Valid parameter values are "Day", "Week", "Month", "Quarter".<br/>Defaults to all valid values.||
-||_setCaptionType():_||Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter.<br/>Valid parameter values are "None", "Caption", "Resource", "Duration", "Complete".<br/>Defaults to "None"||
-||_setDateInputFormat():_||Defines the input format used for dates in task creation, accepts a single parameter.<br/>Valid parameter values are "yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy".<br/>Defaults to "yyyy-mm-dd"||
-||_setScrollTo():_||Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value "today"<br/>Defaults to minimum display date||
+||_setShowSelector():_||Controls where the format selector is displayed, accepts multiple parameters. Valid parameter values are "Top", "Bottom". Defaults to "Top".||
+||_setFormatArr():_||Controls which format options are shown in the format selector, accepts multiple parameters. Valid parameter values are "Day", "Week", "Month", "Quarter". Defaults to all valid values.||
+||_setCaptionType():_||Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter. Valid parameter values are "None", "Caption", "Resource", "Duration", "Complete". Defaults to "None"||
+||_setDateInputFormat():_||Defines the input format used for dates in task creation, accepts a single parameter. Valid parameter values are "yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy". Defaults to "yyyy-mm-dd"||
+||_setScrollTo():_||Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value "today". Defaults to minimum display date||
 
 == Layout ==
 Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.
