@@ -8,8 +8,8 @@
 	jsGanttImproved 1.0
 	Copyright (c) 2013, Paul Geldart All rights reserved.
 
-	This project is a fork of jsGantt 1.2 (which can be obtained from
-	https://code.google.com/p/jsgantt/ ) and remains under the original BSD license.
+	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
+
 
 	* Copyright (c) 2013, Paul Geldart.
 	* All rights reserved.
@@ -36,7 +36,9 @@
 	* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-	This project is based on jsGantt 1.2, the original project license follows:
+	This project is based on jsGantt 1.2, (which can be obtained from
+	https://code.google.com/p/jsgantt/ ) and remains under the original BSD license.
+	The original project license follows:
 
 	Copyright (c) 2009, Shlomy Gantz BlueBrick Inc. All rights reserved.
 
