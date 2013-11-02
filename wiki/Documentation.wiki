@@ -112,7 +112,7 @@ Method definition:
 
 ||_pID:_||(required) the unique numeric ID of the item to be removed||
 
-If the task removed is a group item, all dependant tasks will also be removed. 
+If the task removed is a group item, all child tasks will also be removed. 
 
 After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.
 
