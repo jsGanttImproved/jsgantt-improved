@@ -42,7 +42,7 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-2
 </code>
 
 Method definition:
-*!TaskItem(_pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend_)*
+*!TaskItem(_pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes_)*
 ||_pID:_||(required) a unique numeric ID used to identify each row||
 ||_pName:_||(required) the task Label||
 ||_pStart:_||(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2013-02-20 12:00) for additional precision or half days (not currently supported in Chrome).||
