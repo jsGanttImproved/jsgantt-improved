@@ -9,6 +9,7 @@
 <!--
 body	{ font-size: 0.8em; }
 h3 { margin: 0px; font-size: 1em; }
+h4 { margin: 0px; margin-left: 10px; font-size: 1em; }
 
 .style1 {color: #0000FF}
 
@@ -68,7 +69,7 @@ dd { margin: 0 0 0 70px;
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.0</div>
+<div class="header">jsGanttImproved - 1.1</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -101,25 +102,25 @@ dd { margin: 0 0 0 70px;
 	    // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pMile, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes)
 
 		g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      'Some Notes text' ));
-		g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2013-02-20','2013-02-20', 'gmilestone',   '',                 1, 'Shlomy',   100,   0,      1,       1));
+		g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2014-02-20','2014-02-20', 'gmilestone',   '',                 1, 'Shlomy',   100,   0,      1,       1));
 		g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',                 0, 'Shlomy',   40,    1,      1,       1));
-		g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2013-02-21','2013-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1));
-		g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2013-03-06','2013-03-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      12,      1,     121));
-		g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2013-03-09','2013-03-14 12:00', 'gtaskyellow', '',            0, 'Ilan',     60,    0,      12,      1,     121));
-		g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2013-03-09','2013-03-29', 'gtaskred',     '',                 0, 'Anyone',   60,    0,      12,      1,     '',      'This is a caption', null));
-		g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2013-03-24','2013-03-24', 'gtaskyellow',  '',                 0, 'Brian',    20,    0,      0,       1,     122));
+		g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2014-02-21','2014-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1));
+		g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2014-03-06','2014-03-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      12,      1,     121));
+		g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2014-03-09','2014-03-14 12:00', 'gtaskyellow', '',            0, 'Ilan',     60,    0,      12,      1,     ''));
+		g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2014-03-09','2014-03-29', 'gtaskred',     '',                 0, 'Anyone',   60,    0,      12,      1,     '123SS', 'This is a caption', null));
+		g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2014-03-24','2014-03-24', 'gtaskyellow',  '',                 0, 'Brian',    20,    0,      0,       1,     122));
 		g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1));
-		g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2013-02-25','2013-03-17', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1,     '',      'Caption 1'));
-		g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2013-03-15','2013-03-24', 'gtaskgreen',   '',                 0, 'Shlomy',   40,    0,      3,       1));
+		g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2014-02-25','2014-03-17', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1,     '',      'Caption 1'));
+		g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2014-03-15','2014-03-24', 'gtaskgreen',   '',                 0, 'Shlomy',   40,    0,      3,       1));
 		g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Taks Items',      '',           '',          'ggroupblack',  '',                 0, 'Someone',  40,    1,      3,       1));
-		g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2013-03-06','2013-03-11', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1));
-		g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2013-03-09','2013-03-20', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1));
+		g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2014-03-06','2014-03-11', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1));
+		g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2014-03-09','2014-03-20', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1));
 		g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',                 0, 'Anybody',  60,    1,      3,       0));
-		g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2013-03-26','2013-04-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1));
-		g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2013-04-12','2013-05-18', 'gtaskpink',    '',                 0, 'Brian',    60,    0,      34,      1));
-		g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2013-05-13','2013-05-17', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1));
-		g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2013-05-17','2013-06-04', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     "342,343"));
-		g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2013-07-17','2014-09-04', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1));
+		g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2014-03-26','2014-04-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1));
+		g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2014-04-12','2014-05-18', 'gtaskpink',    '',                 0, 'Brian',    60,    0,      34,      1));
+		g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2014-05-13','2014-05-17', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1));
+		g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2014-05-17','2014-06-04', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     "342,343"));
+		g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2014-07-17','2015-09-04', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1));
 
 		g.Draw();
 	} else {
@@ -159,7 +160,15 @@ dd { margin: 0 0 0 70px;
 <li>If the browser is viewing the page at anything other than 100% zoom then bars may not be sized or positioned correctly. </li>
 
 </ol><br/>
-<h3>Changes/fixes in jsGanttImproved v1.0:</h3>
+<h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.1:</h4>
+<ul>
+<li>Added support for additional dependency types</li>
+<li>Altered date parsing so specifying time works in all browsers</li>
+<li>Fixed bug in calculating end date when time is specified</li>
+<li>Updated CSS to prevent growing DIV bug in IE9</li>
+</ul>
+<h4>v1.0:</h4>
 <ul>
 <li>Multiple new display configuration options (see <a href="#tOptions">Configuration Options</a>)</li>
 <li>Hour/Minute format removed</li>
@@ -184,7 +193,7 @@ JSGanttImproved is released under BSD license.<br/>
 If you plan to use it in a commercial product please consider donating the first sale to charity.
 <br/><br/>
 <textarea cols="80" rows="5">
-* Copyright (c) 2013, Paul Geldart.
+* Copyright (c) 2013-2014, Paul Geldart.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -267,14 +276,14 @@ This project is based on jsGantt 1.2 the original project license follows:
 <ol type="a"><li>using AddTaskItem()
 <pre class="style1">
 g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text' ));
-g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2013-02-20','2013-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1));
+g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1));
 </pre>
 <p>Method definition:
 <strong>TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend</em>)</strong></p>
 <dl>
 <dt>pID</dt><dd>(required) a unique numeric ID used to identify each row</dd>
 <dt>pName</dt><dd>(required) the task Label</dd>
-<dt>pStart</dt><dd>(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2013-02-20 12:00) for additional precision or half days (not currently supported in Chrome).</dd>
+<dt>pStart</dt><dd>(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2014-02-20 12:00) for additional precision.</dd>
 <dt>pEnd</dt><dd>(required) the task end date, can enter empty date ('') for groups</dd>
 <dt>pClass</dt><dd>(required) the css class for this task; defaults to "ggroupblack"</dd>
 <dt>pLink</dt><dd>(optional) any http link to be displayed in tool tip as the "More information" link.</dd>
@@ -284,7 +293,7 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2013-02-20','2013-02-2
 <dt>pGroup</dt><dd>(optional) indicates whether this is a group task(parent) - Numeric; 1 = group task, 0 = not group task</dd>
 <dt>pParent</dt><dd>(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0</dd>
 <dt>pOpen</dt><dd>(required) indicates whether a group task is open when chart is first drawn. Value must be set for all items but is only used by group tasks.  Numeric, 1 = open, 0 = closed</dd>
-<dt>pDepend</dt><dd>(optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item</dd>
+<dt>pDepend</dt><dd>(optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item<br />Each id can optionally be followed by a dependency type suffix. Valid values are:<blockquote>'FS' - Finish to Start (default if suffix is omitted)<br />'SF' - Start to Finish<br />'SS' - Start to Start<br />'FF' - Finish to Finish</blockquote>If present the suffix must be added directly to the id e.g. '123SS'</dd>
 <dt>pCaption</dt><dd>(optional) caption that will be added after task bar if CaptionType set to "Caption"</dd>
 <dt>pNotes</dt><dd>(optional) Detailed task information that will be displayed in tool tip for this task</dd>
 </dl>
@@ -339,7 +348,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dl>
 <dt>pID</dt><dd>(required) the unique numeric ID of the item to be removed</dd>
 </dl>
-<p>If the task removed is a group item, all dependant tasks will also be removed. </p>
+<p>If the task removed is a group item, all child tasks will also be removed. </p>
 <p>After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.</p>
 
 <h2 class="roundedCornerfg" id="tOptions">Configuration Options</h2>
@@ -352,6 +361,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt id="setUseMove">setUseMove()</dt><dd>Controls use of the sliding effect when changing between different task tool tips, defaults to 1 (enabled)</dd>
 <dt id="setUseRowHlt">setUseRowHlt()</dt><dd>Controls the use of row mouseover highlighting, defaults to 1 (enabled)</dd>
 <dt id="setUseSort">setUseSort()</dt><dd>Controls whether the task list is sorted into parent task / start time order or is simply displayed in the order created, defaults to 1 (sort enabled)</dd>
+<dt id="setUseSingleCell">setUseSingleCell()</dt><dd>Controls whether the task list uses a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts, defaults to 0 (use multiple cells)</dd>
 <dt id="setShowRes">setShowRes()</dt><dd>Controls whether the Resource column is displayed in the task list, defaults to 1 (show column)</dd>
 <dt id="setShowDur">setShowDur()</dt><dd>Controls whether the Task Duration column is displayed in the task list, defaults to 1 (show column)</dd>
 <dt id="setShowComp">setShowComp()</dt><dd>Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)</dd>
@@ -384,6 +394,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt id="setWeekColWidth">setWeekColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Week" format. Defaults to 36.</dd>
 <dt id="setMonthColWidth">setMonthColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Month" format. Defaults to 36.</dd>
 <dt id="setQuarterColWidth">setQuarterColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Quarter" format, although not mandatory it is recommended that this be set to a value divisible by 3. Defaults to 18.</dd>
+<dt id="setRowHeight">setRowHeight()</dt><dd>Height of Gantt Chart rows in pixels. Used to route dependency lines near end points. Defaults to 20.</dd>
 <dt id="setMinGpLen">setMinGpLen()</dt><dd>Group tasks have their task bars embellished with end points, this value specifies the width of one of these end points in pixels.  A short task bar&#39;s length will be rounded up to display either a single or both endpoints correctly. Defaults to 8.</dd>
 </dl>
 <h3 id="tOptionsFormatSpecifiers">Display Date Formats</h3>
@@ -453,26 +464,26 @@ g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in h
   g.setShowTaskInfoLink(1);
   g.setShowEndWeekDate(0);
 
-  g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',     0, 'Brian',    0,   1, 0,  1, '', '', 'Some Notes text' ));
-  g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2013-02-20','2013-02-20', 'gmilestone',   '',     1, 'Shlomy',   100, 0, 1,  1));
-  g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',     0, 'Shlomy',   40,  1, 1,  1));
-  g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2013-02-21','2013-03-09', 'gtaskblue',    '',     0, 'Brian T.', 60,  0, 12, 1));
-  g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2013-03-06','2013-03-11', 'gtaskred',     '',     0, 'Brian',    60,  0, 12, 1, 121));
-  g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2013-03-09','2013-03-14 12:00', 'gtaskyellow', '',0, 'Ilan',     60,  0, 12, 1, 121));
-  g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2013-03-09','2013-03-29', 'gtaskred',     '',     0, 'Anyone',   60,  0, 12, 1, '', 'This is a caption', null));
-  g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2013-03-24','2013-03-24', 'gtaskyellow',  '',     0, 'Brian',    20,  0, 0,  1, 122));
-  g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',     0, 'Brian',    0,   1, 0,  1));
-  g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2013-02-25','2013-03-17', 'gtaskpurple',  '',     0, 'Brian',    30,  0, 3,  1, '', 'Caption 1'));
-  g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2013-03-15','2013-03-24', 'gtaskgreen',   '',     0, 'Shlomy',   40,  0, 3,  1));
-  g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Taks Items',      '',           '',          'ggroupblack',  '',     0, 'Someone',  40,  1, 3,  1));
-  g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2013-03-06','2013-03-11', 'gtaskblue',    '',     0, 'Brian',    60,  0, 33, 1));
-  g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2013-03-09','2013-03-20', 'gtaskblue',    '',     0, 'Brian',    60,  0, 33, 1));
-  g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',     0, 'Anybody',  60,  1, 3,  0));
-  g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2013-03-26','2013-04-11', 'gtaskred',     '',     0, 'Brian',    60,  0, 34, 1));
-  g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2013-04-12','2013-05-18', 'gtaskpink',    '',     0, 'Brian',    60,  0, 34, 1));
-  g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2013-05-13','2013-05-17', 'gtaskred',     '',     0, 'Brian',    60,  0, 34, 1));
-  g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2013-05-17','2013-06-04', 'gtaskred',     '',     0, 'Brian',    60,  0, 34, 1, "342,343"));
-  g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2013-07-17','2014-09-04', 'gtaskpurple',  '',     0, 'Brian',    30,  0, 3,  1));
+  g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      'Some Notes text' ));
+  g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2014-02-20','2014-02-20', 'gmilestone',   '',                 1, 'Shlomy',   100,   0,      1,       1));
+  g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',                 0, 'Shlomy',   40,    1,      1,       1));
+  g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2014-02-21','2014-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1));
+  g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2014-03-06','2014-03-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      12,      1,     121));
+  g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2014-03-09','2014-03-14 12:00', 'gtaskyellow', '',            0, 'Ilan',     60,    0,      12,      1,     ''));
+  g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2014-03-09','2014-03-29', 'gtaskred',     '',                 0, 'Anyone',   60,    0,      12,      1,     '123SS', 'This is a caption', null));
+  g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2014-03-24','2014-03-24', 'gtaskyellow',  '',                 0, 'Brian',    20,    0,      0,       1,     122));
+  g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1));
+  g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2014-02-25','2014-03-17', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1,     '',      'Caption 1'));
+  g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2014-03-15','2014-03-24', 'gtaskgreen',   '',                 0, 'Shlomy',   40,    0,      3,       1));
+  g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Taks Items',      '',           '',          'ggroupblack',  '',                 0, 'Someone',  40,    1,      3,       1));
+  g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2014-03-06','2014-03-11', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1));
+  g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2014-03-09','2014-03-20', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1));
+  g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',                 0, 'Anybody',  60,    1,      3,       0));
+  g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2014-03-26','2014-04-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1));
+  g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2014-04-12','2014-05-18', 'gtaskpink',    '',                 0, 'Brian',    60,    0,      34,      1));
+  g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2014-05-13','2014-05-17', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1));
+  g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2014-05-17','2014-06-04', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     "342,343"));
+  g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2014-07-17','2015-09-04', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1));
 
   g.Draw();
  }

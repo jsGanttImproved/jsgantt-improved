@@ -134,6 +134,13 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 
 /*  END Task bar styles */
 
+.gDepFS,
+.gDepSS,
+.gDepSF,
+.dDepFF				{ background-color: #ff0000; }
+.gCurDate			{ background-color: #0000ff; }
+
+
 div.gtaskbarcontainer		{ z-index: 1; }
 
 #JSGanttToolTip		{position: absolute; display: block; z-index: 2;}
@@ -157,8 +164,8 @@ div.gtaskbarcontainer		{ z-index: 1; }
 .rhscrpad			{ width: 150px; }
 
 div.scroll	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
-div.scroll2	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0%}
-div.scroll3 { padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
+div.scroll2	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0% }
+div.scroll3	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
 div.scroll4	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: hidden; }
 
 /* Old Internet Explorer version hacks */
