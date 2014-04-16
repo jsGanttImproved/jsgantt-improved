@@ -98,7 +98,7 @@ dd { margin: 0 0 0 70px;
 		g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
 		g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
 		g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
-	    g.setUseSingleCell(1);
+		g.setUseSingleCell(1); // Use one cell per table row.  Helps with rendering performance for large charts.
 	    // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pMile, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes)
 
 		g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      'Some Notes text' ));
@@ -444,6 +444,7 @@ g.setDayMajorDateDisplayFormat('mon yyyy - Week ww'); // Set format to display d
 g.setWeekMinorDateDisplayFormat('dd mon'); // Set format to display dates in the "Minor" header of the "Week" view
 g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
 g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
+g.setUseSingleCell(1); // Use one cell per table row.  Helps with rendering performance for large charts.
 </pre>
 
 <p>Putting all this information together the final code to produce the chart above is as follows:</p>
@@ -463,6 +464,7 @@ g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in h
   g.setWeekMinorDateDisplayFormat('dd mon');
   g.setShowTaskInfoLink(1);
   g.setShowEndWeekDate(0);
+  g.setUseSingleCell(1);
 
   g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      'Some Notes text' ));
   g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2014-02-20','2014-02-20', 'gmilestone',   '',                 1, 'Shlomy',   100,   0,      1,       1));
