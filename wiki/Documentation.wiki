@@ -38,7 +38,7 @@ see [Documentation#Options Configuration Options] below
 === a) Using !AddTaskItem() ===
 <code language="javascript">
 g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text' ));
-g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2013-02-20','2013-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1));
+g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1));
 </code>
 
 Method definition:
@@ -55,7 +55,7 @@ Method definition:
 ||_pGroup:_||(optional) indicates whether this is a group task(parent) - Numeric; 1 = group task, 0 = not group task||
 ||_pParent:_||(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0||
 ||_pOpen:_||(required) indicates whether a group task is open when chart is first drawn. Value must be set for all items but is only used by group tasks.  Numeric, 1 = open, 0 = closed||
-||_pDepend:_||(optional) comma separated list of id's this task is dependent on. A line will be drawn from each listed task to this item||
+||_pDepend:_||(optional) comma separated list of id's this task is dependent on. A line will be drawn from each listed task to this item. Each id can optionally be followed by a dependency type suffix. Valid values are: 'FS' - Finish to Start (default if suffix is omitted), 'SF' - Start to Finish, 'SS' - Start to Start, 'FF' - Finish to Finish. If present the suffix must be added directly to the id e.g. '123SS'||
 ||_pCaption:_||(optional) caption that will be added after task bar if !CaptionType set to "Caption"||
 ||_pNotes:_||(optional) Detailed task information that will be displayed in tool tip for this task||
 
@@ -125,6 +125,7 @@ The following options take a single numeric parameter; a value of 1 will enable 
 ||_setUseMove():_||Controls use of the sliding effect when changing between different task tool tips, defaults to 1 (enabled)||
 ||_setUseRowHlt():_||Controls the use of row mouseover highlighting, defaults to 1 (enabled)||
 ||_setUseSort():_||Controls whether the task list is sorted into parent task / start time order or is simply displayed in the order created, defaults to 1 (sort enabled)||
+||_setUseSingleCell():_||Controls whether the task list uses a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts, defaults to 0 (use multiple cells)||
 ||_setShowRes():_||Controls whether the Resource column is displayed in the task list, defaults to 1 (show column)||
 ||_setShowDur():_||Controls whether the Task Duration column is displayed in the task list, defaults to 1 (show column)||
 ||_setShowComp():_||Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)||
@@ -155,6 +156,7 @@ Note that the task bar sizing code assumes the use of collapsed table borders 1p
 ||_setWeekColWidth():_||Width of Gantt Chart columns in pixels when drawn in "Week" format. Defaults to 36.||
 ||_setMonthColWidth():_||Width of Gantt Chart columns in pixels when drawn in "Month" format. Defaults to 36.||
 ||_setQuarterColWidth():_||Width of Gantt Chart columns in pixels when drawn in "Quarter" format, although not mandatory it is recommended that this be set to a value divisible by 3. Defaults to 18.||
+||_setRowHeight():||Height of Gantt Chart rows in pixels. Used to route dependency lines near end points. Defaults to 20.||
 ||_setMinGpLen():_||Group tasks have their task bars embellished with end points, this value specifies the width of one of these end points in pixels.  A short task bar's length will be rounded up to display either a single or both endpoints correctly. Defaults to 8.||
 
 == Display Date Formats ==
@@ -203,6 +205,7 @@ g.setDayMajorDateDisplayFormat('mon yyyy - Week ww'); // Set format to display d
 g.setWeekMinorDateDisplayFormat('dd mon'); // Set format to display dates in the "Minor" header of the "Week" view
 g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
 g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
+g.setUseSingleCell(1); // Use one cell per table row.  Helps with rendering performance for large charts.
 </code>
 
 
@@ -225,6 +228,7 @@ Putting all this information together the final code to produce the chart includ
   g.setWeekMinorDateDisplayFormat('dd mon');
   g.setShowTaskInfoLink(1);
   g.setShowEndWeekDate(0);
+  g.setUseSingleCell(1);
 
   g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',     0, 'Brian',    0,   1, 0,  1, '', '', 'Some Notes text' ));
   g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2013-02-20','2013-02-20', 'gmilestone',   '',     1, 'Shlomy',   100, 0, 1,  1));
