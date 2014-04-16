@@ -1,17 +1,17 @@
 /*
-	   _   ___  _____   _   ___
-	  (_) / _ \ \_   \ / | / _ \
-	  | |/ /_\/  / /\/ | || | | |
-	  | / /_\\/\/ /_   | || |_| |
-	 _/ \____/\____/   |_(_)___/
+	   _   ___  _____   _   _
+	  (_) / _ \ \_   \ / | / |
+	  | |/ /_\/  / /\/ | | | |
+	  | / /_\\/\/ /_   | |_| |
+	 _/ \____/\____/   |_(_)_|
 	|__/
-	jsGanttImproved 1.0
-	Copyright (c) 2013, Paul Geldart All rights reserved.
+	jsGanttImproved 1.1
+	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
 
 
-	* Copyright (c) 2013, Paul Geldart.
+	* Copyright (c) 2013-2014, Paul Geldart.
 	* All rights reserved.
 	*
 	* Redistribution and use in source and binary forms, with or without
@@ -95,7 +95,8 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
     var vGroup = parseInt(document.createTextNode(pGroup).data);
     var vParent = document.createTextNode(pParent).data;
     var vOpen   = parseInt(document.createTextNode(pOpen).data);
-    var vDepend = document.createTextNode(pDepend).data;
+    var vDepend = new Array();
+    var vDependType = new Array();
     var vCaption = document.createTextNode(pCaption).data;
     var vDuration = '';
     var vLevel = 0;
@@ -120,6 +121,42 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 		vEnd   = JSGantt.parseDateStr(document.createTextNode(pEnd).data,g.getDateInputFormat());
 	}
 
+	if ( pDepend != null )
+	{
+		var vDependStr = pDepend + '';
+		var vDepList = vDependStr.split(',');
+		var n = vDepList.length;
+
+		for(var k=0;k<n;k++)
+		{
+			if(vDepList[k].toUpperCase().indexOf('SS')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('SS'));
+				vDependType[k]='SS';
+			}
+			else if(vDepList[k].toUpperCase().indexOf('FF')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('FF'));
+				vDependType[k]='FF';
+			}
+			else if(vDepList[k].toUpperCase().indexOf('SF')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('SF'));
+				vDependType[k]='SF';
+			}
+			else if(vDepList[k].toUpperCase().indexOf('FS')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('FS'));
+				vDependType[k]='FS';
+			}
+			else
+			{
+				vDepend[k]=vDepList[k];
+				vDependType[k]='FS';
+			}
+		}
+	}
+
     this.getID       = function(){ return vID };
     this.getName     = function(){ return vName };
     this.getStart    = function(){ return vStart};
@@ -128,6 +165,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
     this.getLink     = function(){ return vLink };
     this.getMile     = function(){ return vMile };
     this.getDepend   = function(){ if(vDepend) return vDepend; else return null };
+    this.getDepType  = function(){ if(vDependType) return vDependType; else return null };
     this.getCaption  = function(){ if(vCaption) return vCaption; else return ''; };
     this.getResource = function(){ if(vRes) return vRes; else return '&nbsp;';  };
     this.getCompVal  = function(){ if(vComp) return vComp; else return 0; };
@@ -144,7 +182,8 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 		}
         else
 		{ //if(vFormat == 'day'){
-			tmpPer =  Math.ceil((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 1000) + 1);
+			tmpPer =  Math.ceil((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 100) + 10)/10;
+			if(Math.floor(tmpPer) != tmpPer) tmpPer--;
 			if(tmpPer == 1)  vDuration = '1 Day';
 			else             vDuration = tmpPer + ' Days';
 		}
@@ -152,21 +191,24 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 		/*
 			else if(vFormat == 'week')
 			{
-			tmpPer =  ((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 1000) + 1)/7;
+			tmpPer =  ((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 100) + 10)/70;
+			if(Math.floor(tmpPer) != tmpPer) tmpPer--;
 			if(tmpPer == 1)  vDuration = '1 Week';
 			else             vDuration = tmpPer + ' Weeks';
 			}
 
 			else if(vFormat == 'month')
 			{
-			tmpPer =  ((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 1000) + 1)/30;
+			tmpPer =  ((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 100) + 10)/300;
+			if(Math.floor(tmpPer) != tmpPer) tmpPer--;
 			if(tmpPer == 1) vDuration = '1 Month';
 			else            vDuration = tmpPer + ' Months';
 			}
 
 			else if(vFormat == 'quater')
 			{
-			tmpPer =  ((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 1000) + 1)/120;
+			tmpPer =  ((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 100) + 10)/1200;
+			if(Math.floor(tmpPer) != tmpPer) tmpPer--;
 			if(tmpPer == 1) vDuration = '1 Qtr';
 			else            vDuration = tmpPer + ' Qtrs';
 			}
@@ -253,6 +295,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
     var vWeekColWidth = 36;
     var vMonthColWidth = 36;
     var vQuarterColWidth = 18;
+    var vRowHeight = 20;
     var vTodayPx = -1;
 
 	this.setUseFade = function(pVal){ vUseFade = pVal; };
@@ -326,6 +369,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 	this.setWeekColWidth = function(pWidth){ vWeekColWidth = pWidth };
 	this.setMonthColWidth = function(pWidth){ vMonthColWidth = pWidth };
 	this.setQuarterColWidth = function(pWidth){ vQuarterColWidth = pWidth };
+	this.setRowHeight = function(pHeight){ vRowHeight = pHeight };
 
 	this.getUseFade = function(){ return vUseFade };
 	this.getUseMove = function(){ return vUseMove };
@@ -367,6 +411,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
     this.getWeekColWidth = function(){ return vWeekColWidth };
     this.getMonthColWidth = function(){ return vMonthColWidth };
     this.getQuarterColWidth = function(){ return vQuarterColWidth };
+    this.getRowHeight = function(){ return vRowHeight };
 
 	this.CalcTaskXY = function()
 	{
@@ -375,6 +420,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 		var vTaskDiv;
 		var vParDiv;
 		var vLeft, vTop, vHeight, vWidth;
+		var vHeight = Math.floor((this.getRowHeight()/2));
 
 		for(i = 0; i < vList.length; i++)
 		{
@@ -386,9 +432,9 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			if(vBarDiv)
 			{
 				vList[i].setStartX( vBarDiv.offsetLeft+1 );
-				vList[i].setStartY( vParDiv.offsetTop+vBarDiv.offsetTop+9 );
+				vList[i].setStartY( vParDiv.offsetTop+vBarDiv.offsetTop+vHeight-1 );
 				vList[i].setEndX( vBarDiv.offsetLeft + vBarDiv.offsetWidth+1 );
-				vList[i].setEndY( vParDiv.offsetTop+vBarDiv.offsetTop+9 );
+				vList[i].setEndY( vParDiv.offsetTop+vBarDiv.offsetTop+vHeight-1 );
 			}
 		}
 	}
@@ -427,7 +473,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 
 	// sLine: Draw a straight line (colored one-pixel wide div), need to parameterize doc item
-	this.sLine = function(x1,y1,x2,y2,pColor)
+	this.sLine = function(x1,y1,x2,y2,pClass)
 	{
 		vLeft = Math.min(x1,x2);
 		vTop  = Math.min(y1,y2);
@@ -448,7 +494,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 		// set attributes
 		oDiv.style.zIndex = 0;
-		oDiv.style.backgroundColor = (pColor)? pColor : "red";
+		if (pClass)	oDiv.className=pClass;
+		else oDiv.style.backgroundColor = '#000000';
 
 		oDiv.style.left = vLeft + "px";
 		oDiv.style.top = vTop + "px";
@@ -463,7 +510,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 
 	// dLine: Draw a diaganol line (calc line x,y paisrs and draw multiple one-by-one sLines)
-	this.dLine = function(x1,y1,x2,y2)
+	this.dLine = function(x1,y1,x2,y2,pClass)
 	{
 
 		var dx = x2 - x1;
@@ -478,37 +525,69 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 		{
 			vx = Math.round(x);
 			vy = Math.round(y);
-			this.sLine(vx,vy,vx,vy);
+			this.sLine(vx,vy,vx,vy,pClass);
 			x += dx;
 			y += dy;
 		}
 
 	}
 
-	this.drawDependency =function(x1,y1,x2,y2)
+	this.drawDependency =function(x1,y1,x2,y2,pType,pClass)
 	{
-		if(x1 + 10 < x2)
+		var vDir = 1;
+		var vBend = false;
+		var vShort = 4;
+		var vRow = Math.floor(this.getRowHeight()/2);
+
+		if( y2 < y1 ) vRow *= -1;
+
+		switch( pType )
 		{
-			this.sLine(x1,y1,x1+4,y1);
-			this.sLine(x1+4,y1,x1+4,y2);
-			this.sLine(x1+4,y2,x2,y2);
-			this.dLine(x2,y2,x2-3,y2-3);
-			this.dLine(x2,y2,x2-3,y2+3);
-			this.dLine(x2-1,y2,x2-3,y2-2);
-			this.dLine(x2-1,y2,x2-3,y2+2);
+			case 'SF':
+				if(x1 - 10 > x2)
+				{
+					vShort *= -1;
+				}
+				else
+				{
+					vBend=true;
+					vShort *= -1;
+				}
+				vDir = -1;
+				break;
+			case 'SS':
+				if ( x1 < x2 ) vShort*=-1;
+				else vShort = x2-x1-(2*vShort);
+				break;
+			case 'FF':
+				if ( x1 <= x2 ) vShort =x2-x1+(2*vShort);
+				vDir = -1;
+				break;
+			default:
+				if(x1 + 10 >= x2) vBend=true;
+				break;
+		}
+
+		if (vBend)
+		{
+			this.sLine(x1,y1,x1+vShort,y1,pClass);
+			this.sLine(x1+vShort,y1,x1+vShort,y2-vRow,pClass);
+			this.sLine(x1+vShort,y2-vRow,x2-(vShort*2),y2-vRow,pClass);
+			this.sLine(x2-(vShort*2),y2-vRow,x2-(vShort*2),y2,pClass);
+			this.sLine(x2-(vShort*2),y2,x2,y2,pClass);
 		}
 		else
 		{
-			this.sLine(x1,y1,x1+4,y1);
-			this.sLine(x1+4,y1,x1+4,y2-10);
-			this.sLine(x1+4,y2-10,x2-8,y2-10);
-			this.sLine(x2-8,y2-10,x2-8,y2);
-			this.sLine(x2-8,y2,x2,y2);
-			this.dLine(x2,y2,x2-3,y2-3);
-			this.dLine(x2,y2,x2-3,y2+3);
-			this.dLine(x2-1,y2,x2-3,y2-2);
-			this.dLine(x2-1,y2,x2-3,y2+2);
+			this.sLine(x1,y1,x1+vShort,y1,pClass);
+			this.sLine(x1+vShort,y1,x1+vShort,y2,pClass);
+			this.sLine(x1+vShort,y2,x2,y2,pClass);
 		}
+
+
+		this.dLine(x2,y2,x2-(3*vDir),y2-(3*vDir),pClass);
+		this.dLine(x2,y2,x2-(3*vDir),y2+(3*vDir),pClass);
+		this.dLine(x2-(1*vDir),y2,x2-(3*vDir),y2-(2*vDir),pClass);
+		this.dLine(x2-(1*vDir),y2,x2-(3*vDir),y2+(2*vDir),pClass);
 	}
 
 	this.DrawDependencies = function ()
@@ -523,29 +602,29 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			var vList = this.getList();
 			for(var i = 0; i < vList.length; i++)
 			{
-
 				vDepend = vList[i].getDepend();
-				if(vDepend && vList[i].getVisible()==1)
+				vDependType = vList[i].getDepType();
+				var n = vDepend.length;
+
+				if(n>0 && vList[i].getVisible()==1)
 				{
-
-					var vDependStr = vDepend + '';
-					var vDepList = vDependStr.split(',');
-					var n = vDepList.length;
-
 					for(var k=0;k<n;k++)
 					{
-						var vTask = this.getArrayLocationByID(vDepList[k]);
+						vTask = this.getArrayLocationByID(vDepend[k]);
 						if (vTask)
 						{
 							if(vList[vTask].getVisible()==1)
-							this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getStartX()-1,vList[i].getStartY())
+							if(vDependType[k]=='SS')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getStartX()-1,vList[i].getStartY(),'SS','gDepSS');
+							else if(vDependType[k]=='FF')this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getEndX(),vList[i].getEndY(),'FF','gDepFF');
+							else if(vDependType[k]=='SF')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getEndX(),vList[i].getEndY(),'SF','gDepSF');
+							else if(vDependType[k]=='FS')this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getStartX()-1,vList[i].getStartY(),'FS','gDepFS');
 						}
 					}
 				}
 			}
 		}
 		// draw the current date line
-		if (vTodayPx >= 0) this.sLine(vTodayPx, 0, vTodayPx, JSGantt.findObj('chartTable').offsetHeight - 1, 'blue');
+		if (vTodayPx >= 0) this.sLine(vTodayPx, 0, vTodayPx, JSGantt.findObj('chartTable').offsetHeight - 1, 'gCurDate');
 	}
 
 
@@ -918,7 +997,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			for(i = 0; i < vTaskList.length; i++)
 			{
 				var curTaskStart = new Date(vTaskList[i].getStart().getTime());
-				var curTaskEnd =  new Date(vTaskList[i].getEnd().getTime() + (24 * 60 * 60 * 1000)); // add 1 day here to simplify calculations below
+				var curTaskEnd = vTaskList[i].getEnd();
+				if ((curTaskEnd.getTime()-(curTaskEnd.getTimezoneOffset()*60000)) % (24 * 60 * 60 * 1000) == 0) curTaskEnd = new Date(curTaskEnd.getTime() + (24 * 60 * 60 * 1000)); // add 1 day here to simplify calculations below
 
 				vTaskLeftPx = JSGantt.getOffset(vMinDate, curTaskStart, vColWidth, vFormat);
 				vTaskRightPx = JSGantt.getOffset(curTaskStart, curTaskEnd, vColWidth, vFormat);
@@ -1790,6 +1870,8 @@ JSGantt.folder= function (pID,ganttObj)
 {
 	var vList = ganttObj.getList();
 
+	ganttObj.clearDependencies(); // clear these first so slow rendering doesn't look odd
+
 	for(i = 0; i < vList.length; i++)
 	{
 		if(vList[i].getID() == pID)
@@ -1919,22 +2001,20 @@ JSGantt.taskLink = function(pRef,pWidth,pHeight)
 
 JSGantt.parseDateStr = function(pDateStr,pFormatStr)
 {
-	var vDate =new Date();
-	vDate.setTime( Date.parse(pDateStr)); // note not all browsers will pull in the time - this function should probably be updated
+	var vDate = null;
+	var vDateParts = pDateStr.split(/[^0-9]/);
+	while(vDateParts.length < 5)vDateParts.push(0);
 
 	switch(pFormatStr)
 	{
 		case 'mm/dd/yyyy':
-		var vDateParts = pDateStr.split('/');
-		vDate.setFullYear(parseInt(vDateParts[2], 10), parseInt(vDateParts[0], 10) - 1, parseInt(vDateParts[1], 10));
+		vDate = new Date(vDateParts[2], vDateParts[0] - 1, vDateParts[1], vDateParts[3], vDateParts[4]);
 		break;
 		case 'dd/mm/yyyy':
-		var vDateParts = pDateStr.split('/');
-		vDate.setFullYear(parseInt(vDateParts[2], 10), parseInt(vDateParts[1], 10) - 1, parseInt(vDateParts[0], 10));
+		vDate = new Date(vDateParts[2], vDateParts[1] - 1, vDateParts[0], vDateParts[3], vDateParts[4]);
 		break;
 		case 'yyyy-mm-dd':
-		var vDateParts = pDateStr.split('-');
-		vDate.setFullYear(parseInt(vDateParts[0], 10), parseInt(vDateParts[1], 10) - 1, parseInt(vDateParts[2], 10));
+		vDate = new Date(vDateParts[0], vDateParts[1] - 1, vDateParts[2], vDateParts[3], vDateParts[4]);
 		break;
 	}
 
