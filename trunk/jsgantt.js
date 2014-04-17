@@ -460,7 +460,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 	this.clearDependencies = function()
 	{
-		var parent = JSGantt.findObj('rightside');
+		var parent = JSGantt.findObj('gchartbody');
 		var depLine;
 		var vMaxId = vDepId;
 		for ( i=1; i<vMaxId; i++ )
@@ -480,7 +480,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 		vWid  = Math.abs(x2-x1) + 1;
 		vHgt  = Math.abs(y2-y1) + 1;
 
-		vDoc = JSGantt.findObj('rightside');
+		vDoc = JSGantt.findObj('gchartbody');
 
 		// retrieve div
 		var oDiv = document.createElement('div');
@@ -695,7 +695,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 			// DRAW the Left-side of the chart (names, resources, comp%)
 			vLeftHeader =
-			'<div class="scroll3 column" id="leftsideh">' +
+			'<div class="glistlbl gcontainercol" id="glisthead">' +
 			'<table id=taskTableh cellSpacing=0 cellPadding=0 border=0><tbody>';
 			vLeftHeader += '<tr><td class="gtasklist">&nbsp;</td><td class="gspanning gtaskname">' + this.drawSelector( "Top" ) + '</td>' ;
 			if(vShowRes ==1) vLeftHeader += '  <td class="gspanning gresource">&nbsp;</td>' ;
@@ -715,8 +715,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			if(vShowStartDate==1) vLeftHeader += '  <td class="gtaskheading gstartdate">Start Date</td>' ;
 			if(vShowEndDate==1) vLeftHeader += '  <td class="gtaskheading genddate">End Date</td>' ;
 
-			vLeftHeader += '</tr></tbody></table></div><div id="footer2"></div>';
-			vLeftTable += '<div class="scroll column" id="leftside">' +
+			vLeftHeader += '</tr></tbody></table></div><div class="glabelfooter"></div>';
+			vLeftTable += '<div class="glistgrid gcontainercol" id="glistbody">' +
 			'<table id=taskTable cellSpacing=0 cellPadding=0 border=0><tbody>';
 
 			for(i = 0; i < vTaskList.length; i++)
@@ -789,7 +789,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 			// Draw the Chart Rows
 			vRightHeader =
-			'<div class="scroll4 column" id="rightsideh">' +
+			'<div class="gchartlbl gcontainercol" id="gcharthead">' +
 			'<table id="chartTableh" cellSpacing=0 cellPadding=0 border=0>' +
 			'<tbody><tr>';
 
@@ -989,7 +989,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 			vRightHeader += vDateRowStr + '</tr></tbody></table><div class="rhscrpad" style="position: absolute; top: 0px; left:'+vTaskLeftPx+1+'px; height: 1px;"></div></div>';
 			vRightTable =
-			'<div class="scroll2 column" id="rightside">' +
+			'<div class="gchartgrid gcontainercol" id="gchartbody">' +
 			'<table id="chartTable" cellSpacing=0 cellPadding=0 border=0 style="width: '+vTaskLeftPx+'px">' +
 			'<tbody>';
 			// Draw each row
@@ -1118,7 +1118,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			}
 			if(vUseSingleCell != 1) vRightTable += vDateRowStr+'</tbody></table></div>';
 			else vRightTable += '</tbody></table></div>';
-			vMainTable = '<div id="container">' + vRightHeader + vLeftHeader + vRightTable + vLeftTable + '<div id="footer"></div></div>';
+			vMainTable = '<div class="gchartcontainer">' + vRightHeader + vLeftHeader + vRightTable + vLeftTable + '<div class="ggridfooter"></div></div>';
 
 /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
 			var tmpGenSrcDiv = document.createElement('div');
@@ -1173,7 +1173,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 					vScrollPx = JSGantt.getOffset(vMinDate, vScrollDate, vColWidth, vFormat)
 				}
-				JSGantt.findObj('rightside').scrollLeft = vScrollPx;
+				JSGantt.findObj('gchartbody').scrollLeft = vScrollPx;
 			}
 
 			if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime() ) vTodayPx = JSGantt.getOffset(vMinDate, new Date(), vColWidth, vFormat);
@@ -2324,10 +2324,10 @@ JSGantt.addFormatListeners = function(pGanttChart, pFormat, pId)
 
 JSGantt.addScrollListeners = function()
 {
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('rightside').scrollTop = JSGantt.findObj('leftside').scrollTop; }, JSGantt.findObj('leftside') );
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('leftside').scrollTop = JSGantt.findObj('rightside').scrollTop; }, JSGantt.findObj('rightside') );
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('rightsideh').scrollLeft = JSGantt.findObj('rightside').scrollLeft; }, JSGantt.findObj('rightside') );
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('rightside').scrollLeft = JSGantt.findObj('rightsideh').scrollLeft; }, JSGantt.findObj('rightsideh') );
-	JSGantt.addListener( 'resize', function () { JSGantt.findObj('rightsideh').scrollLeft = JSGantt.findObj('rightside').scrollLeft; }, window );
-	JSGantt.addListener( 'resize', function () { JSGantt.findObj('leftside').scrollTop = JSGantt.findObj('rightside').scrollTop; }, window );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('gchartbody').scrollTop = JSGantt.findObj('glistbody').scrollTop; }, JSGantt.findObj('glistbody') );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('glistbody').scrollTop = JSGantt.findObj('gchartbody').scrollTop; }, JSGantt.findObj('gchartbody') );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('gcharthead').scrollLeft = JSGantt.findObj('gchartbody').scrollLeft; }, JSGantt.findObj('gchartbody') );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('gchartbody').scrollLeft = JSGantt.findObj('gcharthead').scrollLeft; }, JSGantt.findObj('gcharthead') );
+	JSGantt.addListener( 'resize', function () { JSGantt.findObj('gcharthead').scrollLeft = JSGantt.findObj('gchartbody').scrollLeft; }, window );
+	JSGantt.addListener( 'resize', function () { JSGantt.findObj('glistbody').scrollTop = JSGantt.findObj('gchartbody').scrollTop; }, window );
 }
