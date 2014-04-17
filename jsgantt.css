@@ -137,7 +137,7 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 .gDepFS,
 .gDepSS,
 .gDepSF,
-.dDepFF				{ background-color: #ff0000; }
+.gDepFF				{ background-color: #ff0000; }
 .gCurDate			{ background-color: #0000ff; }
 
 
