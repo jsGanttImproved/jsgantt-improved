@@ -152,34 +152,34 @@ div.gtaskbarcontainer		{ z-index: 1; }
 .gTaskNotes 		{font-size: 11px; font-weight: normal; color: #323232; padding-left: 15px; padding-right: 15px; display: block;}
 
 .gantt				{ min-width: 1064px;	/* 2x LC width */ }
-#container			{ padding-left: 532px;	/* LC width */ }
-#container .column	{ position: relative; float: left; }
-#rightside			{ width: 100%; }
-#leftside			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ }
-#footer				{ clear: both; }
-#rightsideh			{ width: 100%; }
-#leftsideh			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ }
-#footer2			{ clear: both; }
+.gchartcontainer	{ padding-left: 532px;	/* LC width */ }
+.gcontainercol		{ position: relative; float: left; }
+#gcharthead			{ width: 100%; }
+#gchartbody			{ width: 100%; }
+.glabelfooter		{ clear: both; }
+#glisthead			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ }
+#glistbody			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ }
+.ggridfooter		{ clear: both; }
 
 .rhscrpad			{ width: 150px; }
 
-div.scroll	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
-div.scroll2	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0% }
-div.scroll3	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
-div.scroll4	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: hidden; }
+div.glistgrid	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
+div.gchartgrid	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0% }
+div.glistlbl	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
+div.gchartlbl	{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: hidden; }
 
 /* Old Internet Explorer version hacks */
 .gantt						{ _height: 100% }	/* otherwise the chart disappears! */
 div .gantt					{ _width: 1064px; }	/* ie6 fixed width */
-div #rightsideh,
-div #rightside				{ _width: 532px; }	/* ie6 fixed width */
-div #leftsideh,
-div #leftside {
+div #gcharthead,
+div #gchartbody				{ _width: 532px; }	/* ie6 fixed width */
+div #glisthead,
+div #glistbody {
 	*right: 0px;			/* ie7 pulls the content too far left with the negative margin */
 	_right: 532px;			/* but ie6 fixed width needs this */
 	_margin-left: -532px;	/* ie6 fixed width */
 }
-div.scroll2 { *padding-bottom: 20px; *overflow-y: hidden; } /* variable height design, no need for vertical scroll */
+div.gchartgrid { *padding-bottom: 20px; *overflow-y: hidden; } /* variable height design, no need for vertical scroll */
 td.gmajorheading div { *overflow: hidden; } /* stops resizing fixed width columns if the text is too wide */
 
 /* border transparency tricks */
