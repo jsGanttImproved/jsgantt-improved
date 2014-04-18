@@ -220,7 +220,7 @@ Putting all this information together the final code to produce the chart includ
 
  var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
 
- if( g ) {
+ if( g.getDivId() != null ) {
   g.setCaptionType('Complete');
   g.setQuarterColWidth(36);
   g.setDateTaskDisplayFormat('day dd month yyyy');
