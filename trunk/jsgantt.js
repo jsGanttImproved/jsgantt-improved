@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   _
-	  (_) / _ \ \_   \ / | / |
-	  | |/ /_\/  / /\/ | | | |
-	  | / /_\\/\/ /_   | |_| |
-	 _/ \____/\____/   |_(_)_|
+	   _   ___  _____   _   ____
+	  (_) / _ \ \_   \ / | |___ \
+	  | |/ /_\/  / /\/ | |   __) |
+	  | / /_\\/\/ /_   | |_ / __/
+	 _/ \____/\____/   |_(_)_____|
 	|__/
-	jsGanttImproved 1.1
+	jsGanttImproved 1.2
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -248,8 +248,9 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 // pFormat: (required) - used to indicate whether chart should be drawn in "day", "week", "month", or "quarter" format
 JSGantt.GanttChart =  function( pDiv, pFormat )
 {
-	var vDiv      = pDiv;
-	var vFormat   = pFormat;
+	var vDiv     = pDiv;
+	var vFormat  = pFormat;
+	var vDivId   = null;
 	var vUseFade = 1;
 	var vUseMove = 1;
 	var vUseRowHlt = 1;
@@ -371,6 +372,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 	this.setQuarterColWidth = function(pWidth){ vQuarterColWidth = pWidth };
 	this.setRowHeight = function(pHeight){ vRowHeight = pHeight };
 
+	this.getDivId = function(){ return vDivId };
 	this.getUseFade = function(){ return vUseFade };
 	this.getUseMove = function(){ return vUseMove };
 	this.getUseRowHlt = function(){ return vUseRowHlt };
@@ -425,9 +427,9 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 		for(i = 0; i < vList.length; i++)
 		{
 			vID = vList[i].getID();
-			vBarDiv = JSGantt.findObj("bardiv_"+vID);
-			vTaskDiv = JSGantt.findObj("taskbar_"+vID);
-			vParDiv  = JSGantt.findObj("childrow_"+vID);
+			vBarDiv = JSGantt.findObj(vDivId+"bardiv_"+vID);
+			vTaskDiv = JSGantt.findObj(vDivId+"taskbar_"+vID);
+			vParDiv  = JSGantt.findObj(vDivId+"childrow_"+vID);
 
 			if(vBarDiv)
 			{
@@ -460,12 +462,12 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 	this.clearDependencies = function()
 	{
-		var parent = JSGantt.findObj('gchartbody');
+		var parent = JSGantt.findObj(vDivId+'gchartbody');
 		var depLine;
 		var vMaxId = vDepId;
 		for ( i=1; i<vMaxId; i++ )
 		{
-			depLine = JSGantt.findObj("line"+i);
+			depLine = JSGantt.findObj(vDivId+"line"+i);
 			if (depLine){ parent.removeChild(depLine); }
 		}
 		vDepId = 1;
@@ -480,23 +482,17 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 		vWid  = Math.abs(x2-x1) + 1;
 		vHgt  = Math.abs(y2-y1) + 1;
 
-		vDoc = JSGantt.findObj('gchartbody');
+		vDoc = JSGantt.findObj(vDivId+'gchartbody');
 
 		// retrieve div
 		var oDiv = document.createElement('div');
 
-		oDiv.id = "line"+vDepId++;
+		oDiv.id = vDivId+"line"+vDepId++;
 		oDiv.style.position = "absolute";
-		oDiv.style.margin = "0px";
-		oDiv.style.padding = "0px";
 		oDiv.style.overflow = "hidden";
-		oDiv.style.border = "0px";
 
 		// set attributes
 		oDiv.style.zIndex = 0;
-		if (pClass)	oDiv.className=pClass;
-		else oDiv.style.backgroundColor = '#000000';
-
 		oDiv.style.left = vLeft + "px";
 		oDiv.style.top = vTop + "px";
 		oDiv.style.width = vWid + "px";
@@ -504,12 +500,17 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 		oDiv.style.visibility = "visible";
 
+		if (vWid==1) oDiv.className= "glinev";
+		else oDiv.className= "glineh";
+
+		if (pClass) oDiv.className+= " "+pClass;
+
 		vDoc.appendChild(oDiv);
 
 	}
 
 
-	// dLine: Draw a diaganol line (calc line x,y paisrs and draw multiple one-by-one sLines)
+	// dLine: Draw a diagonal line (calc line x,y pairs and draw multiple one-by-one sLines)
 	this.dLine = function(x1,y1,x2,y2,pClass)
 	{
 
@@ -624,7 +625,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			}
 		}
 		// draw the current date line
-		if (vTodayPx >= 0) this.sLine(vTodayPx, 0, vTodayPx, JSGantt.findObj('chartTable').offsetHeight - 1, 'gCurDate');
+		if (vTodayPx >= 0) this.sLine(vTodayPx, 0, vTodayPx, JSGantt.findObj(vDivId+'chartTable').offsetHeight - 1, 'gCurDate');
 	}
 
 
@@ -695,8 +696,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 			// DRAW the Left-side of the chart (names, resources, comp%)
 			vLeftHeader =
-			'<div class="glistlbl gcontainercol" id="glisthead">' +
-			'<table id=taskTableh cellSpacing=0 cellPadding=0 border=0><tbody>';
+			'<div class="glistlbl gcontainercol" id="'+vDivId+'glisthead">' +
+			'<table class="gtasktableh" cellSpacing=0 cellPadding=0 border=0><tbody>';
 			vLeftHeader += '<tr><td class="gtasklist">&nbsp;</td><td class="gspanning gtaskname">' + this.drawSelector( "Top" ) + '</td>' ;
 			if(vShowRes ==1) vLeftHeader += '  <td class="gspanning gresource">&nbsp;</td>' ;
 			if(vShowDur ==1) vLeftHeader += '  <td class="gspanning gduration">&nbsp;</td>' ;
@@ -716,8 +717,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			if(vShowEndDate==1) vLeftHeader += '  <td class="gtaskheading genddate">End Date</td>' ;
 
 			vLeftHeader += '</tr></tbody></table></div><div class="glabelfooter"></div>';
-			vLeftTable += '<div class="glistgrid gcontainercol" id="glistbody">' +
-			'<table id=taskTable cellSpacing=0 cellPadding=0 border=0><tbody>';
+			vLeftTable += '<div class="glistgrid gcontainercol" id="'+vDivId+'glistbody">' +
+			'<table class="gtasktable" cellSpacing=0 cellPadding=0 border=0><tbody>';
 
 			for(i = 0; i < vTaskList.length; i++)
 			{
@@ -735,13 +736,13 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 				vID = vTaskList[i].getID();
 
 				if(vTaskList[i].getVisible() == 0)
-					vLeftTable += '<tr id=child_' + vID + ' class="gname ' + vBGColor + '" style="display:none">' ;
+					vLeftTable += '<tr id="'+vDivId+'child_' + vID + '" class="gname ' + vBGColor + '" style="display:none">' ;
 				else
-					vLeftTable += '<tr id=child_' + vID + ' class="gname ' + vBGColor + '" >' ;
+					vLeftTable += '<tr id="'+vDivId+'child_' + vID + '" class="gname ' + vBGColor + '" >' ;
 
 				vLeftTable +=
 				'  <td class="gtasklist">&nbsp;</td>' +
-				'  <td class="gtaskname">';
+				'  <td class="gtaskname"><div>';
 
 				for(j=1; j<vTaskList[i].getLevel(); j++)
 				{
@@ -750,7 +751,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 				if( vTaskList[i].getGroup())
 				{
-					vLeftTable += '<span id="group_' + vID + '" class="gfoldercollapse">'+(( vTaskList[i].getOpen() == 1)?'-':'+')+'</span>' ;
+					vLeftTable += '<span id="'+vDivId+'group_' + vID + '" class="gfoldercollapse">'+(( vTaskList[i].getOpen() == 1)?'-':'+')+'</span>' ;
 				}
 				else
 				{
@@ -758,13 +759,13 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 				}
 
 				vLeftTable +=
-				' ' + vTaskList[i].getName() + '</td>' ;
+				' ' + vTaskList[i].getName() + '</div></td>' ;
 
-				if(vShowRes ==1) vLeftTable += '  <td class="gresource">' + vTaskList[i].getResource() + '</td>' ;
-				if(vShowDur ==1) vLeftTable += '  <td class="gduration">' + vTaskList[i].getDuration(vFormat) + '</td>' ;
-				if(vShowComp==1) vLeftTable += '  <td class="gpccomplete">' + vTaskList[i].getCompStr()  + '</td>' ;
-				if(vShowStartDate==1) vLeftTable += '  <td class="gstartdate">' + JSGantt.formatDateStr( vTaskList[i].getStart(), vDateTaskTableDisplayFormat) + '</td>' ;
-				if(vShowEndDate==1) vLeftTable += '  <td class="genddate">' + JSGantt.formatDateStr( vTaskList[i].getEnd(), vDateTaskTableDisplayFormat) + '</td>' ;
+				if(vShowRes ==1) vLeftTable += '  <td class="gresource"><div>' + vTaskList[i].getResource() + '</div></td>' ;
+				if(vShowDur ==1) vLeftTable += '  <td class="gduration"><div>' + vTaskList[i].getDuration(vFormat) + '</div></td>' ;
+				if(vShowComp==1) vLeftTable += '  <td class="gpccomplete"><div>' + vTaskList[i].getCompStr()  + '</div></td>' ;
+				if(vShowStartDate==1) vLeftTable += '  <td class="gstartdate"><div>' + JSGantt.formatDateStr( vTaskList[i].getStart(), vDateTaskTableDisplayFormat) + '</div></td>' ;
+				if(vShowEndDate==1) vLeftTable += '  <td class="genddate"><div>' + JSGantt.formatDateStr( vTaskList[i].getEnd(), vDateTaskTableDisplayFormat) + '</div></td>' ;
 
 				vLeftTable += '</tr>';
 
@@ -789,8 +790,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 			// Draw the Chart Rows
 			vRightHeader =
-			'<div class="gchartlbl gcontainercol" id="gcharthead">' +
-			'<table id="chartTableh" cellSpacing=0 cellPadding=0 border=0>' +
+			'<div class="gchartlbl gcontainercol" id="'+vDivId+'gcharthead">' +
+			'<table class="gcharttableh" id="'+vDivId+'chartTableh" cellSpacing=0 cellPadding=0 border=0>' +
 			'<tbody><tr>';
 
 			vTmpDate.setFullYear(vMinDate.getFullYear(), vMinDate.getMonth(), vMinDate.getDate());
@@ -989,8 +990,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 			vRightHeader += vDateRowStr + '</tr></tbody></table><div class="rhscrpad" style="position: absolute; top: 0px; left:'+vTaskLeftPx+1+'px; height: 1px;"></div></div>';
 			vRightTable =
-			'<div class="gchartgrid gcontainercol" id="gchartbody">' +
-			'<table id="chartTable" cellSpacing=0 cellPadding=0 border=0 style="width: '+vTaskLeftPx+'px">' +
+			'<div class="gchartgrid gcontainercol" id="'+vDivId+'gchartbody">' +
+			'<table class="gcharttable" id="'+vDivId+'chartTable" cellSpacing=0 cellPadding=0 border=0 style="width: '+vTaskLeftPx+'px">' +
 			'<tbody>';
 			// Draw each row
 
@@ -1010,10 +1011,10 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 				if( vTaskList[i].getMile())
 				{
 
-					vRightTable += '<tr id=childrow_' + vID + ((vTaskList[i].getVisible() == 0)? ' style="display:none;"' : '') + ' class="gmileitem gmile'+vFormat+'">' + vFirstCellItemRowStr;
+					vRightTable += '<tr id="'+vDivId+'childrow_' + vID + ((vTaskList[i].getVisible() == 0)? '" style="display:none;"' : '"') + ' class="gmileitem gmile'+vFormat+'">' + vFirstCellItemRowStr;
 					vRightTable +=
-					'<div id="bardiv_' + vID + '" class="gtaskbarcontainer" style="position:absolute; top:-2px; width:12px; left:' + (vTaskLeftPx - 6) + 'px;" >' +
-					  '<div id="taskbar_' + vID + '" class="' + vTaskList[i].getClass() +'" style="width:12px;" >';
+					'<div id="'+vDivId+'bardiv_' + vID + '" class="gtaskbarcontainer" style="position:absolute; top:-2px; width:12px; left:' + (vTaskLeftPx - 6) + 'px;" >' +
+					  '<div id="'+vDivId+'taskbar_' + vID + '" class="' + vTaskList[i].getClass() +'" style="width:12px;" >';
 
 					if(vTaskList[i].getCompVal() < 100)
 						vRightTable += '&loz;</div>' ;
@@ -1034,7 +1035,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 						vRightTable += '<div class="gmilecaption" style="position:absolute; width:120px; left:12px">' + vCaptionStr + '</div>';
 					}
 					// Add Task Info div for tooltip
-					vRightTable += '<div style="display: none;" id="tttaskbar_' + vID + '"><div id="ttcomplete_' + vID + '">' + this.createTaskInfo(vTaskList[i]) + '</div></div>'
+					vRightTable += '<div style="display: none;" id="tt'+vDivId+'taskbar_' + vID + '"><div id="tt'+vDivId+'complete_' + vID + '">' + this.createTaskInfo(vTaskList[i]) + '</div></div>'
 					vRightTable += '</div>';
 
 					vRightTable += vItemRowStr + '</tr>';
@@ -1051,11 +1052,11 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 					{
 						vTaskWidth = (vTaskWidth > vMinGpLen && vTaskWidth < vMinGpLen*2)? vMinGpLen*2 : vTaskWidth; // Expand to show two end points
 						vTaskWidth = (vTaskWidth < vMinGpLen)? vMinGpLen : vTaskWidth; // expand to show one end point
-						vRightTable += '<tr id=childrow_' + vID + ((vTaskList[i].getVisible() == 0)? ' style="display:none;"' : '') + ' class="ggroupitem ggroup'+vFormat+'">'  + vFirstCellItemRowStr;
+						vRightTable += '<tr id="'+vDivId+'childrow_' + vID + ((vTaskList[i].getVisible() == 0)? '" style="display:none;"' : '"') + ' class="ggroupitem ggroup'+vFormat+'">'  + vFirstCellItemRowStr;
 						vRightTable +=
-						'<div id="bardiv_' + vID + '" class="gtaskbarcontainer" style="position:absolute; top:2px; left:' + vTaskLeftPx + 'px; width:' + vTaskWidth + 'px;">' +
-						  '<div id="taskbar_' + vID + '" class="' + vTaskList[i].getClass() +'" style="width:' + vTaskWidth + 'px;">' +
-						    '<div id="complete_' + vID + '" class="' + vTaskList[i].getClass() +'complete" style="width:' + vTaskList[i].getCompStr() + '; ">' +
+						'<div id="'+vDivId+'bardiv_' + vID + '" class="gtaskbarcontainer" style="position:absolute; top:2px; left:' + vTaskLeftPx + 'px; width:' + vTaskWidth + 'px;">' +
+						  '<div id="'+vDivId+'taskbar_' + vID + '" class="' + vTaskList[i].getClass() +'" style="width:' + vTaskWidth + 'px;">' +
+						    '<div id="'+vDivId+'complete_' + vID + '" class="' + vTaskList[i].getClass() +'complete" style="width:' + vTaskList[i].getCompStr() + '; ">' +
 						    '</div>' +
 						  '</div>' +
 						  '<div class="' + vTaskList[i].getClass() +'endpointleft" style="float:left;"></div>';
@@ -1074,7 +1075,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 							vRightTable += '<div class="ggroupcaption" style="position:absolute; width:120px; right: -126px">' + vCaptionStr + '</div>';
 						}
 						// Add Task Info div for tooltip
-						vRightTable += '<div style="display: none;" id="tttaskbar_' + vID + '"><div id="ttcomplete_' + vID + '">' + this.createTaskInfo(vTaskList[i]) + '</div></div>'
+						vRightTable += '<div style="display: none;" id="tt'+vDivId+'taskbar_' + vID + '"><div id="tt'+vDivId+'complete_' + vID + '">' + this.createTaskInfo(vTaskList[i]) + '</div></div>'
 						vRightTable += '</div>' ;
 
 						vRightTable += vItemRowStr + '</tr>';
@@ -1083,15 +1084,15 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 					else
 					{
 
-						vDivStr = '<tr id=childrow_' + vID + ((vTaskList[i].getVisible() == 0)? ' style=" display:none;"' : '') + ' class="glineitem gitem'+vFormat+'">'  + vFirstCellItemRowStr;
+						vDivStr = '<tr id="'+vDivId+'childrow_' + vID + ((vTaskList[i].getVisible() == 0)? '" style=" display:none;"' : '"') + ' class="glineitem gitem'+vFormat+'">'  + vFirstCellItemRowStr;
 						vRightTable += vDivStr;
 
 						vTaskWidth = (vTaskWidth <=0)? 1 : vTaskWidth;
 						// Draw Task Bar  which has colored bar div, and opaque completion div
 						vRightTable +=
-						'<div id="bardiv_' + vID + '" class="gtaskbarcontainer" style="position:absolute; top:1px; left:' + vTaskLeftPx + 'px; width:' + vTaskWidth + 'px;">' +
-						  '<div id=taskbar_' + vID + ' class="' + vTaskList[i].getClass() +'" style="width:' + vTaskWidth + 'px;">' +
-						    '<div id="complete_' + vID + '" class="' + vTaskList[i].getClass() +'complete" style="width:' + vTaskList[i].getCompStr() + ';">' +
+						'<div id="'+vDivId+'bardiv_' + vID + '" class="gtaskbarcontainer" style="position:absolute; top:1px; left:' + vTaskLeftPx + 'px; width:' + vTaskWidth + 'px;">' +
+						  '<div id="'+vDivId+'taskbar_' + vID + '" class="' + vTaskList[i].getClass() +'" style="width:' + vTaskWidth + 'px;">' +
+						    '<div id="'+vDivId+'complete_' + vID + '" class="' + vTaskList[i].getClass() +'complete" style="width:' + vTaskList[i].getCompStr() + ';">' +
 						    '</div>' +
 						  '</div>';
 
@@ -1108,7 +1109,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 							vRightTable += '<div class="gcaption" style="position:absolute; width:120px; right: -126px">' + vCaptionStr + '</div>';
 						}
 						// Add Task Info div for tooltip
-						vRightTable += '<div style="display: none;" id="tttaskbar_' + vID + '"><div id="ttcomplete_' + vID + '">' + this.createTaskInfo(vTaskList[i]) + '</div></div>'
+						vRightTable += '<div style="display: none;" id="tt'+vDivId+'taskbar_' + vID + '"><div id="tt'+vDivId+'complete_' + vID + '">' + this.createTaskInfo(vTaskList[i]) + '</div></div>'
 						vRightTable += '</div>' ;
 
 						vRightTable += vItemRowStr + '</tr>';
@@ -1132,10 +1133,10 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			for(i = 0; i < vTaskList.length; i++)
 			{
 				vID = vTaskList[i].getID();
-				vChild = JSGantt.findObj("child_"+vID);
-				vTaskDiv = JSGantt.findObj("taskbar_"+vID);
-				vParDiv  = JSGantt.findObj("childrow_"+vID);
-				if(vTaskList[i].getGroup())vGroup  = JSGantt.findObj("group_"+vID);
+				vChild = JSGantt.findObj(vDivId+"child_"+vID);
+				vTaskDiv = JSGantt.findObj(vDivId+"taskbar_"+vID);
+				vParDiv  = JSGantt.findObj(vDivId+"childrow_"+vID);
+				if(vTaskList[i].getGroup())vGroup  = JSGantt.findObj(vDivId+"group_"+vID);
 
 				if(vTaskDiv) JSGantt.addTootltipListeners( this, vTaskDiv );
 				if(vChild && vParDiv) JSGantt.addThisRowListeners( this, vChild, vParDiv );
@@ -1147,12 +1148,12 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 				for ( var j = 0; j < vFormatArr.length; j++ )
 				{
 					var vSelectorDisplayFormat = vFormatArr[j].toLowerCase();
-					var vSelectorId = "format" + vFormatArr[j] + vShowSelector[i];
+					var vSelectorId = vDivId+"format" + vFormatArr[j] + vShowSelector[i];
 					JSGantt.addFormatListeners(this, vSelectorDisplayFormat, vSelectorId);
 				}
 			}
 
-			JSGantt.addScrollListeners();
+			JSGantt.addScrollListeners(this);
 
 			// now check if we are actually scrolling the pane
 			if ( vScrollTo != '' )
@@ -1173,7 +1174,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 					vScrollPx = JSGantt.getOffset(vMinDate, vScrollDate, vColWidth, vFormat)
 				}
-				JSGantt.findObj('gchartbody').scrollLeft = vScrollPx;
+				JSGantt.findObj(vDivId+'gchartbody').scrollLeft = vScrollPx;
 			}
 
 			if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime() ) vTodayPx = JSGantt.getOffset(vMinDate, new Date(), vColWidth, vFormat);
@@ -1217,29 +1218,29 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 
 			if (vFormatArr.join().toLowerCase().indexOf("day")!=-1)
 			{
-				if (vFormat=='day') vOutput += '<span id="formatDay' + pPos + '" class="gformlabel gselected">Day&nbsp;</span> ';
-				else                vOutput += '<span id="formatDay' + pPos + '" class="gformlabel">Day&nbsp;</span> ';
+				if (vFormat=='day') vOutput += '<span id="'+vDivId+'formatDay' + pPos + '" class="gformlabel gselected">Day&nbsp;</span> ';
+				else                vOutput += '<span id="'+vDivId+'formatDay' + pPos + '" class="gformlabel">Day&nbsp;</span> ';
 			}
 
 			if (vFormatArr.join().toLowerCase().indexOf("week")!=-1)
 			{
-				if (vFormat=='week') vOutput += '<span id="formatWeek' + pPos + '" class="gformlabel gselected">Week</span> ';
-				else                 vOutput += '<span id="formatWeek' + pPos + '" class="gformlabel">Week</span> ';
+				if (vFormat=='week') vOutput += '<span id="'+vDivId+'formatWeek' + pPos + '" class="gformlabel gselected">Week</span> ';
+				else                 vOutput += '<span id="'+vDivId+'formatWeek' + pPos + '" class="gformlabel">Week</span> ';
 			}
 
 			if (vFormatArr.join().toLowerCase().indexOf("month")!=-1)
 			{
-				if (vFormat=='month') vOutput += '<span id="formatMonth' + pPos + '" class="gformlabel gselected">Month</span> ';
-				else                  vOutput += '<span id="formatMonth' + pPos + '" class="gformlabel">Month</span> ';
+				if (vFormat=='month') vOutput += '<span id="'+vDivId+'formatMonth' + pPos + '" class="gformlabel gselected">Month</span> ';
+				else                  vOutput += '<span id="'+vDivId+'formatMonth' + pPos + '" class="gformlabel">Month</span> ';
 			}
 
 			if (vFormatArr.join().toLowerCase().indexOf("quarter")!=-1)
 			{
-				if (vFormat=='quarter') vOutput += '<span id="formatQuarter' + pPos + '" class="gformlabel gselected">Quarter</span>&nbsp;';
-				else                    vOutput += '<span id="formatQuarter' + pPos + '" class="gformlabel">Quarter</span> ';
+				if (vFormat=='quarter') vOutput += '<span id="'+vDivId+'formatQuarter' + pPos + '" class="gformlabel gselected">Quarter</span>&nbsp;';
+				else                    vOutput += '<span id="'+vDivId+'formatQuarter' + pPos + '" class="gformlabel">Quarter</span> ';
 			}
 
-			vOutput += '';
+			vOutput += '</div>';
 		}
 		else
 		{
@@ -1264,6 +1265,7 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 		return vTaskInfoBox;
 	}
 
+	if (vDiv && vDiv.nodeName.toLowerCase() == 'div') vDivId = vDiv.id;
 } //GanttChart
 JSGantt.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
 	var vCurTopBuf = 3;
@@ -1341,7 +1343,7 @@ JSGantt.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
 }
 
 JSGantt.showToolTip = function(pGanttChartObj, e, pContents, pWidth, pContType, pTimer){
-	var vDivId = 'JSGanttToolTip';
+	var vTtDivId = pGanttChartObj.getDivId() + 'JSGanttToolTip';
 	var vMaxW = 500;
 	var vMaxAlpha = 100;
 
@@ -1349,9 +1351,11 @@ JSGantt.showToolTip = function(pGanttChartObj, e, pContents, pWidth, pContType, 
 	{
 		if(pGanttChartObj.vTool == null){
 			pGanttChartObj.vTool = document.createElement('div');
-			pGanttChartObj.vTool.setAttribute('id',vDivId);
+			pGanttChartObj.vTool.id = vTtDivId;
+			pGanttChartObj.vTool.className = 'JSGanttToolTip';
 			pGanttChartObj.vTool.vToolCont = document.createElement('div');
-			pGanttChartObj.vTool.vToolCont.setAttribute('id',vDivId + 'cont');
+			pGanttChartObj.vTool.vToolCont.id = vTtDivId + 'cont';
+			pGanttChartObj.vTool.vToolCont.className = 'JSGanttToolTipcont';
 			pGanttChartObj.vTool.vToolCont.setAttribute('showing','');
 			pGanttChartObj.vTool.appendChild(pGanttChartObj.vTool.vToolCont);
 			document.body.appendChild(pGanttChartObj.vTool);
@@ -1822,7 +1826,7 @@ JSGantt.getMaxDate = function (pList, pFormat)
 
 
 
-// This function finds the document id of the specified objec
+// This function finds the document id of the specified object
 
 JSGantt.findObj = function (theObj, theDoc)
 {
@@ -1830,25 +1834,7 @@ JSGantt.findObj = function (theObj, theDoc)
 
 	if(!theDoc) theDoc = document;
 
-	if( (p = theObj.indexOf("?")) > 0 && parent.frames.length)
-	{
-		theDoc = parent.frames[theObj.substring(p+1)].document;
-		theObj = theObj.substring(0,p);
-	}
-
-	if(!(foundObj = theDoc[theObj]) && theDoc.all) foundObj = theDoc.all[theObj];
-
-	for (i=0; !foundObj && i < theDoc.forms.length; i++)
-	{
-		foundObj = theDoc.forms[i][theObj];
-	}
-
-	for(i=0; !foundObj && theDoc.layers && i < theDoc.layers.length; i++)
-	{
-		foundObj = JSGantt.findObj(theObj,theDoc.layers[i].document);
-	}
-
-	if(!foundObj && document.getElementById) foundObj = document.getElementById(theObj);
+	if(document.getElementById) foundObj = document.getElementById(theObj);
 
 	return foundObj;
 }
@@ -1869,6 +1855,7 @@ JSGantt.changeFormat = function(pFormat,ganttObj)
 JSGantt.folder= function (pID,ganttObj)
 {
 	var vList = ganttObj.getList();
+	var vDivId = ganttObj.getDivId();
 
 	ganttObj.clearDependencies(); // clear these first so slow rendering doesn't look odd
 
@@ -1882,9 +1869,9 @@ JSGantt.folder= function (pID,ganttObj)
 				JSGantt.hide(pID,ganttObj);
 
 				if (JSGantt.isIE())
-					JSGantt.findObj('group_'+pID).innerText = '+';
+					JSGantt.findObj(vDivId+'group_'+pID).innerText = '+';
 				else
-					JSGantt.findObj('group_'+pID).textContent = '+';
+					JSGantt.findObj(vDivId+'group_'+pID).textContent = '+';
 			}
 			else
 			{
@@ -1893,9 +1880,9 @@ JSGantt.folder= function (pID,ganttObj)
 				JSGantt.show(pID, 1, ganttObj);
 
 				if (JSGantt.isIE())
-					JSGantt.findObj('group_'+pID).innerText = '-';
+					JSGantt.findObj(vDivId+'group_'+pID).innerText = '-';
 				else
-					JSGantt.findObj('group_'+pID).textContent = '-';
+					JSGantt.findObj(vDivId+'group_'+pID).textContent = '-';
 			}
 		}
 	}
@@ -1906,6 +1893,7 @@ JSGantt.hide= function (pID,ganttObj)
 {
 	var vList = ganttObj.getList();
 	var vID   = 0;
+	var vDivId = ganttObj.getDivId();
 
 	for(var i = 0; i < vList.length; i++)
 	{
@@ -1914,8 +1902,8 @@ JSGantt.hide= function (pID,ganttObj)
 			vID = vList[i].getID();
 			// it's unlikely but if the task list has been updated since
 			// the chart was drawn some of the rows may not exist
-			if (JSGantt.findObj('child_' + vID)) JSGantt.findObj('child_' + vID).style.display = "none";
-			if (JSGantt.findObj('childrow_' + vID)) JSGantt.findObj('childrow_' + vID).style.display = "none";
+			if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_' + vID).style.display = "none";
+			if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_' + vID).style.display = "none";
 			vList[i].setVisible(0);
 			if(vList[i].getGroup() == 1)
 			JSGantt.hide(vID,ganttObj);
@@ -1928,6 +1916,7 @@ JSGantt.show =  function (pID, pTop, ganttObj)
 {
 	var vList = ganttObj.getList();
 	var vID   = 0;
+	var vDivId = ganttObj.getDivId();
 
 	for(var i = 0; i < vList.length; i++)
 	{
@@ -1939,22 +1928,22 @@ JSGantt.show =  function (pID, pTop, ganttObj)
 				if (JSGantt.isIE())
 				{ // IE;
 
-					if( JSGantt.findObj('group_'+pID).innerText == '+')
+					if( JSGantt.findObj(vDivId+'group_'+pID).innerText == '+')
 					{
 						// it's unlikely but if the task list has been updated since
 						// the chart was drawn some of the rows may not exist
-						if (JSGantt.findObj('child_' + vID)) JSGantt.findObj('child_'+vID).style.display = "";
-						if (JSGantt.findObj('childrow_' + vID)) JSGantt.findObj('childrow_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
 						vList[i].setVisible(1);
 					}
 				}
 				else
 				{
 
-					if( JSGantt.findObj('group_'+pID).textContent == '+')
+					if( JSGantt.findObj(vDivId+'group_'+pID).textContent == '+')
 					{
-						if (JSGantt.findObj('child_' + vID)) JSGantt.findObj('child_'+vID).style.display = "";
-						if (JSGantt.findObj('childrow_' + vID)) JSGantt.findObj('childrow_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
 						vList[i].setVisible(1);
 					}
 				}
@@ -1964,20 +1953,20 @@ JSGantt.show =  function (pID, pTop, ganttObj)
 
 				if (JSGantt.isIE())
 				{ // IE;
-					if( JSGantt.findObj('group_'+pID).innerText == '-')
+					if( JSGantt.findObj(vDivId+'group_'+pID).innerText == '-')
 					{
-						if (JSGantt.findObj('child_' + vID)) JSGantt.findObj('child_'+vID).style.display = "";
-						if (JSGantt.findObj('childrow_' + vID)) JSGantt.findObj('childrow_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
 						vList[i].setVisible(1);
 					}
 				}
 				else
 				{
 
-					if( JSGantt.findObj('group_'+pID).textContent == '-')
+					if( JSGantt.findObj(vDivId+'group_'+pID).textContent == '-')
 					{
-						if (JSGantt.findObj('child_' + vID)) JSGantt.findObj('child_'+vID).style.display = "";
-						if (JSGantt.findObj('childrow_' + vID)) JSGantt.findObj('childrow_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
+						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
 						vList[i].setVisible(1);
 					}
 				}
@@ -2322,12 +2311,12 @@ JSGantt.addFormatListeners = function(pGanttChart, pFormat, pId)
 	JSGantt.addListener( 'click', function () { JSGantt.changeFormat(pFormat, pGanttChart); }, JSGantt.findObj(pId) );
 }
 
-JSGantt.addScrollListeners = function()
+JSGantt.addScrollListeners = function(pGanttChart)
 {
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('gchartbody').scrollTop = JSGantt.findObj('glistbody').scrollTop; }, JSGantt.findObj('glistbody') );
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('glistbody').scrollTop = JSGantt.findObj('gchartbody').scrollTop; }, JSGantt.findObj('gchartbody') );
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('gcharthead').scrollLeft = JSGantt.findObj('gchartbody').scrollLeft; }, JSGantt.findObj('gchartbody') );
-	JSGantt.addListener( 'scroll', function () { JSGantt.findObj('gchartbody').scrollLeft = JSGantt.findObj('gcharthead').scrollLeft; }, JSGantt.findObj('gcharthead') );
-	JSGantt.addListener( 'resize', function () { JSGantt.findObj('gcharthead').scrollLeft = JSGantt.findObj('gchartbody').scrollLeft; }, window );
-	JSGantt.addListener( 'resize', function () { JSGantt.findObj('glistbody').scrollTop = JSGantt.findObj('gchartbody').scrollTop; }, window );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj(pGanttChart.getDivId()+'gchartbody').scrollTop = JSGantt.findObj(pGanttChart.getDivId()+'glistbody').scrollTop; }, JSGantt.findObj(pGanttChart.getDivId()+'glistbody') );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj(pGanttChart.getDivId()+'glistbody').scrollTop = JSGantt.findObj(pGanttChart.getDivId()+'gchartbody').scrollTop; }, JSGantt.findObj(pGanttChart.getDivId()+'gchartbody') );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj(pGanttChart.getDivId()+'gcharthead').scrollLeft = JSGantt.findObj(pGanttChart.getDivId()+'gchartbody').scrollLeft; }, JSGantt.findObj(pGanttChart.getDivId()+'gchartbody') );
+	JSGantt.addListener( 'scroll', function () { JSGantt.findObj(pGanttChart.getDivId()+'gchartbody').scrollLeft = JSGantt.findObj(pGanttChart.getDivId()+'gcharthead').scrollLeft; }, JSGantt.findObj(pGanttChart.getDivId()+'gcharthead') );
+	JSGantt.addListener( 'resize', function () { JSGantt.findObj(pGanttChart.getDivId()+'gcharthead').scrollLeft = JSGantt.findObj(pGanttChart.getDivId()+'gchartbody').scrollLeft; }, window );
+	JSGantt.addListener( 'resize', function () { JSGantt.findObj(pGanttChart.getDivId()+'glistbody').scrollTop = JSGantt.findObj(pGanttChart.getDivId()+'gchartbody').scrollTop; }, window );
 }

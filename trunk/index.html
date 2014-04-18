@@ -69,7 +69,7 @@ dd { margin: 0 0 0 70px;
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.1</div>
+<div class="header">jsGanttImproved - 1.2</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -90,7 +90,7 @@ dd { margin: 0 0 0 70px;
 <script type="text/javascript">
 
 	var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day' );
-	if( g ) {
+	if( g.getDivId() != null ) {
 		g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
 		g.setQuarterColWidth(36);
 		g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
@@ -156,11 +156,46 @@ dd { margin: 0 0 0 70px;
 <br/>
 <h3>Current Issues:</h3>
 <ol>
-<li>Currently only one gantt chart is allowed per page. </li>
 <li>If the browser is viewing the page at anything other than 100% zoom then bars may not be sized or positioned correctly. </li>
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.2:</h4>
+<ul>
+<li>Multiple gantt charts per page are now supported</li>
+<li>Charts are now more printer friendly</li>
+</ul>
+<blockquote><p>Both these updates required changes to existing element IDs and style classes.  Custom stylesheets will most likely need to be updated.
+</p><p>
+All chart element ids are now prefixed with the id of the master DIV containing the chart.  As a result the default stylesheet has been updated to no longer uses any element ids to apply styles.
+</p><p>
+The following classes have been renamed:
+<pre>
+.column -> .gcontainercol
+.scroll -> .glistgrid
+.scroll2 -> .gchartgrid
+.scroll3 -> .glistlbl
+.scroll4 -> .gchartlbl
+</pre>
+</p><p>
+Rules using the following ids have been converted to use these classes:
+<pre>
+#JSGanttToolTip -> .JSGanttToolTip
+#JSGanttToolTipcont -> .JSGanttToolTipcont
+#chartTable -> .gcharttable
+#container -> .gchartcontainer
+#footer -> .ggridfooter
+#footer2 -> .glabelfooter
+#leftside -> .glistgrid (rules combined with old .scroll class)
+#leftsideh -> .glistlbl (rules combined with old .scroll3 class)
+#rightside -> .gchartgrid (rules combined with old .scroll2 class)
+#rightsideh -> .gchartlbl (rules combined with old .scroll4 class)
+#taskTable -> .gtasktable
+#taskTableh -> .gtasktableh
+</pre>
+</p><p>
+Dependency lines have been altered to use a 1px border rather than background color and the default styles have been updated to reflect this.  Two new classes have been defined, .glineh and .glinev for horizontal and vertical lines respectively (1x1 pixel lines are considered to be vertical).
+</p></blockquote>
 <h4>v1.1:</h4>
 <ul>
 <li>Added support for additional dependency types</li>
@@ -456,7 +491,7 @@ g.setUseSingleCell(1); // Use one cell per table row.  Helps with rendering perf
 
  var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
 
- if( g ) {
+ if( g.getDivId() != null ) {
   g.setCaptionType('Complete');
   g.setQuarterColWidth(36);
   g.setDateTaskDisplayFormat('day dd month yyyy');
