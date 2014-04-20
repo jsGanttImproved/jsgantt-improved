@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   ____
-	  (_) / _ \ \_   \ / | |___ \
-	  | |/ /_\/  / /\/ | |   __) |
-	  | / /_\\/\/ /_   | |_ / __/
-	 _/ \____/\____/   |_(_)_____|
+	   _   ___  _____   _   ____    _
+	  (_) / _ \ \_   \ / | |___ \  / |
+	  | |/ /_\/  / /\/ | |   __) | | |
+	  | / /_\\/\/ /_   | |_ / __/ _| |
+	 _/ \____/\____/   |_(_)_____(_)_|
 	|__/
-	jsGanttImproved 1.2
+	jsGanttImproved 1.2.1
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -60,7 +60,7 @@
 	* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 	* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 	* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-	* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TOR
+	* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 	* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
@@ -83,40 +83,41 @@ JSGantt.isIE = function ()
 JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes)
 {
 
-    var vID    = parseInt(document.createTextNode(pID).data);
-    var vName  = document.createTextNode(pName).data;
-    var vStart = new Date(0);
-    var vEnd   = new Date(0);
-    var vClass = document.createTextNode(pClass).data;
-    var vLink  = document.createTextNode(pLink).data;
-    var vMile  = parseInt(document.createTextNode(pMile).data);
-    var vRes   = document.createTextNode(pRes).data;
-    var vComp  = parseInt(document.createTextNode(pComp).data);
-    var vGroup = parseInt(document.createTextNode(pGroup).data);
-    var vParent = document.createTextNode(pParent).data;
-    var vOpen   = parseInt(document.createTextNode(pOpen).data);
-    var vDepend = new Array();
-    var vDependType = new Array();
-    var vCaption = document.createTextNode(pCaption).data;
-    var vDuration = '';
-    var vLevel = 0;
-    var vNumKid = 0;
-    var vVisible = 1;
-    var vSortIdx = 0;
-    var vToDelete = false;
-    var x1, y1, x2, y2;
-    var vNotes;
+	var vID    = parseInt(document.createTextNode(pID).data);
+	var vName  = document.createTextNode(pName).data;
+	var vStart = new Date(0);
+	var vEnd   = new Date(0);
+	var vClass = document.createTextNode(pClass).data;
+	var vLink  = document.createTextNode(pLink).data;
+	var vMile  = parseInt(document.createTextNode(pMile).data);
+	var vRes   = document.createTextNode(pRes).data;
+	var vComp  = parseInt(document.createTextNode(pComp).data);
+	var vGroup = parseInt(document.createTextNode(pGroup).data);
+	var vParent = document.createTextNode(pParent).data;
+	var vOpen   = parseInt(document.createTextNode(pOpen).data);
+	var vDepend = new Array();
+	var vDependType = new Array();
+	var vCaption = document.createTextNode(pCaption).data;
+	var vDuration = '';
+	var vLevel = 0;
+	var vNumKid = 0;
+	var vVisible = 1;
+	var vSortIdx = 0;
+	var vToDelete = false;
+	var x1, y1, x2, y2;
+	var vNotes;
+	var vParItem = null;
 
 	if ( pNotes != null )
 	{
 		var tmpDiv = document.createElement('div');
 		tmpDiv.innerHTML = pNotes;
 		JSGantt.stripUnwanted(tmpDiv);
-	    vNotes = tmpDiv.innerHTML;
+		vNotes = tmpDiv.innerHTML;
 	}
 
-    if (vGroup != 1)
-    {
+	if (vGroup != 1)
+	{
 		vStart = JSGantt.parseDateStr(document.createTextNode(pStart).data,g.getDateInputFormat());
 		vEnd   = JSGantt.parseDateStr(document.createTextNode(pEnd).data,g.getDateInputFormat());
 	}
@@ -157,30 +158,30 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 		}
 	}
 
-    this.getID       = function(){ return vID };
-    this.getName     = function(){ return vName };
-    this.getStart    = function(){ return vStart};
-    this.getEnd      = function(){ return vEnd  };
-    this.getClass    = function(){ return vClass};
-    this.getLink     = function(){ return vLink };
-    this.getMile     = function(){ return vMile };
-    this.getDepend   = function(){ if(vDepend) return vDepend; else return null };
-    this.getDepType  = function(){ if(vDependType) return vDependType; else return null };
-    this.getCaption  = function(){ if(vCaption) return vCaption; else return ''; };
-    this.getResource = function(){ if(vRes) return vRes; else return '&nbsp;';  };
-    this.getCompVal  = function(){ if(vComp) return vComp; else return 0; };
-    this.getCompStr  = function(){ if(vComp) return vComp+'%'; else return ''; };
-    this.getNotes    = function(){ if(vNotes) return vNotes; else return ''; };
-    this.getSortIdx  = function(){ return vSortIdx };
-    this.getToDelete = function(){ return vToDelete };
+	this.getID       = function(){ return vID };
+	this.getName     = function(){ return vName };
+	this.getStart    = function(){ return vStart};
+	this.getEnd      = function(){ return vEnd  };
+	this.getClass    = function(){ return vClass};
+	this.getLink     = function(){ return vLink };
+	this.getMile     = function(){ return vMile };
+	this.getDepend   = function(){ if(vDepend) return vDepend; else return null };
+	this.getDepType  = function(){ if(vDependType) return vDependType; else return null };
+	this.getCaption  = function(){ if(vCaption) return vCaption; else return ''; };
+	this.getResource = function(){ if(vRes) return vRes; else return '&nbsp;';  };
+	this.getCompVal  = function(){ if(vComp) return vComp; else return 0; };
+	this.getCompStr  = function(){ if(vComp) return vComp+'%'; else return ''; };
+	this.getNotes    = function(){ if(vNotes) return vNotes; else return ''; };
+	this.getSortIdx  = function(){ return vSortIdx };
+	this.getToDelete = function(){ return vToDelete };
 
-    this.getDuration = function(vFormat)
+	this.getDuration = function(vFormat)
 	{
-        if (vMile)
+		if (vMile)
 		{
-            vDuration = '-';
+			vDuration = '-';
 		}
-        else
+		else
 		{ //if(vFormat == 'day'){
 			tmpPer =  Math.ceil((this.getEnd() - this.getStart()) /  (24 * 60 * 60 * 100) + 10)/10;
 			if(Math.floor(tmpPer) != tmpPer) tmpPer--;
@@ -226,6 +227,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	this.getEndX     = function(){ return x2 };
 	this.getEndY     = function(){ return y2 };
 	this.getVisible  = function(){ return vVisible };
+	this.getParItem  = function(){ return vParItem };
 	this.setDepend   = function(pDepend){ vDepend = pDepend;};
 	this.setStart    = function(pStart){ vStart = pStart;};
 	this.setEnd      = function(pEnd){ vEnd   = pEnd;  };
@@ -240,6 +242,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	this.setVisible  = function(pVisible){ vVisible = pVisible; };
 	this.setSortIdx  = function(pSortIdx){ vSortIdx = pSortIdx; };
 	this.setToDelete = function(pToDelete){ vToDelete = pToDelete; };
+	this.setParItem  = function(pParItem){ vParItem = pParItem };
 }
 
 
@@ -290,14 +293,14 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 	var vFormatArr	= new Array("Day","Week","Month","Quarter");
 	var vMonthDaysArr = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
 	var vProcessNeeded=true;
-    var vMinGpLen = 8;
-    var vScrollTo = '';
-    var vDayColWidth = 18;
-    var vWeekColWidth = 36;
-    var vMonthColWidth = 36;
-    var vQuarterColWidth = 18;
-    var vRowHeight = 20;
-    var vTodayPx = -1;
+	var vMinGpLen = 8;
+	var vScrollTo = '';
+	var vDayColWidth = 18;
+	var vWeekColWidth = 36;
+	var vMonthColWidth = 36;
+	var vQuarterColWidth = 18;
+	var vRowHeight = 20;
+	var vTodayPx = -1;
 
 	this.setUseFade = function(pVal){ vUseFade = pVal; };
 	this.setUseMove = function(pVal){ vUseMove = pVal; };
@@ -407,13 +410,13 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 	this.getQuarterMajorDateDisplayFormat = function(){ return vQuarterMajorDateDisplayFormat };
 	this.getQuarterMinorDateDisplayFormat = function(){ return vQuarterMinorDateDisplayFormat };
 	this.getCaptionType = function(){ return vCaptionType };
-    this.getMinGpLen = function(){ return vMinGpLen };
-    this.getScrollTo = function(){ return vScrollTo };
-    this.getDayColWidth = function(){ return vDayColWidth };
-    this.getWeekColWidth = function(){ return vWeekColWidth };
-    this.getMonthColWidth = function(){ return vMonthColWidth };
-    this.getQuarterColWidth = function(){ return vQuarterColWidth };
-    this.getRowHeight = function(){ return vRowHeight };
+	this.getMinGpLen = function(){ return vMinGpLen };
+	this.getScrollTo = function(){ return vScrollTo };
+	this.getDayColWidth = function(){ return vDayColWidth };
+	this.getWeekColWidth = function(){ return vWeekColWidth };
+	this.getMonthColWidth = function(){ return vMonthColWidth };
+	this.getQuarterColWidth = function(){ return vQuarterColWidth };
+	this.getRowHeight = function(){ return vRowHeight };
 
 	this.CalcTaskXY = function()
 	{
@@ -772,7 +775,6 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 			}
 
 			// DRAW the date format selector at bottom left.
-			vLeftTable += '</td></tr>';
 			vLeftTable +=
 			'<tr>' +
 			'  <td class="gtasklist">&nbsp;</td><td class="gspanning gtaskname">' + this.drawSelector( "Bottom" ) + '</td>' ;
@@ -986,12 +988,12 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 				}
 			}
 
-			vTaskLeftPx = (vNumCols *(vColWidth + 1))+1;
+			var vChartWidthPx = (vNumCols *(vColWidth + 1))+1;
 
-			vRightHeader += vDateRowStr + '</tr></tbody></table><div class="rhscrpad" style="position: absolute; top: 0px; left:'+vTaskLeftPx+1+'px; height: 1px;"></div></div>';
+			vRightHeader += vDateRowStr + '</tr></tbody></table><div class="rhscrpad" style="position: absolute; top: 0px; left:'+(vChartWidthPx+1)+'px; height: 1px;"></div></div>';
 			vRightTable =
 			'<div class="gchartgrid gcontainercol" id="'+vDivId+'gchartbody">' +
-			'<table class="gcharttable" id="'+vDivId+'chartTable" cellSpacing=0 cellPadding=0 border=0 style="width: '+vTaskLeftPx+'px">' +
+			'<table class="gcharttable" id="'+vDivId+'chartTable" cellSpacing=0 cellPadding=0 border=0 style="width: '+vChartWidthPx+'px">' +
 			'<tbody>';
 			// Draw each row
 
@@ -1117,8 +1119,8 @@ JSGantt.GanttChart =  function( pDiv, pFormat )
 					}
 				}
 			}
-			if(vUseSingleCell != 1) vRightTable += vDateRowStr+'</tbody></table></div>';
-			else vRightTable += '</tbody></table></div>';
+			if(vUseSingleCell != 1) vRightTable += vDateRowStr+'</tbody></table><div class="rhscrpad" style="position: absolute; top: 0px; left:'+(vChartWidthPx+1)+'px; height: 1px;"></div></div>';
+			else vRightTable += '</tbody></table><div class="rhscrpad" style="position: absolute; top: 0px; left:'+(vChartWidthPx+1)+'px; height: 1px;"></div></div>';
 			vMainTable = '<div class="gchartcontainer">' + vRightHeader + vLeftHeader + vRightTable + vLeftTable + '<div class="ggridfooter"></div></div>';
 
 /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
@@ -1614,6 +1616,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 	var vNumKid  = 0;
 	var vCompSum = 0;
 	var vVisible = pOpen;
+	var vCurItem = null;
 
 	for(i = 0; i < pList.length; i++)
 	{
@@ -1622,6 +1625,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 			pList.splice(i,1);
 			i--;
 		}
+		if (pList[i].getID()==pID)vCurItem = pList[i];
 	}
 
 	for(i = 0; i < pList.length; i++)
@@ -1629,6 +1633,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 		if(pList[i].getParent() == pID)
 		{
 			vVisible = pOpen;
+			pList[i].setParItem(vCurItem);
 			pList[i].setVisible(vVisible);
 			if(vVisible==1 && pList[i].getOpen() == 0)
 			vVisible = 0;
@@ -1636,7 +1641,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 			pList[i].setLevel(vLevel);
 			vNumKid++;
 
-			if(pList[i].getGroup() == 1)
+			if(pList[i].getGroup())
 			{
 				JSGantt.processRows(vList, pList[i].getID(), i, vLevel+1, vVisible, 0);
 			}
@@ -1706,7 +1711,7 @@ JSGantt.sortTasks = function (pList, pID, pIdx)
 	return sortIdx;
 }
 
-// Used to determine the minimum date of all tasks and set lower bound based on forma
+// Used to determine the minimum date of all tasks and set lower bound based on format
 JSGantt.getMinDate = function getMinDate(pList, pFormat)
 {
 
@@ -1905,7 +1910,7 @@ JSGantt.hide= function (pID,ganttObj)
 			if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_' + vID).style.display = "none";
 			if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_' + vID).style.display = "none";
 			vList[i].setVisible(0);
-			if(vList[i].getGroup() == 1)
+			if(vList[i].getGroup())
 			JSGantt.hide(vID,ganttObj);
 		}
 	}
@@ -1917,63 +1922,29 @@ JSGantt.show =  function (pID, pTop, ganttObj)
 	var vList = ganttObj.getList();
 	var vID   = 0;
 	var vDivId = ganttObj.getDivId();
+	var vState = '';
+
+	if (JSGantt.isIE()) vState=JSGantt.findObj(vDivId+'group_'+pID).innerText;
+	else vState=JSGantt.findObj(vDivId+'group_'+pID).textContent;
 
 	for(var i = 0; i < vList.length; i++)
 	{
 		if(vList[i].getParent() == pID)
 		{
+			var vChgState = false;
 			vID = vList[i].getID();
-			if(pTop == 1)
+
+			if(pTop == 1 && vState == '+')vChgState=true;
+			else if( vState == '-')vChgState=true;
+
+			if( vChgState )
 			{
-				if (JSGantt.isIE())
-				{ // IE;
-
-					if( JSGantt.findObj(vDivId+'group_'+pID).innerText == '+')
-					{
-						// it's unlikely but if the task list has been updated since
-						// the chart was drawn some of the rows may not exist
-						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
-						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
-						vList[i].setVisible(1);
-					}
-				}
-				else
-				{
-
-					if( JSGantt.findObj(vDivId+'group_'+pID).textContent == '+')
-					{
-						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
-						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
-						vList[i].setVisible(1);
-					}
-				}
+				if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
+				if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
+				vList[i].setVisible(1);
 			}
-			else
-			{
-
-				if (JSGantt.isIE())
-				{ // IE;
-					if( JSGantt.findObj(vDivId+'group_'+pID).innerText == '-')
-					{
-						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
-						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
-						vList[i].setVisible(1);
-					}
-				}
-				else
-				{
-
-					if( JSGantt.findObj(vDivId+'group_'+pID).textContent == '-')
-					{
-						if (JSGantt.findObj(vDivId+'child_' + vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "";
-						if (JSGantt.findObj(vDivId+'childrow_' + vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
-						vList[i].setVisible(1);
-					}
-				}
-			}
-			if(vList[i].getGroup() == 1)
+			if(vList[i].getGroup())
 			JSGantt.show(vID, 0,ganttObj);
-
 		}
 	}
 }
@@ -2231,23 +2202,23 @@ JSGantt.benchMark = function(pItem)
 }
 
 JSGantt.getIsoWeek = function(pDate){
-    // We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
-    // 60*60*24*1000 = 86400000
-    var dayMiliseconds = 86400000;
-    var keyDay = new Date(pDate.getFullYear(),0,4,0,0,0);
-    var keyDayOfWeek = (keyDay.getDay()==0) ? 6 : keyDay.getDay() - 1; // define monday as 0
+	// We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
+	// 60*60*24*1000 = 86400000
+	var dayMiliseconds = 86400000;
+	var keyDay = new Date(pDate.getFullYear(),0,4,0,0,0);
+	var keyDayOfWeek = (keyDay.getDay()==0) ? 6 : keyDay.getDay() - 1; // define monday as 0
 	var firstMondayYearTime = keyDay.getTime() - (keyDayOfWeek * dayMiliseconds);
 	var thisDate = new Date(pDate.getFullYear(), pDate.getMonth(),pDate.getDate(),0,0,0); // This at 00:00:00
-    var thisTime = thisDate.getTime();
+	var thisTime = thisDate.getTime();
 	var daysFromFirstMonday = Math.round(((thisTime - firstMondayYearTime) / dayMiliseconds));
 	var lastWeek=99;
 	var thisWeek=99;
 
-    var firstMondayYear = new Date(firstMondayYearTime);
+	var firstMondayYear = new Date(firstMondayYearTime);
 
-    // We add 1 to "daysFromFirstMonday" because if "daysFromFirstMonday" is *7,
-    // then 7/7 = 1, and as we are 7 days from first monday,
-    // we should be in week number 2 instead of week number 1 (7/7=1)
+	// We add 1 to "daysFromFirstMonday" because if "daysFromFirstMonday" is *7,
+	// then 7/7 = 1, and as we are 7 days from first monday,
+	// we should be in week number 2 instead of week number 1 (7/7=1)
 	thisWeek = Math.ceil((daysFromFirstMonday+1)/7);
 
 	if ( thisWeek <= 0 )
@@ -2264,7 +2235,7 @@ JSGantt.getIsoWeek = function(pDate){
 		if ( (new Date(pDate.getFullYear(),0,1,0,0,0)).getDay() != 4 && (new Date(pDate.getFullYear(),11,31,0,0,0)).getDay() != 4 ) thisWeek = 1;
 	}
 
-    return thisWeek;
+	return thisWeek;
 }
 
 JSGantt.addListener = function ( eventName, handler, control )
