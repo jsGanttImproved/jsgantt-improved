@@ -127,7 +127,6 @@ The following options take a single numeric parameter; a value of 1 will enable 
 ||_setUseMove():_||Controls use of the sliding effect when changing between different task tool tips, defaults to 1 (enabled)||
 ||_setUseRowHlt():_||Controls the use of row mouseover highlighting, defaults to 1 (enabled)||
 ||_setUseSort():_||Controls whether the task list is sorted into parent task / start time order or is simply displayed in the order created, defaults to 1 (sort enabled)||
-||_setUseSingleCell():_||Controls whether the task list uses a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts, defaults to 0 (use multiple cells)||
 ||_setShowRes():_||Controls whether the Resource column is displayed in the task list, defaults to 1 (show column)||
 ||_setShowDur():_||Controls whether the Task Duration column is displayed in the task list, defaults to 1 (show column)||
 ||_setShowComp():_||Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)||
@@ -146,14 +145,16 @@ The following options take a single numeric parameter; a value of 1 will enable 
 == Key Values ==
 The following options enable functionality using a set of specific key values
 ||_setShowSelector():_||Controls where the format selector is displayed, accepts multiple parameters. Valid parameter values are "Top", "Bottom". Defaults to "Top".||
-||_setFormatArr():_||Controls which format options are shown in the format selector, accepts multiple parameters. Valid parameter values are "Day", "Week", "Month", "Quarter". Defaults to all valid values.||
+||_setFormatArr():_||Controls which format options are shown in the format selector, accepts multiple parameters. Valid parameter values are "Hour", "Day", "Week", "Month", "Quarter". Defaults to all valid values.||
 ||_setCaptionType():_||Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter. Valid parameter values are "None", "Caption", "Resource", "Duration", "Complete". Defaults to "None"||
 ||_setDateInputFormat():_||Defines the input format used for dates in task creation, accepts a single parameter. Valid parameter values are "yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy". Defaults to "yyyy-mm-dd"||
 ||_setScrollTo():_||Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value "today". Defaults to minimum display date||
+||_setUseSingleCell():_||Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  Numeric, a value of 0 disables this functionality (always use multiple cells), defaults to 25000||
 
 == Layout ==
 Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.
 Note that the task bar sizing code assumes the use of collapsed table borders 1px wide.
+||_setHourColWidth():_||Width of Gantt Chart columns in pixels when drawn in "Hour" format. Defaults to 18.||
 ||_setDayColWidth():_||Width of Gantt Chart columns in pixels when drawn in "Day" format. Defaults to 18.||
 ||_setWeekColWidth():_||Width of Gantt Chart columns in pixels when drawn in "Week" format. Defaults to 36.||
 ||_setMonthColWidth():_||Width of Gantt Chart columns in pixels when drawn in "Month" format. Defaults to 36.||
@@ -164,6 +165,14 @@ Note that the task bar sizing code assumes the use of collapsed table borders 1p
 == Display Date Formats ==
 Date display formats can be individually controlled. The methods used to set these display formats each take a single format string parameter.  The format string can be made up of the following components (case sensitive)
 
+||_h_||Hour (1-12)||
+||_hh_||Hour (01-12)||
+||_pm_||am/pm indicator||
+||_PM_||AM/PM indicator||
+||_H_||Hour (0-23)||
+||_HH_||Hour (01-23)||
+||_mi_||Minutes (1-59)||
+||_MI_||Minutes (01-59)||
 ||_d_||Day (1-31)||
 ||_dd_||Day (01-31)||
 ||_day_||Abbriviated day of week||
@@ -180,17 +189,19 @@ Date display formats can be individually controlled. The methods used to set the
 ||_ww_||ISO Week number (01-53)||
 ||_week_||Full ISO Week date format||
 
-separated by one of the following characters: *"/\-.,'`<space`>*
+separated by one of the following characters: *"/\-.,'`<space`>:*
 
 Any text between separators that does not match one of the components above will be output unchanged.
 
 The available date display methods are
 ||_setDateTaskTableDisplayFormat():_||Date format used for start and end dates in the main task list. Defaults to 'dd/mm/yyyy'.||
 ||_setDateTaskDisplayFormat():_||Date format used for start and end dates in task tool tips. Defaults to 'dd month yyyy'.||
+||_setHourMajorDateDisplayFormat()_||Date format used for Gantt Chart major date headings displayed in "Hour" format. Defaults to 'day dd month yyyy'.||
 ||_setDayMajorDateDisplayFormat():_||Date format used for Gantt Chart major date headings displayed in "Day" format. Defaults to 'dd/mm/yyyy'.||
 ||_setWeekMajorDateDisplayFormat():_||Date format used for Gantt Chart major date headings displayed in "Week" format. Defaults to 'yyyy'.||
 ||_setMonthMajorDateDisplayFormat():_||Date format used for Gantt Chart major date headings displayed in "Month" format. Defaults to 'yyyy'.||
 ||_setQuarterMajorDateDisplayFormat():_||Date format used for Gantt Chart major date headings displayed in "Year" format. Defaults to 'yyyy'.||
+||_setHourMinorDateDisplayFormat()_||Date format used for Gantt Chart minor date headings displayed in "Hour" format. Defaults to 'HH'.||
 ||_setDayMinorDateDisplayFormat():_||Date format used for Gantt Chart minor date headings displayed in "Day" format. Defaults to 'dd'.||
 ||_setWeekMinjorDateDisplayFormat():_||Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.||
 ||_setMonthMinorDateDisplayFormat():_||Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.||
@@ -208,6 +219,8 @@ g.setWeekMinorDateDisplayFormat('dd mon'); // Set format to display dates in the
 g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
 g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
 g.setUseSingleCell(1); // Use one cell per table row.  Helps with rendering performance for large charts.
+g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
+g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
 </code>
 
 
@@ -230,7 +243,8 @@ Putting all this information together the final code to produce the chart includ
   g.setWeekMinorDateDisplayFormat('dd mon');
   g.setShowTaskInfoLink(1);
   g.setShowEndWeekDate(0);
-  g.setUseSingleCell(1);
+  g.setUseSingleCell(10000);
+  g.setFormatArr('Day', 'Week', 'Month', 'Quarter');
 
   g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',       0, 'Brian',    0,   1, 0,  1,     '',      '',      'Some Notes text' ));
   g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2014-02-20','2014-02-20', 'gmilestone',   '',       1, 'Shlomy',   100, 0, 1,  1));
