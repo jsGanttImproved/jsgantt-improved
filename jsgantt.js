@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   ____    ____
-	  (_) / _ \ \_   \ / | |___ \  |___ \
-	  | |/ /_\/  / /\/ | |   __) |   __) |
-	  | / /_\\/\/ /_   | |_ / __/ _ / __/
-	 _/ \____/\____/   |_(_)_____(_)_____|
+	   _   ___  _____   _   _____
+	  (_) / _ \ \_   \ / | |___ /
+	  | |/ /_\/  / /\/ | |   |_ \
+	  | / /_\\/\/ /_   | |_ ___) |
+	 _/ \____/\____/   |_(_)____/
 	|__/
-	jsGanttImproved 1.2.2
+	jsGanttImproved 1.3
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -99,7 +99,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	var vComp = parseInt(document.createTextNode(pComp).data);
 	var vGroup = parseInt(document.createTextNode(pGroup).data);
 	var vParent = document.createTextNode(pParent).data;
-	var vOpen = parseInt(document.createTextNode(pOpen).data);
+	var vOpen = (vGroup==2)?1:parseInt(document.createTextNode(pOpen).data);
 	var vDepend = new Array();
 	var vDependType = new Array();
 	var vCaption = document.createTextNode(pCaption).data;
@@ -112,6 +112,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	var x1, y1, x2, y2;
 	var vNotes;
 	var vParItem = null;
+	var vCellDiv = null;
 
 	if ( pNotes != null )
 	{
@@ -233,6 +234,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	this.getEndY	= function(){ return y2 };
 	this.getVisible	= function(){ return vVisible };
 	this.getParItem	= function(){ return vParItem };
+	this.getCellDiv	= function(){ return vCellDiv };
 	this.setDepend	= function(pDepend){ vDepend = pDepend;};
 	this.setStart	= function(pStart){ vStart = pStart;};
 	this.setEnd		= function(pEnd){ vEnd = pEnd; };
@@ -248,8 +250,9 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	this.setSortIdx	= function(pSortIdx){ vSortIdx = pSortIdx; };
 	this.setToDelete	= function(pToDelete){ vToDelete = pToDelete; };
 	this.setParItem	= function(pParItem){ vParItem = pParItem };
+	this.setCellDiv	= function(pCellDiv){ vCellDiv = pCellDiv };
+	this.setGroup	= function(pGroup){ vGroup = pGroup };
 }
-
 
 // function that loads the main gantt chart properties and functions
 // pDiv: (required) this is a div object created in HTML
@@ -437,7 +440,11 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 			vID = vList[i].getID();
 			vBarDiv = JSGantt.findObj(vDivId+"bardiv_"+vID);
 			vTaskDiv = JSGantt.findObj(vDivId+"taskbar_"+vID);
-			vParDiv = JSGantt.findObj(vDivId+"childrow_"+vID);
+			if((vList[i].getParItem() && vList[i].getParItem().getGroup()==2))
+			{
+				vParDiv = JSGantt.findObj(vDivId+"childrow_"+vList[i].getParItem().getID());
+			}
+			else vParDiv = JSGantt.findObj(vDivId+"childrow_"+vID);
 
 			if(vBarDiv)
 			{
@@ -605,14 +612,14 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 				vDependType = vList[i].getDepType();
 				var n = vDepend.length;
 
-				if(n>0 && vList[i].getVisible()==1)
+				if(n>0 && vList[i].getVisible()==1 || (vList[i].getParItem() && vList[i].getParItem().getGroup()==2 && vList[i].getParItem().getVisible()==1 && vList[i].getMile()!=1))
 				{
 					for(var k=0;k<n;k++)
 					{
 						vTask = this.getArrayLocationByID(vDepend[k]);
-						if (vTask)
+						if (vTask && vList[vTask].getGroup()!=2)
 						{
-							if(vList[vTask].getVisible()==1)
+							if((vList[vTask].getVisible()==1) || (vList[vTask].getParItem() && vList[vTask].getParItem().getGroup()==2 && vList[vTask].getParItem().getVisible()==1 && vList[vTask].getMile()!=1))
 							if(vDependType[k]=='SS')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getStartX()-1,vList[i].getStartY(),'SS','gDepSS');
 							else if(vDependType[k]=='FF')this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getEndX(),vList[i].getEndY(),'FF','gDepFF');
 							else if(vDependType[k]=='SF')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getEndX(),vList[i].getEndY(),'SF','gDepSF');
@@ -730,7 +737,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 
 			for(i = 0; i < vTaskList.length; i++)
 			{
-				if( vTaskList[i].getGroup())
+				if( vTaskList[i].getGroup()==1)
 				{
 					vBGColor = "ggroupitem";
 					vRowType = "group";
@@ -743,54 +750,60 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 
 				vID = vTaskList[i].getID();
 
-				if(vTaskList[i].getVisible() == 0) vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
-				else vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'child_' + vID, 'gname ' + vBGColor);
-
-				vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-				vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskname');
-
-				vCellContents ='';
-				for(j=1; j<vTaskList[i].getLevel(); j++)
+				if((!(vTaskList[i].getParItem() && vTaskList[i].getParItem().getGroup()==2)) || vTaskList[i].getGroup()==2)
 				{
-					vCellContents += '\u00A0\u00A0\u00A0\u00A0';
-				}
+					if(vTaskList[i].getVisible() == 0) vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
+					else vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'child_' + vID, 'gname ' + vBGColor);
+					vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
+					vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskname');
 
-				if( vTaskList[i].getGroup())
-				{
-					vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
-					this.newNode(vTmpDiv, 'span', vDivId+'group_' + vID, 'gfoldercollapse', ( vTaskList[i].getOpen() == 1)?'-':'+');
-					vTmpDiv.appendChild(document.createTextNode('\u00A0'+vTaskList[i].getName()));
+					vCellContents ='';
+					for(j=1; j<vTaskList[i].getLevel(); j++)
+					{
+						vCellContents += '\u00A0\u00A0\u00A0\u00A0';
+					}
+
+					if( vTaskList[i].getGroup()==1)
+					{
+						vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
+						this.newNode(vTmpDiv, 'span', vDivId+'group_' + vID, 'gfoldercollapse', ( vTaskList[i].getOpen() == 1)?'-':'+');
+						vTmpDiv.appendChild(document.createTextNode('\u00A0'+vTaskList[i].getName()));
+					}
+					else
+					{
+						vCellContents += '\u00A0\u00A0\u00A0\u00A0';
+						vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents+vTaskList[i].getName());
+					}
+
+					if(vShowRes ==1)
+					{
+						vTmpCell = this.newNode(vTmpRow, 'td', null, 'gresource');
+						vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getResource());
+					}
+					if(vShowDur ==1)
+					{
+						vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
+						vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getDuration(vFormat));
+					}
+					if(vShowComp==1)
+					{
+						vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
+						vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getCompStr());
+					}
+					if(vShowStartDate==1)
+					{
+						vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
+						vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr( vTaskList[i].getStart(), vDateTaskTableDisplayFormat));
+					}
+					if(vShowEndDate==1)
+					{
+						vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
+						vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr( vTaskList[i].getEnd(), vDateTaskTableDisplayFormat));
+					}
 				}
 				else
 				{
-					vCellContents += '\u00A0\u00A0\u00A0\u00A0';
-					vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents+vTaskList[i].getName());
-				}
-
-				if(vShowRes ==1)
-				{
-					vTmpCell = this.newNode(vTmpRow, 'td', null, 'gresource');
-					vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getResource());
-				}
-				if(vShowDur ==1)
-				{
-					vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
-					vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getDuration(vFormat));
-				}
-				if(vShowComp==1)
-				{
-					vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
-					vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getCompStr());
-				}
-				if(vShowStartDate==1)
-				{
-					vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
-					vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr( vTaskList[i].getStart(), vDateTaskTableDisplayFormat));
-				}
-				if(vShowEndDate==1)
-				{
-					vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
-					vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr( vTaskList[i].getEnd(), vDateTaskTableDisplayFormat));
+					vTaskList[i].setVisible(0);
 				}
 			}
 
@@ -976,8 +989,9 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 				vTmpDate.setFullYear(vMinDate.getFullYear(), vMinDate.getMonth(), vMinDate.getDate());
 
 				vID = vTaskList[i].getID();
+				var vComb=(vTaskList[i].getParItem() && vTaskList[i].getParItem().getGroup()==2);
 
-				if( vTaskList[i].getMile())
+				if( vTaskList[i].getMile() && !vComb )
 				{
 					vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'childrow_'+vID, 'gmileitem gmile'+vFormat, null, null, null, ((vTaskList[i].getVisible() == 0)? 'none' : null));
 					vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
@@ -1036,31 +1050,34 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 						vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'childrow_'+vID, 'ggroupitem ggroup'+vFormat, null, null, null, ((vTaskList[i].getVisible() == 0)? 'none' : null));
 						vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
 						vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
-						vTmpDiv = this.newNode(vTmpDiv, 'div', vDivId+'bardiv_'+vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
-
-						vTmpDiv2 = this.newNode(vTmpDiv, 'div', vDivId+'taskbar_'+vID, vTaskList[i].getClass(), null, vTaskWidth);
-
-						this.newNode(vTmpDiv2, 'div', vDivId+'complete_'+vID, vTaskList[i].getClass() +'complete', null, vTaskList[i].getCompStr());
-
-						this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() +'endpointleft');
-						if ( vTaskWidth >= vMinGpLen*2 ) this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() +'endpointright');
-
-						if( g.getCaptionType() )
+						vTaskList[i].setCellDiv(vTmpDiv);
+						if(vTaskList[i].getGroup()==1)
 						{
-							vCaptionStr = '';
-							switch( g.getCaptionType() )
+							vTmpDiv = this.newNode(vTmpDiv, 'div', vDivId+'bardiv_'+vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
+							vTmpDiv2 = this.newNode(vTmpDiv, 'div', vDivId+'taskbar_'+vID, vTaskList[i].getClass(), null, vTaskWidth);
+
+							this.newNode(vTmpDiv2, 'div', vDivId+'complete_'+vID, vTaskList[i].getClass() +'complete', null, vTaskList[i].getCompStr());
+
+							this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() +'endpointleft');
+							if ( vTaskWidth >= vMinGpLen*2 ) this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() +'endpointright');
+
+							if( g.getCaptionType() )
 							{
-								case 'Caption': vCaptionStr = vTaskList[i].getCaption(); break;
-								case 'Resource': vCaptionStr = vTaskList[i].getResource(); break;
-								case 'Duration': vCaptionStr = vTaskList[i].getDuration(vFormat); break;
-								case 'Complete': vCaptionStr = vTaskList[i].getCompStr(); break;
+								vCaptionStr = '';
+								switch( g.getCaptionType() )
+								{
+									case 'Caption': vCaptionStr = vTaskList[i].getCaption(); break;
+									case 'Resource': vCaptionStr = vTaskList[i].getResource(); break;
+									case 'Duration': vCaptionStr = vTaskList[i].getDuration(vFormat); break;
+									case 'Complete': vCaptionStr = vTaskList[i].getCompStr(); break;
+								}
+								this.newNode(vTmpDiv, 'div', null, 'ggroupcaption', vCaptionStr, 120);
 							}
-							this.newNode(vTmpDiv, 'div', null, 'ggroupcaption', vCaptionStr, 120);
+							// Add Task Info div for tooltip
+							vTmpDiv2 = this.newNode(vTmpDiv, 'div', 'tt'+vDivId+'taskbar_'+vID, null, null, null, null, 'none');
+							vTmpDiv2 = this.newNode(vTmpDiv2, 'div', 'tt'+vDivId+'complete_'+vID);
+							vTmpDiv2.appendChild(this.createTaskInfo(vTaskList[i]));
 						}
-						// Add Task Info div for tooltip
-						vTmpDiv2 = this.newNode(vTmpDiv, 'div', 'tt'+vDivId+'taskbar_'+vID, null, null, null, null, 'none');
-						vTmpDiv2 = this.newNode(vTmpDiv2, 'div', 'tt'+vDivId+'complete_'+vID);
-						vTmpDiv2.appendChild(this.createTaskInfo(vTaskList[i]));
 
 						if(vUseSingleCell != 1)
 						{
@@ -1077,23 +1094,32 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 					{
 						vTaskWidth = (vTaskWidth <=0)? 1 : vTaskWidth;
 
-						vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'childrow_'+vID, 'glineitem gitem'+vFormat, null, null, null, ((vTaskList[i].getVisible() == 0)? 'none' : null));
-						vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
-						vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
+						if(vComb)
+						{
+							vTmpDiv = vTaskList[i].getParItem().getCellDiv();
+						}
+						else
+						{
+							vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'childrow_'+vID, 'glineitem gitem'+vFormat, null, null, null, ((vTaskList[i].getVisible() == 0)? 'none' : null));
+							vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
+							vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
+						}
 						// Draw Task Bar which has colored bar div, and opaque completion div
 						vTmpDiv = this.newNode(vTmpDiv, 'div', vDivId+'bardiv_'+vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
 						vTmpDiv2 = this.newNode(vTmpDiv, 'div', vDivId+'taskbar_'+vID, vTaskList[i].getClass(), null, vTaskWidth);
 						this.newNode(vTmpDiv2, 'div', vDivId+'complete_'+vID, vTaskList[i].getClass() +'complete', null, vTaskList[i].getCompStr());
 
-						if( g.getCaptionType() )
+						if( g.getCaptionType() && (!vComb || (vComb && vTaskList[i].getParItem().getEnd() == vTaskList[i].getEnd())))
 						{
 							vCaptionStr = '';
+							var vTmpItem = vTaskList[i];
+							if(vComb)vTmpItem = vTaskList[i].getParItem();
 							switch( g.getCaptionType() )
 							{
-								case 'Caption': vCaptionStr = vTaskList[i].getCaption(); break;
-								case 'Resource': vCaptionStr = vTaskList[i].getResource(); break;
-								case 'Duration': vCaptionStr = vTaskList[i].getDuration(vFormat); break;
-								case 'Complete': vCaptionStr = vTaskList[i].getCompStr(); break;
+								case 'Caption': vCaptionStr = vTmpItem.getCaption(); break;
+								case 'Resource': vCaptionStr = vTmpItem.getResource(); break;
+								case 'Duration': vCaptionStr = vTmpItem.getDuration(vFormat); break;
+								case 'Complete': vCaptionStr = vTmpItem.getCompStr(); break;
 							}
 							this.newNode(vTmpDiv, 'div', null, 'gcaption', vCaptionStr, 120);
 						}
@@ -1138,11 +1164,11 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 				vChild = JSGantt.findObj(vDivId+"child_"+vID);
 				vTaskDiv = JSGantt.findObj(vDivId+"taskbar_"+vID);
 				vParDiv = JSGantt.findObj(vDivId+"childrow_"+vID);
-				if(vTaskList[i].getGroup())vGroup = JSGantt.findObj(vDivId+"group_"+vID);
+				if(vTaskList[i].getGroup()==1)vGroup = JSGantt.findObj(vDivId+"group_"+vID);
 
 				if(vTaskDiv) JSGantt.addTootltipListeners( this, vTaskDiv );
 				if(vChild && vParDiv) JSGantt.addThisRowListeners( this, vChild, vParDiv );
-				if(vTaskList[i].getGroup() && vGroup) JSGantt.addFolderListeners( this, vGroup, vID );
+				if(vTaskList[i].getGroup()==1 && vGroup) JSGantt.addFolderListeners( this, vGroup, vID );
 			}
 
 			for ( var i = 0; i < vShowSelector.length; i++ )
@@ -1614,6 +1640,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 	var vNumKid = 0;
 	var vLevel = pLevel;
 	var vList = pList;
+	var vComb = false;
 	var i = 0;
 
 	for(i = 0; i < pList.length; i++)
@@ -1641,6 +1668,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 
 			if(pList[i].getGroup())
 			{
+				if(pList[i].getParItem() && pList[i].getParItem().getGroup()==2)pList[i].setGroup(2);
 				JSGantt.processRows(vList, pList[i].getID(), i, vLevel+1, vVisible, 0);
 			}
 
@@ -1657,6 +1685,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 			}
 
 			vCompSum += pList[i].getCompVal();
+			pList[i].setSortIdx(i*pList.length);
 		}
 	}
 
@@ -1672,6 +1701,18 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 	{
 		JSGantt.sortTasks(pList, 0, 0);
 		pList.sort(function(a,b){return a.getSortIdx()-b.getSortIdx();});
+	}
+	if (pID == 0 && pUseSort != 1) // Need to sort combined tasks regardless
+	{
+		for(i = 0; i < pList.length; i++)
+		{
+			if (pList[i].getGroup()==2)
+			{
+				vComb=true;
+				JSGantt.sortTasks(pList, pList[i].getID(), pList[i].getSortIdx()+1);
+			}
+		}
+		if(vComb==true) pList.sort(function(a,b){return a.getSortIdx()-b.getSortIdx();});
 	}
 }
 
@@ -1897,8 +1938,7 @@ JSGantt.show = function (pID, pTop, ganttObj)
 				if (JSGantt.findObj(vDivId+'childrow_'+vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
 				vList[i].setVisible(1);
 			}
-			if(vList[i].getGroup())
-			JSGantt.show(vID, 0,ganttObj);
+			if(vList[i].getGroup()==1) JSGantt.show(vID, 0,ganttObj);
 		}
 	}
 }
