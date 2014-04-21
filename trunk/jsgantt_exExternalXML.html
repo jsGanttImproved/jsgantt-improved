@@ -63,6 +63,10 @@ dd { margin: 0 0 0 70px;
 	overflow:hidden; }
 .nav li { float:left; }
 .nav a { display:block; padding-right: 20px;color: #656565;}
+a.footnote:link {text-decoration:none;color: red;}
+a.footnote:visited {text-decoration:none;color: red;}
+a.footnote:hover {text-decoration:underline;color: red;}
+a.footnote:active {text-decoration:underline;color: red;}
 -->
 </style>
 </head>
@@ -136,6 +140,19 @@ dd { margin: 0 0 0 70px;
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.3:</h4>
+<ul>
+<li>Code refactored to:
+<ul>
+<li>Move the last non-structural style information from javascript to css file</li>
+<li>Tooltip DIV slightly restructured to allow styling rather than relying on line breaks for layout</li>
+<li>Create the chart using createElement() and appendChild() rather than innerHTML to enable...</li>
+</ul></li>
+<li>New "Combined Group" element created. Combined groups show all child task information on one row.</li>
+</ul>
+<blockquote><p>
+Please see the differences for the CSS file in code revision <a href="https://code.google.com/p/jsgantt-improved/source/diff?spec=svn21&old=18&r=21&format=side&path=%2Ftrunk%2Fjsgantt.css">r21</a> for details of CSS structural changes.
+</p></blockquote>
 <h4>v1.2:</h4>
 <ul>
 <li>Multiple gantt charts per page are now supported</li>
@@ -145,32 +162,7 @@ dd { margin: 0 0 0 70px;
 </p><p>
 All chart element ids are now prefixed with the id of the master DIV containing the chart.  As a result the default stylesheet has been updated to no longer uses any element ids to apply styles.
 </p><p>
-The following classes have been renamed:
-<pre>
-.column -> .gcontainercol
-.scroll -> .glistgrid
-.scroll2 -> .gchartgrid
-.scroll3 -> .glistlbl
-.scroll4 -> .gchartlbl
-</pre>
-</p><p>
-Rules using the following ids have been converted to use these classes:
-<pre>
-#JSGanttToolTip -> .JSGanttToolTip
-#JSGanttToolTipcont -> .JSGanttToolTipcont
-#chartTable -> .gcharttable
-#container -> .gchartcontainer
-#footer -> .ggridfooter
-#footer2 -> .glabelfooter
-#leftside -> .glistgrid (rules combined with old .scroll class)
-#leftsideh -> .glistlbl (rules combined with old .scroll3 class)
-#rightside -> .gchartgrid (rules combined with old .scroll2 class)
-#rightsideh -> .gchartlbl (rules combined with old .scroll4 class)
-#taskTable -> .gtasktable
-#taskTableh -> .gtasktableh
-</pre>
-</p><p>
-Dependency lines have been altered to use a 1px border rather than background color and the default styles have been updated to reflect this.  Two new classes have been defined, .glineh and .glinev for horizontal and vertical lines respectively (1x1 pixel lines are considered to be vertical).
+Please see the notes for code revision <a href="http://code.google.com/p/jsgantt-improved/source/detail?r=18">r18</a> for details of CSS structural changes.
 </p></blockquote>
 <h4>v1.1:</h4>
 <ul>
@@ -301,13 +293,14 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-2
 <dt>pMile</dt><dd>(optional) indicates whether this is a milestone task - Numeric; 1 = milestone, 0 = not milestone</dd>
 <dt>pRes</dt><dd>(optional) resource name</dd>
 <dt>pComp</dt><dd>(required) completion percent, numeric</dd>
-<dt>pGroup</dt><dd>(optional) indicates whether this is a group task(parent) - Numeric; 1 = group task, 0 = not group task</dd>
+<dt>pGroup</dt><dd>(optional) indicates whether this is a group task (parent) - Numeric; 0 = normal task, 1 = standard group task, 2 = combined group task<a href='#combinedtasks' class="footnote">*</a></dd>
 <dt>pParent</dt><dd>(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0</dd>
 <dt>pOpen</dt><dd>(required) indicates whether a group task is open when chart is first drawn. Value must be set for all items but is only used by group tasks.  Numeric, 1 = open, 0 = closed</dd>
 <dt>pDepend</dt><dd>(optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item<br />Each id can optionally be followed by a dependency type suffix. Valid values are:<blockquote>'FS' - Finish to Start (default if suffix is omitted)<br />'SF' - Start to Finish<br />'SS' - Start to Start<br />'FF' - Finish to Finish</blockquote>If present the suffix must be added directly to the id e.g. '123SS'</dd>
 <dt>pCaption</dt><dd>(optional) caption that will be added after task bar if CaptionType set to "Caption"</dd>
 <dt>pNotes</dt><dd>(optional) Detailed task information that will be displayed in tool tip for this task</dd>
 </dl>
+<p id='combinedtasks'><span style="color: red;">*</span> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.</p>
 </li>
 <li>using parseXML() with an external XML file
 <pre class="style1">
