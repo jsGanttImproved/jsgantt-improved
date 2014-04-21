@@ -1,6 +1,8 @@
+/* Sample CSS for jsGanttImproved v1.2.2 */
 body						{ font-family:tahoma, arial, verdana, Sans-serif; font-size:10px; color: #656565; }
 
-table	{ border-collapse: collapse; }
+.gantt table	{ border-collapse: collapse; }
+.gantt td { padding: 0px; }
 
 /* cell defaults */
 .gmajorheading,
@@ -18,6 +20,7 @@ table	{ border-collapse: collapse; }
 .gminorheadingwkend			{ background-color: #f7f7f7; font-weight: bold; font-size: 9px; white-space: nowrap; }
 td.gtaskcell				{ text-align: left }
 td.gspanning				{ border-left: none; border-right: none; }
+.gtaskcelldiv				{ position: relative; }
 
 /* Task list defaults */
 .gtaskheading,
@@ -43,7 +46,7 @@ td.gspanning				{ border-left: none; border-right: none; }
 
 .gselector					{ text-align: left; white-space: nowrap; min-width: 170px; max-width: 170px; width: 170px; }
 
-.gformlabel					{ position:relative; top:0px; cursor:pointer; border: #ffffff 1px solid; padding-left: 2px; padding-right: 2px; }
+.gformlabel					{ position:relative; top:0px; cursor:pointer; border: #ffffff 1px solid; margin-left: 2px; padding-left: 2px; padding-right: 2px; }
 span.gformlabel:hover,
 span.gselected				{ background-color: #dbecff; border: #cccccc 1px solid;}
 
@@ -64,9 +67,10 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 /* task bar caption text styles */
 .gmilecaption,
 .ggroupcaption,
-.gcaption					{ font-weight: normal; font-size: 9px; text-align: left; white-space: nowrap; top:1px }
+.gcaption					{ font-weight: normal; font-size: 9px; text-align: left; white-space: nowrap; top:1px; position: absolute; top:2px; }
 
-.gmilecaption				{ top:4px }
+.ggroupcaption,
+.gcaption					{ right: -126px; }
 
 /* Task complete %age bar shared attributes */
 .gtaskcomplete				{ float:left; overflow: hidden; }
@@ -75,7 +79,7 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 .gtaskcomplete				{ height:5px; background-color:#000000; margin-top:4px; opacity:0.4; filter: alpha(opacity=40); }
 
 /* Milestones */
-.gmilestone					{ font-size: 14px; }
+.gmilestone					{ font-size: 14px; position: absolute; top: -2px; }
 .gmdtop						{ top: 2px; overflow: hidden; width:0px; height:0px; border-bottom: 5px solid black; border-left: 5px solid transparent; border-top: 5px solid transparent; border-right: 5px solid transparent;}
 .gmdbottom					{ top: 2px; overflow: hidden; width:0px; height:0px; border-top: 5px solid black; border-left: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 5px solid transparent;}
 
@@ -86,15 +90,12 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 .gtaskgreen,
 .gtaskyellow,
 .gtaskpurple,
-.gtaskpink					{ height: 13px; filter: alpha(opacity=90); opacity:0.9; }
+.gtaskpink					{ height: 13px; filter: alpha(opacity=90); opacity:0.9; margin-top: 1px; }
 
 /* Task bars - ggroupblack is set as the default class on the task if it is undefined */
-.ggroupblack {
-	height: 7px;
-	background: #000000;
-}
-.ggroupblackendpointleft	{ overflow: hidden; width:0px; height:0px; top: 2px; border-top: 4px solid black; border-left: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 4px solid transparent;  }
-.ggroupblackendpointright	{ overflow: hidden; width:0px; height:0px; top: 2px; border-top: 4px solid black; border-left: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 4px solid transparent;  }
+.ggroupblack { height: 7px; background: #000000; margin-top: 2px; }
+.ggroupblackendpointleft	{ overflow: hidden; width:0px; height:0px; top: 2px; border-top: 4px solid black; border-left: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 4px solid transparent; float: left; }
+.ggroupblackendpointright	{ overflow: hidden; width:0px; height:0px; top: 2px; border-top: 4px solid black; border-left: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 4px solid transparent; float: right; }
 .ggroupblackcomplete		{ float:left; overflow: hidden; height:3px; filter: alpha(opacity=80); opacity:0.8; background-color:#777777; margin-top:2px; margin-bottom: 2px; }
 .gtaskblue {
 	background: rgb(58,132,195); /* Old browsers */
@@ -164,27 +165,28 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 .gCurDate			{ border-color: #0000ff; }
 
 
-div.gtaskbarcontainer		{ z-index: 1; }
+div.gtaskbarcontainer		{ z-index: 1; position: absolute; top: 0px }
 
 .JSGanttToolTip		{position: absolute; display: block; z-index: 2;}
 .JSGanttToolTipcont	{font-family: tahoma, arial, verdana; font-size: 10px; display: block; background: #ffffff; color: #656565}
 .gTaskInfo			{background: #dbecff; width: 400px; border: #656565 1px solid; border-radius: 10px; padding: 4px 6px 4px 6px; float: left;}
-.gTtTitle			{position:absolute; font-size: 12px; font-weight: bold; color: #404040; margin-left: 4px;}
+.gTtTitle			{display: block; font-size: 12px; font-weight: bold; color: #404040; margin-left: 4px; margin-bottom: 1em;}
 .gTaskLabel 		{font-size: 11px; font-weight: bold; color: #656565; margin-left: 4px;}
-.gTaskText	 		{position:absolute; left: 90px; padding-top: 2px; font-size: 10px; font-weight: normal; color: #656565;}
-.gTaskNotes 		{font-size: 11px; font-weight: normal; color: #323232; padding-left: 15px; padding-right: 15px; display: block;}
+.gTaskText	 		{position:absolute; left: 90px; padding-top: 1px; font-size: 10px; font-weight: normal; color: #656565;}
+.gTaskNotes 		{font-size: 11px; font-weight: normal; color: #323232; padding: 0 15px; display: block;}
+.gTIn	 			{padding-top: 10px;}
 
 .gantt				{ min-width: 1064px;	/* 2x LC width */ }
 .gchartcontainer	{ padding-left: 532px;	/* LC width */ }
-.gcontainercol		{ position: relative; float: left; }
+.gcontainercol		{ position: relative; float: left; } /* Add a max-height value here if wanted */
 .glistgrid			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
 .glistlbl			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
 .glabelfooter		{ clear: both; }
 .ggridfooter		{ clear: both; }
 
-.rhscrpad			{ width: 150px; }
+.rhscrpad			{ width: 150px; position: absolute; top: 0px; height: 1px; }
 
-.gchartgrid			{ width: 100%; padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0% }
+.gchartgrid			{ width: 100%; padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0%; }
 .gchartlbl			{ width: 100%; padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: hidden; }
 
 /* Old Internet Explorer version hacks */
