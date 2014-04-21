@@ -18,7 +18,7 @@
 	<task>
 		<pID>20</pID>
 		<pName>Move to WCF from remoting</pName>
-		<pStart>2014-05-11</pStart>
+		<pStart>2014-05-11 09:00</pStart>
 		<pEnd>2014-05-15</pEnd>
 		<pClass>gtaskblue</pClass>
 		<pLink></pLink>
@@ -35,8 +35,8 @@
 	<task>
 		<pID>30</pID>
 		<pName>add Auditing</pName>
-		<pStart>2014-05-19</pStart>
-		<pEnd>2014-05-21</pEnd>
+		<pStart>2014-05-19 10:30</pStart>
+		<pEnd>2014-05-21 12:00</pEnd>
 		<pClass>gtaskblue</pClass>
 		<pLink></pLink>
 		<pMile>0</pMile>
