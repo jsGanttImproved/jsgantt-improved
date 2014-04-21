@@ -1,4 +1,4 @@
-/* Sample CSS for jsGanttImproved v1.3 */
+/* Sample CSS for jsGanttImproved v1.4 */
 body						{ font-family:tahoma, arial, verdana, Sans-serif; font-size:10px; color: #656565; }
 
 .gantt table	{ border-collapse: collapse; }
@@ -202,6 +202,7 @@ div.glistgrid {
 }
 div.gchartgrid { *padding-bottom: 20px; *overflow-y: hidden; } /* variable height design, no need for vertical scroll */
 td.gmajorheading div { *overflow: hidden; } /* stops resizing fixed width columns if the text is too wide */
+td.gspanning div { *overflow: hidden; } /* stops resizing fixed width columns if the text is too wide */
 
 /* border transparency tricks */
 .ggroupblackendpointleft { _border-top: 4px solid black; _border-left: 4px solid pink; _border-bottom: 4px solid pink; _border-right: 4px solid pink; _filter: chroma(color=pink); } 

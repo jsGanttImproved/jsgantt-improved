@@ -73,7 +73,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.2</div>
+<div class="header">jsGanttImproved - 1.4</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -93,12 +93,13 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 <script type="text/javascript">
 
-	var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day' );
+	var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'hour' );
 
 	if( g.getDivId() != null ) {
 		g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
 		g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
 		g.setDayMajorDateDisplayFormat('dd mon');
+		g.setDateTaskDisplayFormat('dd month yyyy HH:MI');
 		// use the XML file parser
 		JSGantt.parseXML('project.xml',g)
 
@@ -123,6 +124,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <li>Dynamic Loading of Tasks</li>
 <li>Dynamic change of format
   <ul>
+    <li>Hour</li>
     <li>Day</li>
     <li>Week</li>
     <li>Month</li>
@@ -140,6 +142,11 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.4:</h4>
+<ul>
+<li>Reintroduced hour view</li>
+<li>Changed definition of "<a href="#setUseSingleCell">setUseSingleCell</a>" to try an prevent huge charts causing issues</li>
+</ul>
 <h4>v1.3:</h4>
 <ul>
 <li>Code refactored to:
@@ -295,7 +302,7 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-2
 <dt>pComp</dt><dd>(required) completion percent, numeric</dd>
 <dt>pGroup</dt><dd>(optional) indicates whether this is a group task (parent) - Numeric; 0 = normal task, 1 = standard group task, 2 = combined group task<a href='#combinedtasks' class="footnote">*</a></dd>
 <dt>pParent</dt><dd>(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0</dd>
-<dt>pOpen</dt><dd>(required) indicates whether a group task is open when chart is first drawn. Value must be set for all items but is only used by group tasks.  Numeric, 1 = open, 0 = closed</dd>
+<dt>pOpen</dt><dd>(required) indicates whether a standard group task is open when chart is first drawn. Value must be set for all items but is only used by standard group tasks.  Numeric, 1 = open, 0 = closed</dd>
 <dt>pDepend</dt><dd>(optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item<br />Each id can optionally be followed by a dependency type suffix. Valid values are:<blockquote>'FS' - Finish to Start (default if suffix is omitted)<br />'SF' - Start to Finish<br />'SS' - Start to Start<br />'FF' - Finish to Finish</blockquote>If present the suffix must be added directly to the id e.g. '123SS'</dd>
 <dt>pCaption</dt><dd>(optional) caption that will be added after task bar if CaptionType set to "Caption"</dd>
 <dt>pNotes</dt><dd>(optional) Detailed task information that will be displayed in tool tip for this task</dd>
@@ -365,7 +372,6 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt id="setUseMove">setUseMove()</dt><dd>Controls use of the sliding effect when changing between different task tool tips, defaults to 1 (enabled)</dd>
 <dt id="setUseRowHlt">setUseRowHlt()</dt><dd>Controls the use of row mouseover highlighting, defaults to 1 (enabled)</dd>
 <dt id="setUseSort">setUseSort()</dt><dd>Controls whether the task list is sorted into parent task / start time order or is simply displayed in the order created, defaults to 1 (sort enabled)</dd>
-<dt id="setUseSingleCell">setUseSingleCell()</dt><dd>Controls whether the task list uses a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts, defaults to 0 (use multiple cells)</dd>
 <dt id="setShowRes">setShowRes()</dt><dd>Controls whether the Resource column is displayed in the task list, defaults to 1 (show column)</dd>
 <dt id="setShowDur">setShowDur()</dt><dd>Controls whether the Task Duration column is displayed in the task list, defaults to 1 (show column)</dd>
 <dt id="setShowComp">setShowComp()</dt><dd>Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)</dd>
@@ -385,15 +391,17 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <p>The following options enable functionality using a set of specific key values</p>
 <dl class="configlist">
 <dt id="setShowSelector">setShowSelector()</dt><dd>Controls where the format selector is displayed, accepts multiple parameters.<br/>Valid parameter values are &quot;Top&quot;, &quot;Bottom&quot;.<br/>Defaults to "Top".</dd>
-<dt id="setFormatArr">setFormatArr()</dt><dd>Controls which format options are shown in the format selector, accepts multiple parameters.<br/>Valid parameter values are &quot;Day&quot;, &quot;Week&quot;, &quot;Month&quot;, &quot;Quarter&quot;.<br/>Defaults to all valid values.</dd>
+<dt id="setFormatArr">setFormatArr()</dt><dd>Controls which format options are shown in the format selector, accepts multiple parameters.<br/>Valid parameter values are &quot;Hour&quot;, &quot;Day&quot;, &quot;Week&quot;, &quot;Month&quot;, &quot;Quarter&quot;.<br/>Defaults to all valid values.</dd>
 <dt id="setCaptionType">setCaptionType()</dt><dd>Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter.<br/>Valid parameter values are &quot;None&quot;, &quot;Caption&quot;, &quot;Resource&quot;, &quot;Duration&quot;, &quot;Complete&quot;.<br/>Defaults to &quot;None&quot;</dd>
 <dt id="setDateInputFormat">setDateInputFormat()</dt><dd>Defines the input format used for dates in task creation, accepts a single parameter.<br/>Valid parameter values are &quot;yyyy-mm-dd&quot;, &quot;dd/mm/yyyy&quot;, &quot;mm/dd/yyyy&quot;.<br/>Defaults to &quot;yyyy-mm-dd&quot;</dd>
 <dt id="setScrollTo">setScrollTo()</dt><dd>Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value &quot;today&quot;<br/>Defaults to minimum display date</dd>
+<dt id="setUseSingleCell">setUseSingleCell()</dt><dd>Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  A value of 0 disables this functionality (always use multiple cells), defaults to 25000</dd>
 </dl>
 <h3 id="tOptionsLayout">Layout</h3>
 <p>Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.</p>
 <p>Note that the task bar sizing code assumes the use of collapsed table borders 1px wide.</p>
 <dl class="configlist">
+<dt id="setHourColWidth">setHourColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Hour" format. Defaults to 18.</dd>
 <dt id="setDayColWidth">setDayColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Day" format. Defaults to 18.</dd>
 <dt id="setWeekColWidth">setWeekColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Week" format. Defaults to 36.</dd>
 <dt id="setMonthColWidth">setMonthColWidth()</dt><dd>Width of Gantt Chart columns in pixels when drawn in "Month" format. Defaults to 36.</dd>
@@ -405,6 +413,14 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <p>Date display formats can be individually controlled. The methods used to set these display formats each take a single format string parameter.  The format string can be made up of the following components (case sensitive)</p>
 <blockquote>
 <dl>
+<dt>h</dt><dd>Hour (1-12)</dd>
+<dt>hh</dt><dd>Hour (01-12)</dd>
+<dt>pm</dt><dd>am/pm indicator</dd>
+<dt>PM</dt><dd>AM/PM indicator</dd>
+<dt>H</dt><dd>Hour (0-23)</dd>
+<dt>HH</dt><dd>Hour (01-23)</dd>
+<dt>mi</dt><dd>Minutes (1-59)</dd>
+<dt>MI</dt><dd>Minutes (01-59)</dd>
 <dt>d</dt><dd>Day (1-31)</dd>
 <dt>dd</dt><dd>Day (01-31)</dd>
 <dt>day</dt><dd>Abbriviated day of week</dd>
@@ -421,17 +437,19 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt>ww</dt><dd>ISO Week number (01-53)</dd>
 <dt>week</dt><dd>Full ISO Week date format</dd>
 </dl>
-<p>separated by one of the following characters: <strong>&quot;/\-.,&#39;&lt;space&gt;</strong></p>
+<p>separated by one of the following characters: <strong>&quot;/\-.,&#39;&lt;space&gt;:</strong></p>
 <p>Any text between separators that does not match one of the components above will be output unchanged.</p>
 </blockquote>
 <p id="tOptionsDateFormats"The available date display methods are</p>
 <dl class="dateconfiglist">
 <dt id="setDateTaskTableDisplayFormat">setDateTaskTableDisplayFormat()</dt><dd>Date format used for start and end dates in the main task list. Defaults to 'dd/mm/yyyy'.</dd>
 <dt id="setDateTaskDisplayFormat">setDateTaskDisplayFormat()</dt><dd>Date format used for start and end dates in task tool tips. Defaults to 'dd month yyyy'.</dd>
+<dt id="setHourMajorDateDisplayFormat">setHourMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Hour" format. Defaults to 'day dd month yyyy'.</dd>
 <dt id="setDayMajorDateDisplayFormat">setDayMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Day" format. Defaults to 'dd/mm/yyyy'.</dd>
 <dt id="setWeekMajorDateDisplayFormat">setWeekMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Week" format. Defaults to 'yyyy'.</dd>
 <dt id="setMonthMajorDateDisplayFormat">setMonthMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Month" format. Defaults to 'yyyy'.</dd>
 <dt id="setQuarterMajorDateDisplayFormat">setQuarterMajorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart major date headings displayed in "Year" format. Defaults to 'yyyy'.</dd>
+<dt id="setHourMinorDateDisplayFormat">setHourMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Hour" format. Defaults to 'HH'.</dd>
 <dt id="setDayMinorDateDisplayFormat">setDayMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Day" format. Defaults to 'dd'.</dd>
 <dt id="setWeekMinjorDateDisplayFormat">setWeekMinjorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.</dd>
 <dt id="setMonthMinorDateDisplayFormat">setMonthMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.</dd>
@@ -444,6 +462,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 g.setCaptionType('Resource');
 g.setShowTaskInfoLink(1);
 g.setDayMajorDateDisplayFormat('dd mon');
+g.setDateTaskDisplayFormat('dd month yyyy HH:MI');
 </pre>
 
 <p>Putting all this information together the final code to produce the chart above is as follows:</p>
@@ -453,12 +472,13 @@ g.setDayMajorDateDisplayFormat('dd mon');
 &lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;
 &lt;script&gt;
 
- var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
+ var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'hour');
 
  if( g.getDivId() != null ) {
   g.setCaptionType('Resource');
   g.setShowTaskInfoLink(1);
   g.setDayMajorDateDisplayFormat('dd mon');
+  g.setDateTaskDisplayFormat('dd month yyyy HH:MI');
 
   JSGantt.parseXML('project.xml',g)
 
