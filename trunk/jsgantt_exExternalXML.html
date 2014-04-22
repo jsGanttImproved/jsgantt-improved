@@ -73,7 +73,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.4</div>
+<div class="header">jsGanttImproved - 1.4.1</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -142,20 +142,26 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.4.1:</h4>
+<ul>
+<li>Task duration now calculated using the same method as is used to size and position task bars</li>
+<li>Fixed positioning bug in day format where charts spanned a DST clock change (only noticeable if column width set to large value)</li>
+<li>Milestones owned by combined group items are now ignored completely rather than hidden</li>
+</ul>
 <h4>v1.4:</h4>
 <ul>
 <li>Reintroduced hour view</li>
-<li>Changed definition of "<a href="#setUseSingleCell">setUseSingleCell</a>" to try an prevent huge charts causing issues</li>
+<li>Changed definition of "<a href="#setUseSingleCell">setUseSingleCell</a>" to try and prevent huge charts causing issues</li>
 </ul>
 <h4>v1.3:</h4>
 <ul>
 <li>Code refactored to:
 <ul>
 <li>Move the last non-structural style information from javascript to css file</li>
-<li>Tooltip DIV slightly restructured to allow styling rather than relying on line breaks for layout</li>
+<li>Restructure the Tooltip DIV slightly to allow styling rather than relying on line breaks for layout</li>
 <li>Create the chart using createElement() and appendChild() rather than innerHTML to enable...</li>
 </ul></li>
-<li>New "Combined Group" element created. Combined groups show all child task information on one row.</li>
+<li>New "Combined Group" element created. Combined groups show all child task information on one row</li>
 </ul>
 <blockquote><p>
 Please see the differences for the CSS file in code revision <a href="https://code.google.com/p/jsgantt-improved/source/diff?spec=svn21&old=18&r=21&format=side&path=%2Ftrunk%2Fjsgantt.css">r21</a> for details of CSS structural changes.
@@ -167,7 +173,7 @@ Please see the differences for the CSS file in code revision <a href="https://co
 </ul>
 <blockquote><p>Both these updates required changes to existing element IDs and style classes.  Custom stylesheets will most likely need to be updated.
 </p><p>
-All chart element ids are now prefixed with the id of the master DIV containing the chart.  As a result the default stylesheet has been updated to no longer uses any element ids to apply styles.
+All chart element ids are now prefixed with the id of the master DIV containing the chart.  As a result the default stylesheet has been updated to no longer use any element ids to apply styles.
 </p><p>
 Please see the notes for code revision <a href="http://code.google.com/p/jsgantt-improved/source/detail?r=18">r18</a> for details of CSS structural changes.
 </p></blockquote>
