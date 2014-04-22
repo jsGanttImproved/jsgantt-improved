@@ -54,7 +54,7 @@ Method definition:
 ||_pComp:_||(required) completion percent, numeric||
 ||_pGroup:_||(optional) indicates whether this is a group task (parent) - Numeric; 0 = normal task, 1 = standard group task, 2 = combined group task^*^||
 ||_pParent:_||(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0||
-||_pOpen:_||(required) indicates whether a group task is open when chart is first drawn. Value must be set for all items but is only used by group tasks.  Numeric, 1 = open, 0 = closed||
+||_pOpen:_||(required) indicates whether a standard group task is open when chart is first drawn. Value must be set for all items but is only used by standard group tasks.  Numeric, 1 = open, 0 = closed||
 ||_pDepend:_||(optional) comma separated list of id's this task is dependent on. A line will be drawn from each listed task to this item. Each id can optionally be followed by a dependency type suffix. Valid values are: 'FS' - Finish to Start (default if suffix is omitted), 'SF' - Start to Finish, 'SS' - Start to Start, 'FF' - Finish to Finish. If present the suffix must be added directly to the id e.g. '123SS'||
 ||_pCaption:_||(optional) caption that will be added after task bar if !CaptionType set to "Caption"||
 ||_pNotes:_||(optional) Detailed task information that will be displayed in tool tip for this task||
