@@ -29,7 +29,7 @@ var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
 
 Method definition: *!GanttChart(_pDiv_, _pFormat_)*
 || _pDiv:_ || (required) this is a DIV object created in HTML ||
-|| _pFormat:_ || (required) used to indicate whether chart should be drawn in "day", "week", "month", or "quarter" format ||
+|| _pFormat:_ || (required) used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format ||
 
 == Customize the look and feel using configuration methods ==
 see [Documentation#Options Configuration Options] below
@@ -45,7 +45,7 @@ Method definition:
 *!TaskItem(_pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes_)*
 ||_pID:_||(required) a unique numeric ID used to identify each row||
 ||_pName:_||(required) the task Label||
-||_pStart:_||(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2013-02-20 12:00) for additional precision or half days (not currently supported in Chrome).||
+||_pStart:_||(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (e.g. 2013-02-20 09:00) for additional precision or half days||
 ||_pEnd:_||(required) the task end date, can enter empty date ('') for groups||
 ||_pClass:_||(required) the css class for this task; defaults to "ggroupblack"||
 ||_pLink:_||(optional) any http link to be displayed in tool tip as the "More information" link.||
