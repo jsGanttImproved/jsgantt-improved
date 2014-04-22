@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _  _  _
-	  (_) / _ \ \_   \ / || || |
-	  | |/ /_\/  / /\/ | || || |_
-	  | / /_\\/\/ /_   | ||__   _|
-	 _/ \____/\____/   |_(_) |_|
+	   _   ___  _____   _  _  _    _
+	  (_) / _ \ \_   \ / || || |  / |
+	  | |/ /_\/  / /\/ | || || |_ | |
+	  | / /_\\/\/ /_   | ||__   _|| |
+	 _/ \____/\____/   |_(_) |_|(_)_|
 	|__/
-	jsGanttImproved 1.4
+	jsGanttImproved 1.4.1
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -188,47 +188,33 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 			vDuration = '-';
 		}
 		else
-		{ //if(vFormat == 'day'){
-			tmpPer = Math.ceil((this.getEnd() - this.getStart()) / (24 * 60 * 60 * 100) + 10)/10;
-			if(Math.floor(tmpPer) != tmpPer) tmpPer=((tmpPer*10)-10)/10; // I know, trust me
-			if(tmpPer == 1)	vDuration = '1 Day';
-			else			vDuration = tmpPer + ' Days';
+		{
+			var vTaskEnd=new Date(this.getEnd().getTime())
+			var vUnits=null;
+			switch( vFormat )
+			{
+				case 'week':  vUnits='day'; break;
+				case 'month':  vUnits='week'; break;
+				case 'quarter': vUnits='month'; break;
+				default: vUnits=vFormat; break;
+			}
+
+			if ((vTaskEnd.getTime()-(vTaskEnd.getTimezoneOffset()*60000)) % (86400000) == 0)
+			{
+				vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate()+1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
+			}
+			tmpPer = (JSGantt.getOffset(this.getStart(), vTaskEnd, 999, vUnits))/1000;
+			if(Math.floor(tmpPer) != tmpPer) tmpPer=Math.round(tmpPer*10)/10;
+			switch( vUnits )
+			{
+				case 'hour': vDuration=tmpPer+' Hr'; break;
+				case 'day': vDuration=tmpPer+' Day'; break;
+				case 'week': vDuration=tmpPer+' Wk'; break;
+				case 'month': vDuration=tmpPer+' Mth'; break;
+				case 'quarter': vDuration=tmpPer+' Qtr'; break;
+			}
+			if (tmpPer != 1)vDuration+='s';
 		}
-
-		/*
-			else if(vFormat == 'week')
-			{
-			tmpPer = ((this.getEnd() - this.getStart()) / (24 * 60 * 60 * 100) + 10)/70;
-			if(Math.floor(tmpPer) != tmpPer) tmpPer=((tmpPer*10)-10)/10;
-			if(tmpPer == 1)	vDuration = '1 Week';
-			else			vDuration = tmpPer + ' Weeks';
-			}
-
-			else if(vFormat == 'month')
-			{
-			tmpPer = ((this.getEnd() - this.getStart()) / (24 * 60 * 60 * 100) + 10)/300;
-			if(Math.floor(tmpPer) != tmpPer) tmpPer=((tmpPer*10)-10)/10;
-			if(tmpPer == 1)	vDuration = '1 Month';
-			else			vDuration = tmpPer + ' Months';
-			}
-
-			else if(vFormat == 'quarter')
-			{
-			tmpPer = ((this.getEnd() - this.getStart()) / (24 * 60 * 60 * 100) + 10)/1200;
-			if(Math.floor(tmpPer) != tmpPer) tmpPer=((tmpPer*10)-10)/10;
-			if(tmpPer == 1)	vDuration = '1 Qtr';
-			else			vDuration = tmpPer + ' Qtrs';
-			}
-
-			else if(vFormat == 'hour')
-			{
-			tmpPer = ((this.getEnd() - this.getStart()) / (60 * 60 * 100) + 10)/10;
-			if(Math.floor(tmpPer) != tmpPer) tmpPer=((tmpPer*10)-10)/10;
-			if(tmpPer == 1)	vDuration = '1 Hour';
-			else			vDuration = tmpPer + ' Hours';
-			}
-
-		*/
 		return( vDuration )
 	};
 
@@ -630,18 +616,20 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 				vDependType = vList[i].getDepType();
 				var n = vDepend.length;
 
-				if(n>0 && vList[i].getVisible()==1 || (vList[i].getParItem() && vList[i].getParItem().getGroup()==2 && vList[i].getParItem().getVisible()==1 && vList[i].getMile()!=1))
+				if(n>0 && vList[i].getVisible()==1)
 				{
 					for(var k=0;k<n;k++)
 					{
 						vTask = this.getArrayLocationByID(vDepend[k]);
 						if (vTask && vList[vTask].getGroup()!=2)
 						{
-							if((vList[vTask].getVisible()==1) || (vList[vTask].getParItem() && vList[vTask].getParItem().getGroup()==2 && vList[vTask].getParItem().getVisible()==1 && vList[vTask].getMile()!=1))
-							if(vDependType[k]=='SS')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getStartX()-1,vList[i].getStartY(),'SS','gDepSS');
-							else if(vDependType[k]=='FF')this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getEndX(),vList[i].getEndY(),'FF','gDepFF');
-							else if(vDependType[k]=='SF')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getEndX(),vList[i].getEndY(),'SF','gDepSF');
-							else if(vDependType[k]=='FS')this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getStartX()-1,vList[i].getStartY(),'FS','gDepFS');
+							if(vList[vTask].getVisible()==1)
+							{
+								if(vDependType[k]=='SS')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getStartX()-1,vList[i].getStartY(),'SS','gDepSS');
+								else if(vDependType[k]=='FF')this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getEndX(),vList[i].getEndY(),'FF','gDepFF');
+								else if(vDependType[k]=='SF')this.drawDependency(vList[vTask].getStartX()-1,vList[vTask].getStartY(),vList[i].getEndX(),vList[i].getEndY(),'SF','gDepSF');
+								else if(vDependType[k]=='FS')this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getStartX()-1,vList[i].getStartY(),'FS','gDepFS');
+							}
 						}
 					}
 				}
@@ -1009,7 +997,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 			{
 				var curTaskStart = vTaskList[i].getStart();
 				var curTaskEnd = vTaskList[i].getEnd();
-				if ((curTaskEnd.getTime()-(curTaskEnd.getTimezoneOffset()*60000)) % (24 * 60 * 60 * 1000) == 0) curTaskEnd = new Date(curTaskEnd.getTime() + (24 * 60 * 60 * 1000)); // add 1 day here to simplify calculations below
+				if ((curTaskEnd.getTime()-(curTaskEnd.getTimezoneOffset()*60000)) % (86400000) == 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate()+1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
 
 				vTaskLeftPx = JSGantt.getOffset(vMinDate, curTaskStart, vColWidth, vFormat);
 				vTaskRightPx = JSGantt.getOffset(curTaskStart, curTaskEnd, vColWidth, vFormat);
@@ -1625,15 +1613,18 @@ JSGantt.getOffset = function(pStartDate, pEndDate, pColWidth, pFormat)
 	var curTaskStart = new Date(pStartDate.getTime());
 	var curTaskEnd = new Date(pEndDate.getTime());
 	var vTaskRightPx = 0;
+	var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
+	var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
 
-	var vTaskRight = (curTaskEnd.getTime() - curTaskStart.getTime()) / (86400000); // length of task in days
+	vTaskRight = (tmpTaskEnd-tmpTaskStart)/3600000 // Length of task in hours
+
 	if(pFormat == 'day')
 	{
-		vTaskRightPx = Math.ceil(vTaskRight * (pColWidth + 1));
+		vTaskRightPx = Math.ceil((vTaskRight/24) * (pColWidth + 1));
 	}
 	else if(pFormat == 'week')
 	{
-		vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + 1))/7);
+		vTaskRightPx = Math.ceil(((vTaskRight/24) * (pColWidth + 1))/7);
 	}
 	else if(pFormat == 'month')
 	{
@@ -1656,14 +1647,11 @@ JSGantt.getOffset = function(pStartDate, pEndDate, pColWidth, pFormat)
 	else if(pFormat == 'hour')
 	{
 		// can't just calculate sum because of daylight savings changes
-		var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
-		var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
-		var vHoursDiff = (tmpTaskEnd-tmpTaskStart)/(3600000)
 		var vPosTmpDate = new Date(curTaskEnd.getTime());
 		vPosTmpDate.setMinutes(curTaskStart.getMinutes(), 0);
 		var vMinsCrctn = (curTaskEnd.getTime()- vPosTmpDate.getTime())/(3600000);
 
-		vTaskRightPx = Math.ceil((vHoursDiff * (pColWidth + 1)) + (vMinsCrctn * (pColWidth)));
+		vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + 1)) + (vMinsCrctn * (pColWidth)));
 	}
 	return vTaskRightPx;
 }
@@ -1701,8 +1689,14 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 			vVisible = pOpen;
 			pList[i].setParItem(vCurItem);
 			pList[i].setVisible(vVisible);
-			if(vVisible==1 && pList[i].getOpen() == 0)
-			vVisible = 0;
+			if(vVisible==1 && pList[i].getOpen() == 0) vVisible = 0;
+
+			if(pList[i].getMile() && pList[i].getParItem() && pList[i].getParItem().getGroup()==2)
+			{ //remove milestones owned by combined groups
+				pList.splice(i,1);
+				i--;
+				continue;
+			}
 
 			pList[i].setLevel(vLevel);
 			vNumKid++;
@@ -1963,8 +1957,7 @@ JSGantt.hide= function (pID,ganttObj)
 			if (JSGantt.findObj(vDivId+'child_'+vID)) JSGantt.findObj(vDivId+'child_'+vID).style.display = "none";
 			if (JSGantt.findObj(vDivId+'childrow_'+vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "none";
 			vList[i].setVisible(0);
-			if(vList[i].getGroup())
-			JSGantt.hide(vID,ganttObj);
+			if(vList[i].getGroup()) JSGantt.hide(vID,ganttObj);
 		}
 	}
 }
@@ -1977,8 +1970,11 @@ JSGantt.show = function (pID, pTop, ganttObj)
 	var vDivId = ganttObj.getDivId();
 	var vState = '';
 
-	if (JSGantt.isIE()) vState=JSGantt.findObj(vDivId+'group_'+pID).innerText;
-	else vState=JSGantt.findObj(vDivId+'group_'+pID).textContent;
+	if (JSGantt.findObj(vDivId+'group_'+pID))
+	{
+		if (JSGantt.isIE()) vState=JSGantt.findObj(vDivId+'group_'+pID).innerText;
+		else vState=JSGantt.findObj(vDivId+'group_'+pID).textContent;
+	}
 
 	for(var i = 0; i < vList.length; i++)
 	{
@@ -1989,6 +1985,7 @@ JSGantt.show = function (pID, pTop, ganttObj)
 
 			if(pTop == 1 && vState == '+')vChgState=true;
 			else if( vState == '-')vChgState=true;
+			else if( vList[i].getParItem() && vList[i].getParItem().getGroup()==2 )vList[i].setVisible(1);
 
 			if( vChgState )
 			{
@@ -1996,7 +1993,7 @@ JSGantt.show = function (pID, pTop, ganttObj)
 				if (JSGantt.findObj(vDivId+'childrow_'+vID)) JSGantt.findObj(vDivId+'childrow_'+vID).style.display = "";
 				vList[i].setVisible(1);
 			}
-			if(vList[i].getGroup()==1) JSGantt.show(vID, 0,ganttObj);
+			if(vList[i].getGroup()) JSGantt.show(vID, 0,ganttObj);
 		}
 	}
 }
