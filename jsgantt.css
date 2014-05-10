@@ -1,5 +1,5 @@
-/* Sample CSS for jsGanttImproved v1.4.1 */
-body						{ font-family:tahoma, arial, verdana, Sans-serif; font-size:10px; color: #656565; }
+/* Sample CSS for jsGanttImproved v1.5 */
+div.gantt		{ font-family:tahoma, arial, verdana, Sans-serif; font-size:10px; color: #656565; }
 
 .gantt table	{ border-collapse: collapse; }
 .gantt td { padding: 0px; }
@@ -217,7 +217,7 @@ td.gspanning div { *overflow: hidden; } /* stops resizing fixed width columns if
 .gitemhour td			{ background-size: 19px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px); width: 100%; height: 19px; }
 .ggroupday td,
 .gmileday td,
-.gitemday td			{ background-size: 19px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px); width: 100%; height: 19px; }
+.gitemday td			{ background-size: 19px 1px, 133px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px), linear-gradient(to left, #f7f7f7 39px, transparent 1px, transparent 92px); width: 100%; height: 19px; }
 .ggroupmonth td,
 .gmileweek td,
 .gitemweek td			{ background-size: 37px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 36px); width: 100%; height: 19px; }
