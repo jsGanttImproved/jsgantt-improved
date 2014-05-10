@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="jsgantt.css"/>
 <style type="text/css">
 <!--
-body	{ font-size: 0.8em; }
+body	{ font-size: 0.8em; font-family:tahoma, arial, verdana, Sans-serif; color: #656565;}
 h3 { margin: 0px; font-size: 1em; }
 h4 { margin: 0px; margin-left: 10px; font-size: 1em; }
 
@@ -40,6 +40,7 @@ dd { margin: 0 0 0 70px;
 .configlist dd {margin: 0 0 0 180px;}
 .dateconfiglist dt {width: 240px;}
 .dateconfiglist dd {margin: 0 0 0 250px;}
+.lang {width: 150px; min-width: 150px; max-width: 150px; vertical-align: top;}
 
 .header {border-top: #bbbbbb 3px solid;
 	border-bottom: #cfcfcf 3px solid;
@@ -73,7 +74,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.4.1</div>
+<div class="header">jsGanttImproved - 1.5</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -142,11 +143,19 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
-<h4>v1.4.1:</h4>
+<h4>v1.5:</h4>
 <ul>
+<li>Added support for Internationalisation</li>
 <li>Task duration now calculated using the same method as is used to size and position task bars</li>
-<li>Fixed positioning bug in day format where charts spanned a DST clock change (only noticeable if column width set to large value)</li>
 <li>Milestones owned by combined group items are now ignored completely rather than hidden</li>
+<li>Fixed positioning bug in day format where charts spanned a DST clock change (only noticeable if column width set to large value)</li>
+<li>Fixed a number of minor bugs
+  <ul>
+  <li>Dependencies on the first task displayed did not display</li>
+  <li>Combined group task rows are now styled like standard tasks</li>
+  <li>Disabling the tool tip caused problems with scrolling</li>
+  </ul>
+</li>
 </ul>
 <h4>v1.4:</h4>
 <ul>
@@ -402,6 +411,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt id="setDateInputFormat">setDateInputFormat()</dt><dd>Defines the input format used for dates in task creation, accepts a single parameter.<br/>Valid parameter values are &quot;yyyy-mm-dd&quot;, &quot;dd/mm/yyyy&quot;, &quot;mm/dd/yyyy&quot;.<br/>Defaults to &quot;yyyy-mm-dd&quot;</dd>
 <dt id="setScrollTo">setScrollTo()</dt><dd>Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value &quot;today&quot;<br/>Defaults to minimum display date</dd>
 <dt id="setUseSingleCell">setUseSingleCell()</dt><dd>Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  A value of 0 disables this functionality (always use multiple cells), defaults to 25000</dd>
+<dt id="setLang">setLang()</dt><dd>Sets translation to use when drawing the chart.  Defaults "en" as this is the only language provided in the base installation (see <a href="#tOptionsLanguage">Internationalisation</a> below for details on how to add more translations.)</dd>
 </dl>
 <h3 id="tOptionsLayout">Layout</h3>
 <p>Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.</p>
@@ -461,6 +471,103 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt id="setMonthMinorDateDisplayFormat">setMonthMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.</dd>
 <dt id="setQuarterMinorDateDisplayFormat">setQuarterMinorDateDisplayFormat()</dt><dd>Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.</dd>
 </dl>
+
+<h3 id="tOptionsLanguage">Internationalisation</h3>
+<p>jsGanttImproved only provides English text however all hard coded strings can be replaced by calling the addLang() method available on the GanttChart object returned by a call to JSGantt.GanttChart()</p>
+<p>The addLang() method takes two parameters.  The first is a string identifier for the language, the second is a javascript object containing all the replacement text pairs, the default English settings are:</p>
+<blockquote>
+<table>
+<tbody>
+<tr>
+<td class="lang">
+<dl>
+<dt>january</dt><dd>January</dd>
+<dt>february</dt><dd>February</dd>
+<dt>march</dt><dd>March</dd>
+<dt>april</dt><dd>April</dd>
+<dt>maylong</dt><dd>May</dd>
+<dt>june</dt><dd>June</dd>
+<dt>july</dt><dd>July</dd>
+<dt>august</dt><dd>August</dd>
+<dt>september</dt><dd>September</dd>
+<dt>october</dt><dd>October</dd>
+<dt>november</dt><dd>November</dd>
+<dt>december</dt><dd>December</dd>
+<dt>jan</dt><dd>Jan</dd>
+<dt>feb</dt><dd>Feb</dd>
+<dt>mar</dt><dd>Mar</dd>
+<dt>apr</dt><dd>Apr</dd>
+<dt>may</dt><dd>May</dd>
+<dt>jun</dt><dd>Jun</dd>
+<dt>jul</dt><dd>Jul</dd>
+<dt>aug</dt><dd>Aug</dd>
+<dt>sep</dt><dd>Sep</dd>
+<dt>oct</dt><dd>Oct</dd>
+<dt>nov</dt><dd>Nov</dd>
+<dt>dec</dt><dd>Dec</dd>
+</dl>
+</td>
+<td class="lang">
+<dl>
+<dt>sunday</dt><dd>Sunday</dd>
+<dt>monday</dt><dd>Monday</dd>
+<dt>tuesday</dt><dd>Tuesday</dd>
+<dt>wednesday</dt><dd>Wednesday</dd>
+<dt>thursday</dt><dd>Thursday</dd>
+<dt>friday</dt><dd>Friday</dd>
+<dt>saturday</dt><dd>Saturday</dd>
+<dt>sun</dt><dd>Sun</dd>
+<dt>mon</dt><dd>Mon</dd>
+<dt>tue</dt><dd>Tue</dd>
+<dt>wed</dt><dd>Wed</dd>
+<dt>thu</dt><dd>Thu</dd>
+<dt>fri</dt><dd>Fri</dd>
+<dt>sat</dt><dd>Sat</dd>
+<dt>resource</dt><dd>Resource</dd>
+<dt>duration</dt><dd>Duration</dd>
+<dt>comp</dt><dd>% Comp.</dd>
+<dt>completion</dt><dd>Completion</dd>
+<dt>startdate</dt><dd>Start Date</dd>
+<dt>enddate</dt><dd>End Date</dd>
+<dt>moreinfo</dt><dd>More Information</dd>
+<dt>notes</dt><dd>Notes</dd>
+</dl>
+</td>
+<td class="lang">
+<dl>
+<dt>format</dt><dd>Format</dd>
+<dt>hour</dt><dd>Hour</dd>
+<dt>day</dt><dd>Day</dd>
+<dt>week</dt><dd>Week</dd>
+<dt>month</dt><dd>Month</dd>
+<dt>quarter</dt><dd>Quarter</dd>
+<dt>hours</dt><dd>Hours</dd>
+<dt>days</dt><dd>Days</dd>
+<dt>weeks</dt><dd>Weeks</dd>
+<dt>months</dt><dd>Months</dd>
+<dt>quarters</dt><dd>Quarters</dd>
+<dt>hr</dt><dd>Hr</dd>
+<dt>dy</dt><dd>Day</dd>
+<dt>wk</dt><dd>Wk</dd>
+<dt>mth</dt><dd>Mth</dd>
+<dt>qtr</dt><dd>Qrt</dd>
+<dt>hrs</dt><dd>Hrs</dd>
+<dt>dys</dt><dd>Days</dd>
+<dt>wks</dt><dd>Wks</dd>
+<dt>mths</dt><dd>Mths</dd>
+<dt>qtrs</dt><dd>Qrts</dd>
+</dl>
+</td>
+</tbody>
+</table>
+</blockquote>
+<p>When adding a language any translations that are not provided will use the default English language value.  This provides a simple way to override default strings e.g.</p>
+<pre class="style1">
+g.addLang('en2', {'format':'Select', 'comp':'Complete'});
+</pre>
+<p>would create a language called 'en2' where the text in the format selector was "Select" rather than "Format" and the header for the Percentage Complete column in the task list is "Complete rather than "% Comp."</p>
+<p>Once a translation has been added a call must be made to <a href="#setLang">setLang()</a> with the appropriate langage identifier before calling Draw().</p>
+
 <h3 id="tOptionsExamples">Example Options</h3>
 <p>The configuration options used in the example chart above are:</p>
 
