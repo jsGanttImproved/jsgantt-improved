@@ -150,6 +150,7 @@ The following options enable functionality using a set of specific key values
 ||_setDateInputFormat():_||Defines the input format used for dates in task creation, accepts a single parameter. Valid parameter values are "yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy". Defaults to "yyyy-mm-dd"||
 ||_setScrollTo():_||Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value "today". Defaults to minimum display date||
 ||_setUseSingleCell():_||Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  Numeric, a value of 0 disables this functionality (always use multiple cells), defaults to 25000||
+||_setLang():_||Sets translation to use when drawing the chart.  Defaults "en" as this is the only language provided in the base installation (see [Documentation#Internationalisation Internationalisation] below for details on how to add more translations.)||
 
 == Layout ==
 Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.
@@ -206,6 +207,46 @@ The available date display methods are
 ||_setWeekMinjorDateDisplayFormat():_||Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.||
 ||_setMonthMinorDateDisplayFormat():_||Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.||
 ||_setQuarterMinorDateDisplayFormat():_||Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.||
+
+== Internationalisation ==
+jsGanttImproved only provides English text however all hard coded strings can be replaced by calling the addLang() method available on the GanttChart object returned by a call to JSGantt.GanttChart()
+
+The addLang() method takes two parameters.  The first is a string identifier for the language, the second is a javascript object containing all the replacement text pairs, the default English settings are:
+
+|| *Key Value* || *Display Text* || || *Key Value* || *Display Text* || || *Key Value* || *Display Text* ||
+||_january_||January|| ||_sunday_||Sunday|| ||_format_||Format||
+||_february_||February|| ||_monday_||Monday|| ||_hour_||Hour||
+||_march_||March|| ||_tuesday_||Tuesday|| ||_day_||Day||
+||_april_||April|| ||_wednesday_||Wednesday|| ||_week_||Week||
+||_maylong_||May|| ||_thursday_||Thursday|| ||_month_||Month||
+||_june_||June|| ||_friday_||Friday|| ||_quarter_||Quarter||
+||_july_||July|| ||_saturday_||Saturday|| ||_hours_||Hours||
+||_august_||August|| ||_sun_||Sun|| ||_days_||Days||
+||_september_||September|| ||_mon_||Mon|| ||_weeks_||Weeks||
+||_october_||October|| ||_tue_||Tue|| ||_months_||Months||
+||_november_||November|| ||_wed_||Wed|| ||_quarters_||Quarters||
+||_december_||December|| ||_thu_||Thu|| ||_hr_||Hr||
+||_jan_||Jan|| ||_fri_||Fri|| ||_dy_||Day||
+||_feb_||Feb|| ||_sat_||Sat|| ||_wk_||Wk||
+||_mar_||Mar|| ||_resource_||Resource|| ||_mth_||Mth||
+||_apr_||Apr|| ||_duration_||Duration|| ||_qtr_||Qrt||
+||_may_||May|| ||_comp_||%Comp.|| ||_hrs_||Hrs||
+||_jun_||Jun|| ||_completion_||Completion|| ||_dys_||Days||
+||_jul_||Jul|| ||_startdate_||Start Date|| ||_wks_||Wks||
+||_aug_||Aug|| ||_enddate_||End Date|| ||_mths_||Mths||
+||_sep_||Sep|| ||_moreinfo_||More Information|| ||_qtrs_||Qrts||
+||_oct_||Oct|| ||_notes_||Notes|| || || ||
+||_nov_||Nov|| || || || || || ||
+||_dec_||Dec|| || || || || || ||
+
+
+When adding a language any translations that are not provided will use the default English language value.  This provides a simple way to override default strings e.g.
+<code language="javascript">
+g.addLang('en2', {'format':'Select', 'comp':'Complete'});
+</code>
+would create a language called 'en2' where the text in the format selector was "Select" rather than "Format" and the header for the Percentage Complete column in the task list is "Complete" rather than "% Comp."
+
+Once a translation has been added a call must be made to setLang() with the appropriate language identifier before calling Draw().
 
 == Example Options ==
 The configuration options used in the example index file provided are:
