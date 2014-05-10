@@ -334,7 +334,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 		{
 			if (vValidFormats.indexOf(arguments[i].toLowerCase())!=-1 && arguments[i].length>1)
 			{
-				vFormatArr[j++] = arguments[i];
+				vFormatArr[j++] = arguments[i].toLowerCase();
 				vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
 				vValidFormats = vValidFormats.replace( vRegExp , '' );
 			}
@@ -361,7 +361,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 		{
 			if (vValidSelectors.indexOf(arguments[i].toLowerCase())!=-1 && arguments[i].length>1)
 			{
-				vShowSelector[j++] = arguments[i];
+				vShowSelector[j++] = arguments[i].toLowerCase();
 				vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
 				vValidSelectors = vValidSelectors.replace( vRegExp , '' );
 			}
@@ -1203,7 +1203,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 				for ( var j = 0; j < vFormatArr.length; j++ )
 				{
 					var vSelectorDisplayFormat = vFormatArr[j].toLowerCase();
-					var vSelectorId = vDivId+"format" + vFormatArr[j] + vShowSelector[i];
+					var vSelectorId = vDivId+"format" + vFormatArr[j].toLowerCase() + vShowSelector[i];
 					JSGantt.addFormatListeners(this, vSelectorDisplayFormat, vSelectorId);
 				}
 			}
@@ -1271,19 +1271,19 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 			var vTmpDiv = this.newNode(vOutput, 'div', null, 'gselector', vLangs[vLang]['format']+':' );
 
 			if (vFormatArr.join().toLowerCase().indexOf("hour")!=-1)
-				this.newNode(vTmpDiv, 'span', vDivId+'formatHour'+pPos, 'gformlabel'+((vFormat=='hour')?' gselected':''), vLangs[vLang]['hour'] );
+				this.newNode(vTmpDiv, 'span', vDivId+'formathour'+pPos, 'gformlabel'+((vFormat=='hour')?' gselected':''), vLangs[vLang]['hour'] );
 
 			if (vFormatArr.join().toLowerCase().indexOf("day")!=-1)
-				this.newNode(vTmpDiv, 'span', vDivId+'formatDay'+pPos, 'gformlabel'+((vFormat=='day')?' gselected':''), vLangs[vLang]['day'] );
+				this.newNode(vTmpDiv, 'span', vDivId+'formatday'+pPos, 'gformlabel'+((vFormat=='day')?' gselected':''), vLangs[vLang]['day'] );
 
 			if (vFormatArr.join().toLowerCase().indexOf("week")!=-1)
-				this.newNode(vTmpDiv, 'span', vDivId+'formatWeek'+pPos, 'gformlabel'+((vFormat=='week')?' gselected':''), vLangs[vLang]['week'] );
+				this.newNode(vTmpDiv, 'span', vDivId+'formatweek'+pPos, 'gformlabel'+((vFormat=='week')?' gselected':''), vLangs[vLang]['week'] );
 
 			if (vFormatArr.join().toLowerCase().indexOf("month")!=-1)
-				this.newNode(vTmpDiv, 'span', vDivId+'formatMonth'+pPos, 'gformlabel'+((vFormat=='month')?' gselected':''), vLangs[vLang]['month'] );
+				this.newNode(vTmpDiv, 'span', vDivId+'formatmonth'+pPos, 'gformlabel'+((vFormat=='month')?' gselected':''), vLangs[vLang]['month'] );
 
 			if (vFormatArr.join().toLowerCase().indexOf("quarter")!=-1)
-				this.newNode(vTmpDiv, 'span', vDivId+'formatQuarter'+pPos, 'gformlabel'+((vFormat=='quarter')?' gselected':''), vLangs[vLang]['quarter'] );
+				this.newNode(vTmpDiv, 'span', vDivId+'formatquarter'+pPos, 'gformlabel'+((vFormat=='quarter')?' gselected':''), vLangs[vLang]['quarter'] );
 		}
 		else
 		{
