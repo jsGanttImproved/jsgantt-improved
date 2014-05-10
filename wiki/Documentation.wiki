@@ -150,7 +150,7 @@ The following options enable functionality using a set of specific key values
 ||_setDateInputFormat():_||Defines the input format used for dates in task creation, accepts a single parameter. Valid parameter values are "yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy". Defaults to "yyyy-mm-dd"||
 ||_setScrollTo():_||Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value "today". Defaults to minimum display date||
 ||_setUseSingleCell():_||Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  Numeric, a value of 0 disables this functionality (always use multiple cells), defaults to 25000||
-||_setLang():_||Sets translation to use when drawing the chart.  Defaults "en" as this is the only language provided in the base installation (see [Documentation#Internationalisation Internationalisation] below for details on how to add more translations.)||
+||_setLang():_||Sets translation to use when drawing the chart.  Defaults to "en" as this is the only language provided in the base installation (see [Documentation#Internationalisation Internationalisation] below for details on how to add more translations.)||
 
 == Layout ==
 Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.
