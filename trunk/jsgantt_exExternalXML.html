@@ -151,7 +151,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <li>Fixed positioning bug in day format where charts spanned a DST clock change (only noticeable if column width set to large value)</li>
 <li>Fixed a number of minor bugs
   <ul>
-  <li>Dependencies on the first task displayed did not display</li>
+  <li>Dependencies on the first task in the list did not display</li>
   <li>Combined group task rows are now styled like standard tasks</li>
   <li>Disabling the tool tip caused problems with scrolling</li>
   </ul>
@@ -411,7 +411,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt id="setDateInputFormat">setDateInputFormat()</dt><dd>Defines the input format used for dates in task creation, accepts a single parameter.<br/>Valid parameter values are &quot;yyyy-mm-dd&quot;, &quot;dd/mm/yyyy&quot;, &quot;mm/dd/yyyy&quot;.<br/>Defaults to &quot;yyyy-mm-dd&quot;</dd>
 <dt id="setScrollTo">setScrollTo()</dt><dd>Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value &quot;today&quot;<br/>Defaults to minimum display date</dd>
 <dt id="setUseSingleCell">setUseSingleCell()</dt><dd>Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  A value of 0 disables this functionality (always use multiple cells), defaults to 25000</dd>
-<dt id="setLang">setLang()</dt><dd>Sets translation to use when drawing the chart.  Defaults "en" as this is the only language provided in the base installation (see <a href="#tOptionsLanguage">Internationalisation</a> below for details on how to add more translations.)</dd>
+<dt id="setLang">setLang()</dt><dd>Sets translation to use when drawing the chart.  Defaults to "en" as this is the only language provided in the base installation (see <a href="#tOptionsLanguage">Internationalisation</a> below for details on how to add more translations.)</dd>
 </dl>
 <h3 id="tOptionsLayout">Layout</h3>
 <p>Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.</p>
@@ -565,7 +565,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <pre class="style1">
 g.addLang('en2', {'format':'Select', 'comp':'Complete'});
 </pre>
-<p>would create a language called 'en2' where the text in the format selector was "Select" rather than "Format" and the header for the Percentage Complete column in the task list is "Complete rather than "% Comp."</p>
+<p>would create a language called 'en2' where the text in the format selector was "Select" rather than "Format" and the header for the Percentage Complete column in the task list is "Complete" rather than "% Comp."</p>
 <p>Once a translation has been added a call must be made to <a href="#setLang">setLang()</a> with the appropriate langage identifier before calling Draw().</p>
 
 <h3 id="tOptionsExamples">Example Options</h3>
