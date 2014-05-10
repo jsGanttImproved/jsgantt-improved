@@ -209,7 +209,7 @@ The available date display methods are
 ||_setQuarterMinorDateDisplayFormat():_||Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.||
 
 == Internationalisation ==
-jsGanttImproved only provides English text however all hard coded strings can be replaced by calling the addLang() method available on the GanttChart object returned by a call to JSGantt.GanttChart()
+jsGanttImproved only provides English text however all hard coded strings can be replaced by calling the addLang() method available on the !GanttChart object returned by a call to JSGantt.!GanttChart()
 
 The addLang() method takes two parameters.  The first is a string identifier for the language, the second is a javascript object containing all the replacement text pairs, the default English settings are:
 
