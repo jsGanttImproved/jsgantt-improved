@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _  _  _    _
-	  (_) / _ \ \_   \ / || || |  / |
-	  | |/ /_\/  / /\/ | || || |_ | |
-	  | / /_\\/\/ /_   | ||__   _|| |
-	 _/ \____/\____/   |_(_) |_|(_)_|
+	   _   ___  _____   _  _  _    ____
+	  (_) / _ \ \_   \ / || || |  |___ \
+	  | |/ /_\/  / /\/ | || || |_   __) |
+	  | / /_\\/\/ /_   | ||__   _| / __/
+	 _/ \____/\____/   |_(_) |_|(_)_____|
 	|__/
-	jsGanttImproved 1.4.1
+	jsGanttImproved 1.4.2
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -320,7 +320,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 		vFormatArr = new Array();
 		for(var i = 0, j = 0; i < arguments.length; i++)
 		{
-			if (vValidFormats.indexOf(arguments[i])!=-1)
+			if (vValidFormats.indexOf(arguments[i])!=-1 && arguments[i].length>1)
 			{
 				vFormatArr[j++] = arguments[i];
 				vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
@@ -347,7 +347,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 		vShowSelector = new Array();
 		for(var i = 0, j = 0; i < arguments.length; i++)
 		{
-			if (vValidSelectors.indexOf(arguments[i])!=-1)
+			if (vValidSelectors.indexOf(arguments[i])!=-1 && arguments[i].length>1)
 			{
 				vShowSelector[j++] = arguments[i];
 				vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
@@ -621,7 +621,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 					for(var k=0;k<n;k++)
 					{
 						vTask = this.getArrayLocationByID(vDepend[k]);
-						if (vTask && vList[vTask].getGroup()!=2)
+						if (vTask>=0 && vList[vTask].getGroup()!=2)
 						{
 							if(vList[vTask].getVisible()==1)
 							{
@@ -647,6 +647,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 			if(vList[i].getID()==pId)
 			return i;
 		}
+		return -1;
 	}
 
 	this.newNode = function(pParent, pNodeType, pId, pClass, pText, pWidth, pLeft, pDisplay, pColspan, pAttribs)
@@ -744,16 +745,8 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 
 			for(i = 0; i < vTaskList.length; i++)
 			{
-				if( vTaskList[i].getGroup()==1)
-				{
-					vBGColor = "ggroupitem";
-					vRowType = "group";
-				}
-				else
-				{
-					vBGColor = "glineitem";
-					vRowType = "row";
-				}
+				if( vTaskList[i].getGroup()==1)vBGColor = "ggroupitem";
+				else vBGColor = "glineitem";
 
 				vID = vTaskList[i].getID();
 
@@ -1061,7 +1054,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 						vTaskWidth = (vTaskWidth > vMinGpLen && vTaskWidth < vMinGpLen*2)? vMinGpLen*2 : vTaskWidth; // Expand to show two end points
 						vTaskWidth = (vTaskWidth < vMinGpLen)? vMinGpLen : vTaskWidth; // expand to show one end point
 
-						vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'childrow_'+vID, 'ggroupitem ggroup'+vFormat, null, null, null, ((vTaskList[i].getVisible() == 0)? 'none' : null));
+						vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId+'childrow_'+vID, ((vTaskList[i].getGroup()==2)?'glineitem gitem':'ggroupitem ggroup')+vFormat, null, null, null, ((vTaskList[i].getVisible() == 0)? 'none' : null));
 						vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
 						vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
 						vTaskList[i].setCellDiv(vTmpDiv);
@@ -1180,7 +1173,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 				vParDiv = JSGantt.findObj(vDivId+"childrow_"+vID);
 				if(vTaskList[i].getGroup()==1)vGroup = JSGantt.findObj(vDivId+"group_"+vID);
 
-				if(vTaskDiv) JSGantt.addTootltipListeners( this, vTaskDiv );
+				if(vTaskDiv && vUseToolTip==1) JSGantt.addTootltipListeners( this, vTaskDiv );
 				if(vChild && vParDiv) JSGantt.addThisRowListeners( this, vChild, vParDiv );
 				if(vTaskList[i].getGroup()==1 && vGroup) JSGantt.addFolderListeners( this, vGroup, vID );
 			}
@@ -1764,7 +1757,8 @@ JSGantt.sortTasks = function (pList, pID, pIdx)
 	if (sortArr.length > 0)
 	{
 		sortArr.sort(function(a,b){ var i=a.getStart().getTime() - b.getStart().getTime();
-									if (i==0) return a.getEnd().getTime() - b.getEnd().getTime();
+									if (i==0) i=a.getEnd().getTime() - b.getEnd().getTime();
+									if (i==0) return a.getID() - b.getID();
 									else return i; })
 	}
 
