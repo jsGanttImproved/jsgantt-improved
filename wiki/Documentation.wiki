@@ -192,7 +192,7 @@ Date display formats can be individually controlled. The methods used to set the
 
 separated by one of the following characters: *"/\-.,'`<space`>:*
 
-Any text between separators that does not match one of the components above will be output unchanged.
+Any text between separators that does not match one of the components above will be checked using a case insensitive match for a valid internationalised string (see [Documentation#Internationalisation Internationalisation] below).  If the value is still not found the text will be output unchanged.
 
 The available date display methods are
 ||_setDateTaskTableDisplayFormat():_||Date format used for start and end dates in the main task list. Defaults to 'dd/mm/yyyy'.||
