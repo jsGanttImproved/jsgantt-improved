@@ -74,7 +74,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.5</div>
+<div class="header">jsGanttImproved - 1.5.1</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -143,6 +143,10 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.5.1:</h4>
+<ul>
+<li>Allow use of Internationalisation strings in custom date formats</li>
+</ul>
 <h4>v1.5:</h4>
 <ul>
 <li>Added support for Internationalisation</li>
@@ -454,7 +458,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt>week</dt><dd>Full ISO Week date format</dd>
 </dl>
 <p>separated by one of the following characters: <strong>&quot;/\-.,&#39;&lt;space&gt;:</strong></p>
-<p>Any text between separators that does not match one of the components above will be output unchanged.</p>
+<p>Any text between separators that does not match one of the components above will be checked using a case insensitive match for a valid internationalised string (see <a href="#tOptionsLanguage">Internationalisation</a> below).  If the value is still not found the text will be output unchanged.</p>
 </blockquote>
 <p id="tOptionsDateFormats"The available date display methods are</p>
 <dl class="dateconfiglist">
@@ -555,7 +559,7 @@ It is also possible to delete tasks using RemoveTaskItem() method.</p>
 <dt>dys</dt><dd>Days</dd>
 <dt>wks</dt><dd>Wks</dd>
 <dt>mths</dt><dd>Mths</dd>
-<dt>qtrs</dt><dd>Qrts</dd>
+<dt>qtrs</dt><dd>Qtrs</dd>
 </dl>
 </td>
 </tbody>

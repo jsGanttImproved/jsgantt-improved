@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   ____
-	  (_) / _ \ \_   \ / | | ___|
-	  | |/ /_\/  / /\/ | | |___ \
-	  | / /_\\/\/ /_   | |_ ___) |
-	 _/ \____/\____/   |_(_)____/
+	   _   ___  _____   _   ____   _
+	  (_) / _ \ \_   \ / | | ___| / |
+	  | |/ /_\/  / /\/ | | |___ \ | |
+	  | / /_\\/\/ /_   | |_ ___) || |
+	 _/ \____/\____/   |_(_)____(_)_|
 	|__/
-	jsGanttImproved 1.5
+	jsGanttImproved 1.5.1
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -309,7 +309,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 	var vLangs = { 'en':
 			{'format':'Format','hour':'Hour','day':'Day','week':'Week','month':'Month','quarter':'Quarter','hours':'Hours','days':'Days',
 			 'weeks':'Weeks','months':'Months','quarters':'Quarters','hr':'Hr','dy':'Day','wk':'Wk','mth':'Mth','qtr':'Qrt','hrs':'Hrs',
-			 'dys':'Days','wks':'Wks','mths':'Mths','qtrs':'Qrts','resource':'Resource','duration':'Duration','comp':'% Comp.',
+			 'dys':'Days','wks':'Wks','mths':'Mths','qtrs':'Qtrs','resource':'Resource','duration':'Duration','comp':'% Comp.',
 			 'completion':'Completion','startdate':'Start Date','enddate':'End Date','moreinfo':'More Information','notes':'Notes',
 			 'january':'January','february':'February','march':'March','april':'April','maylong':'May','june':'June','july':'July',
 			 'august':'August','september':'September','october':'October','november':'November','december':'December','jan':'Jan',
@@ -2129,7 +2129,8 @@ JSGantt.formatDateStr = function( pDate, pDateFormatArr, pL )
 				vDateStr += vYear + '-W' + vWeekNum + '-' + vDayOfWeek;
 				break;
 			default:
-				vDateStr += pDateFormatArr[i];
+				if (pL[pDateFormatArr[i].toLowerCase()]) vDateStr += pL[pDateFormatArr[i].toLowerCase()];
+				else vDateStr += pDateFormatArr[i];
 				break;
 		}
 	}
