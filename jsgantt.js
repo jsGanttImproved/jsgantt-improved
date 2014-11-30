@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   ____   ____  
-	  (_) / _ \ \_   \ / | | ___| |___ \ 
-	  | |/ /_\/  / /\/ | | |___ \   __) |
-	  | / /_\\/\/ /_   | |_ ___)  | / __/ 
-	 _/ \____/\____/   |_(_)____(_)_____|
+	   _   ___  _____   _   __
+	  (_) / _ \ \_   \ / | / /_
+	  | |/ /_\/  / /\/ | || '_ \
+	  | / /_\\/\/ /_   | || (_) |
+	 _/ \____/\____/   |_(_)___/
 	|__/
-	jsGanttImproved 1.5.2
+	jsGanttImproved 1.6
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -114,10 +114,10 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	var vParItem = null;
 	var vCellDiv = null;
 
+	vNotes = document.createElement('span');
+	vNotes.className='gTaskNotes';
 	if ( pNotes != null )
 	{
-		vNotes = document.createElement('span');
-		vNotes.className='gTaskNotes';
 		vNotes.innerHTML = pNotes;
 		JSGantt.stripUnwanted(vNotes);
 	}
@@ -1336,6 +1336,71 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 		return vTaskInfoBox;
 	}
 
+	this.getXMLProject = function()
+	{
+		var vProject = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+		for (var i = 0; i < vTaskList.length; i++)
+		{
+			vProject += this.getXMLTask(i,true);
+		}
+		vProject += '</project>';
+		return vProject;
+	}
+
+	this.getXMLTask = function(pID,pIdx)
+	{
+		var vIdx=-1;
+		var vTask = '';
+		if (pIdx == true)vIdx=pID;
+		else
+		{
+			for (var i = 0; i < vTaskList.length; i++)
+			{
+				if (vTaskList[i].getID() == pID) { vIdx=i; break; }
+			}
+		}
+		if (vIdx>=0 && vIdx < vTaskList.length)
+		{
+			/* Simplest way to return case sensitive node names is to just build a string */
+			vTask = '<task>';
+			vTask+='<pID>'+vTaskList[vIdx].getID()+'</pID>';
+			vTask+='<pName>'+vTaskList[vIdx].getName()+'</pName>';
+			var vTmpDate=vTaskList[vIdx].getStart();
+			vTask+='<pStart>'+vTmpDate.getFullYear() + '-';
+			vTask+=((vTmpDate.getMonth()<9)?'0':'')+(vTmpDate.getMonth()+1)+'-';
+			vTask+=((vTmpDate.getDate()<=9)?'0':'')+(vTmpDate.getDate())+' ';
+			vTask+=((vTmpDate.getHours()<=9)?'0':'')+(vTmpDate.getHours())+':';
+			vTask+=((vTmpDate.getMinutes()<=9)?'0':'')+(vTmpDate.getMinutes())+':';
+			vTask+=((vTmpDate.getSeconds()<=9)?'0':'')+(vTmpDate.getSeconds())+'</pStart>';
+			vTmpDate=vTaskList[vIdx].getEnd();
+			vTask+='<pEnd>'+vTmpDate.getFullYear() + '-';
+			vTask+=((vTmpDate.getMonth()<9)?'0':'')+(vTmpDate.getMonth()+1)+'-';
+			vTask+=((vTmpDate.getDate()<=9)?'0':'')+(vTmpDate.getDate())+' ';
+			vTask+=((vTmpDate.getHours()<=9)?'0':'')+(vTmpDate.getHours())+':';
+			vTask+=((vTmpDate.getMinutes()<=9)?'0':'')+(vTmpDate.getMinutes())+':';
+			vTask+=((vTmpDate.getSeconds()<=9)?'0':'')+(vTmpDate.getSeconds())+'</pEnd>';
+			vTask+='<pClass>'+vTaskList[vIdx].getClass()+'</pClass>';
+			vTask+='<pLink>'+vTaskList[vIdx].getLink()+'</pLink>';
+			vTask+='<pMile>'+vTaskList[vIdx].getMile()+'</pMile>';
+			if(vTaskList[vIdx].getResource()!='\u00A0') vTask+='<pRes>'+vTaskList[vIdx].getResource()+'</pRes>';
+			vTask+='<pComp>'+vTaskList[vIdx].getCompVal()+'</pComp>';
+			vTask+='<pGroup>'+vTaskList[vIdx].getGroup()+'</pGroup>';
+			vTask+='<pParent>'+vTaskList[vIdx].getParent()+'</pParent>';
+			vTask+='<pOpen>'+vTaskList[vIdx].getOpen()+'</pOpen>';
+			vTask+='<pDepend>';
+			var vDepList=vTaskList[vIdx].getDepend();
+			for (var i=0;i<vDepList.length;i++)
+			{
+				if(i>0)vTask+=',';
+				if(vDepList[i]>0)vTask+=vDepList[i]+vTaskList[vIdx].getDepType()[i];
+			}
+			vTask+='</pDepend>';
+			vTask+='<pCaption>'+vTaskList[vIdx].getCaption()+'</pCaption>';
+			vTask+='<pNotes>'+vTaskList[vIdx].getNotes().innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')+'</pNotes>';
+			vTask+='</task>';
+		}
+		return vTask;
+	}
 	if (vDiv && vDiv.nodeName.toLowerCase() == 'div') vDivId = vDiv.id;
 } //GanttChart
 
@@ -2194,88 +2259,241 @@ JSGantt.parseXML = function(pFile,pGanttVar)
 	Task = null;
 }
 
+JSGantt.findXMLNode = function(pRoot,pNodeName)
+{
+	var vRetValue
+
+	try { vRetValue = pRoot.getElementsByTagName(pNodeName);
+	} catch (error)	{ ; } // do nothing, we'll return undefined
+
+	return vRetValue;
+}
+
+// pType can be 1 = numeric, 2 = String, all other values just return raw data
+JSGantt.getXMLNodeValue = function(pRoot,pNodeName,pType,pDefault)
+{
+	var vRetValue
+
+	try { vRetValue = pRoot.getElementsByTagName(pNodeName)[0].childNodes[0].nodeValue;
+	} catch (error)
+	{
+		if (typeof pDefault != 'undefined')vRetValue=pDefault;
+	}
+
+	if (typeof vRetValue != 'undefined' && vRetValue != null)
+	{
+		if (pType==1)vRetValue*=1;
+		else if (pType==2)vRetValue=vRetValue.toString();
+	}
+	return vRetValue;
+}
+
 JSGantt.AddXMLTask = function(pGanttVar)
 {
-	Task=xmlDoc.getElementsByTagName("task");
+	var project="";
+	var vMSP=false;
+	var Task;
+	var n=0;
+	var m=0;
+	var maxPID=0;
+	var ass=new Array();
+	var assRes=new Array();
+	var res=new Array();
+	var pars=new Array();
 
-	var n = xmlDoc.documentElement.childNodes.length;
+	projNode=JSGantt.findXMLNode(xmlDoc,"Project");
+	if (typeof projNode != 'undefined' && projNode.length > 0) project=projNode[0].getAttribute("xmlns");
 
-	for(var i=0;i<n;i++)
+	if(project=="http://schemas.microsoft.com/project")
 	{
-		// optional parameters may not have an entry
-		// Task ID must NOT be zero otherwise it will be skipped
-		try { pID = Task[i].getElementsByTagName("pID")[0].childNodes[0].nodeValue;
-		} catch (error)
-		{pID =0;}
-		pID *= 1;	// make sure that these are numbers rather than strings in order to make jsgantt.js behave as expected.
+		vMSP=true;
+		pGanttVar.setDateInputFormat("yyyy-mm-dd");
+		Task=JSGantt.findXMLNode(xmlDoc,"Task")
+		if (typeof Task == 'undefined')n=0;
+		else n = Task.length;
 
-		if(pID!=0)
+		resources=JSGantt.findXMLNode(xmlDoc,"Resource");
+		if (typeof resources == 'undefined'){n=0; m=0;}
+		else m = resources.length;
+
+		for(var i=0;i<m;i++)
 		{
-			try { pName = Task[i].getElementsByTagName("pName")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{pName ="No Task Name";}			// If there is no corresponding entry in the XML file the set a default.
+			resname=JSGantt.getXMLNodeValue(resources[i],"Name",2,"");
+			uid=JSGantt.getXMLNodeValue(resources[i],"UID",1,-1);
 
-			try { pClass = Task[i].getElementsByTagName("pClass")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{pClass ="ggroupblack";}
+			if (resname.length>0 && uid>0) res[uid]=resname;
+		}
 
-			try { pParent = Task[i].getElementsByTagName("pParent")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{pParent =0;}
-			pParent *= 1;
+		assignments=JSGantt.findXMLNode(xmlDoc,"Assignment");
+		if (typeof assignments == 'undefined') j=0;
+		else j = assignments.length;
 
-			try { pStart = Task[i].getElementsByTagName("pStart")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{pStart ="";}
+		for(var i=0;i<j;i++)
+		{
+			resUID=JSGantt.getXMLNodeValue(assignments[i],"ResourceUID",1,-1);
+			uid=JSGantt.getXMLNodeValue(assignments[i],"TaskUID",1,-1);
 
-			try { pEnd = Task[i].getElementsByTagName("pEnd")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pEnd ="";}
+			if (uid>0)
+			{
+				if (resUID>0) assRes[uid]=res[resUID];
+				ass[uid]=assignments[i];
+			}
+		}
 
-			try { pLink = Task[i].getElementsByTagName("pLink")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pLink ="";}
+		// Store information about parent UIDs in an easily searchable form
+		for(var i=0;i<n;i++)
+		{
+			uid=JSGantt.getXMLNodeValue(Task[i],"UID",1,0)
 
-			try { pMile = Task[i].getElementsByTagName("pMile")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pMile=0;}
-			pMile *= 1;
+			if(uid!=0) OutlineNumber=JSGantt.getXMLNodeValue(Task[i],"OutlineNumber",2,"0");
+			if (uid>0) pars[OutlineNumber]=uid;
+			if (uid>maxPID)maxPID=uid;
+		}
 
-			try { pRes = Task[i].getElementsByTagName("pRes")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pRes ="";}
+		for(var i=0;i<n;i++)
+		{
+			// optional parameters may not have an entry
+			// Task ID must NOT be zero otherwise it will be skipped
+			pID=JSGantt.getXMLNodeValue(Task[i],"UID",1,0)
 
-			try { pComp = Task[i].getElementsByTagName("pComp")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{pComp =0;}
-			pComp *= 1;
+			if(pID!=0)
+			{
+				pName=JSGantt.getXMLNodeValue(Task[i],"Name",2,"No Task Name");
+				pStart=JSGantt.getXMLNodeValue(Task[i],"Start",2,"");
+				pEnd=JSGantt.getXMLNodeValue(Task[i],"Finish",2,"");
+				pLink=JSGantt.getXMLNodeValue(Task[i],"HyperlinkAddress",2,"");
+				pMile=JSGantt.getXMLNodeValue(Task[i],"Milestone",1,0)
+				pComp=JSGantt.getXMLNodeValue(Task[i],"PercentWorkComplete",1,0)
+				pGroup=JSGantt.getXMLNodeValue(Task[i],"Summary",1,0)
 
-			try { pGroup = Task[i].getElementsByTagName("pGroup")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{pGroup =0;}
-			pGroup *= 1;
+				pParent=0;
 
-			try { pOpen = Task[i].getElementsByTagName("pOpen")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pOpen =1;}
-			pOpen *= 1;
+				vOutlineLevel=JSGantt.getXMLNodeValue(Task[i],"OutlineLevel",1,0)
+				if (vOutlineLevel>1)
+				{
+					vOutlineNumber=JSGantt.getXMLNodeValue(Task[i],"OutlineNumber",2,"0");
+					pParent=pars[vOutlineNumber.substr(0, vOutlineNumber.lastIndexOf("."))];
+				}
 
-			try { pDepend = Task[i].getElementsByTagName("pDepend")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pDepend ='';}
-			if (pDepend.length==0)
-			{pDepend=''} // need this to draw the dependency lines
+				try { pNotes = Task[i].getElementsByTagName("Notes")[0].childNodes[1].nodeValue; //this should be a CDATA node
+				} catch (error)
+				{ pNotes ="";}
 
-			try { pCaption = Task[i].getElementsByTagName("pCaption")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pCaption ="";}
+				if(typeof assRes[pID] != 'undefined') pRes = assRes[pID];
+				else pRes = "";
 
-			try { pNotes = Task[i].getElementsByTagName("pNotes")[0].childNodes[0].nodeValue;
-			} catch (error)
-			{ pNotes ="";}
+				predecessors=JSGantt.findXMLNode(Task[i],"PredecessorLink");
+				if (typeof predecessors == 'undefined') j=0;
+				else j = predecessors.length;
+				pDepend="";
 
-			// Finally add the task
-			pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID , pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes));
+				for(var k=0;k<j;k++)
+				{
+					depUID=JSGantt.getXMLNodeValue(predecessors[k],"PredecessorUID",1,-1)
+					depType=JSGantt.getXMLNodeValue(predecessors[k],"Type",1,1)
+
+					if (depUID>0)
+					{
+						if (pDepend.length > 0)pDepend+=',';
+						switch( depType )
+						{
+							case 0:  pDepend+=depUID+'FF'; break;
+							case 1:  pDepend+=depUID+'FS'; break;
+							case 2:  pDepend+=depUID+'SF'; break;
+							case 3:  pDepend+=depUID+'SS'; break;
+							default: pDepend+=depUID+'FS'; break;
+						}
+					}
+				}
+
+				pOpen = 1;
+				pCaption = "";
+
+				if(pGroup>0) pClass ="ggroupblack";
+				else if(pMile>0) pClass ="gmilestone";
+				else pClass ="gtaskblue";
+
+				// check for split tasks
+
+				splits=JSGantt.findXMLNode(ass[pID],"TimephasedData");
+				if (typeof splits == 'undefined') j=0;
+				else j = splits.length;
+
+				vSplitStart=pStart;
+				vSplitEnd=pEnd;
+				vSubCreated=false;
+				vDepend=pDepend.replace(/,*[0-9]+[FS]F/g,"");
+
+				for(var k=0;k<j;k++)
+				{
+					vDuration=JSGantt.getXMLNodeValue(splits[k],"Value",2,"0");
+					//remove all text
+					vDuration="0"+vDuration.replace(/\D/g,"");
+					vDuration*=1;
+					if ((vDuration == 0 && !vSubCreated)|| (k+1==j && pGroup==2))
+					{
+						// No time booked in the given period (or last entry)
+						// Make sure the parent task is set as a combined group
+						pGroup=2;
+						// Handle last loop
+						if (k+1==j)vDepend=pDepend.replace(/,*[0-9]+[FS]S/g,"");
+						// Now create a subtask
+						maxPID++;
+						vSplitEnd=JSGantt.getXMLNodeValue(splits[k],(k+1==j)?"Finish":"Start",2,"");
+						pGanttVar.AddTaskItem(new JSGantt.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, "gtaskblue", pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes));
+						vSubCreated=true;
+						vDepend="";
+					}
+					else if (vDuration != 0 && vSubCreated)
+					{
+						vSplitStart=JSGantt.getXMLNodeValue(splits[k],"Start",2,"");
+						vSubCreated=false;
+					}
+				}
+				if (vSubCreated)pDepend="";
+
+				// Finally add the task
+				pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID , pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes));
+			}
+		}
+	}
+	else
+	{
+		Task=xmlDoc.getElementsByTagName("task");
+		n = Task.length;
+
+		for(var i=0;i<n;i++)
+		{
+			// optional parameters may not have an entry
+			// Task ID must NOT be zero otherwise it will be skipped
+			pID=JSGantt.getXMLNodeValue(Task[i],"pID",1,0)
+
+			if(pID!=0)
+			{
+				pName=JSGantt.getXMLNodeValue(Task[i],"pName",2,"No Task Name");
+				pStart=JSGantt.getXMLNodeValue(Task[i],"pStart",2,"");
+				pEnd=JSGantt.getXMLNodeValue(Task[i],"pEnd",2,"");
+				pLink=JSGantt.getXMLNodeValue(Task[i],"pLink",2,"");
+				pMile=JSGantt.getXMLNodeValue(Task[i],"pMile",1,0)
+				pComp=JSGantt.getXMLNodeValue(Task[i],"pComp",1,0)
+				pGroup=JSGantt.getXMLNodeValue(Task[i],"pGroup",1,0)
+				pParent=JSGantt.getXMLNodeValue(Task[i],"pParent",1,0)
+				pRes=JSGantt.getXMLNodeValue(Task[i],"pRes",2,"");
+				pOpen=JSGantt.getXMLNodeValue(Task[i],"pOpen",1,1)
+				pDepend=JSGantt.getXMLNodeValue(Task[i],"pDepend",2,"");
+				pCaption=JSGantt.getXMLNodeValue(Task[i],"pCaption",2,"");
+				pNotes=JSGantt.getXMLNodeValue(Task[i],"pNotes",2,"");
+				pClass=JSGantt.getXMLNodeValue(Task[i],"pClass",2);
+				if (typeof pClass == 'undefined')
+				{
+					if(pGroup>0) pClass ="ggroupblack";
+					else if(pMile>0) pClass ="gmilestone";
+					else pClass ="gtaskblue";
+				}
+
+				// Finally add the task
+				pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID , pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes));
+			}
 		}
 	}
 }
