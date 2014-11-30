@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   ____   _
-	  (_) / _ \ \_   \ / | | ___| / |
-	  | |/ /_\/  / /\/ | | |___ \ | |
-	  | / /_\\/\/ /_   | |_ ___) || |
-	 _/ \____/\____/   |_(_)____(_)_|
+	   _   ___  _____   _   ____   ____  
+	  (_) / _ \ \_   \ / | | ___| |___ \ 
+	  | |/ /_\/  / /\/ | | |___ \   __) |
+	  | / /_\\/\/ /_   | |_ ___)  | / __/ 
+	 _/ \____/\____/   |_(_)____(_)_____|
 	|__/
-	jsGanttImproved 1.5.1
+	jsGanttImproved 1.5.2
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -308,7 +308,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 	var vTodayPx = -1;
 	var vLangs = { 'en':
 			{'format':'Format','hour':'Hour','day':'Day','week':'Week','month':'Month','quarter':'Quarter','hours':'Hours','days':'Days',
-			 'weeks':'Weeks','months':'Months','quarters':'Quarters','hr':'Hr','dy':'Day','wk':'Wk','mth':'Mth','qtr':'Qrt','hrs':'Hrs',
+			 'weeks':'Weeks','months':'Months','quarters':'Quarters','hr':'Hr','dy':'Day','wk':'Wk','mth':'Mth','qtr':'Qtr','hrs':'Hrs',
 			 'dys':'Days','wks':'Wks','mths':'Mths','qtrs':'Qtrs','resource':'Resource','duration':'Duration','comp':'% Comp.',
 			 'completion':'Completion','startdate':'Start Date','enddate':'End Date','moreinfo':'More Information','notes':'Notes',
 			 'january':'January','february':'February','march':'March','april':'April','maylong':'May','june':'June','july':'July',
@@ -1435,14 +1435,14 @@ JSGantt.showToolTip = function(pGanttChartObj, e, pContents, pWidth, pContType, 
 			pGanttChartObj.vTool.setAttribute('fadeIncrement',10);
 			pGanttChartObj.vTool.setAttribute('moveSpeed',10);
 			pGanttChartObj.vTool.style.filter = 'alpha(opacity=0)';
-			pGanttChartObj.vTool.style.display = 'none'
+			pGanttChartObj.vTool.style.visibility = 'hidden'
 			pGanttChartObj.vTool.style.left = Math.floor(((e)?e.clientX:window.event.clientX)/2)+'px';
 			pGanttChartObj.vTool.style.top = Math.floor(((e)?e.clientY:window.event.clientY)/2)+'px';
 			JSGantt.addListener( 'mouseover', function () { clearTimeout(pGanttChartObj.vTool.delayTimeout); }, pGanttChartObj.vTool );
 			JSGantt.addListener( 'mouseout', function () { JSGantt.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool );
 		}
 		clearTimeout(pGanttChartObj.vTool.delayTimeout);
-		if(pGanttChartObj.vTool.vToolCont.getAttribute('showing') != pContents || pGanttChartObj.vTool.style.display != 'block')
+		if(pGanttChartObj.vTool.vToolCont.getAttribute('showing') != pContents || pGanttChartObj.vTool.style.visibility != 'visible')
 		{
 			if ( pGanttChartObj.vTool.vToolCont.getAttribute('showing') == pContents )
 			{
@@ -1475,7 +1475,7 @@ JSGantt.showToolTip = function(pGanttChartObj, e, pContents, pWidth, pContType, 
 
 			if ( pGanttChartObj.vTool.foundContent )
 			{
-				pGanttChartObj.vTool.style.display = 'block';
+				pGanttChartObj.vTool.style.visibility = 'visible';
 				// Rather than follow the mouse just have it stay put
 				JSGantt.updateFlyingObj(e, pGanttChartObj, pTimer);
 				pGanttChartObj.vTool.style.width = pWidth ? pWidth + 'px' : 'auto';
@@ -1539,7 +1539,12 @@ JSGantt.hideToolTip = function(pGanttChartObj, pTool, pTimer){
 		clearInterval(pTool.fadeInterval);
 		pTool.fadeInterval = setInterval(function(){JSGantt.fadeToolTip(-1, pTool, 0)}, pTimer);
 	}
-	else pTool.style.display = 'none';
+	else
+	{
+		pTool.style.opacity = 0;
+		pTool.style.filter = 'alpha(opacity=0)';
+		pTool.style.visibility = 'hidden';
+	}
 }
 
 JSGantt.fadeToolTip = function(pDirection, pTool, pMaxAlpha){
@@ -1559,7 +1564,11 @@ JSGantt.fadeToolTip = function(pDirection, pTool, pMaxAlpha){
 		pTool.setAttribute('currentOpacity', vAlpha);
 	}else{
 		clearInterval(pTool.fadeInterval);
-		if(pDirection == -1){pTool.style.display = 'none';}
+		if(pDirection == -1){
+			pTool.style.opacity = 0;
+			pTool.style.filter = 'alpha(opacity=0)';
+			pTool.style.visibility = 'hidden';
+		}
 	}
 }
 
@@ -1568,7 +1577,7 @@ JSGantt.moveToolTip = function(pNewX, pNewY, pTool){
 	vOldX = parseInt(pTool.style.left);
 	vOldY = parseInt(pTool.style.top);
 
-	if ( pTool.style.display != 'block' )
+	if ( pTool.style.visibility != 'visible' )
 	{
 		pTool.style.left = pNewX +'px';
 		pTool.style.top = pNewY +'px';
