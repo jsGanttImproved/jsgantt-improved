@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   __    _
-	  (_) / _ \ \_   \ / | / /_  / |
-	  | |/ /_\/  / /\/ | || '_ \ | |
-	  | / /_\\/\/ /_   | || (_) || |
-	 _/ \____/\____/   |_(_)___(_)_|
+	   _   ___  _____   _   __    ____
+	  (_) / _ \ \_   \ / | / /_  |___ \
+	  | |/ /_\/  / /\/ | || '_ \   __) |
+	  | / /_\\/\/ /_   | || (_) | / __/
+	 _/ \____/\____/   |_(_)___(_)_____|
 	|__/
-	jsGanttImproved 1.6.1
+	jsGanttImproved 1.6.2
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -481,8 +481,20 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 
 	this.AddTaskItem = function(value)
 	{
-		vTaskList.push(value);
-		vProcessNeeded = true;
+		var vExists = false;
+		for (var i = 0; i < vTaskList.length; i++)
+		{
+			if (vTaskList[i].getID() == value.getID())
+			{
+				i=vTaskList.length;
+				vExists = true;
+			}
+		}
+		if( !vExists )
+		{
+			vTaskList.push(value);
+			vProcessNeeded = true;
+		}
 	}
 
 	this.RemoveTaskItem = function(pID)
@@ -1765,7 +1777,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 			pList.splice(i,1);
 			i--;
 		}
-		if (pList[i].getID()==pID)vCurItem = pList[i];
+		if (i>=0 && pList[i].getID()==pID)vCurItem = pList[i];
 	}
 
 	for(i = 0; i < pList.length; i++)
@@ -2255,7 +2267,6 @@ JSGantt.parseXML = function(pFile,pGanttVar)
 	JSGantt.AddXMLTask(pGanttVar);
 
 	xmlDoc=null; // a little tidying
-	Task = null;
 }
 
 JSGantt.findXMLNode = function(pRoot,pNodeName)
