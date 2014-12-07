@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   __   _  _
-	  (_) / _ \ \_   \ / | / /_ | || |
-	  | |/ /_\/  / /\/ | || '_ \| || |_
-	  | / /_\\/\/ /_   | || (_) |__   _|
-	 _/ \____/\____/   |_(_)___(_) |_|
+	   _   ___  _____   _  _____
+	  (_) / _ \ \_   \ / ||___  |
+	  | |/ /_\/  / /\/ | |   / /
+	  | / /_\\/\/ /_   | |_ / /
+	 _/ \____/\____/   |_(_)_/
 	|__/
-	jsGanttImproved 1.6.4
+	jsGanttImproved 1.7
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -1363,6 +1363,7 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 	{
 		var vIdx=-1;
 		var vTask = '';
+		var vOutFrmt = JSGantt.parseDateFormatStr(this.getDateInputFormat()+' HH:MI');
 		if (pIdx == true)vIdx=pID;
 		else
 		{
@@ -1377,20 +1378,8 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 			vTask = '<task>';
 			vTask+='<pID>'+vTaskList[vIdx].getID()+'</pID>';
 			vTask+='<pName>'+vTaskList[vIdx].getName()+'</pName>';
-			var vTmpDate=vTaskList[vIdx].getStart();
-			vTask+='<pStart>'+vTmpDate.getFullYear() + '-';
-			vTask+=((vTmpDate.getMonth()<9)?'0':'')+(vTmpDate.getMonth()+1)+'-';
-			vTask+=((vTmpDate.getDate()<=9)?'0':'')+(vTmpDate.getDate())+' ';
-			vTask+=((vTmpDate.getHours()<=9)?'0':'')+(vTmpDate.getHours())+':';
-			vTask+=((vTmpDate.getMinutes()<=9)?'0':'')+(vTmpDate.getMinutes())+':';
-			vTask+=((vTmpDate.getSeconds()<=9)?'0':'')+(vTmpDate.getSeconds())+'</pStart>';
-			vTmpDate=vTaskList[vIdx].getEnd();
-			vTask+='<pEnd>'+vTmpDate.getFullYear() + '-';
-			vTask+=((vTmpDate.getMonth()<9)?'0':'')+(vTmpDate.getMonth()+1)+'-';
-			vTask+=((vTmpDate.getDate()<=9)?'0':'')+(vTmpDate.getDate())+' ';
-			vTask+=((vTmpDate.getHours()<=9)?'0':'')+(vTmpDate.getHours())+':';
-			vTask+=((vTmpDate.getMinutes()<=9)?'0':'')+(vTmpDate.getMinutes())+':';
-			vTask+=((vTmpDate.getSeconds()<=9)?'0':'')+(vTmpDate.getSeconds())+'</pEnd>';
+			vTask+='<pStart>'+JSGantt.formatDateStr(vTaskList[vIdx].getStart(),vOutFrmt,vLangs[vLang])+'</pStart>';
+			vTask+='<pEnd>'+JSGantt.formatDateStr(vTaskList[vIdx].getEnd(),vOutFrmt,vLangs[vLang])+'</pEnd>';
 			vTask+='<pClass>'+vTaskList[vIdx].getClass()+'</pClass>';
 			vTask+='<pLink>'+vTaskList[vIdx].getLink()+'</pLink>';
 			vTask+='<pMile>'+vTaskList[vIdx].getMile()+'</pMile>';
@@ -1408,7 +1397,10 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 			}
 			vTask+='</pDepend>';
 			vTask+='<pCaption>'+vTaskList[vIdx].getCaption()+'</pCaption>';
-			vTask+='<pNotes>'+vTaskList[vIdx].getNotes().innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')+'</pNotes>';
+
+			var vTmpFrag = document.createDocumentFragment();
+			var vTmpDiv = this.newNode(vTmpFrag, 'div', null, null,vTaskList[vIdx].getNotes().innerHTML);
+			vTask+='<pNotes>'+vTmpDiv.innerHTML+'</pNotes>';
 			vTask+='</task>';
 		}
 		return vTask;
