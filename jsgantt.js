@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   __    _____
-	  (_) / _ \ \_   \ / | / /_  |___ /
-	  | |/ /_\/  / /\/ | || '_ \   |_ \
-	  | / /_\\/\/ /_   | || (_) | ___) |
-	 _/ \____/\____/   |_(_)___(_)____/
+	   _   ___  _____   _   __   _  _
+	  (_) / _ \ \_   \ / | / /_ | || |
+	  | |/ /_\/  / /\/ | || '_ \| || |_
+	  | / /_\\/\/ /_   | || (_) |__   _|
+	 _/ \____/\____/   |_(_)___(_) |_|
 	|__/
-	jsGanttImproved 1.6.3
+	jsGanttImproved 1.6.4
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -2269,6 +2269,23 @@ JSGantt.parseXML = function(pFile,pGanttVar)
 
 	xmlDoc=null; // a little tidying
 }
+
+JSGantt.parseXMLString = function(pStr,pGanttVar)
+{
+	if (typeof window.DOMParser != 'undefined') {
+		xmlDoc =( new window.DOMParser() ).parseFromString(pStr, 'text/xml');
+	} else if (typeof window.ActiveXObject != 'undefined' &&
+		   new window.ActiveXObject('Microsoft.XMLDOM')) {
+		xmlDoc = new window.ActiveXObject('Microsoft.XMLDOM');
+		xmlDoc.async = 'false';
+		xmlDoc.loadXML(pStr);
+	}
+
+	JSGantt.AddXMLTask(pGanttVar);
+
+	xmlDoc=null; // a little tidying
+}
+
 
 JSGantt.findXMLNode = function(pRoot,pNodeName)
 {
