@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _   __    ____
-	  (_) / _ \ \_   \ / | / /_  |___ \
-	  | |/ /_\/  / /\/ | || '_ \   __) |
-	  | / /_\\/\/ /_   | || (_) | / __/
-	 _/ \____/\____/   |_(_)___(_)_____|
+	   _   ___  _____   _   __    _____
+	  (_) / _ \ \_   \ / | / /_  |___ /
+	  | |/ /_\/  / /\/ | || '_ \   |_ \
+	  | / /_\\/\/ /_   | || (_) | ___) |
+	 _/ \____/\____/   |_(_)___(_)____/
 	|__/
-	jsGanttImproved 1.6.2
+	jsGanttImproved 1.6.3
 	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -85,7 +85,7 @@ JSGantt.isIE = function ()
 	else return false;
 }
 
-JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes)
+JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
 {
 
 	var vID = parseInt(document.createTextNode(pID).data);
@@ -113,6 +113,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 	var vNotes;
 	var vParItem = null;
 	var vCellDiv = null;
+	var vGantt = (pGantt instanceof JSGantt.GanttChart)? pGantt : g; //hack for backwards compatibility
 
 	vNotes = document.createElement('span');
 	vNotes.className='gTaskNotes';
@@ -124,8 +125,8 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 
 	if (vGroup != 1)
 	{
-		vStart = JSGantt.parseDateStr(document.createTextNode(pStart).data,g.getDateInputFormat());
-		vEnd   = JSGantt.parseDateStr(document.createTextNode(pEnd).data,g.getDateInputFormat());
+		vStart = JSGantt.parseDateStr(document.createTextNode(pStart).data,vGantt.getDateInputFormat());
+		vEnd   = JSGantt.parseDateStr(document.createTextNode(pEnd).data,vGantt.getDateInputFormat());
 	}
 
 	if ( pDepend != null )
@@ -1047,10 +1048,10 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 						this.newNode(vTmpDiv2, 'div', null, 'gmdbottom');
 					}
 
-					if( g.getCaptionType() )
+					if( this.getCaptionType() )
 					{
 						vCaptionStr = '';
-						switch( g.getCaptionType() )
+						switch( this.getCaptionType() )
 						{
 							case 'Caption': vCaptionStr = vTaskList[i].getCaption(); break;
 							case 'Resource': vCaptionStr = vTaskList[i].getResource(); break;
@@ -1099,10 +1100,10 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 							this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() +'endpointleft');
 							if ( vTaskWidth >= vMinGpLen*2 ) this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() +'endpointright');
 
-							if( g.getCaptionType() )
+							if( this.getCaptionType() )
 							{
 								vCaptionStr = '';
-								switch( g.getCaptionType() )
+								switch( this.getCaptionType() )
 								{
 									case 'Caption': vCaptionStr = vTaskList[i].getCaption(); break;
 									case 'Resource': vCaptionStr = vTaskList[i].getResource(); break;
@@ -1147,12 +1148,12 @@ JSGantt.GanttChart = function( pDiv, pFormat )
 						vTmpDiv2 = this.newNode(vTmpDiv, 'div', vDivId+'taskbar_'+vID, vTaskList[i].getClass(), null, vTaskWidth);
 						this.newNode(vTmpDiv2, 'div', vDivId+'complete_'+vID, vTaskList[i].getClass() +'complete', null, vTaskList[i].getCompStr());
 
-						if( g.getCaptionType() && (!vComb || (vComb && vTaskList[i].getParItem().getEnd() == vTaskList[i].getEnd())))
+						if( this.getCaptionType() && (!vComb || (vComb && vTaskList[i].getParItem().getEnd() == vTaskList[i].getEnd())))
 						{
 							vCaptionStr = '';
 							var vTmpItem = vTaskList[i];
 							if(vComb)vTmpItem = vTaskList[i].getParItem();
-							switch( g.getCaptionType() )
+							switch( this.getCaptionType() )
 							{
 								case 'Caption': vCaptionStr = vTmpItem.getCaption(); break;
 								case 'Resource': vCaptionStr = vTmpItem.getResource(); break;
@@ -2450,7 +2451,7 @@ JSGantt.AddXMLTask = function(pGanttVar)
 						// Now create a subtask
 						maxPID++;
 						vSplitEnd=JSGantt.getXMLNodeValue(splits[k],(k+1==j)?'Finish':'Start',2,'');
-						pGanttVar.AddTaskItem(new JSGantt.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes));
+						pGanttVar.AddTaskItem(new JSGantt.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
 						vSubCreated=true;
 						vDepend='';
 					}
@@ -2463,7 +2464,7 @@ JSGantt.AddXMLTask = function(pGanttVar)
 				if (vSubCreated)pDepend='';
 
 				// Finally add the task
-				pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID , pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes));
+				pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID , pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
 			}
 		}
 	}
@@ -2502,7 +2503,7 @@ JSGantt.AddXMLTask = function(pGanttVar)
 				}
 
 				// Finally add the task
-				pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID , pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes));
+				pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID , pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
 			}
 		}
 	}
