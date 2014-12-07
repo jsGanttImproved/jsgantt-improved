@@ -74,7 +74,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.6</div>
+<div class="header">jsGanttImproved - 1.7</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -144,6 +144,15 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.7:</h4>
+<ul>
+<li>Fixed nasty long-standing bug where the first Gantt chart created must be stored in a javascript variable named &quot;g&quot;</li>
+<li>Altered XML export functionality so that dates are output in the specified input format for the chart</li>
+<li>Added method to read XML directly from an input string</li>
+<li>Prevented creation of a task with a duplicate &quot;unique&quot; ID</li>
+<li>Fixed bug where attempting to remove the first task defined would prevent the chart from redrawing</li>
+<li>Some general code clean up</li>
+</ul>
 <h4>v1.6:</h4>
 <ul>
 <li>Allow use of Internationalisation strings in custom date formats</li>
@@ -308,11 +317,11 @@ This project is based on jsGantt 1.2 the original project license follows:
 <li>Add Tasks
 <ol type="a"><li>using AddTaskItem()
 <pre class="style1">
-g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text' ));
-g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1));
+g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
+g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1,'','','',g));
 </pre>
 <p>Method definition:
-<strong>TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes</em>)</strong></p>
+<strong>TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt</em>)</strong></p>
 <dl>
 <dt>pID</dt><dd>(required) a unique numeric ID used to identify each row</dd>
 <dt>pName</dt><dd>(required) the task Label</dd>
@@ -329,6 +338,7 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-2
 <dt>pDepend</dt><dd>(optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item<br />Each id can optionally be followed by a dependency type suffix. Valid values are:<blockquote>'FS' - Finish to Start (default if suffix is omitted)<br />'SF' - Start to Finish<br />'SS' - Start to Start<br />'FF' - Finish to Finish</blockquote>If present the suffix must be added directly to the id e.g. '123SS'</dd>
 <dt>pCaption</dt><dd>(optional) caption that will be added after task bar if CaptionType set to "Caption"</dd>
 <dt>pNotes</dt><dd>(optional) Detailed task information that will be displayed in tool tip for this task</dd>
+<dt>pGantt</dt><dd>(required) javascript JSGantt.GanttChart object from which to take settings.  Defaults to &quot;g&quot; for backwards compatibility</dd>
 </dl>
 <p id='combinedtasks'><span style="color: red;">*</span> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.</p>
 </li>
@@ -368,6 +378,18 @@ JSGantt.parseXML("project.xml",g);
 </blockquote>
 <p>Field definitions are as described for the parameters to TaskItem above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones.</p>
 <p>JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the <a href="#tXMLExport">XML Export methods</a> provided.</p>
+</li>
+<li>using parseXMLString() with XML held in a javascript string object
+<pre class="style1">
+JSGantt.parseXMLString("&lt;project&gt;&lt;task&gt;...&lt;/task&gt;&lt;/project&gt;",g);
+</pre>
+<p>Method definition:
+  <strong>JSGantt.parseXMLString(<em>pStr, pGanttObj</em>)</strong></p>
+  <dl>
+  <dt>pStr</dt><dd>(required) this is a javascript String containing XML</dd>
+  <dt>pGanttObj</dt><dd>(required) a GanttChart object returned by a call to JSGantt.GanttChart()</dd>
+  </dl>
+<p>The XML provided will be parsed in exactly the same way as the contents of an external XML file and hence must match the format as described for JSGantt.parseXML() above</p>
 </li></ol></li>
 <li><p>Call Draw()</p><pre class="style1">g.Draw();</pre>
 </li>
