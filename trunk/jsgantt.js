@@ -124,8 +124,8 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 
 	if (vGroup!=1)
 	{
-		vStart=JSGantt.parseDateStr(document.createTextNode(pStart).data,vGantt.getDateInputFormat());
-		vEnd  =JSGantt.parseDateStr(document.createTextNode(pEnd).data,vGantt.getDateInputFormat());
+		vStart=(pStart instanceof Date)?pStart:JSGantt.parseDateStr(document.createTextNode(pStart).data,vGantt.getDateInputFormat());
+		vEnd  =(pEnd instanceof Date)?pEnd:JSGantt.parseDateStr(document.createTextNode(pEnd).data,vGantt.getDateInputFormat());
 	}
 
 	if (pDepend!=null)

@@ -74,7 +74,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.7</div>
+<div class="header">jsGanttImproved - 1.7.1</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -144,9 +144,21 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
+<h4>v1.7.1:</h4>
+<ul>
+<li>Instantiating a new JSGantt.TaskItem will now also accept Date objects for start and end dates</li>
+<li>Fixed old Internet Explorer compatibilty broken by v1.7</li>
+<li>Fixed bug in Iso week date format</li>
+<li>Code clean up</li>
+</ul>
 <h4>v1.7:</h4>
 <ul>
-<li>Fixed nasty long-standing bug where the first Gantt chart created must be stored in a javascript variable named &quot;g&quot;</li>
+<li>Fixed nasty long-standing bug where the first Gantt chart created must be stored in a javascript variable named &quot;g&quot;
+  <ul>
+  <li>NOTE: This required a change in the method to instatiate a JSGantt.TaskItem object to pass the related chart.</li>
+  <li>A temporary fix is included that still assumes the use of "g" for the chart if the chart object is not passed, this will be removed in v1.8</li>
+  </ul>
+</li>
 <li>Altered XML export functionality so that dates are output in the specified input format for the chart</li>
 <li>Added method to read XML directly from an input string</li>
 <li>Prevented creation of a task with a duplicate &quot;unique&quot; ID</li>
