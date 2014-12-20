@@ -96,7 +96,7 @@ The structure of the native XML file:
 </project>
 }}}
 
-Field definitions are as described for the parameters to [Documentation#a)_Using_AddTaskItem_() TaskItem] above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones.
+Field definitions are as described for the parameters to [Documentation#a)_Using_AddTaskItem_() TaskItem] above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones.  The pGantt element is not required for XML import.
 
 JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the [Documentation#XML_Export XML Export methods] provided.
 
@@ -341,10 +341,10 @@ The following methods can be used to extract details of tasks in the project in 
 
 Method definition: *getXMLProject()*
 
-Returns a string containing the entire project in JSGantt Improved XML format
+Returns a string containing the entire project in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
 
 Method definition: *getXMLTask(_pID_, _pIdx_)*
 || _pID:_ || (required) the numeric ID that identifies the task to extract ||
 || _pIdx:_ || (optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID ||
 
-Returns a string containing the specified task item in JSGantt Improved XML format
+Returns a string containing the specified task item in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
