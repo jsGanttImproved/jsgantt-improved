@@ -1,12 +1,12 @@
 /*
-	   _   ___  _____   _  _____ ____
-	  (_) / _ \ \_   \ / ||___  |___ \
-	  | |/ /_\/  / /\/ | |   / /  __) |
-	  | / /_\\/\/ /_   | |_ / /_ / __/
-	 _/ \____/\____/   |_(_)_/(_)_____|
+	   _   ___  _____   _  _____ _____
+	  (_) / _ \ \_   \ / ||___  |___ /
+	  | |/ /_\/  / /\/ | |   / /  |_ \
+	  | / /_\\/\/ /_   | |_ / /_ ___) |
+	 _/ \____/\____/   |_(_)_/(_)____/
 	|__/
-	jsGanttImproved 1.7.2
-	Copyright (c) 2013-2014, Paul Geldart All rights reserved.
+	jsGanttImproved 1.7.3
+	Copyright (c) 2013-2015, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
 
@@ -331,6 +331,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	var vListBody=null;
 	var vChartTable=null;
 	var vLines=null;
+	var vTimer=20;
 
 	this.setUseFade=function(pVal){vUseFade=pVal;};
 	this.setUseMove=function(pVal){vUseMove=pVal;};
@@ -413,16 +414,12 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	this.setListBody=function(pDiv){if(typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)vListBody=pDiv;};
 	this.setChartTable=function(pTable){if(typeof HTMLTableElement !== 'function' || pTable instanceof HTMLTableElement)vChartTable=pTable;};
 	this.setLines=function(pDiv){if(typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)vLines=pDiv;};
-	this.getChartBody=function(){return vChartBody;};
-	this.getChartHead=function(){return vChartHead;};
-	this.getListBody=function(){return vListBody;};
-	this.getChartTable=function(){return vChartTable;};
-	this.getLines=function(){return vLines;};
+	this.setTimer=function(pVal){vTimer=pVal*1;};
 	this.addLang=function(pLang, pVals){
 		if(!vLangs[pLang])
 		{
 			vLangs[pLang]=new Object();
-			for(var vKey in vLangs['en'])vLangs[pLang][vKey]=(pVals[vKey])?pVals[vKey]:vLangs['en'][vKey];
+			for(var vKey in vLangs['en'])vLangs[pLang][vKey]=(pVals[vKey])?document.createTextNode(pVals[vKey]).data:vLangs['en'][vKey];
 		}
 	};
 
@@ -471,6 +468,12 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	this.getMonthColWidth=function(){return vMonthColWidth;};
 	this.getQuarterColWidth=function(){return vQuarterColWidth;};
 	this.getRowHeight=function(){return vRowHeight;};
+	this.getChartBody=function(){return vChartBody;};
+	this.getChartHead=function(){return vChartHead;};
+	this.getListBody=function(){return vListBody;};
+	this.getChartTable=function(){return vChartTable;};
+	this.getLines=function(){return vLines;};
+	this.getTimer=function(){return vTimer;};
 
 	this.CalcTaskXY=function()
 	{
@@ -1185,10 +1188,9 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 				if (vTaskList[i].getTaskDiv() && vTmpDiv)
 				{
 					// Add Task Info div for tooltip
-					vTmpDiv2=this.newNode(vTmpDiv, 'div', 'tt'+vDivId+'taskbar_'+vID, null, null, null, null, 'none');
-					vTmpDiv2=this.newNode(vTmpDiv2, 'div', 'tt'+vDivId+'complete_'+vID);
+					vTmpDiv2=this.newNode(vTmpDiv, 'div', vDivId+'tt'+vID, null, null, null, null, 'none');
 					vTmpDiv2.appendChild(this.createTaskInfo(vTaskList[i]));
-					JSGantt.addTootltipListeners(this, vTaskList[i].getTaskDiv(), vTmpDiv2);
+					JSGantt.addTooltipListeners(this, vTaskList[i].getTaskDiv(), vTmpDiv2);
 				}
 			}
 
@@ -1201,7 +1203,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 			vTmpDiv.appendChild(vRightTable);
 			vTmpDiv.appendChild(vLeftTable);
 			this.newNode(vTmpDiv, 'div', null, 'ggridfooter');
-			vTmpDiv2=this.newNode(this.getChartBody(), 'div', vDivId+'Lines');
+			vTmpDiv2=this.newNode(this.getChartBody(), 'div', vDivId+'Lines', 'glinediv');
 			vTmpDiv2.style.visibility='hidden';
 			this.setLines(vTmpDiv2);
 
@@ -1225,11 +1227,9 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 				}
 				else
 				{
-					if (vScrollTo=='today') vScrollDate=new Date();
-					else vScrollDate=JSGantt.parseDateStr(vScrollTo, this.getDateInputFormat());
-
-					vScrollDate.setHours(0,0,0,0); // zero any time present
-
+					vScrollDate=JSGantt.parseDateStr(vScrollTo, this.getDateInputFormat());
+					if(vFormat=='hour')vScrollDate.setMinutes(0,0,0);
+					else vScrollDate.setHours(0,0,0,0);
 					vScrollPx=JSGantt.getOffset(vMinDate, vScrollDate, vColWidth, vFormat);
 				}
 				this.getChartBody().scrollLeft=vScrollPx;
@@ -1915,7 +1915,7 @@ JSGantt.getMaxDate=function (pList, pFormat)
 	else if (pFormat=='month')
 	{
 		// Set to last day of current Month
-		while(vDate.getDay()>1) vDate.setDate(vDate.getDate()+1);
+		while(vDate.getDate()>1) vDate.setDate(vDate.getDate()+1);
 		vDate.setDate(vDate.getDate()-1);
 	}
 	else if (pFormat=='quarter')
@@ -2534,11 +2534,10 @@ JSGantt.addListener=function (eventName, handler, control)
 	}
 };
 
-JSGantt.addTootltipListeners=function(pGanttChart, pObj1, pObj2)
+JSGantt.addTooltipListeners=function(pGanttChart, pObj1, pObj2)
 {
-	var vTimer=20;
-	JSGantt.addListener('mouseover', function (e) {JSGantt.showToolTip(pGanttChart, e, pObj2, null, vTimer);}, pObj1);
-	JSGantt.addListener('mouseout', function (e) {JSGantt.delayedHide(pGanttChart, pGanttChart.vTool, vTimer);}, pObj1);
+	JSGantt.addListener('mouseover', function (e) {JSGantt.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());}, pObj1);
+	JSGantt.addListener('mouseout', function (e) {JSGantt.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer());}, pObj1);
 };
 
 JSGantt.addThisRowListeners=function(pGanttChart, pObj1, pObj2)
