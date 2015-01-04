@@ -74,7 +74,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.7.2</div>
+<div class="header">jsGanttImproved - 1.7.3</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -133,7 +133,14 @@ a.footnote:active {text-decoration:underline;color: red;}
     <li>Quarter</li>
   </ul>
 </li>
-<li>Load Gantt from XML file</li>
+<li>Load Gantt from XML using
+  <ul>
+    <li>External XML files (including experimental support for Microsoft Project XML files)</li>
+    <li>JavaScript strings</li>
+  </ul>
+</li>
+<li>Export Gantt as XML string</li>
+<li>Support for internationalisation</li>
 </ul>
   <h2 class="roundedCornerfg" id="tBugs">Bugs/Issues</h2>
 
@@ -144,7 +151,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
-<h4>v1.7.2:</h4>
+<h4>v1.7.3:</h4>
 <ul>
 <li>Instantiating a new JSGantt.TaskItem will now also accept Date objects for start and end dates</li>
 <li>Fixed old Internet Explorer compatibilty broken by v1.7</li>
@@ -388,7 +395,7 @@ JSGantt.parseXML("project.xml",g);
 </project>
 </textarea>
 </blockquote>
-<p>Field definitions are as described for the parameters to TaskItem above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones.</p>
+<p>Field definitions are as described for the parameters to TaskItem above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones. The pGantt element is not required for XML import.</p>
 <p>JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the <a href="#tXMLExport">XML Export methods</a> provided.</p>
 </li>
 <li>using parseXMLString() with XML held in a javascript string object
@@ -653,14 +660,14 @@ g.setDateTaskDisplayFormat('dd month yyyy HH:MI');
 <p>The following methods can be used to extract details of tasks in the project in XML format</p>
 
 <p id="getXMLProject">Method definition: <strong>getXMLProject()</strong></p>
-<p>Returns a string containing the entire project in JSGantt Improved XML format</p>
+<p>Returns a string containing the entire project in JSGantt Improved XML format. Dates will be exported in the currently defined input format as set by setDateInputFormat()</p>
 
 <p id="getXMLProject">Method definition: <strong>getXMLTask(<em>pID, pIdx</em>)</strong></p>
 <dl>
 <dt>pID</dt><dd>(required) the numeric ID that identifies the task to extract</dd>
 <dt>pIdx</dt><dd>(optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID</dd>
 </dl>
-<p>Returns a string containing the specified task item in JSGantt Improved XML format</p>
+<p>Returns a string containing the specified task item in JSGantt Improved XML format. Dates will be exported in the currently defined input format as set by setDateInputFormat()</p>
 
 
 <h2 class="roundedCornerfg" id="tExamples">Additional Demos</h2>
