@@ -1,16 +1,16 @@
 /*
-	   _   ___  _____   _  _____ _____
-	  (_) / _ \ \_   \ / ||___  |___ /
-	  | |/ /_\/  / /\/ | |   / /  |_ \
-	  | / /_\\/\/ /_   | |_ / /_ ___) |
-	 _/ \____/\____/   |_(_)_/(_)____/
+	   _   ___  _____   _  _____ _  _
+	  (_) / _ \ \_   \ / ||___  | || |
+	  | |/ /_\/  / /\/ | |   / /| || |_
+	  | / /_\\/\/ /_   | |_ / /_|__   _|
+	 _/ \____/\____/   |_(_)_/(_)  |_|
 	|__/
-	jsGanttImproved 1.7.3
+	jsGanttImproved 1.7.4
 	Copyright (c) 2013-2015, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
 
-	* Copyright (c) 2013-2014, Paul Geldart.
+	* Copyright (c) 2013-2015, Paul Geldart.
 	* All rights reserved.
 	*
 	* Redistribution and use in source and binary forms, with or without
@@ -545,15 +545,13 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	};
 
 
-	// sLine: Draw a straight line (colored one-pixel wide div), need to parameterize doc item
+	// sLine: Draw a straight line (colored one-pixel wide div)
 	this.sLine=function(x1,y1,x2,y2,pClass)
 	{
 		var vLeft=Math.min(x1,x2);
 		var vTop=Math.min(y1,y2);
 		var vWid=Math.abs(x2-x1)+1;
 		var vHgt=Math.abs(y2-y1)+1;
-
-		var vDoc=this.getChartBody();
 
 		var vTmpDiv=document.createElement('div');
 		vTmpDiv.id=vDivId+'line'+vDepId++;
@@ -573,27 +571,8 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 		if (pClass) vTmpDiv.className+=' '+pClass;
 
 		this.getLines().appendChild(vTmpDiv);
-	};
 
-	// dLine: Draw a diagonal line (calc line x,y pairs and draw multiple one-by-one sLines)
-	this.dLine=function(x1,y1,x2,y2,pClass)
-	{
-		var dx=x2-x1;
-		var dy=y2-y1;
-		var x=x1;
-		var y=y1;
-
-		var n=Math.max(Math.abs(dx),Math.abs(dy));
-		dx=dx / n;
-		dy=dy / n;
-		for (var i=0; i<=n; i++)
-		{
-			var vx=Math.round(x);
-			var vy=Math.round(y);
-			this.sLine(vx,vy,vx,vy,pClass+' gdiag');
-			x+=dx;
-			y+=dy;
-		}
+		return vTmpDiv;
 	};
 
 	this.drawDependency =function(x1,y1,x2,y2,pType,pClass)
@@ -631,20 +610,19 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 			this.sLine(x1+vShort,y1,x1+vShort,y2-vRow,pClass);
 			this.sLine(x1+vShort,y2-vRow,x2-(vShort*2),y2-vRow,pClass);
 			this.sLine(x2-(vShort*2),y2-vRow,x2-(vShort*2),y2,pClass);
-			this.sLine(x2-(vShort*2),y2,x2,y2,pClass);
+			this.sLine(x2-(vShort*2),y2,x2-(1*vDir),y2,pClass);
 		}
 		else if (y1!=y2)
 		{
 			this.sLine(x1,y1,x1+vShort,y1,pClass);
 			this.sLine(x1+vShort,y1,x1+vShort,y2,pClass);
-			this.sLine(x1+vShort,y2,x2,y2,pClass);
+			this.sLine(x1+vShort,y2,x2-(1*vDir),y2,pClass);
 		}
-		else this.sLine(x1,y1,x2,y2,pClass);
+		else this.sLine(x1,y1,x2-(1*vDir),y2,pClass);
 
-		this.dLine(x2,y2,x2-(3*vDir),y2-(3*vDir),pClass);
-		this.dLine(x2,y2,x2-(3*vDir),y2+(3*vDir),pClass);
-		this.dLine(x2-(1*vDir),y2,x2-(3*vDir),y2-(2*vDir),pClass);
-		this.dLine(x2-(1*vDir),y2,x2-(3*vDir),y2+(2*vDir),pClass);
+		var vTmpDiv=this.sLine(x2,y2,x2-3-((vDir<0)?1:0),y2-3-((vDir<0)?1:0),pClass+"Arw");
+		vTmpDiv.style.width='0px';
+		vTmpDiv.style.height='0px';
 	};
 
 	this.DrawDependencies=function()

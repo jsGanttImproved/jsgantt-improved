@@ -162,6 +162,10 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 .gDepSS,
 .gDepSF,
 .gDepFF				{ border-color: #ff0000; }
+.gDepFSArw,
+.gDepSSArw			{ overflow: hidden; width:0px; height:0px; border-bottom: 4px solid transparent; border-left: 4px solid #ff0000; border-top: 4px solid transparent; border-right: 4px solid transparent;}
+.gDepFFArw,
+.gDepSFArw			{ overflow: hidden; width:0px; height:0px; border-bottom: 4px solid transparent; border-left: 4px solid transparent; border-top: 4px solid transparent; border-right: 4px solid #ff0000;}
 .gCurDate			{ border-color: #0000ff; }
 
 
@@ -210,6 +214,11 @@ td.gspanning div { *overflow: hidden; } /* stops resizing fixed width columns if
 
 .gmdtop { _border-left: 5px solid pink; _border-top: 5px solid pink; _border-right: 5px solid pink; _filter: chroma(color=pink);}
 .gmdbottom { _border-left: 5px solid pink; _border-bottom: 5px solid pink; _border-right: 5px solid pink; _filter: chroma(color=pink);}
+
+.gDepFSArw,
+.gDepSSArw { _border-bottom: 4px solid pink; _border-top: 4px solid pink; _border-right: 4px solid pink; _filter: chroma(color=pink);}
+.gDepFFArw,
+.gDepSFArw { _border-bottom: 4px solid pink; _border-left: 4px solid pink; _border-top: 4px solid pink; _filter: chroma(color=pink);}
 
 /* Workaround for odd bug in old versions of Opera - no other browser needs this */
 .glinediv {position: absolute; top: 0px; left: 0px;}
