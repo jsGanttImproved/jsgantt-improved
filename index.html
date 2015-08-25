@@ -74,7 +74,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <body>
 
 <div style="position:absolute; z-index: 5; top:0; left:0; width: 100%;">
-<div class="header">jsGanttImproved - 1.7.4</div>
+<div class="header">jsGanttImproved - 1.7.5</div>
 <div class="nav">
 <ul>
 <li><a href="#tBugs">Bugs/Issues</a></li>
@@ -175,8 +175,9 @@ a.footnote:active {text-decoration:underline;color: red;}
 
 </ol><br/>
 <h3>Changes/fixes in jsGanttImproved:</h3>
-<h4>v1.7.4:</h4>
+<h4>v1.7.5:</h4>
 <ul>
+<li>Project Migrated to GitHub</li>
 <li>Instantiating a new JSGantt.TaskItem will now also accept Date objects for start and end dates</li>
 <li>Fixed old Internet Explorer compatibilty broken by v1.7</li>
 <li>Fixed bug in Iso week date format</li>
@@ -234,7 +235,7 @@ a.footnote:active {text-decoration:underline;color: red;}
 <li>New "Combined Group" element created. Combined groups show all child task information on one row</li>
 </ul>
 <blockquote><p>
-Please see the differences for the CSS file in code revision <a href="https://code.google.com/p/jsgantt-improved/source/diff?spec=svn21&old=18&r=21&format=side&path=%2Ftrunk%2Fjsgantt.css">r21</a> for details of CSS structural changes.
+Please see the differences for the CSS file in commit <a href="https://github.com/jsGanttImproved/jsgantt-improved/commit/ea9890e210d3d02d0cc3e09014c0160de264f9cc">ea9890e</a> for details of CSS structural changes.
 </p></blockquote>
 <h4>v1.2:</h4>
 <ul>
@@ -245,7 +246,7 @@ Please see the differences for the CSS file in code revision <a href="https://co
 </p><p>
 All chart element ids are now prefixed with the id of the master DIV containing the chart.  As a result the default stylesheet has been updated to no longer use any element ids to apply styles.
 </p><p>
-Please see the notes for code revision <a href="http://code.google.com/p/jsgantt-improved/source/detail?r=18">r18</a> for details of CSS structural changes.
+Please see the notes for commit <a href="https://github.com/jsGanttImproved/jsgantt-improved/commit/b4bf8eaa959de11f6a6f671af167a1268a59919f">b4bf8ea</a> for details of CSS structural changes.
 </p></blockquote>
 <h4>v1.1:</h4>
 <ul>
@@ -271,15 +272,15 @@ Please see the notes for code revision <a href="http://code.google.com/p/jsgantt
 <li>Chart pane width will change dynamically with containing element</li>
 </ul>
 <h2 class="roundedCornerfg" id="tDownload">Download</h2>
-<a href="https://drive.google.com/folderview?id=0BzEZAVg3PNU4dUR6Q1JRS09tNFU&usp=drive_web#list">Click here to download the current version of jsGantt Improved</a> <br/>
-You can download the latest bleeding edge version, request features and report issues at <a href="https://code.google.com/p/jsgantt-improved/">https://code.google.com/p/jsgantt-improved/</a>
+<a href="https://github.com/jsGanttImproved/jsgantt-improved/releases">Click here to download the current version of jsGantt Improved</a> <br/>
+You can download the latest bleeding edge version, request features and report issues at <a href="https://github.com/jsGanttImproved/jsgantt-improved/">https://github.com/jsGanttImproved/jsgantt-improved/</a>
 
  <h2 class="roundedCornerfg" id="tLicense">License</h2>
 JSGanttImproved is released under BSD license.<br/>
 If you plan to use it in a commercial product please consider donating the first sale to charity.
 <br/><br/>
 <textarea cols="80" rows="5">
-* Copyright (c) 2013-2014, Paul Geldart.
+* Copyright (c) 2013-2015, Paul Geldart.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -296,7 +297,7 @@ If you plan to use it in a commercial product please consider donating the first
 * THIS SOFTWARE IS PROVIDED BY PAUL GELDART. ''AS IS'' AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-* IN NO EVENT SHALL SHLOMY GANTZ/BLUEBRICK INC. BE LIABLE FOR ANY DIRECT,
+* IN NO EVENT SHALL PAUL GELDART BE LIABLE FOR ANY DIRECT,
 * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND

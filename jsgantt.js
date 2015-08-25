@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _  _____ _  _
-	  (_) / _ \ \_   \ / ||___  | || |
-	  | |/ /_\/  / /\/ | |   / /| || |_
-	  | / /_\\/\/ /_   | |_ / /_|__   _|
-	 _/ \____/\____/   |_(_)_/(_)  |_|
+	   _   ___  _____   _  _____ ____
+	  (_) / _ \ \_   \ / ||___  | ___|
+	  | |/ /_\/  / /\/ | |   / /|___ \
+	  | / /_\\/\/ /_   | |_ / /_ ___) |
+	 _/ \____/\____/   |_(_)_/(_)____/
 	|__/
-	jsGanttImproved 1.7.4
+	jsGanttImproved 1.7.5
 	Copyright (c) 2013-2015, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
