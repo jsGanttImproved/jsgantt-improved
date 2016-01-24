@@ -446,6 +446,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       'wks': 'Wks',
       'mths': 'Mths',
       'qtrs': 'Qtrs',
+      'taskname': 'Task Name',
       'resource': 'Resource',
       'duration': 'Duration',
       'comp': '% Comp.',
@@ -1083,7 +1084,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
       vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-      this.newNode(vTmpRow, 'td', null, 'gtaskname', '\u00A0');
+      this.newNode(vTmpRow, 'td', null, 'gtaskheading gtaskname', vLangs[vLang]['taskname']);
       if (vShowRes == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gresource', vLangs[vLang]['resource']);
       if (vShowDur == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gduration', vLangs[vLang]['duration']);
       if (vShowComp == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', vLangs[vLang]['comp']);
@@ -1875,8 +1876,7 @@ JSGantt.getZoomFactor = function() {
 JSGantt.getScrollPositions = function() {
   var vScrollLeft = window.pageXOffset;
   var vScrollTop = window.pageYOffset;
-  if (!('pageXOffset' in window)) // Internet Explorer before version 9
-  {
+  if (!('pageXOffset' in window)) { // Internet Explorer before version 9
     var vZoomFactor = JSGantt.getZoomFactor();
     vScrollLeft = Math.round(document.documentElement.scrollLeft / vZoomFactor);
     vScrollTop = Math.round(document.documentElement.scrollTop / vZoomFactor);
@@ -1998,8 +1998,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort) {
       return a.getSortIdx() - b.getSortIdx();
     });
   }
-  if (pID == 0 && pUseSort != 1) // Need to sort combined tasks regardless
-  {
+  if (pID == 0 && pUseSort != 1) { // Need to sort combined tasks regardless
     for (i = 0; i < pList.length; i++) {
       if (pList[i].getGroup() == 2) {
         vComb = true;
@@ -2224,7 +2223,6 @@ JSGantt.show = function(pID, pTop, ganttObj) {
 
 // function to open window to display task link
 JSGantt.taskLink = function(pRef, pWidth, pHeight) {
-
   if (pWidth) var vWidth = pWidth;
   else vWidth = 400;
   if (pHeight) var vHeight = pHeight;
@@ -2353,10 +2351,8 @@ JSGantt.parseDateFormatStr = function(pFormatStr) {
 
   for (var i = 0; i < pFormatStr.length; i++) {
     vCurrChar = pFormatStr.charAt(i);
-    if ((vCurrChar.match(vSeparators)) || (i + 1 == pFormatStr.length)) // separator or end of string
-    {
-      if ((i + 1 == pFormatStr.length) && (!(vCurrChar.match(vSeparators)))) // at end of string add any non-separator chars to the current component
-      {
+    if ((vCurrChar.match(vSeparators)) || (i + 1 == pFormatStr.length)) { // separator or end of string
+      if ((i + 1 == pFormatStr.length) && (!(vCurrChar.match(vSeparators)))) { // at end of string add any non-separator chars to the current
         vComponantStr += vCurrChar;
       }
       vDateFormatArray.push(vComponantStr);
@@ -2365,7 +2361,6 @@ JSGantt.parseDateFormatStr = function(pFormatStr) {
     } else {
       vComponantStr += vCurrChar;
     }
-
   }
   return vDateFormatArray;
 };
@@ -2396,7 +2391,6 @@ JSGantt.parseXMLString = function(pStr, pGanttVar) {
 
   JSGantt.AddXMLTask(pGanttVar, xmlDoc);
 };
-
 
 JSGantt.findXMLNode = function(pRoot, pNodeName) {
   var vRetValue;
@@ -2632,7 +2626,6 @@ JSGantt.AddXMLTask = function(pGanttVar, pXmlDoc) {
   }
 };
 
-
 JSGantt.benchMark = function(pItem) {
   var vEndTime = new Date().getTime();
   alert(pItem + ': Elapsed time: ' + ((vEndTime - vBenchTime) / 1000) + ' seconds.');
@@ -2665,11 +2658,9 @@ JSGantt.addListener = function(eventName, handler, control) {
   // Check if control is a string
   if (control === String(control)) control = JSGantt.findObj(control);
 
-  if (control.addEventListener) //Standard W3C
-  {
+  if (control.addEventListener) { //Standard W3C
     return control.addEventListener(eventName, handler, false);
-  } else if (control.attachEvent) //IExplore
-  {
+  } else if (control.attachEvent) { //IExplore
     return control.attachEvent('on' + eventName, handler);
   } else {
     return false;
