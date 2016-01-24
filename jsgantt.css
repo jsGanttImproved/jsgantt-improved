@@ -5,14 +5,15 @@ div.gantt {
     font-size: 10px;
     color: #656565;
 }
+
 .gantt table {
     border-collapse: collapse;
 }
 .gantt td {
     padding: 0px;
 }
-/* cell defaults */
 
+/* cell defaults */
 .gmajorheading,
 .gminorheading,
 .gminorheadingwkend,
@@ -32,9 +33,9 @@ div.gantt {
     border: #efefef 1px solid;
     border-right: none;
 }
+
 /* all three width values set just to make sure - helps resizing code */
 /* Additional values for some cell elements */
-
 .gtaskheading,
 .gmajorheading,
 .gminorheading {
@@ -60,8 +61,8 @@ td.gspanning {
 .gtaskcelldiv {
     position: relative;
 }
-/* Task list defaults */
 
+/* Task list defaults */
 .gtaskheading,
 .gname,
 .gtaskname,
@@ -74,14 +75,12 @@ td.gspanning {
     white-space: nowrap;
     border: #efefef 1px solid;
 }
-/* Additional values for some task list elements */
 
+/* Additional values for some task list elements */
 .gresource,
 .gduration,
 .gpccomplete,
-.gstartdate div,
-/* needed for IE8 */
-
+.gstartdate div, /* needed for IE8 */
 .gstartdate {
     text-align: center;
     min-width: 70px;
@@ -89,9 +88,7 @@ td.gspanning {
     width: 70px;
     font-size: 10px;
 }
-.genddate div,
-/* needed for IE8 */
-
+.genddate div, /* needed for IE8 */
 .genddate {
     text-align: center;
     min-width: 70px;
@@ -102,16 +99,24 @@ td.gspanning {
 .gtaskheading {
     text-align: center;
 }
-.gtaskname div,
-/* needed for IE8 */
-
+.gtaskname div, /* needed for IE8 */
 .gtaskname {
     min-width: 170px;
     max-width: 170px;
     width: 170px;
-    font-size: 10px;
     border-left: none;
 }
+
+/* Additions to show longer text properly into those columns */
+.gtaskname div, /* needed for IE8 */
+.gtaskname
+.gresource div, /* needed for IE8 */
+.gresource {
+    font-size: 9px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .gselector {
     text-align: left;
     white-space: nowrap;
@@ -119,6 +124,7 @@ td.gspanning {
     max-width: 170px;
     width: 170px;
 }
+
 .gformlabel {
     position: relative;
     top: 0px;
@@ -133,6 +139,7 @@ span.gselected {
     background-color: #dbecff;
     border: #cccccc 1px solid;
 }
+
 span.gfoldercollapse {
     color: #000000;
     cursor: pointer;
@@ -140,16 +147,16 @@ span.gfoldercollapse {
     font-size: 12px;
     font-family: Courier, "Courier New", monospace;
 }
+
 .gtasktableh,
 .gtasktable {
     border-right: #efefef 1px solid;
 }
 .gcharttable {
     border: #efefef 1px solid;
-}
-/* for some reason firefox needs this */
-/* Differentiate Group, Milestone and Ordinary task items (applied to row) */
+} /* for some reason firefox needs this */
 
+/* Differentiate Group, Milestone and Ordinary task items (applied to row) */
 .ggroupitem {
     background-color: #fbfbfb;
     font-weight: bold;
@@ -158,14 +165,14 @@ span.gfoldercollapse {
 .glineitem {
     background-color: #ffffff;
 }
-/* highlight row (applied to row) */
 
+/* highlight row (applied to row) */
 .gitemhighlight td {
     background-image: none;
     background-color: #fffde5;
 }
-/* task bar caption text styles */
 
+/* task bar caption text styles */
 .gmilecaption,
 .ggroupcaption,
 .gcaption {
@@ -177,18 +184,19 @@ span.gfoldercollapse {
     position: absolute;
     top: 2px;
 }
+
 .ggroupcaption,
 .gcaption {
     right: -126px;
 }
-/* Task complete %age bar shared attributes */
 
+/* Task complete %age bar shared attributes */
 .gtaskcomplete {
     float: left;
     overflow: hidden;
 }
-/* Task complete %age bar */
 
+/* Task complete %age bar */
 .gtaskcomplete {
     height: 5px;
     background-color: #000000;
@@ -196,8 +204,8 @@ span.gfoldercollapse {
     opacity: 0.4;
     filter: alpha(opacity=40);
 }
-/* Milestones */
 
+/* Milestones */
 .gmilestone {
     font-size: 14px;
     position: absolute;
@@ -223,8 +231,8 @@ span.gfoldercollapse {
     border-bottom: 5px solid transparent;
     border-right: 5px solid transparent;
 }
-/* Task bar shared attributes */
 
+/* Task bar shared attributes */
 .ggroupblack,
 .gtaskblue,
 .gtaskred,
@@ -237,8 +245,18 @@ span.gfoldercollapse {
     opacity: 0.9;
     margin-top: 1px;
 }
-/* Task bars - ggroupblack is set as the default class on the task if it is undefined */
 
+/* Add round corner to task bars */
+.gtaskblue,
+.gtaskred,
+.gtaskgreen,
+.gtaskyellow,
+.gtaskpurple,
+.gtaskpink {
+    border-radius: 5px;
+}
+
+/* Task bars - ggroupblack is set as the default class on the task if it is undefined */
 .ggroupblack {
     height: 7px;
     background: #000000;
@@ -277,64 +295,34 @@ span.gfoldercollapse {
     margin-bottom: 2px;
 }
 .gtaskblue {
-    background: rgb(58, 132, 195);
-    /* Old browsers */
-    
-    background: linear-gradient(to bottom, rgba(58, 132, 195, 1) 0%, rgba(65, 154, 214, 1) 20%, rgba(75, 184, 240, 1) 40%, rgba(58, 139, 194, 1) 70%, rgba(38, 85, 139, 1) 100%);
-    /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#4bb8f0', endColorstr='#3a84c3', GradientType=0);
-    /* IE6-9 */
+    background: rgb(58, 132, 195);/* Old browsers */
+    background: linear-gradient(to bottom, rgba(58, 132, 195, 1) 0%, rgba(65, 154, 214, 1) 20%, rgba(75, 184, 240, 1) 40%, rgba(58, 139, 194, 1) 70%, rgba(38, 85, 139, 1) 100%); /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#4bb8f0', endColorstr='#3a84c3', GradientType=0); /* IE6-9 */
 }
 .gtaskred {
-    background: rgb(196, 58, 58);
-    /* Old browsers */
-    
-    background: linear-gradient(to bottom, rgba(196, 58, 58, 1) 0%, rgba(211, 65, 65, 1) 20%, rgba(239, 76, 76, 1) 40%, rgba(196, 58, 58, 1) 70%, rgba(135, 37, 37, 1) 100%);
-    /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ef4c4c', endColorstr='#c43a3a', GradientType=0);
-    /* IE6-9 */
+    background: rgb(196, 58, 58); /* Old browsers */
+    background: linear-gradient(to bottom, rgba(196, 58, 58, 1) 0%, rgba(211, 65, 65, 1) 20%, rgba(239, 76, 76, 1) 40%, rgba(196, 58, 58, 1) 70%, rgba(135, 37, 37, 1) 100%); /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ef4c4c', endColorstr='#c43a3a', GradientType=0); /* IE6-9 */
 }
 .gtaskgreen {
-    background: rgb(80, 193, 58);
-    /* Old browsers */
-    
-    background: linear-gradient(to bottom, rgba(80, 193, 58, 1) 0%, rgba(88, 209, 64, 1) 20%, rgba(102, 237, 75, 1) 40%, rgba(80, 193, 58, 1) 70%, rgba(53, 132, 37, 1) 100%);
-    /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#66ED4B', endColorstr='#50c13a', GradientType=0);
-    /* IE6-9 */
+    background: rgb(80, 193, 58); /* Old browsers */
+    background: linear-gradient(to bottom, rgba(80, 193, 58, 1) 0%, rgba(88, 209, 64, 1) 20%, rgba(102, 237, 75, 1) 40%, rgba(80, 193, 58, 1) 70%, rgba(53, 132, 37, 1) 100%); /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#66ED4B', endColorstr='#50c13a', GradientType=0); /* IE6-9 */
 }
 .gtaskyellow {
-    background: rgb(247, 228, 56);
-    /* Old browsers */
-    
-    background: linear-gradient(to bottom, rgba(247, 228, 56, 1) 0%, rgba(239, 239, 55, 1) 20%, rgba(255, 255, 58, 1) 40%, rgba(242, 236, 55, 1) 70%, rgba(241, 218, 54, 1) 100%);
-    /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffff3a', endColorstr='#f7e438', GradientType=0);
-    /* IE6-9 */
+    background: rgb(247, 228, 56); /* Old browsers */
+    background: linear-gradient(to bottom, rgba(247, 228, 56, 1) 0%, rgba(239, 239, 55, 1) 20%, rgba(255, 255, 58, 1) 40%, rgba(242, 236, 55, 1) 70%, rgba(241, 218, 54, 1) 100%); /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffff3a', endColorstr='#f7e438', GradientType=0); /* IE6-9 */
 }
 .gtaskpurple {
-    background: rgb(193, 58, 193);
-    /* Old browsers */
-    
-    background: linear-gradient(to bottom, rgba(193, 58, 193, 1) 0%, rgba(211, 65, 211, 1) 20%, rgba(239, 76, 239, 1) 40%, rgba(193, 58, 193, 1) 70%, rgba(137, 38, 137, 1) 100%);
-    /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ef4cef', endColorstr='#892689', GradientType=0);
-    /* IE6-9 */
+    background: rgb(193, 58, 193); /* Old browsers */
+    background: linear-gradient(to bottom, rgba(193, 58, 193, 1) 0%, rgba(211, 65, 211, 1) 20%, rgba(239, 76, 239, 1) 40%, rgba(193, 58, 193, 1) 70%, rgba(137, 38, 137, 1) 100%); /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ef4cef', endColorstr='#892689', GradientType=0); /* IE6-9 */
 }
 .gtaskpink {
-    background: rgb(249, 177, 245);
-    /* Old browsers */
-    
-    background: linear-gradient(to bottom, rgba(249, 177, 245, 1) 0%, rgba(247, 192, 243, 1) 20%, rgba(247, 202, 244, 1) 40%, rgba(249, 192, 246, 1) 70%, rgba(252, 174, 247, 1) 100%);
-    /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f7caf4', endColorstr='#fcaef7', GradientType=0);
-    /* IE6-9 */
+    background: rgb(249, 177, 245); /* Old browsers */
+    background: linear-gradient(to bottom, rgba(249, 177, 245, 1) 0%, rgba(247, 192, 243, 1) 20%, rgba(247, 202, 244, 1) 40%, rgba(249, 192, 246, 1) 70%, rgba(252, 174, 247, 1) 100%); /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f7caf4', endColorstr='#fcaef7', GradientType=0); /* IE6-9 */
 }
 .gtaskbluecomplete,
 .gtaskredcomplete,
@@ -350,9 +338,9 @@ span.gfoldercollapse {
     background-color: #000000;
     margin-top: 4px;
 }
+
 /* Printer friendly styles - we could use these all the time but they are not as pretty! */
 /* note that "@media print" is not supported in IE6 or 7.  Fully patched IE8 should be OK */
-
 @media print {
     .ggroupblack {
         height: 0px;
@@ -411,8 +399,8 @@ span.gfoldercollapse {
         border-color: #777777;
     }
 }
-/*  END Task bar styles */
 
+/*  END Task bar styles */
 .glinev {
     border-left: 1px solid;
     width: 0px;
@@ -421,6 +409,7 @@ span.gfoldercollapse {
     border-top: 1px solid;
     height: 0px;
 }
+
 .gDepFS,
 .gDepSS,
 .gDepSF,
@@ -450,11 +439,13 @@ span.gfoldercollapse {
 .gCurDate {
     border-color: #0000ff;
 }
+
 div.gtaskbarcontainer {
     z-index: 1;
     position: absolute;
     top: 0px
 }
+
 .JSGanttToolTip {
     position: absolute;
     display: block;
@@ -507,28 +498,22 @@ div.gtaskbarcontainer {
 .gTIn {
     padding-top: 10px;
 }
+
 .gantt {
-    min-width: 1064px;
-    /* 2x LC width */
+    min-width: 1064px; /* 2x LC width */
 }
 .gchartcontainer {
-    padding-left: 532px;
-    /* LC width */
+    padding-left: 532px; /* LC width */
 }
 .gcontainercol {
     position: relative;
     float: left;
-}
-/* Add a max-height value here if wanted */
+} /* Add a max-height value here if wanted */
 
 .glistgrid {
-    width: 532px;
-    /* LC width */
-    
+    width: 532px; /* LC width */
     margin-left: -100%;
-    right: 532px;
-    /* LC width */
-    
+    right: 532px; /* LC width */
     padding-right: 0px;
     padding-left: 0px;
     padding-bottom: 0px;
@@ -537,13 +522,9 @@ div.gtaskbarcontainer {
     overflow: hidden;
 }
 .glistlbl {
-    width: 532px;
-    /* LC width */
-    
+    width: 532px; /* LC width */
     margin-left: -100%;
-    right: 532px;
-    /* LC width */
-    
+    right: 532px; /* LC width */
     padding-right: 0px;
     padding-left: 0px;
     padding-bottom: 0px;
@@ -557,12 +538,14 @@ div.gtaskbarcontainer {
 .ggridfooter {
     clear: both;
 }
+
 .rhscrpad {
     width: 150px;
     position: absolute;
     top: 0px;
     height: 1px;
 }
+
 .gchartgrid {
     width: 100%;
     padding-right: 0px;
@@ -584,52 +567,36 @@ div.gtaskbarcontainer {
     position: relative;
     overflow: hidden;
 }
-/* Old Internet Explorer version hacks */
 
+/* Old Internet Explorer version hacks */
 .gantt {
     _height: 100%
-}
-/* otherwise the chart disappears! */
-
+} /* otherwise the chart disappears! */
 div .gantt {
     _width: 1064px;
-}
-/* ie6 fixed width */
-
+} /* ie6 fixed width */
 div.gchartlbl,
 div.gchartgrid {
     _width: 532px;
-}
-/* ie6 fixed width */
-
+} /* ie6 fixed width */
 div.glistlbl,
 div.glistgrid {
-    *right: 0px;
-    /* ie7 pulls the content too far left with the negative margin */
-    
-    _right: 532px;
-    /* but ie6 fixed width needs this */
-    
-    _margin-left: -532px;
-    /* ie6 fixed width */
+    *right: 0px; /* ie7 pulls the content too far left with the negative margin */
+    _right: 532px; /* but ie6 fixed width needs this */
+    _margin-left: -532px; /* ie6 fixed width */
 }
 div.gchartgrid {
     *padding-bottom: 20px;
     *overflow-y: hidden;
-}
-/* variable height design, no need for vertical scroll */
-
+} /* variable height design, no need for vertical scroll */
 td.gmajorheading div {
     *overflow: hidden;
-}
-/* stops resizing fixed width columns if the text is too wide */
-
+} /* stops resizing fixed width columns if the text is too wide */
 td.gspanning div {
     *overflow: hidden;
-}
-/* stops resizing fixed width columns if the text is too wide */
-/* border transparency tricks */
+} /* stops resizing fixed width columns if the text is too wide */
 
+/* border transparency tricks */
 .ggroupblackendpointleft {
     _border-top: 4px solid black;
     _border-left: 4px solid pink;
@@ -644,6 +611,7 @@ td.gspanning div {
     _border-right: 4px solid pink;
     _filter: chroma(color=pink);
 }
+
 .gmdtop {
     _border-left: 5px solid pink;
     _border-top: 5px solid pink;
@@ -656,6 +624,7 @@ td.gspanning div {
     _border-right: 5px solid pink;
     _filter: chroma(color=pink);
 }
+
 .gDepFSArw,
 .gDepSSArw {
     _border-bottom: 4px solid pink;
@@ -670,27 +639,52 @@ td.gspanning div {
     _border-top: 4px solid pink;
     _filter: chroma(color=pink);
 }
-/* Workaround for odd bug in old versions of Opera - no other browser needs this */
 
+/* Workaround for odd bug in old versions of Opera - no other browser needs this */
 .glinediv {
     position: absolute;
     top: 0px;
     left: 0px;
 }
-/* if using setUseSingleCell(1) the following is a suggested set of CSS3 styles to recreate the table grid - won't work on old browsers 
+
+/* if using setUseSingleCell(1) the following is a suggested set of CSS3 styles to recreate the table grid - won't work on old browsers */
 .ggrouphour td,
 .gmilehour td,
-.gitemhour td			{ background-size: 19px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px); width: 100%; height: 19px; }
+.gitemhour td {
+    background-size: 19px 1px;
+    background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px);
+    width: 100%;
+    height: 19px;
+}
 .ggroupday td,
 .gmileday td,
-.gitemday td			{ background-size: 19px 1px, 133px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px), linear-gradient(to left, #f7f7f7 39px, transparent 1px, transparent 92px); width: 100%; height: 19px; }
+.gitemday td {
+    background-size: 19px 1px, 133px 1px;
+    background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px), linear-gradient(to left, #f7f7f7 39px, transparent 1px, transparent 92px);
+    width: 100%;
+    height: 19px;
+}
 .ggroupweek td,
 .gmileweek td,
-.gitemweek td			{ background-size: 37px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 36px); width: 100%; height: 19px; }
+.gitemweek td {
+    background-size: 37px 1px;
+    background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 36px);
+    width: 100%;
+    height: 19px;
+}
 .ggroupmonth td,
 .gmilemonth td,
-.gitemmonth td			{ background-size: 37px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 36px); width: 100%; height: 19px; }
+.gitemmonth td {
+    background-size: 37px 1px;
+    background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 36px);
+    width: 100%;
+    height: 19px;
+}
 .ggroupquarter td,
 .gmilequarter td,
-.gitemquarter td		{ background-size: 19px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px); width: 100%; height: 19px; }
-*/
+.gitemquarter td {
+    background-size: 19px 1px;
+    background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px);
+    width: 100%;
+    height: 19px;
+}
