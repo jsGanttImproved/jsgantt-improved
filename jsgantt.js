@@ -1,69 +1,68 @@
 /*
-	   _   ___  _____   _  _____ ____
-	  (_) / _ \ \_   \ / ||___  | ___|
-	  | |/ /_\/  / /\/ | |   / /|___ \
-	  | / /_\\/\/ /_   | |_ / /_ ___) |
-	 _/ \____/\____/   |_(_)_/(_)____/
-	|__/
-	jsGanttImproved 1.7.5
-	Copyright (c) 2013-2015, Paul Geldart All rights reserved.
+     _   ___  _____   _  _____ ____
+    (_) / _ \ \_   \ / ||___  | ___|
+    | |/ /_\/  / /\/ | |   / /|___ \
+    | / /_\\/\/ /_   | |_ / /_ ___) |
+   _/ \____/\____/   |_(_)_/(_)____/
+  |__/
+  jsGanttImproved 1.7.5
+  Copyright (c) 2013-2015, Paul Geldart All rights reserved.
 
-	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
+  The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
 
-	* Copyright (c) 2013-2015, Paul Geldart.
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without
-	* modification, are permitted provided that the following conditions are met:
-	*     * Redistributions of source code must retain the above copyright
-	*       notice, this list of conditions and the following disclaimer.
-	*     * Redistributions in binary form must reproduce the above copyright
-	*       notice, this list of conditions and the following disclaimer in the
-	*       documentation and/or other materials provided with the distribution.
-	*     * Neither the name of Paul Geldart nor the names of its contributors
-	*       may be used to endorse or promote products derived from this software
-	*       without specific prior written permission.
-	*
-	* THIS SOFTWARE IS PROVIDED BY PAUL GELDART. ''AS IS'' AND ANY EXPRESS OR
-	* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-	* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-	* IN NO EVENT SHALL PAUL GELDART BE LIABLE FOR ANY DIRECT,
-	* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-	* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-	* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-	* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * Copyright (c) 2013-2015, Paul Geldart.
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *     * Redistributions of source code must retain the above copyright
+  *       notice, this list of conditions and the following disclaimer.
+  *     * Redistributions in binary form must reproduce the above copyright
+  *       notice, this list of conditions and the following disclaimer in the
+  *       documentation and/or other materials provided with the distribution.
+  *     * Neither the name of Paul Geldart nor the names of its contributors
+  *       may be used to endorse or promote products derived from this software
+  *       without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY PAUL GELDART. ''AS IS'' AND ANY EXPRESS OR
+  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  * IN NO EVENT SHALL PAUL GELDART BE LIABLE FOR ANY DIRECT,
+  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-	This project is based on jsGantt 1.2, (which can be obtained from
-	https://code.google.com/p/jsgantt/) and remains under the original BSD license.
-	The original project license follows:
+  This project is based on jsGantt 1.2, (which can be obtained from
+  https://code.google.com/p/jsgantt/) and remains under the original BSD license.
+  The original project license follows:
 
-	Copyright (c) 2009, Shlomy Gantz BlueBrick Inc. All rights reserved.
+  Copyright (c) 2009, Shlomy Gantz BlueBrick Inc. All rights reserved.
 
-	* Redistribution and use in source and binary forms, with or without
-	* modification, are permitted provided that the following conditions are met:
-	*     * Redistributions of source code must retain the above copyright
-	*       notice, this list of conditions and the following disclaimer.
-	*     * Redistributions in binary form must reproduce the above copyright
-	*       notice, this list of conditions and the following disclaimer in the
-	*       documentation and/or other materials provided with the distribution.
-	*     * Neither the name of Shlomy Gantz or BlueBrick Inc. nor the
-	*       names of its contributors may be used to endorse or promote products
-	*       derived from this software without specific prior written permission.
-	*
-	* THIS SOFTWARE IS PROVIDED BY SHLOMY GANTZ/BLUEBRICK INC. ''AS IS'' AND ANY
-	* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-	* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-	* DISCLAIMED. IN NO EVENT SHALL SHLOMY GANTZ/BLUEBRICK INC. BE LIABLE FOR ANY
-	* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-	* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-	* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-	* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *     * Redistributions of source code must retain the above copyright
+  *       notice, this list of conditions and the following disclaimer.
+  *     * Redistributions in binary form must reproduce the above copyright
+  *       notice, this list of conditions and the following disclaimer in the
+  *       documentation and/or other materials provided with the distribution.
+  *     * Neither the name of Shlomy Gantz or BlueBrick Inc. nor the
+  *       names of its contributors may be used to endorse or promote products
+  *       derived from this software without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY SHLOMY GANTZ/BLUEBRICK INC. ''AS IS'' AND ANY
+  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL SHLOMY GANTZ/BLUEBRICK INC. BE LIABLE FOR ANY
+  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 var JSGantt;
 if (!JSGantt) JSGantt = {};
 
@@ -118,8 +117,8 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
   }
 
   if (vGroup != 1) {
-    vStart = (pStart instanceof Date) ? pStart : JSGantt.parseDateStr(document.createTextNode(pStart).data, vGantt.getDateInputFormat());
-    vEnd = (pEnd instanceof Date) ? pEnd : JSGantt.parseDateStr(document.createTextNode(pEnd).data, vGantt.getDateInputFormat());
+    vStart = (pStart instanceof Date) ? pStart : JSGantt.parseDateStr(document.createTextNode(pStart).data, vGantt.dateInputFormat);
+    vEnd = (pEnd instanceof Date) ? pEnd : JSGantt.parseDateStr(document.createTextNode(pEnd).data, vGantt.dateInputFormat);
   }
 
   if (pDepend != null) {
@@ -368,60 +367,16 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 
 // function that loads the main gantt chart properties and functions
 // pDiv: (required) this is a div object created in HTML
-// pFormat: (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
+// pFormat: (optional) - used to indicate whether chart should be drawn in "hour", "day" (default), "week", "month", or "quarter" format
 JSGantt.GanttChart = function(pDiv, pFormat) {
   var vDiv = pDiv;
-  var vFormat = pFormat;
+  var vFormat = pFormat || 'day';
   var vDivId = null;
-  var vUseFade = 1;
-  var vUseMove = 1;
-  var vUseRowHlt = 1;
-  var vUseToolTip = 1;
-  var vUseSort = 1;
-  var vUseSingleCell = 25000;
-  var vShowRes = 1;
-  var vShowDur = 1;
-  var vShowComp = 1;
-  var vShowStartDate = 1;
-  var vShowEndDate = 1;
-  var vShowEndWeekDate = 1;
-  var vShowTaskInfoRes = 1;
-  var vShowTaskInfoDur = 1;
-  var vShowTaskInfoComp = 1;
-  var vShowTaskInfoStartDate = 1;
-  var vShowTaskInfoEndDate = 1;
-  var vShowTaskInfoNotes = 1;
-  var vShowTaskInfoLink = 0;
-  var vShowDeps = 1;
-  var vShowSelector = new Array('top');
-  var vDateInputFormat = 'yyyy-mm-dd';
-  var vDateTaskTableDisplayFormat = JSGantt.parseDateFormatStr('dd/mm/yyyy');
-  var vDateTaskDisplayFormat = JSGantt.parseDateFormatStr('dd month yyyy');
-  var vHourMajorDateDisplayFormat = JSGantt.parseDateFormatStr('day dd month yyyy');
-  var vHourMinorDateDisplayFormat = JSGantt.parseDateFormatStr('HH');
-  var vDayMajorDateDisplayFormat = JSGantt.parseDateFormatStr('dd/mm/yyyy');
-  var vDayMinorDateDisplayFormat = JSGantt.parseDateFormatStr('dd');
-  var vWeekMajorDateDisplayFormat = JSGantt.parseDateFormatStr('yyyy');
-  var vWeekMinorDateDisplayFormat = JSGantt.parseDateFormatStr('dd/mm');
-  var vMonthMajorDateDisplayFormat = JSGantt.parseDateFormatStr('yyyy');
-  var vMonthMinorDateDisplayFormat = JSGantt.parseDateFormatStr('mon');
-  var vQuarterMajorDateDisplayFormat = JSGantt.parseDateFormatStr('yyyy');
-  var vQuarterMinorDateDisplayFormat = JSGantt.parseDateFormatStr('qq');
   var vUseFullYear = JSGantt.parseDateFormatStr('dd/mm/yyyy');
-  var vCaptionType;
   var vDepId = 1;
   var vTaskList = new Array();
-  var vFormatArr = new Array('hour', 'day', 'week', 'month', 'quarter');
   var vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
   var vProcessNeeded = true;
-  var vMinGpLen = 8;
-  var vScrollTo = '';
-  var vHourColWidth = 18;
-  var vDayColWidth = 18;
-  var vWeekColWidth = 36;
-  var vMonthColWidth = 36;
-  var vQuarterColWidth = 18;
-  var vRowHeight = 20;
   var vTodayPx = -1;
   var vLangs = {
     'en': {
@@ -502,158 +457,144 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
   var vChartTable = null;
   var vLines = null;
   var vTimer = 20;
-
-  this.setUseFade = function(pVal) {
-    vUseFade = pVal;
+  
+  //  Aggregate draw options into single object
+  this.Options = {
+    useFade: 1,
+    useMove: 1,
+    useRowHlt: 1,
+    useToolTip: 1,
+    useSort: 1,
+    useSingleCell: 25000,
+    showRes: 1,
+    showDur: 1,
+    showComp: 1,
+    showStartDate: 1,
+    showEndDate: 1,
+    showEndWeekDate: 1,
+    showTaskInfoRes: 1,
+    showTaskInfoDur: 1,
+    showTaskInfoComp: 1,
+    showTaskInfoStartDate: 1,
+    showTaskInfoEndDate: 1,
+    showTaskInfoNotes: 1,
+    showTaskInfoLink: 0,
+    showDeps: 1,
+    showSelector: new Array('top'),
+    dateInputFormat: 'yyyy-mm-dd',
+    dateTaskTableDisplayFormat: JSGantt.parseDateFormatStr('dd/mm/yyyy'),
+    dateTaskDisplayFormat: JSGantt.parseDateFormatStr('dd month yyyy'),
+    hourMajorDateDisplayFormat: JSGantt.parseDateFormatStr('day dd month yyyy'),
+    hourMinorDateDisplayFormat: JSGantt.parseDateFormatStr('HH'),
+    dayMajorDateDisplayFormat: JSGantt.parseDateFormatStr('dd/mm/yyyy'),
+    dayMinorDateDisplayFormat: JSGantt.parseDateFormatStr('dd'),
+    weekMajorDateDisplayFormat: JSGantt.parseDateFormatStr('yyyy'),
+    weekMinorDateDisplayFormat: JSGantt.parseDateFormatStr('dd/mm'),
+    monthMajorDateDisplayFormat: JSGantt.parseDateFormatStr('yyyy'),
+    monthMinorDateDisplayFormat: JSGantt.parseDateFormatStr('mon'),
+    quarterMajorDateDisplayFormat: JSGantt.parseDateFormatStr('yyyy'),
+    quarterMinorDateDisplayFormat: JSGantt.parseDateFormatStr('qq'),
+    captionType: 'None',
+    formatArr: new Array('hour', 'day', 'week', 'month', 'quarter'),
+    minGpLen: 8,
+    scrollTo: '',
+    hourColWidth: 18,
+    dayColWidth: 18,
+    weekColWidth: 36,
+    monthColWidth: 36,
+    quarterColWidth: 18,
+    rowHeight: 20
   };
-  this.setUseMove = function(pVal) {
-    vUseMove = pVal;
-  };
-  this.setUseRowHlt = function(pVal) {
-    vUseRowHlt = pVal;
-  };
-  this.setUseToolTip = function(pVal) {
-    vUseToolTip = pVal;
-  };
-  this.setUseSort = function(pVal) {
-    vUseSort = pVal;
-  };
-  this.setUseSingleCell = function(pVal) {
-    vUseSingleCell = pVal * 1;
-  };
-  this.setFormatArr = function() {
-    var vValidFormats = 'hour day week month quarter';
-    vFormatArr = new Array();
-    for (var i = 0, j = 0; i < arguments.length; i++) {
-      if (vValidFormats.indexOf(arguments[i].toLowerCase()) != -1 && arguments[i].length > 1) {
-        vFormatArr[j++] = arguments[i].toLowerCase();
-        var vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
-        vValidFormats = vValidFormats.replace(vRegExp, '');
+  
+  var vMe = this;
+  
+  for (var vIndex in vMe.Options) {
+    if (vMe.Options.hasOwnProperty(vIndex)) {
+      (function (vProp) {
+        Object.defineProperty(vMe, vProp, {
+          get: function () {
+            return this.Options[vProp];
+          },
+          set: function (val) {
+            this.Options[vProp] = val;
+          },
+          enumerable: true,
+          configurable: true
+        });
+  
+        switch (vProp) {
+          case 'useSingleCell':
+            Object.defineProperty(vMe, vProp, {
+              set: function (val) {
+                if (val) {
+                  this.Options[vProp] = val * 1;
+                }
+              }
+            });
+            break;
+          case 'showSelector':
+          case 'formatArr':
+            Object.defineProperty(vMe, vProp, {
+              set: function (val) {
+                if (val) {
+                  var vValidFormats = (vProp == 'showSelector') ? 'top bottom' : 'hour day week month quarter';
+                  var vTemp = new Array();
+                  for (var i = 0, j = 0; i < val.length; i++) {
+                    if (vValidFormats.indexOf(val[i].toLowerCase()) != -1 && val[i].length > 1) {
+                      vTemp[j++] = val[i].toLowerCase();
+                      var vRegExp = new RegExp('(?:^|\s)' + val[i] + '(?!\S)', 'g');
+                      vValidFormats = vValidFormats.replace(vRegExp, '');
+                    }
+                  }
+                  if (vTemp.length > 0) {
+                    this.Options[vProp] = vTemp;
+                  }
+                }
+              }
+            });
+            break;
+          case 'dateTaskTableDisplayFormat':
+          case 'dateTaskDisplayFormat':
+          case 'hourMajorDateDisplayFormat':
+          case 'hourMinorDateDisplayFormat':
+          case 'dayMajorDateDisplayFormat':
+          case 'dayMinorDateDisplayFormat':
+          case 'weekMajorDateDisplayFormat':
+          case 'weekMinorDateDisplayFormat':
+          case 'monthMajorDateDisplayFormat':
+          case 'monthMinorDateDisplayFormat':
+          case 'quarterMajorDateDisplayFormat':
+          case 'quarterMinorDateDisplayFormat':
+            Object.defineProperty(vMe, vProp, {
+              set: function (val) {
+                if (val) {
+                  val = JSGantt.parseDateFormatStr(val);
+                  if (val.length > 0) {
+                    this.Options[vProp] = val;
+                  }
+                }
+              }
+            });
+            break;
+        }
+      }(vIndex));
+    }
+  }
+  
+  
+  this.setOptions = function(pOptions) {
+    if (pOptions) {
+      for (var vProp in pOptions) {
+        if (pOptions.hasOwnProperty(vProp)) {
+          this[vProp] = pOptions[vProp];
+        }
       }
     }
   };
-  this.setShowRes = function(pVal) {
-    vShowRes = pVal;
-  };
-  this.setShowDur = function(pVal) {
-    vShowDur = pVal;
-  };
-  this.setShowComp = function(pVal) {
-    vShowComp = pVal;
-  };
-  this.setShowStartDate = function(pVal) {
-    vShowStartDate = pVal;
-  };
-  this.setShowEndDate = function(pVal) {
-    vShowEndDate = pVal;
-  };
-  this.setShowTaskInfoRes = function(pVal) {
-    vShowTaskInfoRes = pVal;
-  };
-  this.setShowTaskInfoDur = function(pVal) {
-    vShowTaskInfoDur = pVal;
-  };
-  this.setShowTaskInfoComp = function(pVal) {
-    vShowTaskInfoComp = pVal;
-  };
-  this.setShowTaskInfoStartDate = function(pVal) {
-    vShowTaskInfoStartDate = pVal;
-  };
-  this.setShowTaskInfoEndDate = function(pVal) {
-    vShowTaskInfoEndDate = pVal;
-  };
-  this.setShowTaskInfoNotes = function(pVal) {
-    vShowTaskInfoNotes = pVal;
-  };
-  this.setShowTaskInfoLink = function(pVal) {
-    vShowTaskInfoLink = pVal;
-  };
-  this.setShowEndWeekDate = function(pVal) {
-    vShowEndWeekDate = pVal;
-  };
-  this.setShowSelector = function() {
-    var vValidSelectors = 'top bottom';
-    vShowSelector = new Array();
-    for (var i = 0, j = 0; i < arguments.length; i++) {
-      if (vValidSelectors.indexOf(arguments[i].toLowerCase()) != -1 && arguments[i].length > 1) {
-        vShowSelector[j++] = arguments[i].toLowerCase();
-        var vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
-        vValidSelectors = vValidSelectors.replace(vRegExp, '');
-      }
-    }
-  };
-  this.setShowDeps = function(pVal) {
-    vShowDeps = pVal;
-  };
-  this.setDateInputFormat = function(pVal) {
-    vDateInputFormat = pVal;
-  };
-  this.setDateTaskTableDisplayFormat = function(pVal) {
-    vDateTaskTableDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setDateTaskDisplayFormat = function(pVal) {
-    vDateTaskDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setHourMajorDateDisplayFormat = function(pVal) {
-    vHourMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setHourMinorDateDisplayFormat = function(pVal) {
-    vHourMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setDayMajorDateDisplayFormat = function(pVal) {
-    vDayMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setDayMinorDateDisplayFormat = function(pVal) {
-    vDayMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setWeekMajorDateDisplayFormat = function(pVal) {
-    vWeekMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setWeekMinorDateDisplayFormat = function(pVal) {
-    vWeekMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setMonthMajorDateDisplayFormat = function(pVal) {
-    vMonthMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setMonthMinorDateDisplayFormat = function(pVal) {
-    vMonthMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setQuarterMajorDateDisplayFormat = function(pVal) {
-    vQuarterMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setQuarterMinorDateDisplayFormat = function(pVal) {
-    vQuarterMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal);
-  };
-  this.setCaptionType = function(pType) {
-    vCaptionType = pType;
-  };
+  
   this.setFormat = function(pFormat) {
     vFormat = pFormat;
-    this.Draw();
-  };
-  this.setMinGpLen = function(pMinGpLen) {
-    vMinGpLen = pMinGpLen;
-  };
-  this.setScrollTo = function(pDate) {
-    vScrollTo = pDate;
-  };
-  this.setHourColWidth = function(pWidth) {
-    vHourColWidth = pWidth;
-  };
-  this.setDayColWidth = function(pWidth) {
-    vDayColWidth = pWidth;
-  };
-  this.setWeekColWidth = function(pWidth) {
-    vWeekColWidth = pWidth;
-  };
-  this.setMonthColWidth = function(pWidth) {
-    vMonthColWidth = pWidth;
-  };
-  this.setQuarterColWidth = function(pWidth) {
-    vQuarterColWidth = pWidth;
-  };
-  this.setRowHeight = function(pHeight) {
-    vRowHeight = pHeight;
+    this.draw();
   };
   this.setLang = function(pLang) {
     if (vLangs[pLang]) vLang = pLang;
@@ -679,144 +620,18 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
   this.addLang = function(pLang, pVals) {
     if (!vLangs[pLang]) {
       vLangs[pLang] = new Object();
-      for (var vKey in vLangs['en']) vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : vLangs['en'][vKey];
+      for (var vKey in vLangs['en']) {
+        vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : vLangs['en'][vKey];
+      }
     }
   };
 
+  this.getOptions = function() {
+    return this.Options;
+  };
+  
   this.getDivId = function() {
     return vDivId;
-  };
-  this.getUseFade = function() {
-    return vUseFade;
-  };
-  this.getUseMove = function() {
-    return vUseMove;
-  };
-  this.getUseRowHlt = function() {
-    return vUseRowHlt;
-  };
-  this.getUseToolTip = function() {
-    return vUseToolTip;
-  };
-  this.getUseSort = function() {
-    return vUseSort;
-  };
-  this.getUseSingleCell = function() {
-    return vUseSingleCell;
-  };
-  this.getFormatArr = function() {
-    return vFormatArr;
-  };
-  this.getShowRes = function() {
-    return vShowRes;
-  };
-  this.getShowDur = function() {
-    return vShowDur;
-  };
-  this.getShowComp = function() {
-    return vShowComp;
-  };
-  this.getShowStartDate = function() {
-    return vShowStartDate;
-  };
-  this.getShowEndDate = function() {
-    return vShowEndDate;
-  };
-  this.getShowTaskInfoRes = function() {
-    return vShowTaskInfoRes;
-  };
-  this.getShowTaskInfoDur = function() {
-    return vShowTaskInfoDur;
-  };
-  this.getShowTaskInfoComp = function() {
-    return vShowTaskInfoComp;
-  };
-  this.getShowTaskInfoStartDate = function() {
-    return vShowTaskInfoStartDate;
-  };
-  this.getShowTaskInfoEndDate = function() {
-    return vShowTaskInfoEndDate;
-  };
-  this.getShowTaskInfoNotes = function() {
-    return vShowTaskInfoNotes;
-  };
-  this.getShowTaskInfoLink = function() {
-    return vShowTaskInfoLink;
-  };
-  this.getShowEndWeekDate = function() {
-    return vShowEndWeekDate;
-  };
-  this.getShowSelector = function() {
-    return vShowSelector;
-  };
-  this.getShowDeps = function() {
-    return vShowDeps;
-  };
-  this.getDateInputFormat = function() {
-    return vDateInputFormat;
-  };
-  this.getDateTaskTableDisplayFormat = function() {
-    return vDateTaskTableDisplayFormat;
-  };
-  this.getDateTaskDisplayFormat = function() {
-    return vDateTaskDisplayFormat;
-  };
-  this.getHourMajorDateDisplayFormat = function() {
-    return vHourMajorDateDisplayFormat;
-  };
-  this.getHourMinorDateDisplayFormat = function() {
-    return vHourMinorDateDisplayFormat;
-  };
-  this.getDayMajorDateDisplayFormat = function() {
-    return vDayMajorDateDisplayFormat;
-  };
-  this.getDayMinorDateDisplayFormat = function() {
-    return vDayMinorDateDisplayFormat;
-  };
-  this.getWeekMajorDateDisplayFormat = function() {
-    return vWeekMajorDateDisplayFormat;
-  };
-  this.getWeekMinorDateDisplayFormat = function() {
-    return vWeekMinorDateDisplayFormat;
-  };
-  this.getMonthMajorDateDisplayFormat = function() {
-    return vMonthMajorDateDisplayFormat;
-  };
-  this.getMonthMinorDateDisplayFormat = function() {
-    return vMonthMinorDateDisplayFormat;
-  };
-  this.getQuarterMajorDateDisplayFormat = function() {
-    return vQuarterMajorDateDisplayFormat;
-  };
-  this.getQuarterMinorDateDisplayFormat = function() {
-    return vQuarterMinorDateDisplayFormat;
-  };
-  this.getCaptionType = function() {
-    return vCaptionType;
-  };
-  this.getMinGpLen = function() {
-    return vMinGpLen;
-  };
-  this.getScrollTo = function() {
-    return vScrollTo;
-  };
-  this.getHourColWidth = function() {
-    return vHourColWidth;
-  };
-  this.getDayColWidth = function() {
-    return vDayColWidth;
-  };
-  this.getWeekColWidth = function() {
-    return vWeekColWidth;
-  };
-  this.getMonthColWidth = function() {
-    return vMonthColWidth;
-  };
-  this.getQuarterColWidth = function() {
-    return vQuarterColWidth;
-  };
-  this.getRowHeight = function() {
-    return vRowHeight;
   };
   this.getChartBody = function() {
     return vChartBody;
@@ -837,14 +652,14 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     return vTimer;
   };
 
-  this.CalcTaskXY = function() {
+  this.calcTaskXY = function() {
     var vID;
     var vList = this.getList();
     var vBarDiv;
     var vTaskDiv;
     var vParDiv;
     var vLeft, vTop, vWidth;
-    var vHeight = Math.floor((this.getRowHeight() / 2));
+    var vHeight = Math.floor((this.rowHeight / 2));
 
     for (var i = 0; i < vList.length; i++) {
       vID = vList[i].getID();
@@ -863,7 +678,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     }
   };
 
-  this.AddTaskItem = function(value) {
+  this.addTaskItem = function(value) {
     var vExists = false;
     for (var i = 0; i < vTaskList.length; i++) {
       if (vTaskList[i].getID() == value.getID()) {
@@ -877,11 +692,11 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     }
   };
 
-  this.RemoveTaskItem = function(pID) {
+  this.removeTaskItem = function(pID) {
     // simply mark the task for removal at this point - actually remove it next time we re-draw the chart
     for (var i = 0; i < vTaskList.length; i++) {
       if (vTaskList[i].getID() == pID) vTaskList[i].setToDelete(true);
-      else if (vTaskList[i].getParent() == pID) this.RemoveTaskItem(vTaskList[i].getID());
+      else if (vTaskList[i].getParent() == pID) this.removeTaskItem(vTaskList[i].getID());
     }
     vProcessNeeded = true;
   };
@@ -930,7 +745,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     var vDir = 1;
     var vBend = false;
     var vShort = 4;
-    var vRow = Math.floor(this.getRowHeight() / 2);
+    var vRow = Math.floor(this.rowHeight / 2);
 
     if (y2 < y1) vRow *= -1;
 
@@ -970,10 +785,10 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     vTmpDiv.style.height = '0px';
   };
 
-  this.DrawDependencies = function() {
-    if (this.getShowDeps() == 1) {
+  this.drawDependencies = function() {
+    if (this.showDeps == 1) {
       //First recalculate the x,y
-      this.CalcTaskXY();
+      this.calcTaskXY();
       this.clearDependencies();
 
       var vList = this.getList();
@@ -1028,7 +843,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     return vNewNode;
   };
 
-  this.Draw = function() {
+  this.draw = function() {
     var vMaxDate = new Date();
     var vMinDate = new Date();
     var vTmpDate = new Date();
@@ -1052,7 +867,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
     if (vTaskList.length > 0) {
       // Process all tasks, reset parent date and completion % if task list has altered
-      if (vProcessNeeded) JSGantt.processRows(vTaskList, 0, -1, 1, 1, this.getUseSort());
+      if (vProcessNeeded) JSGantt.processRows(vTaskList, 0, -1, 1, 1, this.useSort);
       vProcessNeeded = false;
 
       // get overall min/max dates plus padding
@@ -1060,11 +875,11 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       vMaxDate = JSGantt.getMaxDate(vTaskList, vFormat);
 
       // Calculate chart width variables.
-      if (vFormat == 'day') vColWidth = vDayColWidth;
-      else if (vFormat == 'week') vColWidth = vWeekColWidth;
-      else if (vFormat == 'month') vColWidth = vMonthColWidth;
-      else if (vFormat == 'quarter') vColWidth = vQuarterColWidth;
-      else if (vFormat == 'hour') vColWidth = vHourColWidth;
+      if (vFormat == 'day') vColWidth = this.dayColWidth;
+      else if (vFormat == 'week') vColWidth = this.weekColWidth;
+      else if (vFormat == 'month') vColWidth = this.monthColWidth;
+      else if (vFormat == 'quarter') vColWidth = this.quarterColWidth;
+      else if (vFormat == 'hour') vColWidth = this.hourColWidth;
 
       // DRAW the Left-side of the chart (names, resources, comp%)
       var vLeftHeader = document.createDocumentFragment();
@@ -1076,20 +891,20 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
       var vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
       vTmpCell.appendChild(this.drawSelector('top'));
-      if (vShowRes == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-      if (vShowDur == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-      if (vShowComp == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-      if (vShowStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-      if (vShowEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
+      if (this.showRes == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
+      if (this.showDur == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
+      if (this.showComp == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
+      if (this.showStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
+      if (this.showEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
 
       vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
       this.newNode(vTmpRow, 'td', null, 'gtaskheading gtaskname', vLangs[vLang]['taskname']);
-      if (vShowRes == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gresource', vLangs[vLang]['resource']);
-      if (vShowDur == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gduration', vLangs[vLang]['duration']);
-      if (vShowComp == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', vLangs[vLang]['comp']);
-      if (vShowStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', vLangs[vLang]['startdate']);
-      if (vShowEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', vLangs[vLang]['enddate']);
+      if (this.showRes == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gresource', vLangs[vLang]['resource']);
+      if (this.showDur == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gduration', vLangs[vLang]['duration']);
+      if (this.showComp == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', vLangs[vLang]['comp']);
+      if (this.showStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', vLangs[vLang]['startdate']);
+      if (this.showEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', vLangs[vLang]['enddate']);
 
       vTmpDiv = this.newNode(vLeftHeader, 'div', null, 'glabelfooter');
 
@@ -1128,25 +943,25 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + vTaskList[i].getName());
           }
 
-          if (vShowRes == 1) {
+          if (this.showRes == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gresource');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getResource());
           }
-          if (vShowDur == 1) {
+          if (this.showDur == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getDuration(vFormat, vLangs[vLang]));
           }
-          if (vShowComp == 1) {
+          if (this.showComp == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getCompStr());
           }
-          if (vShowStartDate == 1) {
+          if (this.showStartDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]));
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getStart(), this.dateTaskTableDisplayFormat, vLangs[vLang]));
           }
-          if (vShowEndDate == 1) {
+          if (this.showEndDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]));
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getEnd(), this.dateTaskTableDisplayFormat, vLangs[vLang]));
           }
           vNumRows++;
         }
@@ -1157,11 +972,11 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
       vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
       vTmpCell.appendChild(this.drawSelector('bottom'));
-      if (vShowRes == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-      if (vShowDur == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-      if (vShowComp == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-      if (vShowStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-      if (vShowEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
+      if (this.showRes == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
+      if (this.showDur == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
+      if (this.showComp == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
+      if (this.showStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
+      if (this.showEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
       // Add some white space so the vertical scroll distance should always be greater
       // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
       this.newNode(vTmpDiv2, 'br');
@@ -1190,28 +1005,28 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
         if (vFormat == 'day') {
           vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, 7);
-          vCellContents += JSGantt.formatDateStr(vTmpDate, vDayMajorDateDisplayFormat, vLangs[vLang]);
+          vCellContents += JSGantt.formatDateStr(vTmpDate, this.dayMajorDateDisplayFormat, vLangs[vLang]);
           vTmpDate.setDate(vTmpDate.getDate() + 6);
 
-          if (vShowEndWeekDate == 1) vCellContents += ' - ' + JSGantt.formatDateStr(vTmpDate, vDayMajorDateDisplayFormat, vLangs[vLang]);
+          if (this.showEndWeekDate == 1) vCellContents += ' - ' + JSGantt.formatDateStr(vTmpDate, this.dayMajorDateDisplayFormat, vLangs[vLang]);
 
           this.newNode(vTmpCell, 'div', null, null, vCellContents, vColWidth * 7);
           vTmpDate.setDate(vTmpDate.getDate() + 1);
         } else if (vFormat == 'week') {
           vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, vColWidth);
-          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vWeekMajorDateDisplayFormat, vLangs[vLang]), vColWidth);
+          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.weekMajorDateDisplayFormat, vLangs[vLang]), vColWidth);
           vTmpDate.setDate(vTmpDate.getDate() + 7);
         } else if (vFormat == 'month') {
           vColSpan = (12 - vTmpDate.getMonth());
           if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= (11 - vMaxDate.getMonth());
           vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vMonthMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
+          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.monthMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
           vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
         } else if (vFormat == 'quarter') {
           vColSpan = (4 - Math.floor(vTmpDate.getMonth() / 3));
           if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= (3 - Math.floor(vMaxDate.getMonth() / 3));
           vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vQuarterMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
+          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.quarterMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
           vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
         } else if (vFormat == 'hour') {
           vColSpan = (24 - vTmpDate.getHours());
@@ -1219,7 +1034,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
             vTmpDate.getMonth() == vMaxDate.getMonth() &&
             vTmpDate.getDate() == vMaxDate.getDate()) vColSpan -= (23 - vMaxDate.getHours());
           vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vHourMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
+          this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.hourMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
           vTmpDate.setHours(0);
           vTmpDate.setDate(vTmpDate.getDate() + 1);
         }
@@ -1244,7 +1059,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
           if (vTmpDate <= vMaxDate) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vDayMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.dayMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
             vNumCols++;
           }
 
@@ -1252,7 +1067,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
         } else if (vFormat == 'week') {
           if (vTmpDate <= vMaxDate) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vWeekMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.weekMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
             vNumCols++;
           }
 
@@ -1260,7 +1075,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
         } else if (vFormat == 'month') {
           if (vTmpDate <= vMaxDate) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vMonthMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.monthMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
             vNumCols++;
           }
 
@@ -1272,7 +1087,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
         } else if (vFormat == 'quarter') {
           if (vTmpDate <= vMaxDate) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vQuarterMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.quarterMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
             vNumCols++;
           }
 
@@ -1284,7 +1099,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
             vTmpDate.setHours(i); //works around daylight savings but may look a little odd on days where the clock goes forward
             if (vTmpDate <= vMaxDate) {
               vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-              this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vHourMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+              this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, this.hourMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
               vNumCols++;
             }
           }
@@ -1296,7 +1111,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
       vTaskLeftPx = (vNumCols * (vColWidth + 1)) + 1;
 
-      if (vUseSingleCell != 0 && vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
+      if (this.useSingleCell != 0 && this.useSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
 
       this.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
 
@@ -1309,7 +1124,6 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       vTmpTBody = this.newNode(vTmpTab, 'tbody');
 
       // Draw each row
-
       var i = 0;
       var j = 0;
       for (i = 0; i < vTaskList.length; i++) {
@@ -1361,8 +1175,8 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
           // Draw Group Bar which has outer div with inner group div and several small divs to left and right to create angled-end indicators
           if (vTaskList[i].getGroup()) {
-            vTaskWidth = (vTaskWidth > vMinGpLen && vTaskWidth < vMinGpLen * 2) ? vMinGpLen * 2 : vTaskWidth; // Expand to show two end points
-            vTaskWidth = (vTaskWidth < vMinGpLen) ? vMinGpLen : vTaskWidth; // expand to show one end point
+            vTaskWidth = (vTaskWidth > this.minGpLen && vTaskWidth < this.minGpLen * 2) ? this.minGpLen * 2 : vTaskWidth; // Expand to show two end points
+            vTaskWidth = (vTaskWidth < this.minGpLen) ? this.minGpLen : vTaskWidth; // expand to show one end point
 
             vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, ((vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + vFormat, null, null, null, ((vTaskList[i].getVisible() == 0) ? 'none' : null));
             vTaskList[i].setChildRow(vTmpRow);
@@ -1379,7 +1193,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
               this.newNode(vTmpDiv2, 'div', vDivId + 'complete_' + vID, vTaskList[i].getClass() + 'complete', null, vTaskList[i].getCompStr());
 
               this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() + 'endpointleft');
-              if (vTaskWidth >= vMinGpLen * 2) this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() + 'endpointright');
+              if (vTaskWidth >= this.minGpLen * 2) this.newNode(vTmpDiv, 'div', null, vTaskList[i].getClass() + 'endpointright');
 
               vCaptClass = 'ggroupcaption';
             }
@@ -1425,8 +1239,8 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
           }
         }
 
-        if (this.getCaptionType() && vCaptClass !== null) {
-          switch (this.getCaptionType()) {
+        if (this.captionType && vCaptClass !== null) {
+          switch (this.captionType) {
             case 'Caption':
               var vCaptionStr = vTmpItem.getCaption();
               break;
@@ -1465,13 +1279,16 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       this.setLines(vTmpDiv2);
 
       /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
-      			var tmpGenSrc=document.createElement('textarea');
-      			tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
-      			vDiv.appendChild(tmpGenSrc);
+        var tmpGenSrc = document.createElement('textarea');
+        tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
+        vDiv.appendChild(tmpGenSrc);
       //*/
+      
       // Now all the content exists, register scroll listeners
       JSGantt.addScrollListeners(this);
-
+      
+      /*var vScrollTo = String(this.scrollTo);
+      
       // now check if we are actually scrolling the pane
       if (vScrollTo != '') {
         var vScrollDate = new Date(vMinDate.getTime());
@@ -1480,7 +1297,23 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
         if (vScrollTo.substr(0, 2) == 'px') {
           vScrollPx = parseInt(vScrollTo.substr(2));
         } else {
-          vScrollDate = JSGantt.parseDateStr(vScrollTo, this.getDateInputFormat());
+          vScrollDate = JSGantt.parseDateStr(vScrollTo, this.dateInputFormat);
+          if (vFormat == 'hour') vScrollDate.setMinutes(0, 0, 0);
+          else vScrollDate.setHours(0, 0, 0, 0);
+          vScrollPx = JSGantt.getOffset(vMinDate, vScrollDate, vColWidth, vFormat);
+        }
+        this.getChartBody().scrollLeft = vScrollPx;
+      }*/
+
+      // now check if we are actually scrolling the pane
+      if (this.scrollTo != '') {
+        var vScrollDate = new Date(vMinDate.getTime());
+        var vScrollPx = 0;
+
+        if (this.scrollTo.substr(0, 2) == 'px') {
+          vScrollPx = parseInt(this.scrollTo.substr(2));
+        } else {
+          vScrollDate = JSGantt.parseDateStr(this.scrollTo, this.dateInputFormat);
           if (vFormat == 'hour') vScrollDate.setMinutes(0, 0, 0);
           else vScrollDate.setHours(0, 0, 0, 0);
           vScrollPx = JSGantt.getOffset(vMinDate, vScrollDate, vColWidth, vFormat);
@@ -1490,19 +1323,19 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
       if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) vTodayPx = JSGantt.getOffset(vMinDate, new Date(), vColWidth, vFormat);
       else vTodayPx = -1;
-      this.DrawDependencies();
+      this.drawDependencies();
     }
   }; //this.draw
 
   this.mouseOver = function(pObj1, pObj2) {
-    if (this.getUseRowHlt()) {
+    if (this.UseRowHlt) {
       pObj1.className += ' gitemhighlight';
       pObj2.className += ' gitemhighlight';
     }
   };
 
   this.mouseOut = function(pObj1, pObj2) {
-    if (this.getUseRowHlt()) {
+    if (this.UseRowHlt) {
       pObj1.className = pObj1.className.replace(/(?:^|\s)gitemhighlight(?!\S)/g, '');
       pObj2.className = pObj2.className.replace(/(?:^|\s)gitemhighlight(?!\S)/g, '');
     }
@@ -1512,26 +1345,26 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     var vOutput = document.createDocumentFragment();
     var vDisplay = false;
 
-    for (var i = 0; i < vShowSelector.length && !vDisplay; i++) {
-      if (vShowSelector[i].toLowerCase() == pPos.toLowerCase()) vDisplay = true;
+    for (var i = 0; i < this.showSelector.length && !vDisplay; i++) {
+      if (this.showSelector[i].toLowerCase() == pPos.toLowerCase()) vDisplay = true;
     }
 
     if (vDisplay) {
       var vTmpDiv = this.newNode(vOutput, 'div', null, 'gselector', vLangs[vLang]['format'] + ':');
 
-      if (vFormatArr.join().toLowerCase().indexOf('hour') != -1)
+      if (this.formatArr.join().toLowerCase().indexOf('hour') != -1)
         JSGantt.addFormatListeners(this, 'hour', this.newNode(vTmpDiv, 'span', vDivId + 'formathour' + pPos, 'gformlabel' + ((vFormat == 'hour') ? ' gselected' : ''), vLangs[vLang]['hour']));
 
-      if (vFormatArr.join().toLowerCase().indexOf('day') != -1)
+      if (this.formatArr.join().toLowerCase().indexOf('day') != -1)
         JSGantt.addFormatListeners(this, 'day', this.newNode(vTmpDiv, 'span', vDivId + 'formatday' + pPos, 'gformlabel' + ((vFormat == 'day') ? ' gselected' : ''), vLangs[vLang]['day']));
 
-      if (vFormatArr.join().toLowerCase().indexOf('week') != -1)
+      if (this.formatArr.join().toLowerCase().indexOf('week') != -1)
         JSGantt.addFormatListeners(this, 'week', this.newNode(vTmpDiv, 'span', vDivId + 'formatweek' + pPos, 'gformlabel' + ((vFormat == 'week') ? ' gselected' : ''), vLangs[vLang]['week']));
 
-      if (vFormatArr.join().toLowerCase().indexOf('month') != -1)
+      if (this.formatArr.join().toLowerCase().indexOf('month') != -1)
         JSGantt.addFormatListeners(this, 'month', this.newNode(vTmpDiv, 'span', vDivId + 'formatmonth' + pPos, 'gformlabel' + ((vFormat == 'month') ? ' gselected' : ''), vLangs[vLang]['month']));
 
-      if (vFormatArr.join().toLowerCase().indexOf('quarter') != -1)
+      if (this.formatArr.join().toLowerCase().indexOf('quarter') != -1)
         JSGantt.addFormatListeners(this, 'quarter', this.newNode(vTmpDiv, 'span', vDivId + 'formatquarter' + pPos, 'gformlabel' + ((vFormat == 'quarter') ? ' gselected' : ''), vLangs[vLang]['quarter']));
     } else {
       this.newNode(vOutput, 'div', null, 'gselector');
@@ -1544,38 +1377,38 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     var vTaskInfoBox = document.createDocumentFragment();
     var vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
     this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
-    if (vShowTaskInfoStartDate == 1) {
+    if (this.showTaskInfoStartDate == 1) {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
       this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['startdate'] + ': ');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskText', JSGantt.formatDateStr(pTask.getStart(), vDateTaskDisplayFormat, vLangs[vLang]));
+      this.newNode(vTmpDiv, 'span', null, 'gTaskText', JSGantt.formatDateStr(pTask.getStart(), this.dateTaskDisplayFormat, vLangs[vLang]));
     }
-    if (vShowTaskInfoEndDate == 1) {
+    if (this.showTaskInfoEndDate == 1) {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
       this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['enddate'] + ': ');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskText', JSGantt.formatDateStr(pTask.getEnd(), vDateTaskDisplayFormat, vLangs[vLang]));
+      this.newNode(vTmpDiv, 'span', null, 'gTaskText', JSGantt.formatDateStr(pTask.getEnd(), this.dateTaskDisplayFormat, vLangs[vLang]));
     }
-    if (vShowTaskInfoDur == 1 && !pTask.getMile()) {
+    if (this.showTaskInfoDur == 1 && !pTask.getMile()) {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
       this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['duration'] + ': ');
       this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(vFormat, vLangs[vLang]));
     }
-    if (vShowTaskInfoComp == 1) {
+    if (this.showTaskInfoComp == 1) {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
       this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['completion'] + ': ');
       this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
     }
-    if (vShowTaskInfoRes == 1) {
+    if (this.showTaskInfoRes == 1) {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
       this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['resource'] + ': ');
       this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
     }
-    if (vShowTaskInfoLink == 1 && pTask.getLink() != '') {
+    if (this.showTaskInfoLink == 1 && pTask.getLink() != '') {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
       var vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
       vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', vLangs[vLang]['moreinfo']);
       vTmpNode.setAttribute('href', pTask.getLink());
     }
-    if (vShowTaskInfoNotes == 1) {
+    if (this.showTaskInfoNotes == 1) {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
       this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['notes'] + ': ');
       if (pTask.getNotes()) vTmpDiv.appendChild(pTask.getNotes());
@@ -1596,7 +1429,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     var i = 0;
     var vIdx = -1;
     var vTask = '';
-    var vOutFrmt = JSGantt.parseDateFormatStr(this.getDateInputFormat() + ' HH:MI');
+    var vOutFrmt = JSGantt.parseDateFormatStr(this.dateInputFormat + ' HH:MI');
     if (pIdx === true) vIdx = pID;
     else {
       for (i = 0; i < vTaskList.length; i++) {
@@ -1668,12 +1501,10 @@ JSGantt.updateFlyingObj = function(e, pGanttChartObj, pTimer) {
 
   /* Code for positioned right of the mouse by default*/
   /*
-  if (vMouseX+vCurRightBuf+pGanttChartObj.vTool.offsetWidth>vViewportX)
-  {
-  	if (vMouseX-vCurLeftBuf-pGanttChartObj.vTool.offsetWidth<0) vNewX=vScrollPos.x;
-  	else vNewX=vMouseX+vScrollPos.x-vCurLeftBuf-pGanttChartObj.vTool.offsetWidth;
-  }
-  else vNewX=vMouseX+vScrollPos.x+vCurRightBuf;
+  if (vMouseX + vCurRightBuf + pGanttChartObj.vTool.offsetWidth > vViewportX) {
+    if (vMouseX - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth < 0) vNewX = vScrollPos.x;
+    else vNewX = vMouseX + vScrollPos.x - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth;
+  } else vNewX = vMouseX + vScrollPos.x + vCurRightBuf;
   */
 
   /* Code for positioned left of the mouse by default */
@@ -1690,15 +1521,13 @@ JSGantt.updateFlyingObj = function(e, pGanttChartObj, pTimer) {
 
   /* Code for positioned above the mouse by default */
   /*
-  if (vMouseY-vCurTopBuf-pGanttChartObj.vTool.offsetHeight<0)
-  {
-  	if (vMouseY+vCurBotBuf+pGanttChartObj.vTool.offsetHeight>vViewportY) vNewY=vScrollPos.y;
-  	else vNewY=vMouseY+vScrollPos.y+vCurBotBuf;
-  }
-  else vNewY=vMouseY+vScrollPos.y-vCurTopBuf-pGanttChartObj.vTool.offsetHeight;
+  if (vMouseY - vCurTopBuf - pGanttChartObj.vTool.offsetHeight < 0) {
+    if (vMouseY + vCurBotBuf + pGanttChartObj.vTool.offsetHeight > vViewportY) vNewY = vScrollPos.y;
+    else vNewY = vMouseY + vScrollPos.y + vCurBotBuf;
+  } else vNewY = vMouseY + vScrollPos.y - vCurTopBuf - pGanttChartObj.vTool.offsetHeight;
   */
 
-  if (pGanttChartObj.getUseMove()) {
+  if (pGanttChartObj.useMove) {
     clearInterval(pGanttChartObj.vTool.moveInterval);
     pGanttChartObj.vTool.moveInterval = setInterval(function() {
       JSGantt.moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer);
@@ -1715,7 +1544,7 @@ JSGantt.showToolTip = function(pGanttChartObj, e, pContents, pWidth, pTimer) {
   var vMaxAlpha = 100;
   var vShowing = pContents.id;
 
-  if (pGanttChartObj.getUseToolTip()) {
+  if (pGanttChartObj.useToolTip) {
     if (pGanttChartObj.vTool == null) {
       pGanttChartObj.vTool = document.createElement('div');
       pGanttChartObj.vTool.id = vTtDivId;
@@ -1763,7 +1592,7 @@ JSGantt.showToolTip = function(pGanttChartObj, e, pContents, pWidth, pTimer) {
       }
     }
 
-    if (pGanttChartObj.getUseFade()) {
+    if (pGanttChartObj.useFade) {
       clearInterval(pGanttChartObj.vTool.fadeInterval);
       pGanttChartObj.vTool.fadeInterval = setInterval(function() {
         JSGantt.fadeToolTip(1, pGanttChartObj.vTool, vMaxAlpha);
@@ -1801,7 +1630,7 @@ JSGantt.delayedHide = function(pGanttChartObj, pTool, pTimer) {
 };
 
 JSGantt.hideToolTip = function(pGanttChartObj, pTool, pTimer) {
-  if (pGanttChartObj.getUseFade()) {
+  if (pGanttChartObj.useFade) {
     clearInterval(pTool.fadeInterval);
     pTool.fadeInterval = setInterval(function() {
       JSGantt.fadeToolTip(-1, pTool, 0);
@@ -2164,7 +1993,7 @@ JSGantt.folder = function(pID, ganttObj) {
       }
     }
   }
-  ganttObj.DrawDependencies();
+  ganttObj.drawDependencies();
 };
 
 JSGantt.hide = function(pID, ganttObj) {
@@ -2352,7 +2181,7 @@ JSGantt.parseDateFormatStr = function(pFormatStr) {
   for (var i = 0; i < pFormatStr.length; i++) {
     vCurrChar = pFormatStr.charAt(i);
     if ((vCurrChar.match(vSeparators)) || (i + 1 == pFormatStr.length)) { // separator or end of string
-      if ((i + 1 == pFormatStr.length) && (!(vCurrChar.match(vSeparators)))) { // at end of string add any non-separator chars to the current
+      if ((i + 1 == pFormatStr.length) && (!(vCurrChar.match(vSeparators)))) { // at end of string add any non-separator chars to the current component
         vComponantStr += vCurrChar;
       }
       vDateFormatArray.push(vComponantStr);
@@ -2376,7 +2205,7 @@ JSGantt.parseXML = function(pFile, pGanttVar) {
   xhttp.send(null);
   var xmlDoc = xhttp.responseXML;
 
-  JSGantt.AddXMLTask(pGanttVar, xmlDoc);
+  JSGantt.addXMLTask(pGanttVar, xmlDoc);
 };
 
 JSGantt.parseXMLString = function(pStr, pGanttVar) {
@@ -2389,7 +2218,7 @@ JSGantt.parseXMLString = function(pStr, pGanttVar) {
     xmlDoc.loadXML(pStr);
   }
 
-  JSGantt.AddXMLTask(pGanttVar, xmlDoc);
+  JSGantt.addXMLTask(pGanttVar, xmlDoc);
 };
 
 JSGantt.findXMLNode = function(pRoot, pNodeName) {
@@ -2420,7 +2249,7 @@ JSGantt.getXMLNodeValue = function(pRoot, pNodeName, pType, pDefault) {
   return vRetValue;
 };
 
-JSGantt.AddXMLTask = function(pGanttVar, pXmlDoc) {
+JSGantt.addXMLTask = function(pGanttVar, pXmlDoc) {
   var project = '';
   var vMSP = false;
   var Task;
@@ -2440,7 +2269,7 @@ JSGantt.AddXMLTask = function(pGanttVar, pXmlDoc) {
 
   if (project == 'http://schemas.microsoft.com/project') {
     vMSP = true;
-    pGanttVar.setDateInputFormat('yyyy-mm-dd');
+    pGanttVar.dateInputFormat = 'yyyy-mm-dd';
     Task = JSGantt.findXMLNode(pXmlDoc, 'Task');
     if (typeof Task == 'undefined') n = 0;
     else n = Task.length;
@@ -2575,7 +2404,7 @@ JSGantt.AddXMLTask = function(pGanttVar, pXmlDoc) {
             // Now create a subtask
             maxPID++;
             vSplitEnd = JSGantt.getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-            pGanttVar.AddTaskItem(new JSGantt.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
+            pGanttVar.addTaskItem(new JSGantt.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
             vSubCreated = true;
             vDepend = '';
           } else if (vDuration != 0 && vSubCreated) {
@@ -2586,7 +2415,7 @@ JSGantt.AddXMLTask = function(pGanttVar, pXmlDoc) {
         if (vSubCreated) pDepend = '';
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+        pGanttVar.addTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
       }
     }
   } else {
@@ -2620,7 +2449,7 @@ JSGantt.AddXMLTask = function(pGanttVar, pXmlDoc) {
         }
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+        pGanttVar.addTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
       }
     }
   }
