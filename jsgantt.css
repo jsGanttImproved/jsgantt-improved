@@ -68,50 +68,46 @@ td.gspanning {
 .gtaskname,
 .gresource,
 .gduration,
-.gpccomplete,
+.gcomplete,
 .gstartdate,
-.genddate {
+.genddate,
+.gcost {
   height: 18px;
   white-space: nowrap;
   border: #efefef 1px solid;
-  font-size: 10px;
+  font-size: 9px;
 }
 
 /* Additional values for some task list elements */
 .gresource,
 .gduration,
-.gpccomplete,
+.gcomplete,
 .gstartdate div, /* needed for IE8 */
-.gstartdate {
-  text-align: center;
-  min-width: 70px;
-  max-width: 70px;
-  width: 70px;
-}
+.gstartdate,
 .genddate div, /* needed for IE8 */
-.genddate {
+.genddate,
+.gcost {
   text-align: center;
-  min-width: 70px;
-  max-width: 70px;
-  width: 70px;
+  min-width: 60px;
+  max-width: 60px;
+  width: 60px;
 }
+
 .gtaskheading {
   text-align: center;
 }
-.gtaskname div, /* needed for IE8 */
 .gtaskname {
-  min-width: 170px;
-  max-width: 170px;
-  width: 170px;
+  min-width: 526px;
+  max-width: 526px;
+  width: 526px;
   border-left: none;
 }
 
 /* Additions to show longer text properly into those columns */
-.gtasktable .gtaskname div, /* needed for IE8 */
-.gtasktable .gtaskname
-.gtasktable .gresource div, /* needed for IE8 */
+.gtasktable .gtaskname div,
+.gtasktable .gtaskname,
+.gtasktable .gresource div,
 .gtasktable .gresource {
-  font-size: 9px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -119,9 +115,9 @@ td.gspanning {
 .gselector {
   text-align: left;
   white-space: nowrap;
-  min-width: 170px;
-  max-width: 170px;
-  width: 170px;
+  min-width: 176px;
+  max-width: 176px;
+  width: 176px;
 }
 
 .gformlabel {
