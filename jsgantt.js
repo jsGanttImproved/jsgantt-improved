@@ -63,6 +63,9 @@
   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+"use strict"; 
+
 var JSGantt;
 if (!JSGantt) JSGantt = {};
 
@@ -112,7 +115,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
 
   vNotes = document.createElement('span');
   vNotes.className = 'gTaskNotes';
-  if (pNotes != null) {
+  if (pNotes !== null) {
     vNotes.innerHTML = pNotes;
     JSGantt.stripUnwanted(vNotes);
   }
@@ -122,7 +125,7 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
     vEnd = (pEnd instanceof Date) ? pEnd : JSGantt.parseDateStr(document.createTextNode(pEnd).data, vGantt.dateInputFormat);
   }
 
-  if (pDepend != null) {
+  if (pDepend !== null) {
     var vDependStr = pDepend + '';
     var vDepList = vDependStr.split(',');
     var n = vDepList.length;
@@ -227,26 +230,26 @@ JSGantt.TaskItem = function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes
           break;
       }
 
-      if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
+      if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) === 0) {
         vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       }
-      var tmpPer = (JSGantt.getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-      if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer * 10) / 10;
+      var vTmpPer = (JSGantt.getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
+      if (Math.floor(vTmpPer) != vTmpPer) vTmpPer = Math.round(vTmpPer * 10) / 10;
       switch (vUnits) {
         case 'hour':
-          vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']);
+          vDuration = vTmpPer + ' ' + ((vTmpPer != 1) ? pLang['hrs'] : pLang['hr']);
           break;
         case 'day':
-          vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']);
+          vDuration = vTmpPer + ' ' + ((vTmpPer != 1) ? pLang['dys'] : pLang['dy']);
           break;
         case 'week':
-          vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']);
+          vDuration = vTmpPer + ' ' + ((vTmpPer != 1) ? pLang['wks'] : pLang['wk']);
           break;
         case 'month':
-          vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']);
+          vDuration = vTmpPer + ' ' + ((vTmpPer != 1) ? pLang['mths'] : pLang['mth']);
           break;
         case 'quarter':
-          vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']);
+          vDuration = vTmpPer + ' ' + ((vTmpPer != 1) ? pLang['qtrs'] : pLang['qtr']);
           break;
       }
     }
@@ -380,10 +383,10 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
   var vDiv = pDiv;
   var vFormat = pFormat || 'day';
   var vDivId = null;
-  var vUseFullYear = JSGantt.parseDateFormatStr('dd/mm/yyyy');
+  //var vUseFullYear = JSGantt.parseDateFormatStr('dd/mm/yyyy');
   var vDepId = 1;
   var vTaskList = [];
-  var vMonthDaysArr = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  //var vMonthDaysArr = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   var vProcessNeeded = true;
   var vTodayPx = -1;
   var vLangs = {
@@ -506,97 +509,94 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
   };
   
   var vMe = this;
-  var vFormats;
+  var vValidFormats;
   
-  for (var vIndex in vMe.Options) {
-    if (vMe.Options.hasOwnProperty(vIndex)) {
-      vFormats = null;
-      (function (vProp, vValidFormats) {
-        Object.defineProperty(vMe, vProp, {
-          get: function () {
-            return this.Options[vProp];
-          },
-          set: function (pVal) {
-            this.Options[vProp] = pVal;
-          },
-          enumerable: true,
-          configurable: true
-        });
-  
-        switch (vProp) {
-          case 'useSingleCell':
-            Object.defineProperty(vMe, vProp, {
-              set: function (pVal) {
-                if (pVal) {
-                  this.Options[vProp] = pVal * 1;
-                }
+  Object.keys(vMe.Options).forEach(function(vProperty) {
+    vValidFormats = null;
+    (function (vProp, vFormats) { // Closure necessary to pass property within function
+      Object.defineProperty(vMe, vProp, {
+        get: function () {
+          return this.Options[vProp];
+        },
+        set: function (pVal) {
+          this.Options[vProp] = pVal;
+        },
+        enumerable: true,
+        configurable: true
+      });
+
+      switch (vProp) {
+        case 'useSingleCell':
+          Object.defineProperty(vMe, vProp, {
+            set: function (pVal) {
+              if (pVal) {
+                this.Options[vProp] = pVal * 1;
               }
-            });
-            break;
-          case 'showColumns':
-            vValidFormats =  vValidFormats || ['resource', 'duration', 'complete', 'startdate', 'enddate', 'cost'];
-          case 'showTaskInfo':
-            vValidFormats =  vValidFormats || ['resource', 'duration', 'complete', 'startdate', 'enddate', 'cost', 'notes', 'link'];
-          case 'showSelector':
-            vValidFormats =  vValidFormats || ['top', 'bottom'];
-          case 'formatArr':
-            vValidFormats =  vValidFormats || ['hour', 'day', 'week', 'month', 'quarter'];
-            Object.defineProperty(vMe, vProp, {
-              set: function (pVal) {
-                if (pVal) {
-                  var vTemp = [], vValid = vValidFormats;
-                  if (!Array.isArray(vValid)) vValid = vValid.split('  ');
-                  for (var i = 0; i < vValid.length; i++) {
-                    vTemp[i] = 0;
-                    for (var j = 0; j < pVal.length; j++) {
-                      if (vValid[i].toLowerCase() == pVal[j].toLowerCase()) {
-                        vTemp[i] = 1;
-                        break;
-                      }
+            }
+          });
+          break;
+        case 'showColumns':
+          vFormats =  vFormats || ['resource', 'duration', 'complete', 'startdate', 'enddate', 'cost'];
+        case 'showTaskInfo':
+          vFormats =  vFormats || ['resource', 'duration', 'complete', 'startdate', 'enddate', 'cost', 'notes', 'link'];
+        case 'showSelector':
+          vFormats =  vFormats || ['top', 'bottom'];
+        case 'formatArr':
+          vFormats =  vFormats || ['hour', 'day', 'week', 'month', 'quarter'];
+          Object.defineProperty(vMe, vProp, {
+            set: function (pVal) {
+              if (pVal) {
+                var vTemp = [];
+                var vValid = vFormats;
+                if (!Array.isArray(vValid)) vValid = vValid.split('  ');
+                for (var i = 0; i < vValid.length; i++) {
+                  vTemp[i] = 0;
+                  for (var j = 0; j < pVal.length; j++) {
+                    if (vValid[i].toLowerCase() == pVal[j].toLowerCase()) {
+                      vTemp[i] = 1;
+                      break;
                     }
                   }
-                  if (vTemp.length > 0) {
-                    this.Options[vProp] = vTemp;
-                  }
+                }
+                if (vTemp.length > 0) {
+                  this.Options[vProp] = vTemp;
                 }
               }
-            });
-            break;
-          case 'dateTaskTableDisplayFormat':
-          case 'dateTaskDisplayFormat':
-          case 'hourMajorDateDisplayFormat':
-          case 'hourMinorDateDisplayFormat':
-          case 'dayMajorDateDisplayFormat':
-          case 'dayMinorDateDisplayFormat':
-          case 'weekMajorDateDisplayFormat':
-          case 'weekMinorDateDisplayFormat':
-          case 'monthMajorDateDisplayFormat':
-          case 'monthMinorDateDisplayFormat':
-          case 'quarterMajorDateDisplayFormat':
-          case 'quarterMinorDateDisplayFormat':
-            Object.defineProperty(vMe, vProp, {
-              set: function (pVal) {
-                if (pVal) {
-                  pVal = JSGantt.parseDateFormatStr(pVal);
-                  if (pVal.length > 0) {
-                    this.Options[vProp] = pVal;
-                  }
+            }
+          });
+          break;
+        case 'dateTaskTableDisplayFormat':
+        case 'dateTaskDisplayFormat':
+        case 'hourMajorDateDisplayFormat':
+        case 'hourMinorDateDisplayFormat':
+        case 'dayMajorDateDisplayFormat':
+        case 'dayMinorDateDisplayFormat':
+        case 'weekMajorDateDisplayFormat':
+        case 'weekMinorDateDisplayFormat':
+        case 'monthMajorDateDisplayFormat':
+        case 'monthMinorDateDisplayFormat':
+        case 'quarterMajorDateDisplayFormat':
+        case 'quarterMinorDateDisplayFormat':
+          Object.defineProperty(vMe, vProp, {
+            set: function (pVal) {
+              if (pVal) {
+                pVal = JSGantt.parseDateFormatStr(pVal);
+                if (pVal.length > 0) {
+                  this.Options[vProp] = pVal;
                 }
               }
-            });
-            break;
-        }
-      }(vIndex, vFormats));
-    }
-  }
+            }
+          });
+          break;
+      }
+    }(vProperty, vValidFormats));
+  });
   
   this.setOptions = function(pOptions) {
     if (pOptions) {
-      for (var vProp in pOptions) {
-        if (pOptions.hasOwnProperty(vProp)) {
-          this[vProp] = pOptions[vProp];
-        }
-      }
+      Object.keys(pOptions).forEach(function(vProp) {
+        vMe[vProp] = pOptions[vProp];
+      });
     }
   };
   
@@ -627,10 +627,10 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
   };
   this.addLang = function(pLang, pVals) {
     if (!vLangs[pLang]) {
-      vLangs[pLang] = new Object();
-      for (var vKey in vLangs['en']) {
+      vLangs[pLang] = {};
+      Object.keys(vLangs['en']).forEach(function(vKey) {
         vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : vLangs['en'][vKey];
-      }
+      });
     }
   };
 
@@ -659,6 +659,8 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
   this.getTimer = function() {
     return vTimer;
   };
+  
+  this.ToolTip = null;
 
   this.calcTaskXY = function() {
     var vID;
@@ -666,7 +668,6 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     var vBarDiv;
     var vTaskDiv;
     var vParDiv;
-    var vLeft, vTop, vWidth;
     var vHeight = Math.floor((this.rowHeight / 2));
 
     for (var i = 0; i < vList.length; i++) {
@@ -686,16 +687,16 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     }
   };
 
-  this.addTaskItem = function(value) {
+  this.addTaskItem = function(pValue) {
     var vExists = false;
     for (var i = 0; i < vTaskList.length; i++) {
-      if (vTaskList[i].getID() == value.getID()) {
+      if (vTaskList[i].getID() == pValue.getID()) {
         i = vTaskList.length;
         vExists = true;
       }
     }
     if (!vExists) {
-      vTaskList.push(value);
+      vTaskList.push(pValue);
       vProcessNeeded = true;
     }
   };
@@ -824,16 +825,16 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     if (vTodayPx >= 0) this.sLine(vTodayPx, 0, vTodayPx, this.getChartTable().offsetHeight - 1, 'gCurDate');
   };
 
-  this.getArrayLocationByID = function(pId) {
+  this.getArrayLocationByID = function(pID) {
     var vList = this.getList();
     for (var i = 0; i < vList.length; i++) {
-      if (vList[i].getID() == pId)
+      if (vList[i].getID() == pID)
         return i;
     }
     return -1;
   };
 
-  this.newNode = function(pParent, pNodeType, pId, pClass, pText, pWidth, pLeft, pDisplay, pColspan, pAttribs) {
+  this.newNode = function(pParent, pNodeType, pID, pClass, pText, pWidth, pLeft, pDisplay, pColspan, pAttribs) {
     var vNewNode = pParent.appendChild(document.createElement(pNodeType));
     if (pAttribs) {
       for (var i = 0; i + 1 < pAttribs.length; i += 2) {
@@ -841,7 +842,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       }
     }
     // I wish I could do this with setAttribute but older IEs don't play nice
-    if (pId) vNewNode.id = pId;
+    if (pID) vNewNode.id = pID;
     if (pClass) vNewNode.className = pClass;
     if (pWidth) {
       var vWidth = vNewNode.offsetWidth + 'px';
@@ -872,16 +873,8 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
     var vNumRows = 0;
     var vSingleCell = false;
     var vID = 0;
-    var vMainTable = '';
     var vDateRow = null;
-    var vFirstCellItemRowStr = '';
-    var vItemRowStr = '';
     var vColWidth = 0;
-    var vColUnit = 0;
-    var vChild;
-    var vGroup;
-    var vTaskDiv;
-    var vParDiv;
 
     if (vTaskList.length > 0) {
       // Process all tasks, reset parent date and completion % if task list has altered
@@ -939,20 +932,21 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
       vTmpTBody = this.newNode(vTmpTab, 'tbody');
 
+      var vCellContents = '';
       for (i = 0; i < vTaskList.length; i++) {
-        if (vTaskList[i].getGroup() == 1) var vBGColor = 'ggroupitem';
-        else vBGColor = 'glineitem';
+        var vBGColor = 'glineitem';
+        if (vTaskList[i].getGroup() == 1) vBGColor = 'ggroupitem';
 
         vID = vTaskList[i].getID();
 
         if ((!(vTaskList[i].getParItem() && vTaskList[i].getParItem().getGroup() == 2)) || vTaskList[i].getGroup() == 2) {
-          if (vTaskList[i].getVisible() == 0) vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
+          if (vTaskList[i].getVisible() === 0) vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
           else vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'child_' + vID, 'gname ' + vBGColor);
           vTaskList[i].setListChildRow(vTmpRow);
           this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskname', '', vDivWidth);
           
-          var vCellContents = '';
+          vCellContents = '';
           for (j = 1; j < vTaskList[i].getLevel(); j++) {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
           }
@@ -1028,9 +1022,10 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       vTmpDate.setMilliseconds(0);
 
       var vColSpan = 1;
+      var vHeaderCellClass = '';
       // Major Date Header
       while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-        var vHeaderCellClass = 'gmajorheading';
+        vHeaderCellClass = 'gmajorheading';
         vCellContents = '';
 
         if (vFormat == 'day') {
@@ -1082,7 +1077,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
         var vCellClass = 'gtaskcell';
 
         if (vFormat == 'day') {
-          if (vTmpDate.getDay() % 6 == 0) {
+          if (vTmpDate.getDay() % 6 === 0) {
             vHeaderCellClass += 'wkend';
             vCellClass += 'wkend';
           }
@@ -1141,7 +1136,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
 
       vTaskLeftPx = (vNumCols * (vColWidth + 1)) + 1;
 
-      if (this.useSingleCell != 0 && this.useSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
+      if (this.useSingleCell !== 0 && this.useSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
 
       this.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
 
@@ -1154,12 +1149,12 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       vTmpTBody = this.newNode(vTmpTab, 'tbody');
 
       // Draw each row
-      var i = 0;
+      i = 0;
       var j = 0;
       for (i = 0; i < vTaskList.length; i++) {
         var curTaskStart = vTaskList[i].getStart();
         var curTaskEnd = vTaskList[i].getEnd();
-        if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
+        if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) === 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
 
         vTaskLeftPx = JSGantt.getOffset(vMinDate, curTaskStart, vColWidth, vFormat);
         vTaskRightPx = JSGantt.getOffset(curTaskStart, curTaskEnd, vColWidth, vFormat);
@@ -1172,7 +1167,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
         var vCaptionStr = '';
         var vCaptClass = null;
         if (vTaskList[i].getMile() && !vComb) {
-          vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, 'gmileitem gmile' + vFormat, null, null, null, ((vTaskList[i].getVisible() == 0) ? 'none' : null));
+          vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, 'gmileitem gmile' + vFormat, null, null, null, ((vTaskList[i].getVisible() === 0) ? 'none' : null));
           vTaskList[i].setChildRow(vTmpRow);
           JSGantt.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
@@ -1208,7 +1203,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
             vTaskWidth = (vTaskWidth > this.minGpLen && vTaskWidth < this.minGpLen * 2) ? this.minGpLen * 2 : vTaskWidth; // Expand to show two end points
             vTaskWidth = (vTaskWidth < this.minGpLen) ? this.minGpLen : vTaskWidth; // expand to show one end point
 
-            vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, ((vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + vFormat, null, null, null, ((vTaskList[i].getVisible() == 0) ? 'none' : null));
+            vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, ((vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + vFormat, null, null, null, ((vTaskList[i].getVisible() === 0) ? 'none' : null));
             vTaskList[i].setChildRow(vTmpRow);
             JSGantt.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
@@ -1242,7 +1237,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
             if (vComb) {
               vTmpDiv = vTaskList[i].getParItem().getCellDiv();
             } else {
-              vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, 'glineitem gitem' + vFormat, null, null, null, ((vTaskList[i].getVisible() == 0) ? 'none' : null));
+              vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, 'glineitem gitem' + vFormat, null, null, null, ((vTaskList[i].getVisible() === 0) ? 'none' : null));
               vTaskList[i].setChildRow(vTmpRow);
               JSGantt.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
               vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
@@ -1272,7 +1267,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
         if (this.captionType && vCaptClass !== null) {
           switch (this.captionType) {
             case 'Caption':
-              var vCaptionStr = vTmpItem.getCaption();
+              vCaptionStr = vTmpItem.getCaption();
               break;
             case 'Resource':
               vCaptionStr = vTmpItem.getResource();
@@ -1318,7 +1313,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       JSGantt.addScrollListeners(this);
 
       // now check if we are actually scrolling the pane
-      if (this.scrollTo != '') {
+      if (this.scrollTo !== '') {
         var vScrollDate = new Date(vMinDate.getTime());
         var vScrollPx = 0;
 
@@ -1418,7 +1413,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
       this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['cost'] + ': ');
       this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCost());
     }
-    if (this.showTaskInfo[7] == 1 && pTask.getLink() != '') {
+    if (this.showTaskInfo[7] == 1 && pTask.getLink() !== '') {
       vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
       var vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
       vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', vLangs[vLang]['moreinfo']);
@@ -1490,7 +1485,7 @@ JSGantt.GanttChart = function(pDiv, pFormat) {
   if (vDiv && vDiv.nodeName.toLowerCase() == 'div') vDivId = vDiv.id;
 }; //GanttChart
 
-JSGantt.updateFlyingObj = function(e, pGanttChartObj, pTimer) {
+JSGantt.updateFlyingObj = function(e, pGantt, pTimer) {
   var vCurTopBuf = 3;
   var vCurLeftBuf = 5;
   var vCurBotBuf = 3;
@@ -1518,105 +1513,105 @@ JSGantt.updateFlyingObj = function(e, pGanttChartObj, pTimer) {
 
   /* Code for positioned right of the mouse by default*/
   /*
-  if (vMouseX + vCurRightBuf + pGanttChartObj.vTool.offsetWidth > vViewportX) {
-    if (vMouseX - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth < 0) vNewX = vScrollPos.x;
-    else vNewX = vMouseX + vScrollPos.x - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth;
+  if (vMouseX + vCurRightBuf + pGantt.ToolTip.offsetWidth > vViewportX) {
+    if (vMouseX - vCurLeftBuf - pGantt.ToolTip.offsetWidth < 0) vNewX = vScrollPos.x;
+    else vNewX = vMouseX + vScrollPos.x - vCurLeftBuf - pGantt.ToolTip.offsetWidth;
   } else vNewX = vMouseX + vScrollPos.x + vCurRightBuf;
   */
 
   /* Code for positioned left of the mouse by default */
-  if (vMouseX - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth < 0) {
-    if (vMouseX + vCurRightBuf + pGanttChartObj.vTool.offsetWidth > vViewportX) vNewX = vScrollPos.x;
+  if (vMouseX - vCurLeftBuf - pGantt.ToolTip.offsetWidth < 0) {
+    if (vMouseX + vCurRightBuf + pGantt.ToolTip.offsetWidth > vViewportX) vNewX = vScrollPos.x;
     else vNewX = vMouseX + vScrollPos.x + vCurRightBuf;
-  } else vNewX = vMouseX + vScrollPos.x - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth;
+  } else vNewX = vMouseX + vScrollPos.x - vCurLeftBuf - pGantt.ToolTip.offsetWidth;
 
   /* Code for positioned below the mouse by default */
-  if (vMouseY + vCurBotBuf + pGanttChartObj.vTool.offsetHeight > vViewportY) {
-    if (vMouseY - vCurTopBuf - pGanttChartObj.vTool.offsetHeight < 0) vNewY = vScrollPos.y;
-    else vNewY = vMouseY + vScrollPos.y - vCurTopBuf - pGanttChartObj.vTool.offsetHeight;
+  if (vMouseY + vCurBotBuf + pGantt.ToolTip.offsetHeight > vViewportY) {
+    if (vMouseY - vCurTopBuf - pGantt.ToolTip.offsetHeight < 0) vNewY = vScrollPos.y;
+    else vNewY = vMouseY + vScrollPos.y - vCurTopBuf - pGantt.ToolTip.offsetHeight;
   } else vNewY = vMouseY + vScrollPos.y + vCurBotBuf;
 
   /* Code for positioned above the mouse by default */
   /*
-  if (vMouseY - vCurTopBuf - pGanttChartObj.vTool.offsetHeight < 0) {
-    if (vMouseY + vCurBotBuf + pGanttChartObj.vTool.offsetHeight > vViewportY) vNewY = vScrollPos.y;
+  if (vMouseY - vCurTopBuf - pGantt.ToolTip.offsetHeight < 0) {
+    if (vMouseY + vCurBotBuf + pGantt.ToolTip.offsetHeight > vViewportY) vNewY = vScrollPos.y;
     else vNewY = vMouseY + vScrollPos.y + vCurBotBuf;
-  } else vNewY = vMouseY + vScrollPos.y - vCurTopBuf - pGanttChartObj.vTool.offsetHeight;
+  } else vNewY = vMouseY + vScrollPos.y - vCurTopBuf - pGantt.ToolTip.offsetHeight;
   */
 
-  if (pGanttChartObj.useMove) {
-    clearInterval(pGanttChartObj.vTool.moveInterval);
-    pGanttChartObj.vTool.moveInterval = setInterval(function() {
-      JSGantt.moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer);
+  if (pGantt.useMove) {
+    clearInterval(pGantt.ToolTip.moveInterval);
+    pGantt.ToolTip.moveInterval = setInterval(function() {
+      JSGantt.moveToolTip(vNewX, vNewY, pGantt.ToolTip, pTimer);
     }, pTimer);
   } else {
-    pGanttChartObj.vTool.style.left = vNewX + 'px';
-    pGanttChartObj.vTool.style.top = vNewY + 'px';
+    pGantt.ToolTip.style.left = vNewX + 'px';
+    pGantt.ToolTip.style.top = vNewY + 'px';
   }
 };
 
-JSGantt.showToolTip = function(pGanttChartObj, e, pContents, pWidth, pTimer) {
-  var vTtDivId = pGanttChartObj.getDivId() + 'JSGanttToolTip';
+JSGantt.showToolTip = function(pGantt, e, pContents, pWidth, pTimer) {
+  var vTtDivId = pGantt.getDivId() + 'JSGanttToolTip';
   var vMaxW = 500;
   var vMaxAlpha = 100;
   var vShowing = pContents.id;
 
-  if (pGanttChartObj.useToolTip) {
-    if (pGanttChartObj.vTool == null) {
-      pGanttChartObj.vTool = document.createElement('div');
-      pGanttChartObj.vTool.id = vTtDivId;
-      pGanttChartObj.vTool.className = 'JSGanttToolTip';
-      pGanttChartObj.vTool.vToolCont = document.createElement('div');
-      pGanttChartObj.vTool.vToolCont.id = vTtDivId + 'cont';
-      pGanttChartObj.vTool.vToolCont.className = 'JSGanttToolTipcont';
-      pGanttChartObj.vTool.vToolCont.setAttribute('showing', '');
-      pGanttChartObj.vTool.appendChild(pGanttChartObj.vTool.vToolCont);
-      document.body.appendChild(pGanttChartObj.vTool);
-      pGanttChartObj.vTool.style.opacity = 0;
-      pGanttChartObj.vTool.setAttribute('currentOpacity', 0);
-      pGanttChartObj.vTool.setAttribute('fadeIncrement', 10);
-      pGanttChartObj.vTool.setAttribute('moveSpeed', 10);
-      pGanttChartObj.vTool.style.filter = 'alpha(opacity=0)';
-      pGanttChartObj.vTool.style.visibility = 'hidden';
-      pGanttChartObj.vTool.style.left = Math.floor(((e) ? e.clientX : window.event.clientX) / 2) + 'px';
-      pGanttChartObj.vTool.style.top = Math.floor(((e) ? e.clientY : window.event.clientY) / 2) + 'px';
+  if (pGantt.useToolTip) {
+    if (pGantt.ToolTip === null) {
+      pGantt.ToolTip = document.createElement('div');
+      pGantt.ToolTip.id = vTtDivId;
+      pGantt.ToolTip.className = 'JSGanttToolTip';
+      pGantt.ToolTip.ToolCont = document.createElement('div');
+      pGantt.ToolTip.ToolCont.id = vTtDivId + 'cont';
+      pGantt.ToolTip.ToolCont.className = 'JSGanttToolTipcont';
+      pGantt.ToolTip.ToolCont.setAttribute('showing', '');
+      pGantt.ToolTip.appendChild(pGantt.ToolTip.ToolCont);
+      document.body.appendChild(pGantt.ToolTip);
+      pGantt.ToolTip.style.opacity = 0;
+      pGantt.ToolTip.setAttribute('currentOpacity', 0);
+      pGantt.ToolTip.setAttribute('fadeIncrement', 10);
+      pGantt.ToolTip.setAttribute('moveSpeed', 10);
+      pGantt.ToolTip.style.filter = 'alpha(opacity=0)';
+      pGantt.ToolTip.style.visibility = 'hidden';
+      pGantt.ToolTip.style.left = Math.floor(((e) ? e.clientX : window.event.clientX) / 2) + 'px';
+      pGantt.ToolTip.style.top = Math.floor(((e) ? e.clientY : window.event.clientY) / 2) + 'px';
       JSGantt.addListener('mouseover', function() {
-        clearTimeout(pGanttChartObj.vTool.delayTimeout);
-      }, pGanttChartObj.vTool);
+        clearTimeout(pGantt.ToolTip.delayTimeout);
+      }, pGantt.ToolTip);
       JSGantt.addListener('mouseout', function() {
-        JSGantt.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer);
-      }, pGanttChartObj.vTool);
+        JSGantt.delayedHide(pGantt, pGantt.ToolTip, pTimer);
+      }, pGantt.ToolTip);
     }
-    clearTimeout(pGanttChartObj.vTool.delayTimeout);
-    if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
-      if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing) {
-        pGanttChartObj.vTool.vToolCont.setAttribute('showing', vShowing);
+    clearTimeout(pGantt.ToolTip.delayTimeout);
+    if (pGantt.ToolTip.ToolCont.getAttribute('showing') != vShowing || pGantt.ToolTip.style.visibility != 'visible') {
+      if (pGantt.ToolTip.ToolCont.getAttribute('showing') != vShowing) {
+        pGantt.ToolTip.ToolCont.setAttribute('showing', vShowing);
 
-        pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
+        pGantt.ToolTip.ToolCont.innerHTML = pContents.innerHTML;
         // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
-        JSGantt.stripIds(pGanttChartObj.vTool.vToolCont);
+        JSGantt.stripIds(pGantt.ToolTip.ToolCont);
       }
 
-      pGanttChartObj.vTool.style.visibility = 'visible';
+      pGantt.ToolTip.style.visibility = 'visible';
       // Rather than follow the mouse just have it stay put
-      JSGantt.updateFlyingObj(e, pGanttChartObj, pTimer);
-      pGanttChartObj.vTool.style.width = (pWidth) ? pWidth + 'px' : 'auto';
+      JSGantt.updateFlyingObj(e, pGantt, pTimer);
+      pGantt.ToolTip.style.width = (pWidth) ? pWidth + 'px' : 'auto';
       if (!pWidth && JSGantt.isIE()) {
-        pGanttChartObj.vTool.style.width = pGanttChartObj.vTool.offsetWidth;
+        pGantt.ToolTip.style.width = pGantt.ToolTip.offsetWidth;
       }
-      if (pGanttChartObj.vTool.offsetWidth > vMaxW) {
-        pGanttChartObj.vTool.style.width = vMaxW + 'px';
+      if (pGantt.ToolTip.offsetWidth > vMaxW) {
+        pGantt.ToolTip.style.width = vMaxW + 'px';
       }
     }
 
-    if (pGanttChartObj.useFade) {
-      clearInterval(pGanttChartObj.vTool.fadeInterval);
-      pGanttChartObj.vTool.fadeInterval = setInterval(function() {
-        JSGantt.fadeToolTip(1, pGanttChartObj.vTool, vMaxAlpha);
+    if (pGantt.useFade) {
+      clearInterval(pGantt.ToolTip.fadeInterval);
+      pGantt.ToolTip.fadeInterval = setInterval(function() {
+        JSGantt.fadeToolTip(1, pGantt.ToolTip, vMaxAlpha);
       }, pTimer);
     } else {
-      pGanttChartObj.vTool.style.opacity = vMaxAlpha * 0.01;
-      pGanttChartObj.vTool.style.filter = 'alpha(opacity=' + vMaxAlpha + ')';
+      pGantt.ToolTip.style.opacity = vMaxAlpha * 0.01;
+      pGantt.ToolTip.style.filter = 'alpha(opacity=' + vMaxAlpha + ')';
     }
   }
 };
@@ -1639,15 +1634,15 @@ JSGantt.stripUnwanted = function(pNode) {
   }
 };
 
-JSGantt.delayedHide = function(pGanttChartObj, pTool, pTimer) {
+JSGantt.delayedHide = function(pGantt, pTool, pTimer) {
   var vDelay = 1500;
   pTool.delayTimeout = setTimeout(function() {
-    JSGantt.hideToolTip(pGanttChartObj, pTool, pTimer);
+    JSGantt.hideToolTip(pGantt, pTool, pTimer);
   }, vDelay);
 };
 
-JSGantt.hideToolTip = function(pGanttChartObj, pTool, pTimer) {
-  if (pGanttChartObj.useFade) {
+JSGantt.hideToolTip = function(pGantt, pTool, pTimer) {
+  if (pGantt.useFade) {
     clearInterval(pTool.fadeInterval);
     pTool.fadeInterval = setInterval(function() {
       JSGantt.fadeToolTip(-1, pTool, 0);
@@ -1663,7 +1658,7 @@ JSGantt.fadeToolTip = function(pDirection, pTool, pMaxAlpha) {
   var vIncrement = parseInt(pTool.getAttribute('fadeIncrement'));
   var vAlpha = pTool.getAttribute('currentOpacity');
   var vCurAlpha = parseInt(vAlpha);
-  if ((vCurAlpha != pMaxAlpha && pDirection == 1) || (vCurAlpha != 0 && pDirection == -1)) {
+  if ((vCurAlpha != pMaxAlpha && pDirection == 1) || (vCurAlpha !== 0 && pDirection == -1)) {
     var i = vIncrement;
     if (pMaxAlpha - vCurAlpha < vIncrement && pDirection == 1) {
       i = pMaxAlpha - vCurAlpha;
@@ -1735,37 +1730,36 @@ JSGantt.getScrollPositions = function() {
 
 JSGantt.getOffset = function(pStartDate, pEndDate, pColWidth, pFormat) {
   var vMonthDaysArr = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  var curTaskStart = new Date(pStartDate.getTime());
-  var curTaskEnd = new Date(pEndDate.getTime());
+  var vCurTaskStart = new Date(pStartDate.getTime());
+  var vCurTaskEnd = new Date(pEndDate.getTime());
   var vTaskRightPx = 0;
-  var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
-  var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
-
-  var vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
+  var vTmpTaskStart = Date.UTC(vCurTaskStart.getFullYear(), vCurTaskStart.getMonth(), vCurTaskStart.getDate(), vCurTaskStart.getHours(), 0, 0);
+  var vTmpTaskEnd = Date.UTC(vCurTaskEnd.getFullYear(), vCurTaskEnd.getMonth(), vCurTaskEnd.getDate(), vCurTaskEnd.getHours(), 0, 0);
+  var vTaskRight = (vTmpTaskEnd - vTmpTaskStart) / 3600000; // Length of task in hours
+  var vMonthsDiff = 0;
+  var vPosTmpDate = new Date(vCurTaskEnd.getTime());
+  var vDaysCrctn = 0;
 
   if (pFormat == 'day') {
     vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + 1));
   } else if (pFormat == 'week') {
     vTaskRightPx = Math.ceil(((vTaskRight / 24) * (pColWidth + 1)) / 7);
   } else if (pFormat == 'month') {
-    var vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
-    var vPosTmpDate = new Date(curTaskEnd.getTime());
-    vPosTmpDate.setDate(curTaskStart.getDate());
-    var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
+    vMonthsDiff = (12 * (vCurTaskEnd.getFullYear() - vCurTaskStart.getFullYear())) + (vCurTaskEnd.getMonth() - vCurTaskStart.getMonth());
+    vPosTmpDate.setDate(vCurTaskStart.getDate());
+    vDaysCrctn = (vCurTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
 
-    vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + 1)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[curTaskEnd.getMonth()])));
+    vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + 1)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[vCurTaskEnd.getMonth()])));
   } else if (pFormat == 'quarter') {
-    vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
-    vPosTmpDate = new Date(curTaskEnd.getTime());
-    vPosTmpDate.setDate(curTaskStart.getDate());
-    vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
+    vMonthsDiff = (12 * (vCurTaskEnd.getFullYear() - vCurTaskStart.getFullYear())) + (vCurTaskEnd.getMonth() - vCurTaskStart.getMonth());
+    vPosTmpDate.setDate(vCurTaskStart.getDate());
+    vDaysCrctn = (vCurTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
 
     vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + 1) / 3)) + (vDaysCrctn * (pColWidth / 90)));
   } else if (pFormat == 'hour') {
     // can't just calculate sum because of daylight savings changes
-    vPosTmpDate = new Date(curTaskEnd.getTime());
-    vPosTmpDate.setMinutes(curTaskStart.getMinutes(), 0);
-    var vMinsCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (3600000);
+    vPosTmpDate.setMinutes(vCurTaskStart.getMinutes(), 0);
+    var vMinsCrctn = (vCurTaskEnd.getTime() - vPosTmpDate.getTime()) / (3600000);
 
     vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + 1)) + (vMinsCrctn * (pColWidth)));
   }
@@ -1800,7 +1794,7 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort) {
       vVisible = pOpen;
       pList[i].setParItem(vCurItem);
       pList[i].setVisible(vVisible);
-      if (vVisible == 1 && pList[i].getOpen() == 0) vVisible = 0;
+      if (vVisible == 1 && pList[i].getOpen() === 0) vVisible = 0;
 
       if (pList[i].getMile() && pList[i].getParItem() && pList[i].getParItem().getGroup() == 2) { //remove milestones owned by combined groups
         pList.splice(i, 1);
@@ -1816,12 +1810,12 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort) {
         JSGantt.processRows(vList, pList[i].getID(), i, vLevel + 1, vVisible, 0);
       }
 
-      if (vMinSet == 0 || pList[i].getStart() < vMinDate) {
+      if (vMinSet === 0 || pList[i].getStart() < vMinDate) {
         vMinDate = pList[i].getStart();
         vMinSet = 1;
       }
 
-      if (vMaxSet == 0 || pList[i].getEnd() > vMaxDate) {
+      if (vMaxSet === 0 || pList[i].getEnd() > vMaxDate) {
         vMaxDate = pList[i].getEnd();
         vMaxSet = 1;
       }
@@ -1838,51 +1832,52 @@ JSGantt.processRows = function(pList, pID, pRow, pLevel, pOpen, pUseSort) {
     pList[pRow].setCompVal(Math.ceil(vCompSum / vNumKid));
   }
 
-  if (pID == 0 && pUseSort == 1) {
+  if (pID === 0 && pUseSort == 1) {
     JSGantt.sortTasks(pList, 0, 0);
     pList.sort(function(a, b) {
       return a.getSortIdx() - b.getSortIdx();
     });
   }
-  if (pID == 0 && pUseSort != 1) { // Need to sort combined tasks regardless
+  if (pID === 0 && pUseSort != 1) { // Need to sort combined tasks regardless
     for (i = 0; i < pList.length; i++) {
       if (pList[i].getGroup() == 2) {
         vComb = true;
         JSGantt.sortTasks(pList, pList[i].getID(), pList[i].getSortIdx() + 1);
       }
     }
-    if (vComb == true) pList.sort(function(a, b) {
+    if (vComb === true) pList.sort(function(a, b) {
       return a.getSortIdx() - b.getSortIdx();
     });
   }
 };
 
 JSGantt.sortTasks = function(pList, pID, pIdx) {
-  var sortIdx = pIdx;
-  var sortArr = [];
-
+  var vSortIdx = pIdx;
+  var vSortArr = [];
+  //var i = 0;
+  
   for (var i = 0; i < pList.length; i++) {
-    if (pList[i].getParent() == pID) sortArr.push(pList[i]);
+    if (pList[i].getParent() == pID) vSortArr.push(pList[i]);
   }
 
-  if (sortArr.length > 0) {
-    sortArr.sort(function(a, b) {
+  if (vSortArr.length > 0) {
+    vSortArr.sort(function(a, b) {
       var i = a.getStart().getTime() - b.getStart().getTime();
-      if (i == 0) i = a.getEnd().getTime() - b.getEnd().getTime();
-      if (i == 0) return a.getID() - b.getID();
+      if (i === 0) i = a.getEnd().getTime() - b.getEnd().getTime();
+      if (i === 0) return a.getID() - b.getID();
       else return i;
     });
   }
 
-  for (var j = 0; j < sortArr.length; j++) {
+  for (var j = 0; j < vSortArr.length; j++) {
     for (i = 0; i < pList.length; i++) {
-      if (pList[i].getID() == sortArr[j].getID()) {
-        pList[i].setSortIdx(sortIdx++);
-        sortIdx = JSGantt.sortTasks(pList, pList[i].getID(), sortIdx);
+      if (pList[i].getID() == vSortArr[j].getID()) {
+        pList[i].setSortIdx(vSortIdx++);
+        vSortIdx = JSGantt.sortTasks(pList, pList[i].getID(), vSortIdx);
       }
     }
   }
-  return sortIdx;
+  return vSortIdx;
 };
 
 // Used to determine the minimum date of all tasks and set lower bound based on format
@@ -1907,7 +1902,7 @@ JSGantt.getMinDate = function getMinDate(pList, pFormat) {
     while (vDate.getDate() > 1) vDate.setDate(vDate.getDate() - 1);
   } else if (pFormat == 'quarter') {
     vDate.setDate(vDate.getDate() - 31);
-    if (vDate.getMonth() == 0 || vDate.getMonth() == 1 || vDate.getMonth() == 2)
+    if (vDate.getMonth() === 0 || vDate.getMonth() == 1 || vDate.getMonth() == 2)
       vDate.setFullYear(vDate.getFullYear(), 0, 1);
     else if (vDate.getMonth() == 3 || vDate.getMonth() == 4 || vDate.getMonth() == 5)
       vDate.setFullYear(vDate.getFullYear(), 3, 1);
@@ -1917,7 +1912,7 @@ JSGantt.getMinDate = function getMinDate(pList, pFormat) {
       vDate.setFullYear(vDate.getFullYear(), 9, 1);
   } else if (pFormat == 'hour') {
     vDate.setHours(vDate.getHours() - 1);
-    while (vDate.getHours() % 6 != 0) vDate.setHours(vDate.getHours() - 1);
+    while (vDate.getHours() % 6 !== 0) vDate.setHours(vDate.getHours() - 1);
   }
 
   if (pFormat == 'hour') vDate.setMinutes(0, 0);
@@ -1940,19 +1935,19 @@ JSGantt.getMaxDate = function(pList, pFormat) {
   if (pFormat == 'day') {
     vDate.setDate(vDate.getDate() + 1);
 
-    while (vDate.getDay() % 7 != 0) vDate.setDate(vDate.getDate() + 1);
+    while (vDate.getDay() % 7 !== 0) vDate.setDate(vDate.getDate() + 1);
   } else if (pFormat == 'week') {
     //For weeks, what is the last logical boundary?
     vDate.setDate(vDate.getDate() + 1);
 
-    while (vDate.getDay() % 7 != 0) vDate.setDate(vDate.getDate() + 1);
+    while (vDate.getDay() % 7 !== 0) vDate.setDate(vDate.getDate() + 1);
   } else if (pFormat == 'month') {
     // Set to last day of current Month
     while (vDate.getDate() > 1) vDate.setDate(vDate.getDate() + 1);
     vDate.setDate(vDate.getDate() - 1);
   } else if (pFormat == 'quarter') {
     // Set to last day of current Quarter
-    if (vDate.getMonth() == 0 || vDate.getMonth() == 1 || vDate.getMonth() == 2)
+    if (vDate.getMonth() === 0 || vDate.getMonth() == 1 || vDate.getMonth() == 2)
       vDate.setFullYear(vDate.getFullYear(), 2, 31);
     else if (vDate.getMonth() == 3 || vDate.getMonth() == 4 || vDate.getMonth() == 5)
       vDate.setFullYear(vDate.getFullYear(), 5, 30);
@@ -1961,7 +1956,7 @@ JSGantt.getMaxDate = function(pList, pFormat) {
     else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
       vDate.setFullYear(vDate.getFullYear(), 11, 31);
   } else if (pFormat == 'hour') {
-    if (vDate.getHours() == 0) vDate.setDate(vDate.getDate() + 1);
+    if (vDate.getHours() === 0) vDate.setDate(vDate.getDate() + 1);
     vDate.setHours(vDate.getHours() + 1);
 
     while (vDate.getHours() % 6 != 5) vDate.setHours(vDate.getHours() + 1);
@@ -1970,30 +1965,29 @@ JSGantt.getMaxDate = function(pList, pFormat) {
 };
 
 // This function finds the document id of the specified object
-JSGantt.findObj = function(theObj, theDoc) {
-  var p, i, foundObj;
-  if (!theDoc) theDoc = document;
-  if (document.getElementById) foundObj = document.getElementById(theObj);
-  return foundObj;
+JSGantt.findObj = function(pObj, pDoc) {
+  var vFoundObj;
+  if (!pDoc) pDoc = document;
+  if (document.getElementById) vFoundObj = document.getElementById(pObj);
+  return vFoundObj;
 };
 
-JSGantt.changeFormat = function(pFormat, ganttObj) {
-  if (ganttObj) ganttObj.setFormat(pFormat);
+JSGantt.changeFormat = function(pFormat, pGantt) {
+  if (pGantt) pGantt.setFormat(pFormat);
   else alert('Chart undefined');
 };
 
 // Function to open/close and hide/show children of specified task
-JSGantt.folder = function(pID, ganttObj) {
-  var vList = ganttObj.getList();
-  var vDivId = ganttObj.getDivId();
+JSGantt.folder = function(pID, pGantt) {
+  var vList = pGantt.getList();
 
-  ganttObj.clearDependencies(); // clear these first so slow rendering doesn't look odd
+  pGantt.clearDependencies(); // clear these first so slow rendering doesn't look odd
 
   for (var i = 0; i < vList.length; i++) {
     if (vList[i].getID() == pID) {
       if (vList[i].getOpen() == 1) {
         vList[i].setOpen(0);
-        JSGantt.hide(pID, ganttObj);
+        JSGantt.hide(pID, pGantt);
 
         if (JSGantt.isIE())
           vList[i].getGroupSpan().innerText = '+';
@@ -2001,7 +1995,7 @@ JSGantt.folder = function(pID, ganttObj) {
           vList[i].getGroupSpan().textContent = '+';
       } else {
         vList[i].setOpen(1);
-        JSGantt.show(pID, 1, ganttObj);
+        JSGantt.show(pID, 1, pGantt);
 
         if (JSGantt.isIE())
           vList[i].getGroupSpan().innerText = '-';
@@ -2010,13 +2004,42 @@ JSGantt.folder = function(pID, ganttObj) {
       }
     }
   }
-  ganttObj.drawDependencies();
+  pGantt.drawDependencies();
 };
 
-JSGantt.hide = function(pID, ganttObj) {
-  var vList = ganttObj.getList();
+// Function to filter task by date
+JSGantt.filterDate = function(pGantt, pStartDate, pEndDate) {
+  var vList = pGantt.getList();
+
+  pGantt.clearDependencies(); // clear these first so slow rendering doesn't look odd
+
+  for (var i = 0; i < vList.length; i++) {
+    if (vList[i].getID() == pID) {
+      if (vList[i].getOpen() == 1) {
+        vList[i].setOpen(0);
+        JSGantt.hide(pID, pGantt);
+
+        if (JSGantt.isIE())
+          vList[i].getGroupSpan().innerText = '+';
+        else
+          vList[i].getGroupSpan().textContent = '+';
+      } else {
+        vList[i].setOpen(1);
+        JSGantt.show(pID, 1, pGantt);
+
+        if (JSGantt.isIE())
+          vList[i].getGroupSpan().innerText = '-';
+        else
+          vList[i].getGroupSpan().textContent = '-';
+      }
+    }
+  }
+  pGantt.drawDependencies();
+};
+
+JSGantt.hide = function(pID, pGantt) {
+  var vList = pGantt.getList();
   var vID = 0;
-  var vDivId = ganttObj.getDivId();
 
   for (var i = 0; i < vList.length; i++) {
     if (vList[i].getParent() == pID) {
@@ -2026,16 +2049,15 @@ JSGantt.hide = function(pID, ganttObj) {
       if (vList[i].getListChildRow()) vList[i].getListChildRow().style.display = 'none';
       if (vList[i].getChildRow()) vList[i].getChildRow().style.display = 'none';
       vList[i].setVisible(0);
-      if (vList[i].getGroup()) JSGantt.hide(vID, ganttObj);
+      if (vList[i].getGroup()) JSGantt.hide(vID, pGantt);
     }
   }
 };
 
 // Function to show children of specified task
-JSGantt.show = function(pID, pTop, ganttObj) {
-  var vList = ganttObj.getList();
+JSGantt.show = function(pID, pTop, pGantt) {
+  var vList = pGantt.getList();
   var vID = 0;
-  var vDivId = ganttObj.getDivId();
   var vState = '';
 
   for (var i = 0; i < vList.length; i++) {
@@ -2062,19 +2084,19 @@ JSGantt.show = function(pID, pTop, ganttObj) {
         if (vList[i].getChildRow()) vList[i].getChildRow().style.display = '';
         vList[i].setVisible(1);
       }
-      if (vList[i].getGroup()) JSGantt.show(vID, 0, ganttObj);
+      if (vList[i].getGroup()) JSGantt.show(vID, 0, pGantt);
     }
   }
 };
 
 // function to open window to display task link
 JSGantt.taskLink = function(pRef, pWidth, pHeight) {
-  if (pWidth) var vWidth = pWidth;
-  else vWidth = 400;
-  if (pHeight) var vHeight = pHeight;
-  else vHeight = 400;
+  var vWidth = 400;
+  if (pWidth) vWidth = pWidth;
+  var vHeight = 400;
+  if (pHeight) vHeight = pHeight;
 
-  var OpenWindow = window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth);
+  window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth);
 };
 
 JSGantt.parseDateStr = function(pDateStr, pFormatStr) {
@@ -2104,7 +2126,7 @@ JSGantt.formatDateStr = function(pDate, pDateFormatArr, pL) {
   var vYear2Str = pDate.getFullYear().toString().substring(2, 4);
   var vMonthStr = (pDate.getMonth() + 1) + '';
   var vMonthArr = [pL['january'], pL['february'], pL['march'], pL['april'], pL['maylong'], pL['june'], pL['july'], pL['august'], pL['september'], pL['october'], pL['november'], pL['december']];
-  var vDayArr =	[pL['sunday'], pL['monday'], pL['tuesday'], pL['wednesday'], pL['thursday'], pL['friday'], pL['saturday']];
+  var vDayArr =  [pL['sunday'], pL['monday'], pL['tuesday'], pL['wednesday'], pL['thursday'], pL['friday'], pL['saturday']];
   var vMthArr = [pL['jan'], pL['feb'], pL['mar'], pL['apr'], pL['may'], pL['jun'], pL['jul'], pL['aug'], pL['sep'], pL['oct'], pL['nov'], pL['dec']];
   var vDyArr = [pL['sun'], pL['mon'], pL['tue'], pL['wed'], pL['thu'], pL['fri'], pL['sat']];
 
@@ -2144,9 +2166,9 @@ JSGantt.formatDateStr = function(pDate, pDateFormatArr, pL) {
         vDateStr += Math.floor(pDate.getMonth() / 3) + 1;
         break;
       case 'hh':
-        if ((((pDate.getHours() % 12) == 0) ? 12 : pDate.getHours() % 12) < 10) vDateStr += '0'; // now fall through
+        if ((((pDate.getHours() % 12) === 0) ? 12 : pDate.getHours() % 12) < 10) vDateStr += '0'; // now fall through
       case 'h':
-        vDateStr += ((pDate.getHours() % 12) == 0) ? 12 : pDate.getHours() % 12;
+        vDateStr += ((pDate.getHours() % 12) === 0) ? 12 : pDate.getHours() % 12;
         break;
       case 'HH':
         if ((pDate.getHours()) < 10) vDateStr += '0'; // now fall through
@@ -2172,7 +2194,7 @@ JSGantt.formatDateStr = function(pDate, pDateFormatArr, pL) {
       case 'week':
         var vWeekNum = JSGantt.getIsoWeek(pDate);
         var vYear = pDate.getFullYear();
-        var vDayOfWeek = (pDate.getDay() == 0) ? 7 : pDate.getDay();
+        var vDayOfWeek = (pDate.getDay() === 0) ? 7 : pDate.getDay();
         if (vWeekNum >= 52 && vMonthStr == 1) vYear--;
         if (vWeekNum == 1 && vMonthStr == 12) vYear++;
         if (vWeekNum < 10) vWeekNum = '0' + vWeekNum;
@@ -2189,8 +2211,7 @@ JSGantt.formatDateStr = function(pDate, pDateFormatArr, pL) {
 };
 
 JSGantt.parseDateFormatStr = function(pFormatStr) {
-  var vDateStr = '';
-  var vComponantStr = '';
+  var vComponentStr = '';
   var vCurrChar = '';
   var vSeparators = new RegExp('[\/\\ -.,\'":]');
   var vDateFormatArray = [];
@@ -2199,43 +2220,98 @@ JSGantt.parseDateFormatStr = function(pFormatStr) {
     vCurrChar = pFormatStr.charAt(i);
     if ((vCurrChar.match(vSeparators)) || (i + 1 == pFormatStr.length)) { // separator or end of string
       if ((i + 1 == pFormatStr.length) && (!(vCurrChar.match(vSeparators)))) { // at end of string add any non-separator chars to the current component
-        vComponantStr += vCurrChar;
+        vComponentStr += vCurrChar;
       }
-      vDateFormatArray.push(vComponantStr);
+      vDateFormatArray.push(vComponentStr);
       if (vCurrChar.match(vSeparators)) vDateFormatArray.push(vCurrChar);
-      vComponantStr = '';
+      vComponentStr = '';
     } else {
-      vComponantStr += vCurrChar;
+      vComponentStr += vCurrChar;
     }
   }
   return vDateFormatArray;
 };
 
-JSGantt.parseXML = function(pFile, pGanttVar) {
-  if (window.XMLHttpRequest) {
-    var xhttp = new XMLHttpRequest();
-  } else { // IE 5/6
-    xhttp = new ActiveXObject('Microsoft.XMLHTTP');
+JSGantt.parseFromFile = function(pFile, pGantt) {
+  // Use HTML5 W3C File API asynchronously
+  if (window.File && window.FileReader && window.FileList && window.Blob) {
+    var vReader = new FileReader();
+  
+    vReader.readAsText(pFile, 'UTF-8');
+    vReader.onload = function(pEvent) {
+      JSGantt.parseFromString(pEvent.target.result, pGantt);
+      pGantt.draw(); // Because is asynchronous, can only called after loaded it 
+    };
+    vReader.onerror = function(pEvent) {
+      console.log(pEvent.target.error);
+      alert('Error while reading XML from file.');
+    };
+  } else {
+    alert('Error, your browser does not support reading local file.');
   }
-
-  xhttp.open('GET', pFile, false);
-  xhttp.send(null);
-  var xmlDoc = xhttp.responseXML;
-
-  JSGantt.addXMLTask(pGanttVar, xmlDoc);
 };
 
-JSGantt.parseXMLString = function(pStr, pGanttVar) {
-  if (typeof window.DOMParser != 'undefined') {
-    var xmlDoc = (new window.DOMParser()).parseFromString(pStr, 'text/xml');
-  } else if (typeof window.ActiveXObject != 'undefined' &&
-    new window.ActiveXObject('Microsoft.XMLDOM')) {
-    xmlDoc = new window.ActiveXObject('Microsoft.XMLDOM');
-    xmlDoc.async = 'false';
-    xmlDoc.loadXML(pStr);
+JSGantt.parseFromString = function(pStr, pGantt) {
+  var vXMLDoc = false;
+  
+  try {  // Get XML Document directly from string
+    if (typeof window.DOMParser != 'undefined') {
+      var vParserDOM = new window.DOMParser();
+      vXMLDoc = vParserDOM.parseFromString(pStr, 'application/xml');
+    } else if (typeof window.ActiveXObject != 'undefined' &&
+      new window.ActiveXObject('Microsoft.XMLDOM')) {
+      vXMLDoc = new window.ActiveXObject('Microsoft.XMLDOM');
+      vXMLDoc.async = 'false';
+      vXMLDoc.loadXML(pStr);
+    }
+    if (vXMLDoc) JSGantt.addXMLTask(pGantt, vXMLDoc);
+  }  catch(vError) {
+    console.log(vError);
+    alert('Error while reading XML from string.');
+  }
+};
+
+JSGantt.parseFromURI = function(pURI, pGantt) {
+  var vXMLDoc = false;
+  var vXMLHTTP = false;
+  
+  try {  // Use XMLHTTP to request file
+    if (window.XMLHttpRequest) {
+      vXMLHTTP = new XMLHttpRequest();
+    } else { // IE 5/6
+      vXMLHTTP = new ActiveXObject('Microsoft.XMLHTTP');
+    }
+
+    vXMLHTTP.overrideMimeType('text/xml');
+    vXMLHTTP.open('GET', pURI, false); // Request synchronously
+    vXMLHTTP.send(null);
+    vXMLDoc = vXMLHTTP.responseXML;
+    if (vXMLDoc) JSGantt.addXMLTask(pGantt, vXMLDoc);
+  }  catch(vError) {
+    console.log(vError);
+    alert('Error while reading XML from URI.');
+  }
+};
+
+JSGantt.parseXML = function(pSource, pGantt) {
+  var vType = false;
+  if (typeof pSource == 'string') {
+    if (pSource.substr(0, 5) == '<?xml') {
+      vType = 'string';
+    } else {
+      vType = 'uri';
+    }
+  } else if (pSource.type && pSource.type.match('(text/plain|.*xml)')) {
+    vType = 'file';
   }
 
-  JSGantt.addXMLTask(pGanttVar, xmlDoc);
+  if (vType == 'file') {
+    JSGantt.parseFromFile(pSource, pGantt);
+  } else if (vType == 'string') {
+    JSGantt.parseFromString(pSource, pGantt);
+  } else if (vType == 'uri') {
+    JSGantt.parseFromURI(pSource, pGantt);
+  }
 };
 
 JSGantt.findXMLNode = function(pRoot, pNodeName) {
@@ -2243,7 +2319,8 @@ JSGantt.findXMLNode = function(pRoot, pNodeName) {
 
   try {
     vRetValue = pRoot.getElementsByTagName(pNodeName);
-  } catch (error) {;
+  } catch (vError) {
+    //console.log(vError);
   } // do nothing, we'll return undefined
 
   return vRetValue;
@@ -2255,212 +2332,233 @@ JSGantt.getXMLNodeValue = function(pRoot, pNodeName, pType, pDefault) {
 
   try {
     vRetValue = pRoot.getElementsByTagName(pNodeName)[0].childNodes[0].nodeValue;
-  } catch (error) {
+  } catch (vError) {
+    //console.log(vError);
     if (typeof pDefault != 'undefined') vRetValue = pDefault;
   }
 
-  if (typeof vRetValue != 'undefined' && vRetValue != null) {
+  if (typeof vRetValue != 'undefined' && vRetValue !== null) {
     if (pType == 1) vRetValue *= 1;
     else if (pType == 2) vRetValue = vRetValue.toString();
   }
   return vRetValue;
 };
 
-JSGantt.addXMLTask = function(pGanttVar, pXmlDoc) {
-  var project = '';
+JSGantt.addXMLTask = function(pGantt, pXMLDoc) {
+  var vProject = '';
   var vMSP = false;
-  var Task;
+  var vTask;
   var n = 0;
   var m = 0;
   var i = 0;
   var j = 0;
   var k = 0;
-  var maxPID = 0;
-  var ass = [];
-  var assRes = [];
-  var res = [];
-  var pars = [];
+  var vMaxPID = 0;
+  var vAssign = [];
+  var vAssignRes = [];
+  var vRes = [];
+  var vPars = [];
+  
+  var pID;
+  var pName;
+  var pStart;
+  var pEnd;
+  var pLink;
+  var pMile;
+  var pComp;
+  var pGroup;
+  var pParent;
+  var pRes;
+  var pCost;
+  var pOpen;
+  var pDepend;
+  var pCaption;
+  var pNotes;
+  var pClass;
 
-  var projNode = JSGantt.findXMLNode(pXmlDoc, 'Project');
-  if (typeof projNode != 'undefined' && projNode.length > 0) project = projNode[0].getAttribute('xmlns');
+  var vProjNode = JSGantt.findXMLNode(pXMLDoc, 'Project');
+  if (typeof vProjNode != 'undefined' && vProjNode.length > 0) vProject = vProjNode[0].getAttribute('xmlns');
 
-  if (project == 'http://schemas.microsoft.com/project') {
+  if (vProject == 'http://schemas.microsoft.com/project') {
     vMSP = true;
-    pGanttVar.dateInputFormat = 'yyyy-mm-dd';
-    Task = JSGantt.findXMLNode(pXmlDoc, 'Task');
-    if (typeof Task == 'undefined') n = 0;
-    else n = Task.length;
+    pGantt.dateInputFormat = 'yyyy-mm-dd';
+    vTask = JSGantt.findXMLNode(pXMLDoc, 'Task');
+    if (typeof vTask == 'undefined') n = 0;
+    else n = vTask.length;
 
-    var resources = JSGantt.findXMLNode(pXmlDoc, 'Resource');
-    if (typeof resources == 'undefined') {
+    var vResources = JSGantt.findXMLNode(pXMLDoc, 'Resource');
+    if (typeof vResources == 'undefined') {
       n = 0;
       m = 0;
-    } else m = resources.length;
-
+    } else m = vResources.length;
+    
+    var vUID = 0;
     for (i = 0; i < m; i++) {
-      var resname = JSGantt.getXMLNodeValue(resources[i], 'Name', 2, '');
-      var uid = JSGantt.getXMLNodeValue(resources[i], 'UID', 1, -1);
+      var vResName = JSGantt.getXMLNodeValue(vResources[i], 'Name', 2, '');
+      vUID = JSGantt.getXMLNodeValue(vResources[i], 'UID', 1, -1);
 
-      if (resname.length > 0 && uid > 0) res[uid] = resname;
+      if (vResName.length > 0 && vUID > 0) vRes[vUID] = vResName;
     }
 
-    var assignments = JSGantt.findXMLNode(pXmlDoc, 'Assignment');
-    if (typeof assignments == 'undefined') j = 0;
-    else j = assignments.length;
+    var vAssignments = JSGantt.findXMLNode(pXMLDoc, 'Assignment');
+    if (typeof vAssignments == 'undefined') j = 0;
+    else j = vAssignments.length;
 
     for (i = 0; i < j; i++) {
-      var resUID = JSGantt.getXMLNodeValue(assignments[i], 'ResourceUID', 1, -1);
-      uid = JSGantt.getXMLNodeValue(assignments[i], 'TaskUID', 1, -1);
+      var vResUID = JSGantt.getXMLNodeValue(vAssignments[i], 'ResourceUID', 1, -1);
+      vUID = JSGantt.getXMLNodeValue(vAssignments[i], 'TaskUID', 1, -1);
 
-      if (uid > 0) {
-        if (resUID > 0) assRes[uid] = res[resUID];
-        ass[uid] = assignments[i];
+      if (vUID > 0) {
+        if (vResUID > 0) vAssignRes[vUID] = vRes[vResUID];
+        vAssign[vUID] = vAssignments[i];
       }
     }
-
+    
+    var vOutlineNumber = 0;
     // Store information about parent UIDs in an easily searchable form
     for (i = 0; i < n; i++) {
-      uid = JSGantt.getXMLNodeValue(Task[i], 'UID', 1, 0);
+      vUID = JSGantt.getXMLNodeValue(vTask[i], 'UID', 1, 0);
 
-      if (uid != 0) var vOutlineNumber = JSGantt.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
-      if (uid > 0) pars[vOutlineNumber] = uid;
-      if (uid > maxPID) maxPID = uid;
+      if (vUID !== 0) vOutlineNumber = JSGantt.getXMLNodeValue(vTask[i], 'OutlineNumber', 2, '0');
+      if (vUID > 0) vPars[vOutlineNumber] = vUID;
+      if (vUID > vMaxPID) vMaxPID = vUID;
     }
 
     for (i = 0; i < n; i++) {
       // optional parameters may not have an entry
       // Task ID must NOT be zero otherwise it will be skipped
-      var pID = JSGantt.getXMLNodeValue(Task[i], 'UID', 1, 0);
+      pID = JSGantt.getXMLNodeValue(vTask[i], 'UID', 1, 0);
 
-      if (pID != 0) {
-        var pName = JSGantt.getXMLNodeValue(Task[i], 'Name', 2, 'No Task Name');
-        var pStart = JSGantt.getXMLNodeValue(Task[i], 'Start', 2, '');
-        var pEnd = JSGantt.getXMLNodeValue(Task[i], 'Finish', 2, '');
-        var pLink = JSGantt.getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
-        var pMile = JSGantt.getXMLNodeValue(Task[i], 'Milestone', 1, 0);
-        var pComp = JSGantt.getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
-        var pCost = JSGantt.getXMLNodeValue(Task[i], 'Cost', 2, 0);
-        var pGroup = JSGantt.getXMLNodeValue(Task[i], 'Summary', 1, 0);
+      if (pID !== 0) {
+        pName = JSGantt.getXMLNodeValue(vTask[i], 'Name', 2, 'No Task Name');
+        pStart = JSGantt.getXMLNodeValue(vTask[i], 'Start', 2, '');
+        pEnd = JSGantt.getXMLNodeValue(vTask[i], 'Finish', 2, '');
+        pLink = JSGantt.getXMLNodeValue(vTask[i], 'HyperlinkAddress', 2, '');
+        pMile = JSGantt.getXMLNodeValue(vTask[i], 'Milestone', 1, 0);
+        pComp = JSGantt.getXMLNodeValue(vTask[i], 'PercentWorkComplete', 1, 0);
+        pCost = JSGantt.getXMLNodeValue(vTask[i], 'Cost', 2, 0);
+        pGroup = JSGantt.getXMLNodeValue(vTask[i], 'Summary', 1, 0);
 
-        var pParent = 0;
+        pParent = 0;
 
-        var vOutlineLevel = JSGantt.getXMLNodeValue(Task[i], 'OutlineLevel', 1, 0);
+        var vOutlineLevel = JSGantt.getXMLNodeValue(vTask[i], 'OutlineLevel', 1, 0);
         if (vOutlineLevel > 1) {
-          vOutlineNumber = JSGantt.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
-          pParent = pars[vOutlineNumber.substr(0, vOutlineNumber.lastIndexOf('.'))];
+          vOutlineNumber = JSGantt.getXMLNodeValue(vTask[i], 'OutlineNumber', 2, '0');
+          pParent = vPars[vOutlineNumber.substr(0, vOutlineNumber.lastIndexOf('.'))];
         }
-
+        
         try {
-          var pNotes = Task[i].getElementsByTagName('Notes')[0].childNodes[1].nodeValue; //this should be a CDATA node
-        } catch (error) {
+          pNotes = vTask[i].getElementsByTagName('Notes')[0].childNodes[1].nodeValue; //this should be a CDATA node
+        } catch (vError) {
+          //console.log(vError);
           pNotes = '';
         }
-
-        if (typeof assRes[pID] != 'undefined') var pRes = assRes[pID];
-        else pRes = '';
-
-        var predecessors = JSGantt.findXMLNode(Task[i], 'PredecessorLink');
-        if (typeof predecessors == 'undefined') j = 0;
-        else j = predecessors.length;
-        var pDepend = '';
+        
+        pRes = '';
+        if (typeof vAssignRes[pID] != 'undefined') pRes = vAssignRes[pID];
+        
+        var vPredecessors = JSGantt.findXMLNode(vTask[i], 'PredecessorLink');
+        if (typeof vPredecessors == 'undefined') j = 0;
+        else j = vPredecessors.length;
+        pDepend = '';
 
         for (k = 0; k < j; k++) {
-          var depUID = JSGantt.getXMLNodeValue(predecessors[k], 'PredecessorUID', 1, -1);
-          var depType = JSGantt.getXMLNodeValue(predecessors[k], 'Type', 1, 1);
+          var vDepUID = JSGantt.getXMLNodeValue(vPredecessors[k], 'PredecessorUID', 1, -1);
+          var vDepType = JSGantt.getXMLNodeValue(vPredecessors[k], 'Type', 1, 1);
 
-          if (depUID > 0) {
+          if (vDepUID > 0) {
             if (pDepend.length > 0) pDepend += ',';
-            switch (depType) {
+            switch (vDepType) {
               case 0:
-                pDepend += depUID + 'FF';
+                pDepend += vDepUID + 'FF';
                 break;
               case 1:
-                pDepend += depUID + 'FS';
+                pDepend += vDepUID + 'FS';
                 break;
               case 2:
-                pDepend += depUID + 'SF';
+                pDepend += vDepUID + 'SF';
                 break;
               case 3:
-                pDepend += depUID + 'SS';
+                pDepend += vDepUID + 'SS';
                 break;
               default:
-                pDepend += depUID + 'FS';
+                pDepend += vDepUID + 'FS';
                 break;
             }
           }
         }
 
-        var pOpen = 1;
-        var pCaption = '';
-
-        if (pGroup > 0) var pClass = 'ggroupblack';
+        pOpen = 1;
+        pCaption = '';
+        
+        pClass = 'gtaskblue';
+        if (pGroup > 0) pClass = 'ggroupblack';
         else if (pMile > 0) pClass = 'gmilestone';
-        else pClass = 'gtaskblue';
 
         // check for split tasks
-
-        var splits = JSGantt.findXMLNode(ass[pID], 'TimephasedData');
-        if (typeof splits == 'undefined') j = 0;
-        else j = splits.length;
+        var vSplits = JSGantt.findXMLNode(vAssign[pID], 'TimephasedData');
+        if (typeof vSplits == 'undefined') j = 0;
+        else j = vSplits.length;
 
         var vSplitStart = pStart;
         var vSplitEnd = pEnd;
         var vSubCreated = false;
         var vDepend = pDepend.replace(/,*[0-9]+[FS]F/g, '');
-
+        
+        var vDuration = 0;
         for (k = 0; k < j; k++) {
-          var vDuration = JSGantt.getXMLNodeValue(splits[k], 'Value', 2, '0');
+          vDuration = JSGantt.getXMLNodeValue(vSplits[k], 'Value', 2, '0');
           //remove all text
           vDuration = '0' + vDuration.replace(/\D/g, '');
           vDuration *= 1;
-          if ((vDuration == 0 && !vSubCreated) || (k + 1 == j && pGroup == 2)) {
+          if ((vDuration === 0 && !vSubCreated) || (k + 1 == j && pGroup == 2)) {
             // No time booked in the given period (or last entry)
             // Make sure the parent task is set as a combined group
             pGroup = 2;
             // Handle last loop
             if (k + 1 == j) vDepend = pDepend.replace(/,*[0-9]+[FS]S/g, '');
             // Now create a subtask
-            maxPID++;
-            vSplitEnd = JSGantt.getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-            pGanttVar.addTaskItem(new JSGantt.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, pCost, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
+            vMaxPID++;
+            vSplitEnd = JSGantt.getXMLNodeValue(vSplits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
+            pGantt.addTaskItem(new JSGantt.TaskItem(vMaxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, pCost, 0, pID, pOpen, vDepend, pCaption, pNotes, pGantt));
             vSubCreated = true;
             vDepend = '';
-          } else if (vDuration != 0 && vSubCreated) {
-            vSplitStart = JSGantt.getXMLNodeValue(splits[k], 'Start', 2, '');
+          } else if (vDuration !== 0 && vSubCreated) {
+            vSplitStart = JSGantt.getXMLNodeValue(vSplits[k], 'Start', 2, '');
             vSubCreated = false;
           }
         }
         if (vSubCreated) pDepend = '';
 
         // Finally add the task
-        pGanttVar.addTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pCost, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+        pGantt.addTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pCost, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt));
       }
     }
   } else {
-    Task = pXmlDoc.getElementsByTagName('task');
-    n = Task.length;
+    vTask = pXMLDoc.getElementsByTagName('task');
+    n = vTask.length;
 
     for (i = 0; i < n; i++) {
       // optional parameters may not have an entry
       // Task ID must NOT be zero otherwise it will be skipped
-      pID = JSGantt.getXMLNodeValue(Task[i], 'pID', 1, 0);
+      pID = JSGantt.getXMLNodeValue(vTask[i], 'pID', 1, 0);
 
-      if (pID != 0) {
-        pName = JSGantt.getXMLNodeValue(Task[i], 'pName', 2, 'No Task Name');
-        pStart = JSGantt.getXMLNodeValue(Task[i], 'pStart', 2, '');
-        pEnd = JSGantt.getXMLNodeValue(Task[i], 'pEnd', 2, '');
-        pLink = JSGantt.getXMLNodeValue(Task[i], 'pLink', 2, '');
-        pMile = JSGantt.getXMLNodeValue(Task[i], 'pMile', 1, 0);
-        pComp = JSGantt.getXMLNodeValue(Task[i], 'pComp', 1, 0);
-        pGroup = JSGantt.getXMLNodeValue(Task[i], 'pGroup', 1, 0);
-        pParent = JSGantt.getXMLNodeValue(Task[i], 'pParent', 1, 0);
-        pRes = JSGantt.getXMLNodeValue(Task[i], 'pRes', 2, '');
-        pCost = JSGantt.getXMLNodeValue(Task[i], 'pCost', 2, 0);
-        pOpen = JSGantt.getXMLNodeValue(Task[i], 'pOpen', 1, 1);
-        pDepend = JSGantt.getXMLNodeValue(Task[i], 'pDepend', 2, '');
-        pCaption = JSGantt.getXMLNodeValue(Task[i], 'pCaption', 2, '');
-        pNotes = JSGantt.getXMLNodeValue(Task[i], 'pNotes', 2, '');
-        pClass = JSGantt.getXMLNodeValue(Task[i], 'pClass', 2);
+      if (pID !== 0) {
+        pName = JSGantt.getXMLNodeValue(vTask[i], 'pName', 2, 'No Task Name');
+        pStart = JSGantt.getXMLNodeValue(vTask[i], 'pStart', 2, '');
+        pEnd = JSGantt.getXMLNodeValue(vTask[i], 'pEnd', 2, '');
+        pLink = JSGantt.getXMLNodeValue(vTask[i], 'pLink', 2, '');
+        pMile = JSGantt.getXMLNodeValue(vTask[i], 'pMile', 1, 0);
+        pComp = JSGantt.getXMLNodeValue(vTask[i], 'pComp', 1, 0);
+        pGroup = JSGantt.getXMLNodeValue(vTask[i], 'pGroup', 1, 0);
+        pParent = JSGantt.getXMLNodeValue(vTask[i], 'pParent', 1, 0);
+        pRes = JSGantt.getXMLNodeValue(vTask[i], 'pRes', 2, '');
+        pCost = JSGantt.getXMLNodeValue(vTask[i], 'pCost', 2, 0);
+        pOpen = JSGantt.getXMLNodeValue(vTask[i], 'pOpen', 1, 1);
+        pDepend = JSGantt.getXMLNodeValue(vTask[i], 'pDepend', 2, '');
+        pCaption = JSGantt.getXMLNodeValue(vTask[i], 'pCaption', 2, '');
+        pNotes = JSGantt.getXMLNodeValue(vTask[i], 'pNotes', 2, '');
+        pClass = JSGantt.getXMLNodeValue(vTask[i], 'pClass', 2);
         if (typeof pClass == 'undefined') {
           if (pGroup > 0) pClass = 'ggroupblack';
           else if (pMile > 0) pClass = 'gmilestone';
@@ -2468,7 +2566,7 @@ JSGantt.addXMLTask = function(pGanttVar, pXmlDoc) {
         }
 
         // Finally add the task
-        pGanttVar.addTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pCost, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+        pGantt.addTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pCost, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt));
       }
     }
   }
@@ -2483,91 +2581,88 @@ JSGantt.benchMark = function(pItem) {
 JSGantt.getIsoWeek = function(pDate) {
   // We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
   // 60*60*24*1000=86400000
-  var dayMiliseconds = 86400000;
-  var keyDay = new Date(pDate.getFullYear(), 0, 4, 0, 0, 0);
-  var keyDayOfWeek = (keyDay.getDay() == 0) ? 6 : keyDay.getDay() - 1; // define monday as 0
-  var firstMondayYearTime = keyDay.getTime() - (keyDayOfWeek * dayMiliseconds);
-  var thisDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate(), 0, 0, 0); // This at 00:00:00
-  var thisTime = thisDate.getTime();
-  var daysFromFirstMonday = Math.round(((thisTime - firstMondayYearTime) / dayMiliseconds));
-  var lastWeek = 99;
-  var thisWeek = 99;
+  var vDayMiliseconds = 86400000;
+  var vKeyDay = new Date(pDate.getFullYear(), 0, 4, 0, 0, 0);
+  var vKeyDayOfWeek = (vKeyDay.getDay() === 0) ? 6 : vKeyDay.getDay() - 1; // define monday as 0
+  var vFirstMondayYearTime = vKeyDay.getTime() - (vKeyDayOfWeek * vDayMiliseconds);
+  var vThisDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate(), 0, 0, 0); // This at 00:00:00
+  var vThisTime = vThisDate.getTime();
+  var vDaysFromFirstMonday = Math.round(((vThisTime - vFirstMondayYearTime) / vDayMiliseconds));
+  var vThisWeek = 99;
 
-  var firstMondayYear = new Date(firstMondayYearTime);
+  vThisWeek = Math.ceil((vDaysFromFirstMonday + 1) / 7);
 
-  thisWeek = Math.ceil((daysFromFirstMonday + 1) / 7);
-
-  if (thisWeek <= 0) thisWeek = JSGantt.getIsoWeek(new Date(pDate.getFullYear() - 1, 11, 31, 0, 0, 0));
-  else if (thisWeek == 53 && (new Date(pDate.getFullYear(), 0, 1, 0, 0, 0)).getDay() != 4 && (new Date(pDate.getFullYear(), 11, 31, 0, 0, 0)).getDay() != 4) thisWeek = 1;
-  return thisWeek;
+  if (vThisWeek <= 0) vThisWeek = JSGantt.getIsoWeek(new Date(pDate.getFullYear() - 1, 11, 31, 0, 0, 0));
+  else if (vThisWeek == 53 && (new Date(pDate.getFullYear(), 0, 1, 0, 0, 0)).getDay() != 4 && (new Date(pDate.getFullYear(), 11, 31, 0, 0, 0)).getDay() != 4) vThisWeek = 1;
+  return vThisWeek;
 };
 
-JSGantt.addListener = function(eventName, handler, control) {
+JSGantt.addListener = function(pEventName, pHandler, pControl) {
   // Check if control is a string
-  if (control === String(control)) control = JSGantt.findObj(control);
+  if (pControl === String(pControl)) pControl = JSGantt.findObj(pControl);
 
-  if (control.addEventListener) { //Standard W3C
-    return control.addEventListener(eventName, handler, false);
-  } else if (control.attachEvent) { //IExplore
-    return control.attachEvent('on' + eventName, handler);
+  if (pControl.addEventListener) { //Standard W3C
+    return pControl.addEventListener(pEventName, pHandler, false);
+  } else if (pControl.attachEvent) { //IExplore
+    return pControl.attachEvent('on' + pEventName, pHandler);
   } else {
     return false;
   }
 };
 
-JSGantt.addTooltipListeners = function(pGanttChart, pObj1, pObj2) {
+JSGantt.addTooltipListeners = function(pGantt, pObj1, pObj2) {
   JSGantt.addListener('mouseover', function(e) {
-    JSGantt.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+    JSGantt.showToolTip(pGantt, e, pObj2, null, pGantt.getTimer());
   }, pObj1);
   JSGantt.addListener('mouseout', function(e) {
-    JSGantt.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer());
+    JSGantt.delayedHide(pGantt, pGantt.ToolTip, pGantt.getTimer());
   }, pObj1);
 };
 
-JSGantt.addThisRowListeners = function(pGanttChart, pObj1, pObj2) {
+JSGantt.addThisRowListeners = function(pGantt, pObj1, pObj2) {
   JSGantt.addListener('mouseover', function() {
-    pGanttChart.mouseOver(pObj1, pObj2);
+    pGantt.mouseOver(pObj1, pObj2);
   }, pObj1);
   JSGantt.addListener('mouseover', function() {
-    pGanttChart.mouseOver(pObj1, pObj2);
+    pGantt.mouseOver(pObj1, pObj2);
   }, pObj2);
   JSGantt.addListener('mouseout', function() {
-    pGanttChart.mouseOut(pObj1, pObj2);
+    pGantt.mouseOut(pObj1, pObj2);
   }, pObj1);
   JSGantt.addListener('mouseout', function() {
-    pGanttChart.mouseOut(pObj1, pObj2);
+    pGantt.mouseOut(pObj1, pObj2);
   }, pObj2);
 };
 
-JSGantt.addFolderListeners = function(pGanttChart, pObj, pID) {
+JSGantt.addFolderListeners = function(pGantt, pObj, pID) {
   JSGantt.addListener('click', function() {
-    JSGantt.folder(pID, pGanttChart);
+    JSGantt.folder(pID, pGantt);
   }, pObj);
 };
 
-JSGantt.addFormatListeners = function(pGanttChart, pFormat, pObj) {
+JSGantt.addFormatListeners = function(pGantt, pFormat, pObj) {
   JSGantt.addListener('click', function() {
-    JSGantt.changeFormat(pFormat, pGanttChart);
+    JSGantt.changeFormat(pFormat, pGantt);
   }, pObj);
 };
 
-JSGantt.addScrollListeners = function(pGanttChart) {
+JSGantt.addScrollListeners = function(pGantt) {
   JSGantt.addListener('scroll', function() {
-    pGanttChart.getChartBody().scrollTop = pGanttChart.getListBody().scrollTop;
-  }, pGanttChart.getListBody());
+    pGantt.getChartBody().scrollTop = pGantt.getListBody().scrollTop;
+  }, pGantt.getListBody());
   JSGantt.addListener('scroll', function() {
-    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
-  }, pGanttChart.getChartBody());
+    pGantt.getListBody().scrollTop = pGantt.getChartBody().scrollTop;
+  }, pGantt.getChartBody());
   JSGantt.addListener('scroll', function() {
-    pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft;
-  }, pGanttChart.getChartBody());
+    pGantt.getChartHead().scrollLeft = pGantt.getChartBody().scrollLeft;
+  }, pGantt.getChartBody());
   JSGantt.addListener('scroll', function() {
-    pGanttChart.getChartBody().scrollLeft = pGanttChart.getChartHead().scrollLeft;
-  }, pGanttChart.getChartHead());
+    pGantt.getChartBody().scrollLeft = pGantt.getChartHead().scrollLeft;
+  }, pGantt.getChartHead());
   JSGantt.addListener('resize', function() {
-    pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft;
+    pGantt.getChartHead().scrollLeft = pGantt.getChartBody().scrollLeft;
   }, window);
   JSGantt.addListener('resize', function() {
-    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
+    pGantt.getListBody().scrollTop = pGantt.getChartBody().scrollTop;
   }, window);
 };
