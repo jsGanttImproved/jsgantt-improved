@@ -10,6 +10,7 @@
 		<pMile>0</pMile>
 		<pRes></pRes>
 		<pComp>0</pComp>
+		<pCost>10</pCost>
 		<pGroup>1</pGroup>
 		<pParent>0</pParent>
 		<pOpen>1</pOpen>
@@ -25,6 +26,7 @@
 		<pMile>0</pMile>
 		<pRes>Rich</pRes>
 		<pComp>10</pComp>
+		<pCost>15</pCost>
 		<pGroup>0</pGroup>
 		<pParent>10</pParent>
 		<pOpen>1</pOpen>
@@ -42,6 +44,7 @@
 		<pMile>0</pMile>
 		<pRes>Shlomy</pRes>
 		<pComp>50</pComp>
+		<pCost>20</pCost>
 		<pGroup>0</pGroup>
 		<pParent>10</pParent>
 		<pOpen>1</pOpen>
@@ -58,6 +61,7 @@
 		<pMile>0</pMile>
 		<pRes>Shlomy</pRes>
 		<pComp>30</pComp>
+		<pCost>25</pCost>
 		<pGroup>0</pGroup>
 		<pParent>0</pParent>
 		<pOpen>1</pOpen>
