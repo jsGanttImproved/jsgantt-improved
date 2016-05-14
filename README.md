@@ -20,4 +20,4 @@ Project forked as I was unable to contact the original maintainers.  This work w
 
 See the [Documentation](https://github.com/jsGanttImproved/jsgantt-improved/wiki/Documentation) wiki page or the included ``index.html`` file for instructions on use.
 
-Latest Release: v1.7.5 - Migration to GitHub
+Latest Release: v1.7.5.2 - Honour standard group task start and end dates
