@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _  _____ ____   _ 
-	  (_) / _ \ \_   \ / ||___  | ___| / |
-	  | |/ /_\/  / /\/ | |   / /|___ \ | |
-	  | / /_\\/\/ /_   | |_ / /_ ___) || |
-	 _/ \____/\____/   |_(_)_/(_)____(_)_|
+	   _   ___  _____   _  _____ ____   ____
+	  (_) / _ \ \_   \ / ||___  | ___| |___ \
+	  | |/ /_\/  / /\/ | |   / /|___ \   __) |
+	  | / /_\\/\/ /_   | |_ / /_ ___) | / __/
+	 _/ \____/\____/   |_(_)_/(_)____(_)_____|
 	|__/
-	jsGanttImproved 1.7.5.1
+	jsGanttImproved 1.7.5.2
 	Copyright (c) 2013-2016, Paul Geldart All rights reserved.
 
 	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
@@ -85,6 +85,8 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	var vName=document.createTextNode(pName).data;
 	var vStart=new Date(0);
 	var vEnd=new Date(0);
+	var vGroupMinStart=null;
+	var vGroupMinEnd=null;
 	var vClass=document.createTextNode(pClass).data;
 	var vLink=document.createTextNode(pLink).data;
 	var vMile=parseInt(document.createTextNode(pMile).data);
@@ -121,10 +123,16 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 		JSGantt.stripUnwanted(vNotes);
 	}
 
-	if (vGroup!=1)
+	if (pStart!=null && pStart!='')
 	{
 		vStart=(pStart instanceof Date)?pStart:JSGantt.parseDateStr(document.createTextNode(pStart).data,vGantt.getDateInputFormat());
+		vGroupMinStart=vStart;
+	}
+
+	if (pEnd!=null && pEnd!='')
+	{
 		vEnd  =(pEnd instanceof Date)?pEnd:JSGantt.parseDateStr(document.createTextNode(pEnd).data,vGantt.getDateInputFormat());
+		vGroupMinEnd=vEnd;
 	}
 
 	if (pDepend!=null)
@@ -167,6 +175,8 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	this.getName=function(){return vName;};
 	this.getStart=function(){return vStart;};
 	this.getEnd=function(){return vEnd;};
+	this.getGroupMinStart=function(){return vGroupMinStart;};
+	this.getGroupMinEnd=function(){return vGroupMinEnd;};
 	this.getClass=function(){return vClass;};
 	this.getLink=function(){return vLink;};
 	this.getMile=function(){return vMile;};
@@ -235,6 +245,8 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	this.getGroupSpan=function(){return vGroupSpan;};
 	this.setStart=function(pStart){if(pStart instanceof Date)vStart=pStart;};
 	this.setEnd=function(pEnd){if(pEnd instanceof Date)vEnd=pEnd;};
+	this.setGroupMinStart=function(pStart){if(pStart instanceof Date)vGroupMinStart=pStart;};
+	this.setGroupMinEnd=function(pEnd){if(pEnd instanceof Date)vGroupMinEnd=pEnd;};
 	this.setLevel=function(pLevel){vLevel=parseInt(document.createTextNode(pLevel).data);};
 	this.setNumKid=function(pNumKid){vNumKid=parseInt(document.createTextNode(pNumKid).data);};
 	this.setCompVal=function(pCompVal){vComp=parseFloat(document.createTextNode(pCompVal).data);};
@@ -1755,6 +1767,15 @@ JSGantt.processRows=function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 
 	if(pRow>=0)
 	{
+		if(pList[pRow].getGroupMinStart()!=null && pList[pRow].getGroupMinStart()<vMinDate)
+		{
+			vMinDate=pList[pRow].getGroupMinStart();
+		}
+
+		if(pList[pRow].getGroupMinEnd()!=null && pList[pRow].getGroupMinEnd()>vMaxDate)
+		{
+			vMaxDate=pList[pRow].getGroupMinEnd();
+		}
 		pList[pRow].setStart(vMinDate);
 		pList[pRow].setEnd(vMaxDate);
 		pList[pRow].setNumKid(vNumKid);
