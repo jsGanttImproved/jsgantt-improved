@@ -2,7 +2,7 @@
 
 I clearly no longer have the time to properly manage/curate this project.  Rather than letting it die and move to a new fork I am looking for someone to take ownership of this GitHub project and the related web page.  
 
-If you are interested please email jsgantt.immproved@gmail.com responses will likely be slow.
+If you are interested please email jsgantt.improved@gmail.com responses will likely be slow.
 
 ---
 
