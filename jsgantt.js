@@ -6,11 +6,10 @@
 	 _/ \____/\____/   |_(_)_/(_)____(_)_____|
 	|__/
 	jsGanttImproved 1.7.5.2
-	Copyright (c) 2013-2016, Paul Geldart All rights reserved.
 
-	The current version of this code can be found at https://code.google.com/p/jsgantt-improved/
+	The current version of this code can be found at https://github.com/jsGanttImproved/jsgantt-improved/
 
-	* Copyright (c) 2013-2016, Paul Geldart.
+	* Copyright (c) 2013-2017, Paul Geldart and Eduardo Rodrigues.
 	* All rights reserved.
 	*
 	* Redistribution and use in source and binary forms, with or without
@@ -20,14 +19,14 @@
 	*     * Redistributions in binary form must reproduce the above copyright
 	*       notice, this list of conditions and the following disclaimer in the
 	*       documentation and/or other materials provided with the distribution.
-	*     * Neither the name of Paul Geldart nor the names of its contributors
+	*     * Neither the name of Paul Geldart and Eduardo Rodrigues nor the names of its contributors
 	*       may be used to endorse or promote products derived from this software
 	*       without specific prior written permission.
 	*
-	* THIS SOFTWARE IS PROVIDED BY PAUL GELDART. ''AS IS'' AND ANY EXPRESS OR
+	* THIS SOFTWARE IS PROVIDED BY PAUL GELDART AND EDUARDO RODRIGUES ''AS IS'' AND ANY EXPRESS OR
 	* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 	* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-	* IN NO EVENT SHALL PAUL GELDART BE LIABLE FOR ANY DIRECT,
+	* IN NO EVENT SHALL PAUL GELDART AND EDUARDO RODRIGUES BE LIABLE FOR ANY DIRECT,
 	* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 	* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 	* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
