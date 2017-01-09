@@ -11,6 +11,7 @@
       var doc = document, docEl = doc.documentElement;
       docEl.className = docEl.className.replace(/(^|\s)no-js(\s|$)/, " js ");
     </script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,300,700|Material+Icons" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="jsgantt.css"/>
     <script type="text/javascript" src="jsgantt.js"></script>
 <style media="screen" type="text/css">
@@ -75,10 +76,10 @@ q {
     quotes: "\201C" "\201D" "\2018" "\2019"
 }
 small {
-    font-size: 80%
+    font-size: 72%
 }
 sub, sup {
-    font-size: 75%;
+    font-size: 65%;
     line-height: 0;
     position: relative;
     vertical-align: baseline
@@ -101,6 +102,9 @@ ul {
 ol {
     list-style-type: decimal
 }
+textarea {
+    width: 80%
+}
 nav ol, nav ul {
     list-style: none;
     margin: 0;
@@ -108,7 +112,7 @@ nav ol, nav ul {
 }
 button, input, select, textarea {
     font-family: inherit;
-    font-size: 100%;
+    font-size: 90%;
     margin: 0
 }
 button, input {
@@ -211,41 +215,19 @@ body {
     text-size-adjust: 100%;
     color: #37302a;
     background: white;
-    font: 400 112.5%/1.4 "chaparral-pro", Georgia, "times new roman", times, serif
+    font: 400 12px/1.4 "Vollkorn", Georgia, "times new roman", times, serif;
+    font-size: 4vw
 }
-@media screen and (min-width: 28.75em) {
+@media screen and (min-width: 46.25em) {
     body {
-        font-size: 125%
-    }
-}
-@media screen and (min-width: 103.75em) {
-    body {
-        font-size: 150%
-    }
-}
-@media screen and (max-width: 18.75em) {
-    body {
-        font-size: 87.5%
+        font-size: 16px
     }
 }
 .content {
     float: left;
     text-align: center;
     margin: 0;
-    padding: 0 8%;
-    width: 84%
-}
-@media screen and (min-width: 28.75em) {
-    .content {
-        padding: 0 12%;
-        width: 76%
-    }
-}
-@media screen and (min-width: 37.5em) {
-    .content {
-        padding: 0 15%;
-        width: 70%
-    }
+    width: 100%
 }
 @media screen and (min-width: 46.25em) {
     .content {
@@ -269,6 +251,30 @@ body {
         _width: 47.5em
     }
 }
+.container {
+    text-align: center;
+    margin: 0 auto
+}
+.container:after {
+    content: '';
+    display: table;
+    clear: both
+}
+.member {
+    display: inline-block;
+    position: relative;
+    width: 220px;
+    margin: 0 30px 30px;
+    background-color: #fff
+}
+.member img {
+    width: 100%
+}
+.member-info {
+    display: block;
+    width: 100%;
+    padding: 15px 10px
+}
 .border {
     position: absolute;
     z-index: 2;
@@ -291,11 +297,12 @@ a:hover {
     text-transform: uppercase;
     text-decoration: none;
     padding: .5em 1em .46em;
+    margin-bottom: .2em;
     line-height: normal;
     display: inline-block;
     font-weight: 400;
-    font-family: "proxima-nova-extra-condensed", sans-serif;
-    font-size: 112.5%;
+    font-family: "Lato", sans-serif;
+    font-size: 100%;
     letter-spacing: 2px;
     -webkit-transition: background .5s ease;
     -moz-transition: background .5s ease;
@@ -303,7 +310,7 @@ a:hover {
     transition: background .5s ease
 }
 .btn:hover {
-    background: #ca2d09
+    background: #17A286
 }
 .btn:active {
     opacity: .7
@@ -313,18 +320,19 @@ a:hover {
         font-size: 1.1em
     }
 }
-h1, h2, h3 {
-    font-family: "proxima-nova-extra-condensed", sans-serif;
-    text-transform: uppercase;
+h1, h2, h3, h4 {
+    font-family: "Lato", sans-serif;
     -moz-font-feature-settings: "liga=1,kern=1";
     -ms-font-feature-settings: "liga" 1, "kern" 1;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     font-weight: 700;
-    color: #424242
+    color: #424242;
+    margin-top: .2em;
+    margin-bottom: .7em
 }
 h1 {
-    font-size: 275%;
+    font-size: 200%;
     text-transform: none;
     line-height: .82;
     letter-spacing: -0.03em;
@@ -333,27 +341,26 @@ h1 {
 }
 @media screen and (min-width: 37.5em) {
     h1 {
-        font-size: 400%
+        font-size: 280%
     }
 }
 @media screen and (min-width: 46.25em) {
     h1 {
         margin-bottom: .2em;
         *letter-spacing: -0.2em;
-        font-size: 620%
+        font-size: 440%
     }
 }
 @media screen and (min-width: 62.5em) {
     h1 {
-        font-size: 880%
+        font-size: 625%
     }
 }
 h2 {
     letter-spacing: -0.02em;
-    font-size: 175%;
-    line-height: .82;
-    margin-top: .2em;
-    margin-bottom: .7em
+    text-transform: uppercase;
+    font-size: 135%;
+    line-height: .82
 }
 @media screen and (min-width: 46.25em) {
     h2 {
@@ -362,12 +369,13 @@ h2 {
 }
 h3 {
     -webkit-font-smoothing: subpixel-antialiased;
-    font-weight: 400;
-    font-size: 125%;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 100%;
     line-height: 1;
     float: left;
     width: 100%;
-    margin: .2em 0 1em;
+    margin: 1em 0 1em;
     letter-spacing: 1px;
     color: #37302a
 }
@@ -375,6 +383,15 @@ h3 {
     h3 {
         font-size: 1.2em
     }
+}
+h4 {
+    -webkit-font-smoothing: subpixel-antialiased;
+    font-weight: 400;
+    font-size: 100%;
+    line-height: 1;
+    float: left;
+    width: 100%;
+    color: #37302a
 }
 p {
     margin-bottom: 1.5em
@@ -389,7 +406,7 @@ p {
 }
 .nav-collapse {
     z-index: 1;
-    font-family: "proxima-nova-extra-condensed", sans-serif
+    font-family: "Lato", sans-serif;
 }
 .nav-collapse, .nav-collapse * {
     -webkit-box-sizing: border-box;
@@ -427,8 +444,8 @@ p {
 .nav-collapse a {
     text-transform: uppercase;
     font-weight: 400;
-    font-size: 112.5%;
-    letter-spacing: 2px;
+    font-size: 100%;
+    letter-spacing: 0.8px;
     color: white;
     text-decoration: none;
     width: 100%;
@@ -498,21 +515,18 @@ p {
     -o-user-select: none;
     user-select: none;
     width: 70px;
-    height: 55px;
+    height: 50px;
     float: right;
-    text-indent: -9999px;
-    overflow: hidden;
+    overflow: hidden;   
+    background: #1bbc9b no-repeat 50% 33%;
+    font-size: 48px;
+    text-align: center;
+    text-decoration: none;
     display: block;
-    background: #1bbc9b url("../images/hamburger.gif") no-repeat 50% 33%
+    color: #e5e5e5
 }
-@media screen and (-webkit-min-device-pixel-ratio: 1.3), screen and (min--moz-device-pixel-ratio: 1.3), screen and (-o-min-device-pixel-ratio: 2 / 1), screen and (min-device-pixel-ratio: 1.3), screen and (min-resolution: 192dpi), screen and (min-resolution: 2dppx) {
-    .nav-toggle {
-        background-image: url("../images/hamburger-retina.gif");
-        -webkit-background-size: 100px 100px !important;
-        -moz-background-size: 100px 100px !important;
-        -o-background-size: 100px 100px !important;
-        background-size: 100px 100px !important
-    }
+.nav-toggle:hover {
+    color: #ffffff
 }
 @media screen and (min-width: 46.25em) {
     .nav-toggle {
@@ -523,30 +537,23 @@ p {
     float: left;
     width: 100%
 }
-.image {
-    width: 100%;
-    float: left;
-    margin-bottom: 3em
-}
-@media screen and (min-width: 62.5em) {
-    .image {
-        margin-left: -0.5em;
-        *margin-left: 0
-    }
-}
 .intro {
     margin: 1em auto 2em;
-    min-height: 455px;
+    min-height: 300px;
     padding: 70px 0;
     background: #323232 url(home-bg.jpg) center 0 no-repeat;
     background-attachment: fixed;
     background-size: cover;
     color: #ffffff
 }
+.intro h2 {
+    color: #ffffff
+}
 @media screen and (min-width: 46.25em) {
     .intro .intro-container {
-        _width: 31.5em;
-        max-width: 31.5em;
+        _width: 40em;
+        max-width: 40em;
+        min-height: 50px;
         margin: 2.4em auto
     }
     .intro p {
@@ -563,12 +570,13 @@ p {
     }
 }
 .section {
-    max-width: 31.5em;
-    margin: 0 auto;
+    max-width: 80em;
+    overflow: auto;
     text-align: left;
     clear: both;
-    margin-top: 3em;
-    margin-bottom: 3em;
+    margin: 3em 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #d3d2d0;
     *zoom: 1
 }
 .section:before, .section:after {
@@ -579,43 +587,48 @@ p {
     clear: both
 }
 .section ul {
-    list-style-type: circle;
-    font-weight: 600
+    margin-left: 1em;
+    text-align: left;
+    float: none;
+    max-width: 100%;
+    font-weight: 400
 }
-@media screen and (min-width: 37.5em) {
-    .section ul {
-        margin-left: 0
+.section .list {
+    list-style-type: circle;
+	line-height: 1.4;
+	font-weight: 600
+}
+@media screen and (min-width: 46.25em) {
+    .section {
+        padding-bottom: 1.74em;
+        margin: 3em 10em 5.26em
     }
 }
 @media screen and (min-width: 62.5em) {
-    .section {
-        padding-bottom: 1.74em;
-        margin-bottom: 5.26em;
-        border-bottom: 1px solid #d3d2d0
+    .section .list {
+        margin: 1.34em 1em 2em;
+        float: left;
+        width: 45%
     }
-    .section ul {
-        margin: 1.34em 0 2em;
-        line-height: 1.4;
-        width: 55%;
-        margin-left: -7%;
-        float: left
+    .section .list li {
+        margin: 0.5em auto 0.5em
     }
-    .section ul li {
-        margin-bottom: 1.4em
-    }
-    .section ul.list-2 {
+    .section .list-2 {
         float: right;
+        width: 55%
         margin-left: 0;
-        margin-right: -13%
     }
 }
+#features p {
+    float: left
+}
 pre, code {
-    font-family: "panic sans", Monaco, monospace, monospace
+    font-family: "Anonymous Pro", Monaco, monospace, monospace
 }
 pre {
     padding: 2em 2em 1.3em;
     margin-bottom: 3em;
-    font-size: 75%;
+    font-size: 65%;
     float: left;
     width: 100%;
     -webkit-box-sizing: border-box;
@@ -690,7 +703,38 @@ pre::-webkit-scrollbar-thumb {
     background: #847160
 }
 #download .repo:hover {
-    background: #66584b
+    background: #6A5B4D
+}
+.go-next {
+    width: 48px;
+    height: 48px;
+    margin: .3em auto .1em;
+    background-color: #fff;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    color: #323232;
+    display: block;
+    text-align: center;
+    font-size: 48px;
+    font-weight: bold;
+    text-decoration: none;
+    -webkit-transition: -webkit-transform .5s;
+    transition: -webkit-transform .5s;
+    -o-transition: -o-transform .5s;
+    transition: transform .5s;
+    transition: transform .5s, -webkit-transform .5s, -o-transform .5s
+}
+.go-next:hover {
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2)
+}
+@media screen and (min-width: 46.25em) {
+    .go-next {
+        margin-top: 3em;
+        margin-bottom: 1em
+    }
 }
 .footer {
     color: #bab9b6;
@@ -714,7 +758,6 @@ pre::-webkit-scrollbar-thumb {
 }
 -->
 </style>
-    <script src="https://use.typekit.net/sxv1brn.js"></script>
     <script>
 <!--
     function toggle_visibility(id) {
@@ -724,8 +767,6 @@ pre::-webkit-scrollbar-thumb {
        else
           e.style.display = 'block';
     }
-
-try{Typekit.load();}catch(e){}
     
 // http://trentwalton.com/2013/01/16/windows-phone-8-viewport-fix/
 if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
@@ -771,11 +812,11 @@ PR.registerLangHandler(PR.createSimpleLexer([["pln",/^[\t\n\f\r ]+/,null," \t\r\
 /^(?:<\!--|--\>)/],["lit",/^(?:\d+|\d*\.\d+)(?:%|[a-z]+)?/i],["lit",/^#[\da-f]{3,6}/i],["pln",/^-?(?:[_a-z]|\\[\da-f]+ ?)(?:[\w-]|\\\\[\da-f]+ ?)*/i],["pun",/^[^\s\w"']+/]]),["css"]);PR.registerLangHandler(PR.createSimpleLexer([],[["kwd",/^-?(?:[_a-z]|\\[\da-f]+ ?)(?:[\w-]|\\\\[\da-f]+ ?)*/i]]),["css-kw"]);PR.registerLangHandler(PR.createSimpleLexer([],[["str",/^[^"')]+/]]),["css-str"]);
 
 /*! https://github.com/viljamis/responsive-nav.js */
-!function(){"use strict";var a=function(a,b){var c=!!window.getComputedStyle;c||(window.getComputedStyle=function(a){return this.el=a,this.getPropertyValue=function(b){var c=/(\-([a-z]){1})/g;return"float"===b&&(b="styleFloat"),c.test(b)&&(b=b.replace(c,function(){return arguments[2].toUpperCase()})),a.currentStyle[b]?a.currentStyle[b]:null},this});var d,e,f,g,h,i=function(a,b,c,d){if("addEventListener"in a)try{a.addEventListener(b,c,d)}catch(e){if("object"!=typeof c||!c.handleEvent)throw e;a.addEventListener(b,function(a){c.handleEvent.call(c,a)},d)}else"attachEvent"in a&&("object"==typeof c&&c.handleEvent?a.attachEvent("on"+b,function(){c.handleEvent.call(c)}):a.attachEvent("on"+b,c))},j=function(a,b,c,d){if("removeEventListener"in a)try{a.removeEventListener(b,c,d)}catch(e){if("object"!=typeof c||!c.handleEvent)throw e;a.removeEventListener(b,function(a){c.handleEvent.call(c,a)},d)}else"detachEvent"in a&&("object"==typeof c&&c.handleEvent?a.detachEvent("on"+b,function(){c.handleEvent.call(c)}):a.detachEvent("on"+b,c))},k=function(a){if(a.children.length<1)throw new Error("The Nav container has no containing elements");for(var b=[],c=0;c<a.children.length;c++)1===a.children[c].nodeType&&b.push(a.children[c]);return b},l=function(a,b){for(var c in b)a.setAttribute(c,b[c])},m=function(a,b){0!==a.className.indexOf(b)&&(a.className+=" "+b,a.className=a.className.replace(/(^\s*)|(\s*$)/g,""))},n=function(a,b){var c=new RegExp("(\\s|^)"+b+"(\\s|$)");a.className=a.className.replace(c," ").replace(/(^\s*)|(\s*$)/g,"")},o=document.createElement("style"),p=function(a,b){var c;this.options={animate:!0,transition:250,label:"Menu",insert:"after",customToggle:"",openPos:"relative",navClass:"nav-collapse",jsClass:"js",init:function(){},open:function(){},close:function(){}};for(c in b)this.options[c]=b[c];if(m(document.documentElement,this.options.jsClass),this.wrapperEl=a.replace("#",""),document.getElementById(this.wrapperEl))this.wrapper=document.getElementById(this.wrapperEl);else{if(!document.querySelector(this.wrapperEl))throw new Error("The nav element you are trying to select doesn't exist");this.wrapper=document.querySelector(this.wrapperEl)}this.wrapper.inner=k(this.wrapper),e=this.options,d=this.wrapper,this._init(this)};return p.prototype={destroy:function(){this._removeStyles(),n(d,"closed"),n(d,"opened"),n(d,e.navClass),d.removeAttribute("style"),d.removeAttribute("aria-hidden"),j(window,"resize",this,!1),j(document.body,"touchmove",this,!1),j(f,"touchstart",this,!1),j(f,"touchend",this,!1),j(f,"mouseup",this,!1),j(f,"keyup",this,!1),j(f,"click",this,!1),e.customToggle?f.removeAttribute("aria-hidden"):f.parentNode.removeChild(f)},toggle:function(){g===!0&&(h?(n(d,"opened"),m(d,"closed"),l(d,{"aria-hidden":"true"}),e.animate?(g=!1,setTimeout(function(){d.style.position="absolute",g=!0},e.transition+10)):d.style.position="absolute",h=!1,e.close()):(n(d,"closed"),m(d,"opened"),d.style.position=e.openPos,l(d,{"aria-hidden":"false"}),h=!0,e.open()))},resize:function(){"none"!==window.getComputedStyle(f,null).getPropertyValue("display")?(l(f,{"aria-hidden":"false"}),d.className.match(/(^|\s)closed(\s|$)/)&&(l(d,{"aria-hidden":"true"}),d.style.position="absolute"),this._createStyles(),this._calcHeight()):(l(f,{"aria-hidden":"true"}),l(d,{"aria-hidden":"false"}),d.style.position=e.openPos,this._removeStyles())},handleEvent:function(a){var b=a||window.event;switch(b.type){case"touchstart":this._onTouchStart(b);break;case"touchmove":this._onTouchMove(b);break;case"touchend":case"mouseup":this._onTouchEnd(b);break;case"click":this._preventDefault(b);break;case"keyup":this._onKeyUp(b);break;case"resize":this.resize(b)}},_init:function(){m(d,e.navClass),m(d,"closed"),g=!0,h=!1,this._createToggle(),this._transitions(),this.resize();var a=this;setTimeout(function(){a.resize()},20),i(window,"resize",this,!1),i(document.body,"touchmove",this,!1),i(f,"touchstart",this,!1),i(f,"touchend",this,!1),i(f,"mouseup",this,!1),i(f,"keyup",this,!1),i(f,"click",this,!1),e.init()},_createStyles:function(){o.parentNode||(o.type="text/css",document.getElementsByTagName("head")[0].appendChild(o))},_removeStyles:function(){o.parentNode&&o.parentNode.removeChild(o)},_createToggle:function(){if(e.customToggle){var a=e.customToggle.replace("#","");if(document.getElementById(a))f=document.getElementById(a);else{if(!document.querySelector(a))throw new Error("The custom nav toggle you are trying to select doesn't exist");f=document.querySelector(a)}}else{var b=document.createElement("a");b.innerHTML=e.label,l(b,{href:"#","class":"nav-toggle"}),"after"===e.insert?d.parentNode.insertBefore(b,d.nextSibling):d.parentNode.insertBefore(b,d),f=b}},_preventDefault:function(a){a.preventDefault?(a.preventDefault(),a.stopPropagation()):a.returnValue=!1},_onTouchStart:function(a){a.stopPropagation(),m(d,"disable-pointer-events"),this.startX=a.touches[0].clientX,this.startY=a.touches[0].clientY,this.touchHasMoved=!1,j(f,"mouseup",this,!1)},_onTouchMove:function(a){(Math.abs(a.touches[0].clientX-this.startX)>10||Math.abs(a.touches[0].clientY-this.startY)>10)&&(this.touchHasMoved=!0)},_onTouchEnd:function(a){if(this._preventDefault(a),!this.touchHasMoved){if("touchend"===a.type)return this.toggle(a),setTimeout(function(){n(d,"disable-pointer-events")},e.transition+300),void 0;var b=a||window.event;3!==b.which&&2!==b.button&&this.toggle(a)}},_onKeyUp:function(a){var b=a||window.event;13===b.keyCode&&this.toggle(a)},_transitions:function(){if(e.animate){var a=d.style,b="max-height "+e.transition+"ms";a.WebkitTransition=b,a.MozTransition=b,a.OTransition=b,a.transition=b}},_calcHeight:function(){for(var a=0,b=0;b<d.inner.length;b++)a+=d.inner[b].offsetHeight;var c="."+e.navClass+".opened{max-height:"+a+"px !important}";o.styleSheet?o.styleSheet.cssText=c:o.innerHTML=c,c=""}},new p(a,b)};window.responsiveNav=a}();    
+!function(){"use strict";var a=function(a,b){var c=!!window.getComputedStyle;c||(window.getComputedStyle=function(a){return this.el=a,this.getPropertyValue=function(b){var c=/(\-([a-z]){1})/g;return"float"===b&&(b="styleFloat"),c.test(b)&&(b=b.replace(c,function(){return arguments[2].toUpperCase()})),a.currentStyle[b]?a.currentStyle[b]:null},this});var d,e,f,g,h,i=function(a,b,c,d){if("addEventListener"in a)try{a.addEventListener(b,c,d)}catch(e){if("object"!=typeof c||!c.handleEvent)throw e;a.addEventListener(b,function(a){c.handleEvent.call(c,a)},d)}else"attachEvent"in a&&("object"==typeof c&&c.handleEvent?a.attachEvent("on"+b,function(){c.handleEvent.call(c)}):a.attachEvent("on"+b,c))},j=function(a,b,c,d){if("removeEventListener"in a)try{a.removeEventListener(b,c,d)}catch(e){if("object"!=typeof c||!c.handleEvent)throw e;a.removeEventListener(b,function(a){c.handleEvent.call(c,a)},d)}else"detachEvent"in a&&("object"==typeof c&&c.handleEvent?a.detachEvent("on"+b,function(){c.handleEvent.call(c)}):a.detachEvent("on"+b,c))},k=function(a){if(a.children.length<1)throw new Error("The Nav container has no containing elements");for(var b=[],c=0;c<a.children.length;c++)1===a.children[c].nodeType&&b.push(a.children[c]);return b},l=function(a,b){for(var c in b)a.setAttribute(c,b[c])},m=function(a,b){0!==a.className.indexOf(b)&&(a.className+=" "+b,a.className=a.className.replace(/(^\s*)|(\s*$)/g,""))},n=function(a,b){var c=new RegExp("(\\s|^)"+b+"(\\s|$)");a.className=a.className.replace(c," ").replace(/(^\s*)|(\s*$)/g,"")},o=document.createElement("style"),p=function(a,b){var c;this.options={animate:!0,transition:250,label:"view_headline",insert:"after",customToggle:"",openPos:"relative",navClass:"nav-collapse",jsClass:"js",init:function(){},open:function(){},close:function(){}};for(c in b)this.options[c]=b[c];if(m(document.documentElement,this.options.jsClass),this.wrapperEl=a.replace("#",""),document.getElementById(this.wrapperEl))this.wrapper=document.getElementById(this.wrapperEl);else{if(!document.querySelector(this.wrapperEl))throw new Error("The nav element you are trying to select doesn't exist");this.wrapper=document.querySelector(this.wrapperEl)}this.wrapper.inner=k(this.wrapper),e=this.options,d=this.wrapper,this._init(this)};return p.prototype={destroy:function(){this._removeStyles(),n(d,"closed"),n(d,"opened"),n(d,e.navClass),d.removeAttribute("style"),d.removeAttribute("aria-hidden"),j(window,"resize",this,!1),j(document.body,"touchmove",this,!1),j(f,"touchstart",this,!1),j(f,"touchend",this,!1),j(f,"mouseup",this,!1),j(f,"keyup",this,!1),j(f,"click",this,!1),e.customToggle?f.removeAttribute("aria-hidden"):f.parentNode.removeChild(f)},toggle:function(){g===!0&&(h?(n(d,"opened"),m(d,"closed"),l(d,{"aria-hidden":"true"}),e.animate?(g=!1,setTimeout(function(){d.style.position="absolute",g=!0},e.transition+10)):d.style.position="absolute",h=!1,e.close()):(n(d,"closed"),m(d,"opened"),d.style.position=e.openPos,l(d,{"aria-hidden":"false"}),h=!0,e.open()))},resize:function(){"none"!==window.getComputedStyle(f,null).getPropertyValue("display")?(l(f,{"aria-hidden":"false"}),d.className.match(/(^|\s)closed(\s|$)/)&&(l(d,{"aria-hidden":"true"}),d.style.position="absolute"),this._createStyles(),this._calcHeight()):(l(f,{"aria-hidden":"true"}),l(d,{"aria-hidden":"false"}),d.style.position=e.openPos,this._removeStyles())},handleEvent:function(a){var b=a||window.event;switch(b.type){case"touchstart":this._onTouchStart(b);break;case"touchmove":this._onTouchMove(b);break;case"touchend":case"mouseup":this._onTouchEnd(b);break;case"click":this._preventDefault(b);break;case"keyup":this._onKeyUp(b);break;case"resize":this.resize(b)}},_init:function(){m(d,e.navClass),m(d,"closed"),g=!0,h=!1,this._createToggle(),this._transitions(),this.resize();var a=this;setTimeout(function(){a.resize()},20),i(window,"resize",this,!1),i(document.body,"touchmove",this,!1),i(f,"touchstart",this,!1),i(f,"touchend",this,!1),i(f,"mouseup",this,!1),i(f,"keyup",this,!1),i(f,"click",this,!1),e.init()},_createStyles:function(){o.parentNode||(o.type="text/css",document.getElementsByTagName("head")[0].appendChild(o))},_removeStyles:function(){o.parentNode&&o.parentNode.removeChild(o)},_createToggle:function(){if(e.customToggle){var a=e.customToggle.replace("#","");if(document.getElementById(a))f=document.getElementById(a);else{if(!document.querySelector(a))throw new Error("The custom nav toggle you are trying to select doesn't exist");f=document.querySelector(a)}}else{var b=document.createElement("a");b.innerHTML=e.label,l(b,{href:"#","class":"nav-toggle material-icons"}),"after"===e.insert?d.parentNode.insertBefore(b,d.nextSibling):d.parentNode.insertBefore(b,d),f=b}},_preventDefault:function(a){a.preventDefault?(a.preventDefault(),a.stopPropagation()):a.returnValue=!1},_onTouchStart:function(a){a.stopPropagation(),m(d,"disable-pointer-events"),this.startX=a.touches[0].clientX,this.startY=a.touches[0].clientY,this.touchHasMoved=!1,j(f,"mouseup",this,!1)},_onTouchMove:function(a){(Math.abs(a.touches[0].clientX-this.startX)>10||Math.abs(a.touches[0].clientY-this.startY)>10)&&(this.touchHasMoved=!0)},_onTouchEnd:function(a){if(this._preventDefault(a),!this.touchHasMoved){if("touchend"===a.type)return this.toggle(a),setTimeout(function(){n(d,"disable-pointer-events")},e.transition+300),void 0;var b=a||window.event;3!==b.which&&2!==b.button&&this.toggle(a)}},_onKeyUp:function(a){var b=a||window.event;13===b.keyCode&&this.toggle(a)},_transitions:function(){if(e.animate){var a=d.style,b="max-height "+e.transition+"ms";a.WebkitTransition=b,a.MozTransition=b,a.OTransition=b,a.transition=b}},_calcHeight:function(){for(var a=0,b=0;b<d.inner.length;b++)a+=d.inner[b].offsetHeight;var c="."+e.navClass+".opened{max-height:"+a+"px !important}";o.styleSheet?o.styleSheet.cssText=c:o.innerHTML=c,c=""}},new p(a,b)};window.responsiveNav=a}();    
 //-->
     </script>
   </head>
-  <body onload="prettyPrint()">
+  <body onload="prettyPrint()">	
     <div class="border" id="home"></div>
     <div class="wrapper">
       <div id="nav" class="nav-collapse">
@@ -783,34 +824,37 @@ PR.registerLangHandler(PR.createSimpleLexer([["pln",/^[\t\n\f\r ]+/,null," \t\r\
           <li class="active"><a href="#">Home</a></li>
           <li><a href="#demo">Demo</a></li>
           <li><a href="#features">Features</a></li>
-          <li><a href="#license">License</a></li>
           <li><a href="#usage">Usage</a></li>
           <li><a href="#credits">Credits</a></li>
+          <li></li>
           <li><a href="https://github.com/jsGanttImproved/jsgantt-improved" rel="external">View on GitHub</a></li>
         </ul>
       </div>
       <div class="content">
-        <div class="intro">
+<div class="intro">
   <h1>jsGanttImproved</h1>
   <div class="intro-container">
-    <p>Latest v1.7.5.2<br/><br/>100% Free Javascript / CSS / HTML Gantt chart control. Completely buzzword compliant including AJAX !</p>
+    <h2>Latest v1.7.5.2</h2><br/><p>100% Free Javascript / CSS / HTML Gantt chart control. Completely buzzword compliant including AJAX !</p>
     <a href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball" rel="external" class="btn">Download</a>
+  </div>
+  <div class="intro-container">
+    <a class="material-icons go-next" href="#demo">keyboard_arrow_down</a>
   </div>
 </div>
 
 <div id="demo" class="section">
   <h2>Demo</h2>
-  <a href="#GanttEmbedded" onclick="toggle_visibility('GanttEmbedded');" class="btn">Embedded</a><br/>
-  <div style="position:relative; display:none; " class="gantt" id="GanttEmbedded"></div>
+  <a href="#GanttEmbedded" onclick="toggle_visibility('GanttEmbedded');" class="btn">Embedded</a>
+  <div style="position:relative; display:block; " class="gantt" id="GanttEmbedded"></div>
   <script type="text/javascript">
-	var g = new JSGantt.GanttChart(document.getElementById('GanttEmbedded'), 'week' );
-	if( g.getDivId() != null ) {
+	var g = new JSGantt.GanttChart(document.getElementById('GanttEmbedded'), 'week');
+	if (g.getDivId() != null) {
 		g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
 		g.setQuarterColWidth(36);
 		g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
 		g.setDayMajorDateDisplayFormat('mon yyyy - Week ww') // Set format to display dates in the "Major" header of the "Day" view
 		g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
-		g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
+		g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
 		g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
 		g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
 		g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
@@ -841,18 +885,18 @@ PR.registerLangHandler(PR.createSimpleLexer([["pln",/^[\t\n\f\r ]+/,null," \t\r\
 		alert("Error, unable to create Gantt Chart");
 	}
   </script>
-  <br/><a href="#GanttExternal" onclick="toggle_visibility('GanttExternal');" class="btn">External XML File</a><br/>
-  <div style="position:relative; display:none; " class="gantt" id="GanttExternal"></div>
+  <br/><a href="#GanttFile" onclick="toggle_visibility('GanttFile');" class="btn">External XML File</a>
+  <div style="position:relative; display:none; " class="gantt" id="GanttFile"></div>
   <script type="text/javascript">
-	var g = new JSGantt.GanttChart(document.getElementById('GanttExternal'), 'day' );
+	var g = new JSGantt.GanttChart(document.getElementById('GanttFile'), 'day');
 
-	if( g.getDivId() != null ) {
+	if (g.getDivId() != null) {
 		g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
-		g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
+		g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
 		g.setDayMajorDateDisplayFormat('dd mon');
 		g.setDateTaskDisplayFormat('dd month yyyy HH:MI');
-		// use the XML file parser
-		JSGantt.parseXML('project.xml',g)
+		// Use the XML file parser
+		JSGantt.parseXML('project.xml', g)
 
 		g.Draw();
 	} else {
@@ -863,8 +907,9 @@ PR.registerLangHandler(PR.createSimpleLexer([["pln",/^[\t\n\f\r ]+/,null," \t\r\
 
 <div id="features" class="section">
   <h2>Features</h2>
-  <p>jsGanttImproved is a lightweight JavaScript plugin to create Gantt charts with no need of any external libraries.</p>
-  <ul class="list-1">
+  <p>jsGanttImproved is a fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images.</p>
+  <div class="columns">
+  <ul class="list">
 <h3>Basic Features</h3>
 <li>Tasks &amp; Collapsible Task Groups</li>
 <li>Multiple Dependencies</li>
@@ -872,19 +917,11 @@ PR.registerLangHandler(PR.createSimpleLexer([["pln",/^[\t\n\f\r ]+/,null," \t\r\
 <li>Task Style</li>
 <li>Milestones</li>
 <li>Resources</li>
-<li>No images needed</li>
-  </ul><ul class="list-2">
-<h3>Advanced Features</h3>
-<li>Dynamic Loading of Tasks</li>
-<li>Dynamic change of format
-  <ul>
-    <li>Hour</li>
-    <li>Day</li>
-    <li>Week</li>
-    <li>Month</li>
-    <li>Quarter</li>
   </ul>
-</li>
+  <h3>Advanced Features</h3>
+  <ul class="list list-2">
+<li>Dynamic Loading of Tasks</li>
+<li>Dynamic change of format: Hour, Day, Week, Month, Quarter</li>
 <li>Load Gantt from XML using
   <ul>
     <li>External XML files (including experimental support for Microsoft Project XML files)</li>
@@ -892,16 +929,93 @@ PR.registerLangHandler(PR.createSimpleLexer([["pln",/^[\t\n\f\r ]+/,null," \t\r\
   </ul>
 </li>
 <li>Export Gantt as XML string</li>
-<li>Support for internationalisation</li>
+<li>Support for internationalization</li>
   </ul>
+  </div>
+    <h3>Current Known Issues:</h3>
+  <ul>
+    <li>If the browser is viewing the page at anything other than 100% zoom then bars may not be sized or positioned correctly.</li>
+  </ul>	
+<h3>Changelog:</h3>
+<p>Check the full list of changes on <a href="https://github.com/jsGanttImproved/jsgantt-improved/releases">GitHub releases page</a>.</p>
+<ul>
+<h4>v1.7.5.2:</h4>
+<li>Fixed problem that would occur if Tool Tips were disabled</li>
+<li>Start and end dates specified on standard group tasks will now be respected if they fall outside of the calculated group date range</li>
+</ul>
+<ul>
+<h4>v1.7.5:</h4>
+<li>Project Migrated to GitHub</li>
+<li>Instantiating a new JSGantt.TaskItem will now also accept Date objects for start and end dates</li>
+<li>Fixed old Internet Explorer compatibilty broken by v1.7</li>
+<li>Fixed bug in Iso week date format</li>
+<li>Changed to solid arrows on dependency lines to be more printer friendly</li>
+<li>Code refactoring and clean up</li>
+</ul>
+<ul>
+<h4>v1.7:</h4>
+<li>Fixed nasty long-standing bug where the first Gantt chart created must be stored in a javascript variable named &quot;g&quot;
+  <ul>
+  <li>NOTE: This required a change in the method to instatiate a JSGantt.TaskItem object to pass the related chart.</li>
+  <li>A temporary fix is included that still assumes the use of "g" for the chart if the chart object is not passed, this will be removed in v1.8</li>
+  </ul>
+</li>
+<li>Altered XML export functionality so that dates are output in the specified input format for the chart</li>
+<li>Added method to read XML directly from an input string</li>
+<li>Prevented creation of a task with a duplicate &quot;unique&quot; ID</li>
+<li>Fixed bug where attempting to remove the first task defined would prevent the chart from redrawing</li>
+<li>Some general code clean up</li>
+</ul>
 </div>
 
-<div id="license" class="section">
-  <h2>License</h2>
+<div id="usage" class="section">
+  <h2>Usage</h2>
+  <p>Following the steps below you will be able to get create a basic Gantt Chart. If you notice any bugs, please post them to <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues">GitHub&nbsp;issues</a>.</p>
+
+<h4>Include JSGantt CSS and Javascript</h4>
+<pre class="prettyprint lang-html"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
+&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<h4>Create a div element to hold the gantt chart</h4>
+<pre class="prettyprint lang-html"><code>&lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;
+</code></pre>
+
+<h4>Start a &lt;script&gt; block</h4>
+<pre class="prettyprint lang-html"><code>&lt;script type="text/javascript"&gt;
+</code></pre>
+
+<h4>Instantiate JSGantt using GanttChart()</h4>
+<pre class="prettyprint lang-js"><code>var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
+</code></pre>
+<p>Method definition:
+  <strong>GanttChart(<em>pDiv, pFormat</em>)</strong></p>
+  <dl>
+  <dt>pDiv</dt><dd>(required) this is a DIV object created in HTML</dd>
+  <dt>pFormat</dt><dd>(required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format</dd>
+  </dl>
+
+<h4>Customize the look and feel using configuration methods (see <a href="#options">Configuration Options</a>)</h4>
+<pre class="prettyprint lang-js"><code>
+g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
+g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1,'','','',g));
+</code></pre>
+</div>
+
+<div id="credits" class="section">
+  <h2>Credits</h2>
+  <div>
+    <p>Developed by Paul Geldart</p>
+    <p>Based on jsGantt 1.2 developed by Shlomy Gantz and Brian Twidt<br/>
+    Contributed: Paul Labuschagne, Kevin Badgett, Ilan Admon<br/>
+    </p>
+  </div>
+  <div id="license">
+    <h3>License</h3>
 JSGanttImproved is released under BSD license.<br/>
 If you plan to use it in a commercial product please consider donating the first sale to charity.
 <br/><br/>
-<textarea cols="80" rows="5">
+  <textarea cols="80" rows="5">
 * Copyright (c) 2013-2017, Paul Geldart and Eduardo Rodrigues.
 * All rights reserved.
 *
@@ -953,68 +1067,25 @@ This project is based on jsGantt 1.2, the original project license follows:
 * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</textarea>
-</div>
-
-<div id="usage" class="section">
-  <h2>Usage</h2>
-  <p>Following the steps below you will be able to get create a basic Gantt Chart. If you notice any bugs, please post them to <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues">GitHub&nbsp;issues</a>.</p>
-
-<h3>Include JSGantt CSS and Javascript</h3>
-<pre class="prettyprint lang-html"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
-&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
-</code></pre>
-
-<h3>Create a div element to hold the gantt chart</h3>
-<pre class="prettyprint lang-html"><code>&lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;
-</code></pre>
-
-<h3>Start a &lt;script&gt; block</h3>
-<pre class="prettyprint lang-html"><code>&lt;script type="text/javascript"&gt;
-</code></pre>
-
-<h3>Instantiate JSGantt using GanttChart()</h3>
-<pre class="prettyprint lang-js"><code>var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
-</code></pre>
-<p>Method definition:
-  <strong>GanttChart(<em>pDiv, pFormat</em>)</strong></p>
-  <dl>
-  <dt>pDiv</dt><dd>(required) this is a DIV object created in HTML</dd>
-  <dt>pFormat</dt><dd>(required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format</dd>
-  </dl>
-
-<h3>Customize the look and feel using configuration methods (see <a href="#options">Configuration Options</a>)</h3>
-<pre class="prettyprint lang-js"><code>
-g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
-g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1,'','','',g));
-</code></pre>
-</div>
-
-<div id="credits" class="section">
-  <h2>Credits</h2>
-  <div>
-<p>Developed by Paul Geldart</p>
-<p>Based on jsGantt 1.2 developed by Shlomy Gantz and Brian Twidt<br/>
-Contributed: Paul Labuschagne, Kevin Badgett, Ilan Admon<br/>
-</p>
-  </div><br/>
+  </textarea>
+  </div>
+      <div id="team" class="container">
         <h3>Maintainers</h3>
-        <div class="team__member">
-          <img href="https://github.com/eduardomourar" src="https://avatars.githubusercontent.com/eduardomourar" alt="Eduardo Rodrigues">
-          <div class="team__member-info">
-            <h4 class="team__member-name">Eduardo Rodrigues</h4>
-            <span class="team__member-role">Developer</span>
-            <p class="team__member-descr">DESCRIÇÃO AQUI</p>
+        <div class="member">
+          <img src="https://avatars.githubusercontent.com/eduardomourar" alt="Eduardo Rodrigues">
+          <div class="member-info">
+            <h4><a href="https://github.com/eduardomourar">Eduardo Rodrigues</a></h4>
+            <span>Developer</span>
           </div>
         </div>
-        <div class="team__member">
+        <div class="member">
           <img src="https://avatars.githubusercontent.com/RickCardoso" alt="Ricardo Cardoso">
-          <div class="team__member-info">
-            <h4 class="team__member-name">Ricardo Cardoso</h4>
-            <span class="team__member-role">Developer and Designer</span>
-            <p class="team__member-descr">DESCRIÇÃO AQUI</p>
+          <div class="member-info">
+            <h4><a href="https://github.com/RickCardoso">Ricardo Cardoso</a></h4>
+            <span>Developer and Designer</span>
           </div>
         </div>
+      </div>
 </div>
 
 <div id="download" class="section">
@@ -1023,7 +1094,7 @@ Contributed: Paul Labuschagne, Kevin Badgett, Ilan Admon<br/>
   <a href="https://github.com/jsGanttImproved/jsgantt-improved" rel="external" class="btn repo">View source on GitHub</a>
 </div>
       </div>
-      <div class="footer">&copy; Copyright 2013-2017 jsGanttImproved&nbsp;&nbsp;Designed using <a href="https://github.com/viljamis/responsive-nav.js">responsive-nav.js</a>&nbsp;&nbsp;<a href="#home">Go to top</a></div>
+      <div class="footer">&copy; Copyright 2013-2017 jsGanttImproved&nbsp;&nbsp;|&nbsp;&nbsp;Designed using <a href="https://github.com/viljamis/responsive-nav.js">responsive-nav.js</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#home">Go to top</a></div>
       
     </div>
 
