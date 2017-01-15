@@ -1739,7 +1739,6 @@ JSGantt.processRows=function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 			}
 
 			pList[i].setLevel(vLevel);
-			vNumKid++;
 
 			if(pList[i].getGroup())
 			{
@@ -1759,7 +1758,8 @@ JSGantt.processRows=function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 				vMaxSet=1;
 			}
 
-			vCompSum+=pList[i].getCompVal();
+			vNumKid+=pList[i].getEnd()-pList[i].getStart()+1;
+			vCompSum+=pList[i].getCompVal()*(pList[i].getEnd()-pList[i].getStart()+1);
 			pList[i].setSortIdx(i*pList.length);
 		}
 	}
