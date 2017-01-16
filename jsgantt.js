@@ -1,11 +1,11 @@
 /*
-	   _   ___  _____   _  _____ ____   ____
-	  (_) / _ \ \_   \ / ||___  | ___| |___ \
-	  | |/ /_\/  / /\/ | |   / /|___ \   __) |
-	  | / /_\\/\/ /_   | |_ / /_ ___) | / __/
-	 _/ \____/\____/   |_(_)_/(_)____(_)_____|
-	|__/
-	jsGanttImproved 1.7.5.2
+	   _        ___            _   _    _____                                        _
+	  (_)___   / _ \__ _ _ __ | |_| |_  \_   \_ __ ___  _ __  _ __ _____   _____  __| |
+	  | / __| / /_\/ _` | '_ \| __| __|  / /\/ '_ ` _ \| '_ \| '__/ _ \ \ / / _ \/ _` |
+	  | \__ \/ /_\\ (_| | | | | |_| |_/\/ /_ | | | | | | |_) | | | (_) \ V /  __/ (_| |
+	 _/ |___/\____/\__,_|_| |_|\__|\__\____/ |_| |_| |_| .__/|_|  \___/ \_/ \___|\__,_|
+	|__/                                               |_|
+	jsGanttImproved 1.7.5.3
 
 	The current version of this code can be found at https://github.com/jsGanttImproved/jsgantt-improved/
 
@@ -100,6 +100,7 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	var vDuration='';
 	var vLevel=0;
 	var vNumKid=0;
+	var vWeight=0;
 	var vVisible=1;
 	var vSortIdx=0;
 	var vToDelete=false;
@@ -230,6 +231,7 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	this.getOpen=function(){return vOpen;};
 	this.getLevel=function(){return vLevel;};
 	this.getNumKids=function(){return vNumKid;};
+	this.getWeight=function(){return vWeight;};
 	this.getStartX=function(){return x1;};
 	this.getStartY=function(){return y1;};
 	this.getEndX=function(){return x2;};
@@ -248,6 +250,7 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	this.setGroupMinEnd=function(pEnd){if(pEnd instanceof Date)vGroupMinEnd=pEnd;};
 	this.setLevel=function(pLevel){vLevel=parseInt(document.createTextNode(pLevel).data);};
 	this.setNumKid=function(pNumKid){vNumKid=parseInt(document.createTextNode(pNumKid).data);};
+	this.setWeight=function(pWeight){vWeight=parseInt(document.createTextNode(pWeight).data);};
 	this.setCompVal=function(pCompVal){vComp=parseFloat(document.createTextNode(pCompVal).data);};
 	this.setStartX=function(pX){x1=parseInt(document.createTextNode(pX).data);};
 	this.setStartY=function(pY){y1=parseInt(document.createTextNode(pY).data);};
@@ -1707,6 +1710,7 @@ JSGantt.processRows=function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 	var vMinSet=0;
 	var vMaxSet=0;
 	var vNumKid=0;
+	var vWeight=0;
 	var vLevel=pLevel;
 	var vList=pList;
 	var vComb=false;
@@ -1758,7 +1762,8 @@ JSGantt.processRows=function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 				vMaxSet=1;
 			}
 
-			vNumKid+=pList[i].getEnd()-pList[i].getStart()+1;
+			vNumKid++;
+			vWeight+=pList[i].getEnd()-pList[i].getStart()+1;
 			vCompSum+=pList[i].getCompVal()*(pList[i].getEnd()-pList[i].getStart()+1);
 			pList[i].setSortIdx(i*pList.length);
 		}
@@ -1778,7 +1783,8 @@ JSGantt.processRows=function(pList, pID, pRow, pLevel, pOpen, pUseSort)
 		pList[pRow].setStart(vMinDate);
 		pList[pRow].setEnd(vMaxDate);
 		pList[pRow].setNumKid(vNumKid);
-		pList[pRow].setCompVal(Math.ceil(vCompSum/vNumKid));
+		pList[pRow].setWeight(vWeight);
+		pList[pRow].setCompVal(Math.ceil(vCompSum/vWeight));
 	}
 
 	if (pID==0 && pUseSort==1)
