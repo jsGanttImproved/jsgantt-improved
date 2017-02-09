@@ -18,8 +18,11 @@
 
     <!-- Material Design Lite (https://getmdl.io) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-pink.min.css" />
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-blue.min.css" />
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google's Code Prettify -->
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
 
     <!-- jsGantt Material Customization -->
     <link href="https://fonts.googleapis.com/css?family=Lato|Noto+Sans|Noto+Serif|Roboto" rel="stylesheet">
@@ -77,27 +80,18 @@
 <!--
 
   /* Material Design Customization */
-    .code-card.mdl-card {
-      background-color: #eee;
-      min-height: 0;
-      margin: 1em 0;
-      width: 90%;
-      padding: 1em 1em;
-      line-height: 1.25;
-      overflow-x: scroll;
-      font-size: 1em;
-      color: #777;
-      -webkit-transition: all .5s;
-         -moz-transition: all .5s;
-           -o-transition: all .5s;
-              transition: all .5s;
-    }
-    .code-card.mdl-card:hover {
-      background-color: #ddd;
-    }
-
     .mdl-layout__header .mdl-button--accent {
       margin: 0 0.2em;
+    }
+
+  /* Pretty Print Customization */
+    .prettyprint {
+      font-size: 1vw;
+    }
+    @media screen and (max-width: 70em) {
+      .prettyprint {
+        font-size: 0.8em;
+      }
     }
 
   /* jsGantt Customization */
@@ -120,14 +114,57 @@
         color: transparent;
       }
 
-      h2, h3 {
+      h2 {
         padding: 1em 0 0.2em;
         margin: 0;
+        font-size: 3vw;
+        text-transform: uppercase;
+      }
+      @media screen and (max-width: 50em) {
+        h2 {
+          font-size: 1.7em;
+        }
+      }
+
+      h3 {
+        padding: 1em 0 0.2em;
+        margin: 0;
+        font-size: 2.8vw;
+      }
+      @media screen and (max-width: 50em) {
+        h3 {
+          font-size: 1.5em;
+        }
       }
 
       h4 {
         margin: 0;
         padding: 1em 0 0.1em;
+        font-size: 2.5vw;
+      }
+      @media screen and (max-width: 50em) {
+        h4 {
+          font-size: 1.2em;
+        }
+      }
+
+      p {
+        font-size: 1.25vw;
+      }
+      @media screen and (max-width: 70em) {
+        p {
+          font-size: 1em;
+        }
+      }
+
+      pre {
+        -webkit-transition: all .3s;
+           -moz-transition: all .3s;
+             -o-transition: all .3s;
+                transition: all .3s;
+      }
+      pre:hover {
+        box-shadow: 3px 3px 7px #777;
       }
 
       .font-serif {
@@ -157,7 +194,12 @@
       .footer {
         text-align: center;
         margin: 2em;
-        font-size: 1em;
+        font-size: 1.8vw;
+      }
+      @media screen and (max-width: 40em) {
+        .footer {
+          font-size: 0.75em;
+        }
       }
 
     /* Menu */
@@ -174,7 +216,8 @@
       .intro-background {
         min-height: 850px;
         text-align: center;
-        background: url(home-bg.jpg) center no-repeat ;
+        background-attachment: fixed;
+        background: url(home-bg.jpg) center no-repeat;
         -webkit-background-size: cover;
            -moz-background-size: cover;
              -o-background-size: cover;
@@ -326,7 +369,6 @@
           background-color: white;
           position: fixed;
           visibility: hidden;
-          font-size: 10%;
           opacity: 0;
           z-index: 2;
           right: 44px;
@@ -570,27 +612,19 @@
           <ol>
             <li>
               Include JSGantt CSS and Javascript
-              <div class="code-card mdl-card mdl-shadow--2dp">
-                <pre><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;</code></pre>
-              </div>
+              <pre class="prettyprint"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;</code></pre>
             </li>
             <li>
               Create a div element to hold the gantt chart
-              <div class="code-card mdl-card mdl-shadow--2dp">
-                <pre><code>&lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;</code></pre>
-              </div>
+              <pre class="prettyprint"><code>&lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;</code></pre>
             </li>
             <li>
               Start a &lt;script&gt; block
-              <div class="code-card mdl-card mdl-shadow--2dp">
-                <pre><code>&lt;script type="text/javascript"&gt;</code></pre>
-              </div>
+              <pre class="prettyprint"><code>&lt;script type="text/javascript"&gt;</code></pre>
             </li>
             <li>
               Instantiate JSGantt using GanttChart()
-              <div class="code-card mdl-card mdl-shadow--2dp">
-                <pre><code>var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');</code></pre>
-              </div>
+              <pre class="prettyprint"><code>var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');</code></pre>
               <p>Method definition:
                 <strong>GanttChart(<em>pDiv, pFormat</em>)</strong>
               </p>
@@ -613,12 +647,10 @@
               <ul>
                 <li>
                   <span class="mdl-color-text--primary-dark mdl-typography--font-bold">Method #1:</span> using AddTaskItem()
-                  <div class="code-card mdl-card mdl-shadow--2dp">
-                    <!-- Start Code -->
-<pre><code>g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
+                  <!-- Start Code -->
+<pre class="prettyprint"><code>g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
 g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1,'','','',g));</code></pre>
-                    <!-- End Code -->
-                  </div>
+                  <!-- End Code -->
                   <p>Method definition:
                     <strong>TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt</em>)</strong>
                   </p>
@@ -707,9 +739,7 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
                 </li>
                 <li>
                   <span class="mdl-color-text--primary-dark mdl-typography--font-bold">Method #2:</span> using parseXML() with an external XML file
-                  <div class="code-card mdl-card mdl-shadow--2dp">
-                    <pre><code>JSGantt.parseXML("project.xml",g);</code></pre>
-                  </div>
+                  <pre class="prettyprint"><code>JSGantt.parseXML("project.xml",g);</code></pre>
                   <p>Method definition:
                     <strong>JSGantt.parseXML(<em>pFile, pGanttObj</em>)</strong>
                   </p>
@@ -724,9 +754,8 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
                     </tr>
                   </table>
                   <p>The structure of the native XML file:</p>
-                  <div class="code-card mdl-card mdl-shadow--2dp">
-                    <!-- Start Code -->
-<pre><code>&lt;project&gt;
+                  <!-- Start Code -->
+<pre class="prettyprint"><code>&lt;project&gt;
 &lt;task&gt;
   &lt;pID&gt;25&lt;/pID&gt;
   &lt;pName&gt;WCF Changes&lt;/pName&gt;
@@ -745,16 +774,13 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
   &lt;pNotes&gt;Text - can include limited HTML&lt;/pNotes&gt;
 &lt;/task&gt;
 &lt;/project&gt;</code></pre>
-                    <!-- End Code -->
-                  </div>
+                  <!-- End Code -->
                   <p>Field definitions are as described for the parameters to TaskItem above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones. The pGantt element is not required for XML import.</p>
                   <p>JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the <a href="#xmlExport">XML Export methods</a> provided.</p>
                 </li>
                 <li>
                   using parseXMLString() with XML held in a javascript string object
-                  <div class="code-card mdl-card mdl-shadow--2dp">
-                    <pre><code>JSGantt.parseXMLString("&lt;project&gt;&lt;task&gt;...&lt;/task&gt;&lt;/project&gt;",g);</code></pre>
-                  </div>
+                  <pre class="prettyprint"><code>JSGantt.parseXMLString("&lt;project&gt;&lt;task&gt;...&lt;/task&gt;&lt;/project&gt;",g);</code></pre>
                   <p>Method definition:
                     <strong>JSGantt.parseXMLString(<em>pStr, pGanttObj</em>)</strong>
                   </p>
@@ -774,23 +800,17 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
             </li>
             <li>
               <p>Call Draw()</p>
-              <div class="code-card mdl-card mdl-shadow--2dp">
-                <pre><code>g.Draw();</code></pre>
-              </div>
+              <pre class="prettyprint"><code>g.Draw();</code></pre>
             </li>
             <li>
               <p>Close the &lt;script&gt; block</p>
-              <div class="code-card mdl-card mdl-shadow--2dp">
-                <pre><code>&lt;/script&gt;</code></pre>
-              </div>
+              <pre class="prettyprint"><code>&lt;/script&gt;</code></pre>
             </li>
           </ol>
           <p>It is possible to add items to the chart in realtime via javascript using either direct method calls or additional XML files.
             It is also possible to delete tasks using RemoveTaskItem() method.
           </p>
-          <div class="code-card mdl-card mdl-shadow--2dp">
-            <pre><code>g.RemoveTaskItem(11);</code></pre>
-          </div>
+          <pre class="prettyprint"><code>g.RemoveTaskItem(11);</code></pre>
           <p>Method definition:
             <strong>RemoveTaskItem(<em>pID</em>)</strong>
           </p>
@@ -1392,9 +1412,8 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
           <p>Once a translation has been added a call must be made to <a href="#setLang">setLang()</a> with the appropriate langage identifier before calling Draw().</p>
           <h4 id="tOptionsExamples">Example Options</h4>
           <p>The configuration options used in the example chart above are:</p>
-          <div class="code-card mdl-card mdl-shadow--2dp">
-            <!-- Start Code -->
-<pre><code>g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+          <!-- Start Code -->
+<pre class="prettyprint"><code>g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
 g.setQuarterColWidth(36);
 g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
 g.setDayMajorDateDisplayFormat('mon yyyy - Week ww'); // Set format to display dates in the "Major" header of the "Day" view
@@ -1403,12 +1422,10 @@ g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
 g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
 g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
 g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers</code></pre>
-            <!-- End Code -->
-          </div>
+          <!-- End Code -->
           <p>Putting all this information together the final code to produce the chart above is as follows:</p>
-          <div class="code-card mdl-card mdl-shadow--2dp">
-            <!-- Start Code -->
-<pre><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
+          <!-- Start Code -->
+<pre class="prettyprint"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
 &lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
 &lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;
 &lt;script&gt;
@@ -1455,8 +1472,7 @@ g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell
  }
 
 &lt;/script&gt;</code></pre>
-            <!-- End Code -->
-          </div>
+          <!-- End Code -->
           <h4 id="xmlExport">XML Export</h4>
           <p>The following methods can be used to extract details of tasks in the project in XML format</p>
           <p>Method definition: <span class="mdl-color-text--primary-dark mdl-typography--font-bold">getXMLProject()</span></p>
@@ -1490,9 +1506,8 @@ g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell
               jsGanttImproved is released under BSD license.<br>
               If you plan to use it in a commercial product please consider donating the first sale to charity.
             </div>
-            <div class="code-card mdl-card mdl-shadow--2dp">
-              <!-- Start Code -->
-<pre><code>* Copyright (c) 2013-2017, Paul Geldart and Eduardo Rodrigues.
+            <!-- Start Code -->
+<pre class="prettyprint"><code>* Copyright (c) 2013-2017, Paul Geldart and Eduardo Rodrigues.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -1516,8 +1531,7 @@ g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell
 * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</code></pre>
-              <!-- End Code -->
-            </div>
+            <!-- End Code -->
           </div>
 
           <h3>Maintainers</h3>
