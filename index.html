@@ -1141,8 +1141,8 @@ if (g.getDivId() != null) {
           <ol>
             <li>
               Include JSGantt CSS and Javascript
-              <pre class="prettyprint lang-html"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
-&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
+              <pre class="prettyprint lang-html"><code>&lt;link href="jsgantt.css" rel="stylesheet" type="text/css"/&gt;
+&lt;script src="jsgantt.js" type="text/javascript"&gt;&lt;/script&gt;
             </code></pre>
             </li>
             <li>
@@ -1949,12 +1949,12 @@ g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell
           </code></pre>
           <p>Putting all this information together the final code to produce the chart above is as follows:</p>
           <textarea name="textarea2" cols="150" rows="20">
-&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
-&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
+&lt;link href="jsgantt.css" rel="stylesheet" type="text/css"/&gt;
+&lt;script src="jsgantt.js" type="text/javascript"&gt;&lt;/script&gt;
 &lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;
 &lt;script&gt;
 
- var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
+ var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
 
  if( g.getDivId() != null ) {
   g.setCaptionType('Complete');
