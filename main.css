@@ -1,0 +1,17 @@
+body {
+  margin-top: 40px;
+}
+
+.nav-item.active {
+  border: none;
+  border-radius: 5px;
+  background-color: #dddddd;
+}
+
+#embedded-Gantt {
+
+}
+
+#external-Gantt {
+
+}
