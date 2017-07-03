@@ -1,5 +1,5 @@
 body {
-  margin-top: 62px;
+  position: relative;
 }
 
 .product-name {
@@ -16,20 +16,16 @@ body {
   color: #ffffff;
 }
 
-.nav-item.active {
-  font-weight: 600;
-}
-
 #home {
   background: #323232 url(home-bg.jpg) center 0 no-repeat;
   background-attachment: fixed;
   background-size: cover;
-  min-height: 600px;
+  min-height: 660px;
   color: #ffffff;
 }
 #home-title {
   font-size: 70px;
-  margin-top: 120px;
+  margin-top: 180px;
 }
 #home-subtitle {
   font-size: 36px;
@@ -100,7 +96,7 @@ h3 {
 #slide-card {
   background: transparent;
   border: none;
-  margin: 120px 50px 50px;
+  margin: 180px 50px 50px;
 }
 #slide-dots {
   background: transparent;

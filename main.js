@@ -1,25 +1,7 @@
 $(document).ready(function() {
 
-  // Scrolling changes active link on menu
-    $(window).scroll(function() {
-      var scroll = $(window).scrollTop();
-      if (scroll < $("div#home").height()) {
-        $(".nav-item").removeClass("active");
-        $(".nav-item:nth-child(1)").addClass("active");
-      } else if (scroll < $("div#home").height() + $("div#demo").height()) {
-        $(".nav-item").removeClass("active");
-        $(".nav-item:nth-child(2)").addClass("active");
-      } else if (scroll < $("div#home").height() + $("div#demo").height() + $("div#features").height()) {
-        $(".nav-item").removeClass("active");
-        $(".nav-item:nth-child(3)").addClass("active");
-      } else if (scroll < $("div#home").height() + $("div#demo").height() + $("div#features").height() + $("div#usage").height()) {
-        $(".nav-item").removeClass("active");
-        $(".nav-item:nth-child(4)").addClass("active");
-      } else {
-        $(".nav-item").removeClass("active");
-        $(".nav-item:nth-child(5)").addClass("active");
-      }
-    });
+  // Scrollspy changes navbar active links
+    $("body").scrollspy({target:"#my-navbar-nav", offset:50});
 
   // Smooth scroll
     $("a").click(function(event) {
@@ -67,25 +49,25 @@ $(document).ready(function() {
       }
     });
 
-    // Slideshow
+  // Slideshow
     var slideIndex = 0;
     carousel();
 
     function carousel() {
-        var i;
-        var x = document.getElementsByClassName("slide");
-        var d = document.getElementsByClassName("dot");
-        for (i = 0; i < x.length; i++) {
-          x[i].style.display = "none";
-        }
-        slideIndex++;
-        if (slideIndex > x.length) {slideIndex = 1}
-        x[slideIndex-1].style.display = "inline-block";
-        $(".slide:nth-child(" + (slideIndex).toString() + ")").animate({
-          opacity: 1
-        }, 500);
-        $(".dot").removeClass("active");
-        $(".dot:nth-child(" + (slideIndex).toString() + ")").addClass("active");
-        setTimeout(carousel, 2000); // Change image every 2 seconds
+      var i;
+      var x = document.getElementsByClassName("slide");
+      var d = document.getElementsByClassName("dot");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      slideIndex++;
+      if (slideIndex > x.length) {slideIndex = 1}
+      x[slideIndex-1].style.display = "inline-block";
+      $(".slide:nth-child(" + (slideIndex).toString() + ")").animate({
+        opacity: 1
+      }, 500);
+      $(".dot").removeClass("active");
+      $(".dot:nth-child(" + (slideIndex).toString() + ")").addClass("active");
+      setTimeout(carousel, 2000); // Change image every 2 seconds
     }
   });
