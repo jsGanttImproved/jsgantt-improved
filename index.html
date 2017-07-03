@@ -1,1185 +1,763 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="no-js">
-  <head>
-    <meta charset="utf-8">
-    <title>jsGantt Improved</title>
-    <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
-    <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
 
-    <!-- Required for the mini floating action button menu -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<!-- Meta data -->
+  <meta charset="utf-8">
+  <title>jsGantt Improved</title>
+  <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
+  <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <!-- Required for the smooth scroll actions and the visibility toggle -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- External resources -->
+  <!-- jQuery + Ajax [required by Bootstrap] -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <!-- Required by smooth scrolling -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!-- Bootstrap v4.0.0 Alpha -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/78d1e57168.js"></script>
+  <!-- Google's Code Prettify -->
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+  <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
 
-    <!-- jsGantt -->
+<!-- Internal resources -->
+  <!-- Webpage -->
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <script src="main.js" type="text/javascript"></script>
+  <!-- jsGanttImproved App -->
     <link href="jsgantt.css" rel="stylesheet" type="text/css"/>
     <script src="jsgantt.js" type="text/javascript"></script>
 
-    <!-- Material Design Lite (https://getmdl.io) -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-pink.min.css" />
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<!-- Content -->
+  <body data-spy="scroll" data-target="#my-navbar-nav">
+  <!-- Navigation bar -->
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#my-navbar-nav" aria-controls="my-navbar-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand product-name" id="my-nav-brand" href="#home">jsGanttImproved</a>
 
-    <!-- Google's Code Prettify -->
-    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
-
-    <!-- jsGantt Material Customization -->
-    <link href="https://fonts.googleapis.com/css?family=Lato|Noto+Sans|Noto+Serif|Roboto" rel="stylesheet">
-
-    <script type="text/javascript">
-
-      /* Angular for floating action button menu */
-        var app = angular.module('myApp', []);
-
-        app.controller('MainCtrl', MainCtrl);
-
-        function MainCtrl() {
-          var vm = this;
-          vm.showFabs = false;
-        }
-
-      $(document).ready(function() {
-
-        /* Hideable sections */
-          $('#GanttEmbedded').hide(0);
-          $('#GanttFile').hide(0);
-
-        /* Initial menu active section */
-          $('.mdl-navigation__link:nth-child(1)').addClass('active');
-
-          $('button[id*="embedded"]').click(function() {
-            $('#GanttEmbedded').animate({
-              height: 'toggle',
-              opacity: 'toggle'}, 600
-            );
-          });
-
-          $('button[id*="external-xml-file"]').click(function() {
-            $('#GanttFile').animate({
-              height: 'toggle',
-              opacity: 'toggle'}, 600
-            );
-          });
-
-        /* Smooth Scrolling */
-          $('a').click(function(event) {
-            if (this.hash !== "") {
-              event.preventDefault();
-              $('.mdl-layout__content').animate({
-                // Since .mdl-layout__content is relative, it's required to sum the desired offset with the current position
-                // The header height are being deducted for a more beautiful result with some padding
-                scrollTop: $('.mdl-layout__content').scrollTop() + $(this.hash).offset().top - $('header').height()
-              }, 600);
-            }
-          });
-
-        /* Active Menu */
-          $('main').scroll(function() {
-            var scroll = $('main').scrollTop();
-            if (scroll < $('div#home').height()) {
-              $('.mdl-navigation__link').removeClass('active');
-              $('.mdl-navigation__link:nth-child(1)').addClass('active');
-            } else if (scroll < $('div#home').height() + $('div#demo').height()) {
-              $('.mdl-navigation__link').removeClass('active');
-              $('.mdl-navigation__link:nth-child(2)').addClass('active');
-            } else if (scroll < $('div#home').height() + $('div#demo').height() + $('div#features').height()) {
-              $('.mdl-navigation__link').removeClass('active');
-              $('.mdl-navigation__link:nth-child(3)').addClass('active');
-            } else if (scroll < $('div#home').height() + $('div#demo').height() + $('div#features').height() + $('div#usage').height()) {
-              $('.mdl-navigation__link').removeClass('active');
-              $('.mdl-navigation__link:nth-child(4)').addClass('active');
-            } else {
-              $('.mdl-navigation__link').removeClass('active');
-              $('.mdl-navigation__link:nth-child(5)').addClass('active');
-            }
-          });
-
-      });
-
-    </script>
-
-    <style media="screen" type="text/css">
-
-<!--
-
-  /* Material Design Customization */
-    .mdl-layout__header .mdl-button--accent {
-      margin: 0 0.2em;
-    }
-
-    .mdl-navigation__link.active {
-      background-color: #dddddd;
-    }
-
-  /* Pretty Print Customization */
-    .prettyprint {
-      font-size: 1vw;
-    }
-    @media screen and (max-width: 70em) {
-      .prettyprint {
-        font-size: 0.8em;
-      }
-    }
-
-  /* jsGantt Customization */
-    /* General Content */
-      html, body {
-        font-family: 'Lato', sans-serif;
-      }
-
-      h1, h2, h3, h4 {
-        font-family: 'Lato', sans-serif;
-        font-weight: 700;
-        color: #424242;
-        margin-top: .2em;
-        margin-bottom: .7em;
-      }
-
-      h1::selection {
-        -webkit-text-stroke: 2px #1bbc9b;
-        background: transparent;
-        color: transparent;
-      }
-
-      h2 {
-        padding: 1em 0 0.2em;
-        margin: 0;
-        font-size: 3vw;
-        text-transform: uppercase;
-      }
-      @media screen and (max-width: 50em) {
-        h2 {
-          font-size: 1.7em;
-        }
-      }
-
-      h3 {
-        padding: 1em 0 0.2em;
-        margin: 0;
-        font-size: 2.8vw;
-      }
-      @media screen and (max-width: 50em) {
-        h3 {
-          font-size: 1.5em;
-        }
-      }
-
-      h4 {
-        margin: 0;
-        padding: 1em 0 0.1em;
-        font-size: 2.5vw;
-      }
-      @media screen and (max-width: 50em) {
-        h4 {
-          font-size: 1.2em;
-        }
-      }
-
-      p {
-        font-size: 1.25vw;
-      }
-      @media screen and (max-width: 70em) {
-        p {
-          font-size: 1em;
-        }
-      }
-
-      pre {
-        -webkit-transition: all .3s;
-           -moz-transition: all .3s;
-             -o-transition: all .3s;
-                transition: all .3s;
-      }
-      pre:hover {
-        box-shadow: 3px 3px 7px #777;
-      }
-
-      .font-serif {
-        font-family: Noto serif;
-      }
-
-      .section {
-        width: 100%;
-        max-width: 1000px;
-        margin: auto;
-        border-bottom: #cccccc solid 2px;
-      }
-
-      .container--two-col {
-        border-collapse: collapse;
-        width: 100%;
-      }
-      .container--two-col td {
-        width: 50%;
-        vertical-align: text-top;
-      }
-
-      .code-snippet {
-        background-color: #eeeeee;
-      }
-
-      .footer {
-        text-align: center;
-        margin: 2em;
-        font-size: 14px;
-      }
-      @media screen and (max-width: 40em) {
-        .footer {
-          font-size: 0.75em;
-        }
-      }
-
-    /* Menu */
-      .mdl-layout__drawer {
-        font-family: 'Lato', sans-serif;
-        text-transform: uppercase;
-      }
-
-      .mdl-navigation {
-        margin-left: 1em;
-      }
-
-    /* Home Section */
-      .intro-background {
-        min-height: 600px;
-        text-align: center;
-        background-attachment: fixed;
-        background: url(home-bg.jpg) center no-repeat;
-        -webkit-background-size: cover;
-           -moz-background-size: cover;
-             -o-background-size: cover;
-                background-size: cover;
-      }
-
-      .intro-background .intro-text {
-        text-align: center;
-        color: white;
-        margin: 0;
-      }
-
-      .intro-title {
-        padding: 40px 0 0;
-        font-size: 80px;
-      }
-
-      .intro-subtitle {
-        padding: 20px 0 0;
-        font-size: 40px;
-      }
-
-      .intro-description {
-        font-family: Noto serif;
-        padding: 40px 0 0;
-        font-size: 20px;
-      }
-
-      @media screen and (max-width: 800px) {
-        .intro-title {
-          font-size: 10vw;
-        }
-        .intro-subtitle {
-          font-size: 5vw;
-        }
-        .intro-description {
-          font-size: 2.5vw;
-        }
-      }
-      @media screen and (max-width: 600px) {
-        .intro-description {
-          font-size: 14px;
-        }
-      }
-      @media screen and (max-width: 300px) {
-        .intro-title {
-          padding: 20px 0 0;
-        }
-        .intro-subtitle {
-          padding: 15px 0 0;
-          font-size: 16px;
-        }
-        .intro-description {
-          padding: 15px 0 0;
-        }
-        .intro-button {
-          margin: 15px 0 0;
-        }
-      }
-
-      .intro-button {
-        margin: 50px 0 0;
-        -webkit-transform: scale(1.4);
-           -moz-transform: scale(1.4);
-             -o-transform: scale(1.4);
-                transform: scale(1.4);
-      }
-
-    /* Demo Section */
-      #embedded {
-        margin: 0 0 1em;
-      }
-
-    /* Usage Section */
-      .function-table {
-        margin: 1em;
-        width: 80%;
-      }
-      .function-table td, .function-table th {
-        border-bottom: #eee solid 1px;
-        vertical-align: text-top;
-        text-align: left;
-      }
-
-    /* Credits Section */
-      .container-contact-card {
-        width: 80%;
-        margin: 2em auto;
-        display: flex;
-        justify-content: center;
-      }
-
-      .contact-card.mdl-card {
-        width: 18vw;
-        margin: 0 8vw;
-      }
-      .contact-card > .mdl-card__title {
-        height: 18vw;
-      }
-      @media screen and (max-width: 40em) {
-        .contact-card.mdl-card {
-          width: 100px;
-          margin: 0 8vw;
-        }
-        .contact-card > .mdl-card__title {
-          height: 100px;
-        }
-      }
-      .mdl-card__contact-name {
-        width: 100%;
-        padding: 16px;
-        background: rgb(48,63,159);
-        color: #fff;
-      }
-      .contact-card.edu-card > .mdl-card__title {
-        background: url('https://avatars.githubusercontent.com/eduardomourar') center / cover;
-      }
-      .contact-card.rick-card > .mdl-card__title {
-        background: url('https://avatars.githubusercontent.com/rickcardoso') center / cover;
-      }
-      .contact-card > .mdl-card__menu {
-        color: rgb(48,63,159);
-      }
-      .contact-card > .mdl-card__actions {
-        display: flex;
-        box-sizing:border-box;
-        align-items: center;
-      }
-      .contact-card > .mdl-card__actions > .material-icons {
-        padding-right: 10px;
-      }
-
-    /* Button Behavior */
-      .intro-background .mdl-button--fab {
-        background-color: white;
-        margin: 3em 0 0;
-        padding: 0;
-        -webkit-transition: transform .5s;
-           -moz-transition: transform .5s;
-             -o-transition: transform .5s;
-                transition: transform .5s;
-      }
-
-      .mdl-button--accent {
-        -webkit-transition: transform .5s;
-           -moz-transition: transform .5s;
-             -o-transition: transform .5s;
-                transition: transform .5s;
-      }
-
-      .mdl-button--fab:hover, .mdl-button--mini-fab:hover, .mdl-button--accent:hover {
-        background-color: white;
-        z-index: 100;
-        -webkit-transform: scale(1.2);
-           -moz-transform: scale(1.2);
-             -o-transform: scale(1.2);
-                transform: scale(1.2);
-      }
-
-      .intro-button.mdl-button--accent:hover {
-        z-index: 100;
-        -webkit-transform: scale(1.68);
-           -moz-transform: scale(1.68);
-             -o-transform: scale(1.68);
-                transform: scale(1.68);
-      }
-
-      .fab-small-screen-only {
-        position: fixed;
-        z-index: 3;
-        bottom: 36px;
-        right: 36px;
-      }
-
-      .minifab-small-screen-only {
-          background-color: white;
-          position: fixed;
-          visibility: hidden;
-          opacity: 0;
-          z-index: 2;
-          right: 44px;
-          -webkit-transform: scale(0.1);
-             -moz-transform: scale(0.1);
-               -o-transform: scale(0.1);
-                  transform: scale(0.1);
-          -webkit-transition: all .5s;
-             -moz-transition: all .5s;
-               -o-transition: all .5s;
-                  transition: all .5s;
-      }
-      .minifab-small-screen-only.one {
-        bottom: 107px;
-      }
-      .minifab-small-screen-only.two {
-        bottom: 162px;
-      }
-      .minifab-small-screen-only.active {
-        visibility: visible;
-        opacity: 1;
-        -webkit-transform: scale(1);
-           -moz-transform: scale(1);
-             -o-transform: scale(1);
-                transform: scale(1);
-      }
-      .minifab-small-screen-only.active:hover {
-        -webkit-transform: scale(1.2);
-           -moz-transform: scale(1.2);
-             -o-transform: scale(1.2);
-                transform: scale(1.2);
-      }
-//-->
-    </style>
-  </head>
-  <body ng-app="myApp" ng-controller="MainCtrl as mc"> <!-- references Angular for the fab menu -->
-
-    <!-- Material Design Layout -->
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-
-      <!-- Fixed Header -->
-      <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
-          <!-- Title
-          <span class="mdl-layout-title">jsGantt Improved</span> -->
-          <!-- Add spacer, to align navigation to the right -->
-          <div class="mdl-layout-spacer"></div>
-          <!-- Navigation. We hide it in small screens. -->
-          <nav class="mdl-navigation mdl-layout--large-screen-only">
-            <a href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball" rel="external">
-              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">Download</button>
-            </a>
-            <a href="https://github.com/jsGanttImproved/jsgantt-improved" rel="external" target="_blank">
-              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">View on GitHub</button>
-            </a>
-          </nav>
-        </div>
-      </header>
-
-      <!-- Drawer -->
-      <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">Content</span>
-        <nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="#home">Home</a>
-          <a class="mdl-navigation__link" href="#demo">Demo</a>
-          <a class="mdl-navigation__link" href="#features">Features</a>
-          <a class="mdl-navigation__link" href="#usage">Usage</a>
-          <a class="mdl-navigation__link" href="#credits">Credits</a>
-        </nav>
+      <div class="collapse navbar-collapse" id="my-navbar-nav">
+        <ul class="navbar-nav mr-auto" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" href="#home">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#demo">Demo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#features">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#usage">Usage</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#credits">Credits</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <a class="btn btn-outline-danger my-2 my-sm-0 mx-1" href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball">Download</a>
+          <a class="btn btn-outline-primary my-2 my-sm-0 mx-1" href="https://github.com/jsGanttImproved/jsgantt-improved" target="_blank">View on GitHub</a>
+        </form>
       </div>
+    </nav>
 
-      <!-- Content -->
-      <main class="mdl-layout__content">
-
-        <!-- Home Section -->
-        <div class="intro-background" id="home">
-          <h1 class="intro-text intro-title">jsGanttImproved</h1>
-          <h2 class="intro-text intro-subtitle">LATEST V1.7.5.3</h2>
-          <p class="intro-text intro-description">100% Free Javascript / CSS / HTML Gantt chart control. Completely buzzword compliant including AJAX!</p>
-          <a href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball" rel="external">
-            <button class="intro-button mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">Download</button>
-          </a></br>
-          <a class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect" href="#demo">
-            <i class="material-icons">keyboard_arrow_down</i>
-          </a>
+  <!-- Content -->
+    <!-- Home -->
+      <div class="container-fluid" id="home">
+        <div class="row">
+          <div class="col-lg-6 text-center">
+            <h1 class="display-1 product-name" id="home-title">jsGanttImproved</h1>
+            <h2 class="display-2" id="home-subtitle">latest v1.7.5.3</h2>
+            <a class="btn btn-danger my-2 my-sm-0 mx-1" href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball">Download</a>
+            <a class="btn btn-primary my-2 my-sm-0 mx-1" href="https://github.com/jsGanttImproved/jsgantt-improved" target="_blank">View on GitHub</a>
+          </div>
+          <div class="col-lg-6">
+            <div class="card text-center" id="slide-card">
+              <div class="card-block">
+                <span class="card-text slide">
+                  <p><i class="fa fa-code slide-icon"></i></p>
+                  <p>100% HTML + CSS + JavaScript Gantt Chart</p>
+                </span>
+                <span class="card-text slide">
+                  <p><i class="fa fa-usd slide-icon"></i></p>
+                  <p>Completely free</p>
+                </span>
+                <span class="card-text slide">
+                  <p><i class="fa fa-github slide-icon"></i></p>
+                  <p>Open source</p>
+                </span>
+              </div>
+              <div class="card-footer text-muted" id="slide-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <!-- Demo Section -->
-        <div class="section" id="demo">
-          <h2>Demo</h2>
-
-          <!-- Embedded -->
-            <button id="embedded" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">Embedded</button></br>
-            <div style="position:relative; display:block;" class="gantt" id="GanttEmbedded"></div>
-            <script type="text/javascript">
-              var g = new JSGantt.GanttChart(document.getElementById('GanttEmbedded'), 'week');
-              if (g.getDivId() != null) {
-                g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
-                g.setQuarterColWidth(36);
-                g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
-                g.setDayMajorDateDisplayFormat('mon yyyy - Week ww') // Set format to display dates in the "Major" header of the "Day" view
-                g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
-                g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
-                g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
-                g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
-                g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
-                // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pMile, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
-                g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      'Some Notes text', g ));
-                g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2017-02-20','2017-02-20', 'gmilestone',   '',                 1, 'Shlomy',   100,   0,      1,       1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',                 0, 'Shlomy',   40,    1,      1,       1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2017-02-21','2017-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2017-03-06','2017-03-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      12,      1,     121,     '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2017-03-09','2017-03-14 12:00', 'gtaskyellow', '',            0, 'Ilan',     60,    0,      12,      1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2017-03-09','2017-03-29', 'gtaskred',     '',                 0, 'Anyone',   60,    0,      12,      1,     '123SS', 'This is a caption', null, g));
-                g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2017-03-24','2017-03-24', 'gtaskyellow',  '',                 0, 'Brian',    20,    0,      0,       1,     122,     '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2017-02-25','2017-03-17', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1,     '',      'Caption 1','',   g));
-                g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2017-03-15','2017-03-24', 'gtaskgreen',   '',                 0, 'Shlomy',   40,    0,      3,       1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Task Items',      '',           '',          'ggroupblack',  '',                 0, 'Someone',  40,    2,      3,       1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2017-03-06','2017-03-09', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2017-03-11','2017-03-20', 'gtaskblue',    '',                 0, 'Brian',    0,     0,      33,      1,     '332',   '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',                 0, 'Anybody',  60,    1,      3,       0,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2017-03-26','2017-04-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2017-04-12','2017-05-18', 'gtaskpink',    '',                 0, 'Brian',    60,    0,      34,      1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2017-05-13','2017-05-17', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     '',      '',      '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2017-05-17','2017-06-04', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     "342,343",'',     '',      g));
-                g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2017-07-17','2017-09-04', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1,     '333',   '',      '',      g));
-
-                g.Draw();
-              } else {
-                alert("Error, unable to create Gantt Chart");
-              }
-            </script>
-
-          <!-- External XML File -->
-            <button id="external-xml-file" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">External XML File</button>
-            </br></br>
-            <div style="position:relative; display:block;" class="gantt" id="GanttFile"></div>
-            <script type="text/javascript">
-              var g = new JSGantt.GanttChart(document.getElementById('GanttFile'), 'day');
-
-              if (g.getDivId() != null) {
-                g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
-                g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
-                g.setDayMajorDateDisplayFormat('dd mon');
-                g.setDateTaskDisplayFormat('dd month yyyy HH:MI');
-                // Use the XML file parser
-                JSGantt.parseXML('project.xml', g)
-
-                g.Draw();
-              } else {
-                alert("Error, unable to create Gantt Chart");
-              }
-            </script>
-
+        <div class="row">
+          <div class="col text-center">
+            <a class="btn btn-outline-info" href="#demo" id="learn-more"><i class="fa fa-chevron-down"></i></a>
+          </div>
         </div>
+      </div>
+    <!-- Demo -->
+      <div class="container-fluid section" id="demo">
+        <h1>Demo</h1>
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-primary btn-demo">
+            <input type="checkbox" autocomplete="off"><i class="fa fa-code"></i> Embedded Code
+          </label>
+          <label class="btn btn-primary btn-demo">
+            <input type="checkbox" autocomplete="off"><i class="fa fa-file-code-o"></i> External XML File
+          </label>
+        </div>
+        <div id="embedded-Gantt">
+          <script type="text/javascript">
+var g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
+if (g.getDivId() != null) {
+  g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+  g.setQuarterColWidth(36);
+  g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
+  g.setDayMajorDateDisplayFormat('mon yyyy - Week ww') // Set format to display dates in the "Major" header of the "Day" view
+  g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
+  g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
+  g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
+  g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
+  g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+  // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pMile, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
+  g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      'Some Notes text', g ));
+  g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2017-02-20','2017-02-20', 'gmilestone',   '',                 1, 'Shlomy',   100,   0,      1,       1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',                 0, 'Shlomy',   40,    1,      1,       1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2017-02-21','2017-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2017-03-06','2017-03-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      12,      1,     121,     '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2017-03-09','2017-03-14 12:00', 'gtaskyellow', '',            0, 'Ilan',     60,    0,      12,      1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2017-03-09','2017-03-29', 'gtaskred',     '',                 0, 'Anyone',   60,    0,      12,      1,     '123SS', 'This is a caption', null, g));
+  g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2017-03-24','2017-03-24', 'gtaskyellow',  '',                 0, 'Brian',    20,    0,      0,       1,     122,     '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2017-02-25','2017-03-17', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1,     '',      'Caption 1','',   g));
+  g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2017-03-15','2017-03-24', 'gtaskgreen',   '',                 0, 'Shlomy',   40,    0,      3,       1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Task Items',      '',           '',          'ggroupblack',  '',                 0, 'Someone',  40,    2,      3,       1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2017-03-06','2017-03-09', 'gtaskblue',    '',                 0, 'Brian',    60,    0,      33,      1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2017-03-11','2017-03-20', 'gtaskblue',    '',                 0, 'Brian',    0,     0,      33,      1,     '332',   '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',                 0, 'Anybody',  60,    1,      3,       0,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2017-03-26','2017-04-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2017-04-12','2017-05-18', 'gtaskpink',    '',                 0, 'Brian',    60,    0,      34,      1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2017-05-13','2017-05-17', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2017-05-17','2017-06-04', 'gtaskred',     '',                 0, 'Brian',    60,    0,      34,      1,     "342,343",'',     '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2017-07-17','2017-09-04', 'gtaskpurple',  '',                 0, 'Brian',    30,    0,      3,       1,     '333',   '',      '',      g));
 
-        <!-- Features Section -->
-        <div class="section" id="features">
-          <h2>Features</h2>
-          <p>jsGanttImproved is a fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images.</p>
-          <table class="container--two-col">
-            <tr>
-              <td><h3>Basic Features</h3></td>
-              <td><h3>Advanced Features</h3></td>
-            </tr>
-            <tr>
-              <td>
-                <ul class="list">
-                  <li>Tasks &amp; Collapsible Task Groups</li>
-                  <li>Multiple Dependencies</li>
-                  <li>Task Completion</li>
-                  <li>Task Style</li>
-                  <li>Milestones</li>
-                  <li>Resources</li>
+  g.Draw();
+} else {
+  alert("Error, unable to create Gantt Chart");
+}
+          </script>
+        </div>
+        <div id="external-Gantt">
+          <script type="text/javascript">
+var g = new JSGantt.GanttChart(document.getElementById('external-Gantt'), 'day');
+
+if (g.getDivId() != null) {
+  g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+  g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
+  g.setDayMajorDateDisplayFormat('dd mon');
+  g.setDateTaskDisplayFormat('dd month yyyy HH:MI');
+  // Use the XML file parser
+  JSGantt.parseXML('project.xml', g)
+
+  g.Draw();
+} else {
+  alert("Error, unable to create Gantt Chart");
+}
+          </script>
+        </div>
+      </div>
+    <!-- Features -->
+      <div class="container-fluid section" id="features">
+        <h1>Features</h1>
+        <p>jsGanttImproved is a fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images.</p>
+        <div class="row">
+          <div class="col-lg">
+            <h2>Basic Features</h2>
+            <ul>
+              <li>Tasks &amp; Collapsible Task Groups</li>
+              <li>Multiple Dependencies</li>
+              <li>Task Completion</li>
+              <li>Task Style</li>
+              <li>Milestones</li>
+              <li>Resources</li>
+            </ul>
+          </div>
+          <div class="col-lg">
+            <h2>Advanced Features</h3>
+            <ul>
+              <li>Dynamic Loading of Tasks</li>
+              <li>Dynamic change of format: Hour, Day, Week, Month, Quarter</li>
+              <li>
+                Load Gantt from:
+                <ul>
+                  <li>External XML files (including experimental support for Microsoft Project XML files)</li>
+                  <li>JavaScript strings</li>
                 </ul>
-              </td>
-              <td>
-                <ul class="list list-2">
-                  <li>Dynamic Loading of Tasks</li>
-                  <li>Dynamic change of format: Hour, Day, Week, Month, Quarter</li>
-                  <li>
-                    Load Gantt from:
-                    <ul>
-                      <li>External XML files (including experimental support for Microsoft Project XML files)</li>
-                      <li>JavaScript strings</li>
-                    </ul>
-                  </li>
-                  <li>Export Gantt as XML string</li>
-                  <li>Support for internationalization</li>
-                </ul>
-              </td>
-            </tr>
-          </table>
-
-          <h3>Current Known Issues:</h3>
-          <ul>
-            <li>If the browser is viewing the page at anything other than 100% zoom then bars may not be sized or positioned correctly.</li>
-          </ul>
-
-          <h3>Changelog:</h3>
-          <p>Check the full list of changes on <a href="https://github.com/jsGanttImproved/jsgantt-improved/releases" target="_blank">GitHub releases page</a>.</p>
-          <h4>v1.7.5.3:</h4>
-          <ul>
-            <li>Fixed group completion percentage that now is a weighted average</li>
-            <li>Start and end dates specified on standard group tasks will now be respected if they fall outside of the calculated group date range</li>
-            <li>Fixed problem that would occur if Tool Tips were disabled</li>
-            <li>Moved example dates forward so the current date marker is visible</li>
-          </ul>
-          <h4>v1.7.5:</h4>
-          <ul>
-            <li>Project Migrated to GitHub</li>
-            <li>Instantiating a new JSGantt.TaskItem will now also accept Date objects for start and end dates</li>
-            <li>Fixed old Internet Explorer compatibilty broken by v1.7</li>
-            <li>Fixed bug in Iso week date format</li>
-            <li>Changed to solid arrows on dependency lines to be more printer friendly</li>
-            <li>Code refactoring and clean up</li>
-          </ul>
-          <h4>v1.7:</h4>
-          <ul>
-            <li>
-              Fixed nasty long-standing bug where the first Gantt chart created must be stored in a javascript variable named &quot;g&quot;
-              <ul>
-                <li>NOTE: This required a change in the method to instatiate a JSGantt.TaskItem object to pass the related chart.</li>
-                <li>A temporary fix is included that still assumes the use of "g" for the chart if the chart object is not passed, this will be removed in v1.8</li>
-              </ul>
-            </li>
-            <li>Altered XML export functionality so that dates are output in the specified input format for the chart</li>
-            <li>Added method to read XML directly from an input string</li>
-            <li>Prevented creation of a task with a duplicate &quot;unique&quot; ID</li>
-            <li>Fixed bug where attempting to remove the first task defined would prevent the chart from redrawing</li>
-            <li>Some general code clean up</li>
-          </ul>
+              </li>
+              <li>Export Gantt as XML string</li>
+              <li>Support for internationalization</li>
+            </ul>
+          </div>
         </div>
-
-        <!-- Usage Section -->
-        <div id="usage" class="section">
-          <h2>Usage</h2>
-          <p>Following the steps below you will be able to get create a basic Gantt Chart. If you notice any bugs, please post them to <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues" target="_blank">GitHub&nbsp;issues</a>.</p>
-
-          <ol>
-            <li>
-              Include JSGantt CSS and Javascript
-              <pre class="prettyprint"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;</code></pre>
-            </li>
-            <li>
-              Create a div element to hold the gantt chart
-              <pre class="prettyprint"><code>&lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;</code></pre>
-            </li>
-            <li>
-              Start a &lt;script&gt; block
-              <pre class="prettyprint"><code>&lt;script type="text/javascript"&gt;</code></pre>
-            </li>
-            <li>
-              Instantiate JSGantt using GanttChart()
-              <pre class="prettyprint"><code>var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');</code></pre>
-              <p>Method definition:
-                <strong>GanttChart(<em>pDiv, pFormat</em>)</strong>
-              </p>
-              <table class="function-table">
-                <tr>
-                  <th>pDiv:</th>
-                  <td>(required) this is a DIV object created in HTML</td>
-                </tr>
-                <tr>
-                  <th>pFormat:</th>
-                  <td>(required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format</td>
-                </tr>
-              </table>
-            </li>
-            <li>
-              <p>Customize the look and feel using configuration methods (see <a href="#options">Configuration Options</a>)</p>
-            </li>
-            <li>
-              Add Tasks
-              <ul>
-                <li>
-                  <span class="mdl-color-text--primary-dark mdl-typography--font-bold">Method #1:</span> using AddTaskItem()
-                  <!-- Start Code -->
-<pre class="prettyprint"><code>g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
-g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1,'','','',g));</code></pre>
-                  <!-- End Code -->
-                  <p>Method definition:
-                    <strong>TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt</em>)</strong>
-                  </p>
-                  <table class="function-table">
-                    <tr>
-                      <th>pID:</th>
-                      <td>(required) a unique numeric ID used to identify each row</td>
-                    </tr>
-                    <tr>
-                      <th>pName:</th>
-                      <td>(required) the task Label</td>
-                    </tr>
-                    <tr>
-                      <th>pStart:</th>
-                      <td>(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2016-02-20 12:00) for additional precision.</td>
-                    </tr>
-                    <tr>
-                      <th>pEnd:</th>
-                      <td>(required) the task end date, can enter empty date ('') for groups</td>
-                    </tr>
-                    <tr>
-                      <th>pClass:</th>
-                      <td>(required) the css class for this task</td>
-                    </tr>
-                    <tr>
-                      <th>pLink:</th>
-                      <td>(optional) any http link to be displayed in tool tip as the "More information" link.</td>
-                    </tr>
-                    <tr>
-                      <th>pMile:</th>
-                      <td>(optional) indicates whether this is a milestone task - Numeric; 1 = milestone, 0 = not milestone</td>
-                    </tr>
-                    <tr>
-                      <th>pRes:</th>
-                      <td>(optional) resource name</td>
-                    </tr>
-                    <tr>
-                      <th>pComp:</th>
-                      <td>(required) completion percent, numeric</td>
-                    </tr>
-                    <tr>
-                      <th>pGroup:</th>
-                      <td>(optional) indicates whether this is a group task (parent) - Numeric:
-                        <ul>
-                          <li>0 = normal task</li>
-                          <li>1 = standard group task</li>
-                          <li>2 = combined group task<a href='#combinedtasks' class="footnote">*</a></li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>pParent:</th>
-                      <td>(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0</td>
-                    </tr>
-                    <tr>
-                      <th>pOpen:</th>
-                      <td>(required) indicates whether a standard group task is open when chart is first drawn. Value must be set for all items but is only used by standard group tasks.  Numeric, 1 = open, 0 = closed</td>
-                    </tr>
-                    <tr>
-                      <th>pDepend:</th>
-                      <td>
-                        (optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item<br />Each id can optionally be followed by a dependency type suffix. Valid values are:
-                        <ul>
-                          <li>'FS' - Finish to Start (default if suffix is omitted)</li>
-                          <li>'SF' - Start to Finish</li>
-                          <li>'SS' - Start to Start</li>
-                          <li>'FF' - Finish to Finish</li>
-                        </ul>
-                        If present the suffix must be added directly to the id (e.g. '123SS').
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>pCaption:</th>
-                      <td>(optional) caption that will be added after task bar if CaptionType set to "Caption"</td>
-                    </tr>
-                    <tr>
-                      <th>pNotes:</th>
-                      <td>(optional) Detailed task information that will be displayed in tool tip for this task</td>
-                    </tr>
-                    <tr>
-                      <th>pGantt:</th>
-                      <td>(required) javascript JSGantt.GanttChart object from which to take settings.  Defaults to &quot;g&quot; for backwards compatibility</td>
-                    </tr>
-                  </table>
-                  <p id='combinedtasks'><span style="color: red;">*</span> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.</p>
-                </li>
-                <li>
-                  <span class="mdl-color-text--primary-dark mdl-typography--font-bold">Method #2:</span> using parseXML() with an external XML file
-                  <pre class="prettyprint"><code>JSGantt.parseXML("project.xml",g);</code></pre>
-                  <p>Method definition:
-                    <strong>JSGantt.parseXML(<em>pFile, pGanttObj</em>)</strong>
-                  </p>
-                  <table class="function-table">
-                    <tr>
-                      <th>pFile:</th>
-                      <td>(required) this is the filename of the XML</td>
-                    </tr>
-                    <tr>
-                      <th>pGanttObj:</th>
-                      <td>(required) a GanttChart object returned by a call to JSGantt.GanttChart()</td>
-                    </tr>
-                  </table>
-                  <p>The structure of the native XML file:</p>
-                  <!-- Start Code -->
-<pre class="prettyprint"><code>&lt;project&gt;
-&lt;task&gt;
-  &lt;pID&gt;25&lt;/pID&gt;
-  &lt;pName&gt;WCF Changes&lt;/pName&gt;
-  &lt;pStart&gt;&lt;/pStart&gt;
-  &lt;pEnd&gt;&lt;/pEnd&gt;
-  &lt;pClass&gt;gtaskred&lt;/pClass&gt;
-  &lt;pLink&gt;&lt;/pLink&gt;
-  &lt;pMile&gt;0&lt;/pMile&gt;
-  &lt;pRes&gt;&lt;/pRes&gt;
-  &lt;pComp&gt;0&lt;/pComp&gt;
-  &lt;pGroup&gt;1&lt;/pGroup&gt;
-  &lt;pParent&gt;2&lt;/pParent&gt;
-  &lt;pOpen&gt;1&lt;/pOpen&gt;
-  &lt;pDepend&gt;2,24&lt;/pDepend&gt;
-  &lt;pCaption&gt;A caption&lt;/pCaption&gt;
-  &lt;pNotes&gt;Text - can include limited HTML&lt;/pNotes&gt;
-&lt;/task&gt;
+        <h2>Current Known Issues:</h3>
+        <ul>
+          <li>If the browser is viewing the page at anything other than 100% zoom then bars may not be sized or positioned correctly.</li>
+        </ul>
+        <h2>Changelog:</h3>
+        <p>Check the full list of changes on <a href="https://github.com/jsGanttImproved/jsgantt-improved/releases">GitHub releases page</a>.</p>
+        <h3>v1.7.5.3:</h3>
+        <ul>
+          <li>Fixed group completion percentage that now is a weighted average</li>
+          <li>Start and end dates specified on standard group tasks will now be respected if they fall outside of the calculated group date range</li>
+          <li>Fixed problem that would occur if Tool Tips were disabled</li>
+          <li>Moved example dates forward so the current date marker is visible</li>
+        </ul>
+        <h3>v1.7.5:</h3>
+        <ul>
+          <li>Project Migrated to GitHub</li>
+          <li>Instantiating a new JSGantt.TaskItem will now also accept Date objects for start and end dates</li>
+          <li>Fixed old Internet Explorer compatibilty broken by v1.7</li>
+          <li>Fixed bug in Iso week date format</li>
+          <li>Changed to solid arrows on dependency lines to be more printer friendly</li>
+          <li>Code refactoring and clean up</li>
+        </ul>
+        <h3>v1.7:</h3>
+        <ul>
+          <li>
+            Fixed nasty long-standing bug where the first Gantt chart created must be stored in a javascript variable named &quot;g&quot;
+            <ul>
+              <li>NOTE: This required a change in the method to instatiate a JSGantt.TaskItem object to pass the related chart.</li>
+              <li>A temporary fix is included that still assumes the use of "g" for the chart if the chart object is not passed, this will be removed in v1.8</li>
+            </ul>
+          </li>
+          <li>Altered XML export functionality so that dates are output in the specified input format for the chart</li>
+          <li>Added method to read XML directly from an input string</li>
+          <li>Prevented creation of a task with a duplicate &quot;unique&quot; ID</li>
+          <li>Fixed bug where attempting to remove the first task defined would prevent the chart from redrawing</li>
+          <li>Some general code clean up</li>
+        </ul>
+      </div>
+    <!-- Usage -->
+      <div class="container-fluid section" id="usage">
+        <h1>Usage</h1>
+        <p>Following the steps below you will be able to get create a basic Gantt Chart. If you notice any bugs, please post them to <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues">GitHub&nbsp;issues</a>.</p>
+        <ol>
+          <li>
+            Include JSGantt CSS and Javascript
+            <pre class="prettyprint lang-html code-block"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
+&lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;</code></pre>
+          </li>
+          <li>
+            Create a div element to hold the gantt chart
+            <pre class="prettyprint lang-html"><code>&lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;</code></pre>
+          </li>
+          <li>
+            Start a &lt;script&gt; block
+            <pre class="prettyprint lang-html"><code>&lt;script type="text/javascript"&gt;</code></pre>
+          </li>
+          <li>
+            Instantiate JSGantt using GanttChart()
+            <pre class="prettyprint lang-js"><code>var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');</code></pre>
+            <p>Method definition:
+              <strong>GanttChart(<em>pDiv, pFormat</em>)</strong>
+            </p>
+            <p><table>
+              <tr>
+                <th>pDiv:</th>
+                <td>(required) this is a DIV object created in HTML</td>
+              </tr>
+              <tr>
+                <th>pFormat:</th>
+                <td>(required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format</td>
+              </tr>
+            </table></p>
+          </li>
+          <li>
+            <p>Customize the look and feel using configuration methods (see <a href="#options">Configuration Options</a>)</p>
+          </li>
+          <li>
+            Add Tasks
+            <ul>
+              <li>
+                using AddTaskItem()
+                <pre class="prettyprint lang-js"><code>g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
+g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1,'','','',g));
+                </code></pre>
+                <p>Method definition:
+                  <strong>TaskItem(<em>pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt</em>)</strong>
+                </p>
+                <table>
+                  <tr>
+                    <th>pID:</th>
+                    <td>(required) a unique numeric ID used to identify each row</td>
+                  </tr>
+                  <tr>
+                    <th>pName:</th>
+                    <td>(required) the task Label</td>
+                  </tr>
+                  <tr>
+                    <th>pStart:</th>
+                    <td>(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (2016-02-20 12:00) for additional precision.</td>
+                  </tr>
+                  <tr>
+                    <th>pEnd:</th>
+                    <td>(required) the task end date, can enter empty date ('') for groups</td>
+                  </tr>
+                  <tr>
+                    <th>pClass:</th>
+                    <td>(required) the css class for this task</td>
+                  </tr>
+                  <tr>
+                    <th>pLink:</th>
+                    <td>(optional) any http link to be displayed in tool tip as the "More information" link.</td>
+                  </tr>
+                  <tr>
+                    <th>pMile:</th>
+                    <td>(optional) indicates whether this is a milestone task - Numeric; 1 = milestone, 0 = not milestone</td>
+                  </tr>
+                  <tr>
+                    <th>pRes:</th>
+                    <td>(optional) resource name</td>
+                  </tr>
+                  <tr>
+                    <th>pComp:</th>
+                    <td>(required) completion percent, numeric</td>
+                  </tr>
+                  <tr>
+                    <th>pGroup:</th>
+                    <td>(optional) indicates whether this is a group task (parent) - Numeric; 0 = normal task, 1 = standard group task, 2 = combined group task<a href='#combinedtasks' class="footnote">*</a></td>
+                  </tr>
+                  <tr>
+                    <th>pParent:</th>
+                    <td>(required) identifies a parent pID, this causes this task to be a child of identified task. Numeric, top level tasks should have pParent set to 0</td>
+                  </tr>
+                  <tr>
+                    <th>pOpen:</th>
+                    <td>(required) indicates whether a standard group task is open when chart is first drawn. Value must be set for all items but is only used by standard group tasks.  Numeric, 1 = open, 0 = closed</td>
+                  </tr>
+                  <tr>
+                    <th>pDepend:</th>
+                    <td>
+                      (optional) comma separated list of id&#39;s this task is dependent on. A line will be drawn from each listed task to this item<br />Each id can optionally be followed by a dependency type suffix. Valid values are:
+                      <blockquote>'FS' - Finish to Start (default if suffix is omitted)<br />'SF' - Start to Finish<br />'SS' - Start to Start<br />'FF' - Finish to Finish</blockquote>
+                      If present the suffix must be added directly to the id e.g. '123SS'
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>pCaption:</th>
+                    <td>(optional) caption that will be added after task bar if CaptionType set to "Caption"</td>
+                  </tr>
+                  <tr>
+                    <th>pNotes:</th>
+                    <td>(optional) Detailed task information that will be displayed in tool tip for this task</td>
+                  </tr>
+                  <tr>
+                    <th>pGantt:</th>
+                    <td>(required) javascript JSGantt.GanttChart object from which to take settings.  Defaults to &quot;g&quot; for backwards compatibility</td>
+                  </tr>
+                </table>
+                <p id='combinedtasks'><span style="color: red;">*</span> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.</p>
+              </li>
+              <li>
+                using parseXML() with an external XML file
+                <pre class="prettyprint lang-js"><code>JSGantt.parseXML("project.xml",g);</code></pre>
+                <p>Method definition:
+                  <strong>JSGantt.parseXML(<em>pFile, pGanttObj</em>)</strong>
+                </p>
+                <table>
+                  <tr>
+                    <th>pFile:</th>
+                    <td>(required) this is the filename of the XML</td>
+                  </tr>
+                  <tr>
+                    <th>pGanttObj:</th>
+                    <td>(required) a GanttChart object returned by a call to JSGantt.GanttChart()</td>
+                  </tr>
+                </table>
+                <p>The structure of the native XML file:</p>
+                <pre class="prettyprint lang-ml"><code>&lt;project&gt;
+  &lt;task&gt;
+    &lt;pID&gt;25&lt;/pID&gt;
+    &lt;pName&gt;WCF Changes&lt;/pName&gt;
+    &lt;pStart&gt;&lt;/pStart&gt;
+    &lt;pEnd&gt;&lt;/pEnd&gt;
+    &lt;pClass&gt;gtaskred&lt;/pClass&gt;
+    &lt;pLink&gt;&lt;/pLink&gt;
+    &lt;pMile&gt;0&lt;/pMile&gt;
+    &lt;pRes&gt;&lt;/pRes&gt;
+    &lt;pComp&gt;0&lt;/pComp&gt;
+    &lt;pGroup&gt;1&lt;/pGroup&gt;
+    &lt;pParent&gt;2&lt;/pParent&gt;
+    &lt;pOpen&gt;1&lt;/pOpen&gt;
+    &lt;pDepend&gt;2,24&lt;/pDepend&gt;
+    &lt;pCaption&gt;A caption&lt;/pCaption&gt;
+    &lt;pNotes&gt;Text - can include limited HTML&lt;/pNotes&gt;
+  &lt;/task&gt;
 &lt;/project&gt;</code></pre>
-                  <!-- End Code -->
-                  <p>Field definitions are as described for the parameters to TaskItem above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones. The pGantt element is not required for XML import.</p>
-                  <p>JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the <a href="#xmlExport">XML Export methods</a> provided.</p>
-                </li>
-                <li>
-                  using parseXMLString() with XML held in a javascript string object
-                  <pre class="prettyprint"><code>JSGantt.parseXMLString("&lt;project&gt;&lt;task&gt;...&lt;/task&gt;&lt;/project&gt;",g);</code></pre>
-                  <p>Method definition:
-                    <strong>JSGantt.parseXMLString(<em>pStr, pGanttObj</em>)</strong>
-                  </p>
-                  <table class="function-table">
-                    <tr>
-                      <th>pStr:</th>
-                      <td>(required) this is a javascript String containing XML</td>
-                    </tr>
-                    <tr>
-                      <th>pGanttObj:</th>
-                      <td>(required) a GanttChart object returned by a call to JSGantt.GanttChart()</td>
-                    </tr>
-                  </table>
-                  <p>The XML provided will be parsed in exactly the same way as the contents of an external XML file and hence must match the format as described for JSGantt.parseXML() above.</p>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <p>Call Draw()</p>
-              <pre class="prettyprint"><code>g.Draw();</code></pre>
-            </li>
-            <li>
-              <p>Close the &lt;script&gt; block</p>
-              <pre class="prettyprint"><code>&lt;/script&gt;</code></pre>
-            </li>
-          </ol>
-          <p>It is possible to add items to the chart in realtime via javascript using either direct method calls or additional XML files.
-            It is also possible to delete tasks using RemoveTaskItem() method.
-          </p>
-          <pre class="prettyprint"><code>g.RemoveTaskItem(11);</code></pre>
-          <p>Method definition:
-            <strong>RemoveTaskItem(<em>pID</em>)</strong>
-          </p>
-          <table class="function-table">
+                <p>Field definitions are as described for the parameters to TaskItem above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones. The pGantt element is not required for XML import.</p>
+                <p>JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the <a href="#xmlExport">XML Export methods</a> provided.</p>
+              </li>
+              <li>
+                using parseXMLString() with XML held in a javascript string object
+                <pre class="prettyprint lang-js"><code>JSGantt.parseXMLString("&lt;project&gt;&lt;task&gt;...&lt;/task&gt;&lt;/project&gt;",g);</code></pre>
+                <p>Method definition:
+                  <strong>JSGantt.parseXMLString(<em>pStr, pGanttObj</em>)</strong>
+                </p>
+                <table>
+                  <tr>
+                    <th>pStr:</th>
+                    <td>(required) this is a javascript String containing XML</td>
+                  </tr>
+                  <tr>
+                    <th>pGanttObj:</th>
+                    <td>(required) a GanttChart object returned by a call to JSGantt.GanttChart()</td>
+                  </tr>
+                </table>
+                <p>The XML provided will be parsed in exactly the same way as the contents of an external XML file and hence must match the format as described for JSGantt.parseXML() above</p>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <p>Call Draw()</p>
+            <pre class="prettyprint lang-js"><code>g.Draw();</code></pre>
+          </li>
+          <li>
+            <p>Close the &lt;script&gt; block</p>
+            <pre class="prettyprint lang-html"><code>&lt;/script&gt;</code></pre>
+          </li>
+        </ol>
+        <p>It is possible to add items to the chart in realtime via javascript using either direct method calls or additional XML files.
+          It is also possible to delete tasks using RemoveTaskItem() method.
+        </p>
+        <pre class="prettyprint lang-js"><code>g.RemoveTaskItem(11);</code></pre>
+        <p>Method definition:
+          <strong>RemoveTaskItem(<em>pID</em>)</strong>
+        </p>
+        <table>
+          <tr>
+            <th>pID:</th>
+            <td>(required) the unique numeric ID of the item to be removed</td>
+          </tr>
+        </table>
+        <p>If the task removed is a group item, all child tasks will also be removed. </p>
+        <p>After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.</p>
+        <h2 id="options">Configuration Options</h2>
+        <h3>Switches</h3>
+        <p>Many of the features of jsGanttImproved can be customised through the use of setter methods available on the GanttChart object returned by a call to JSGantt.GanttChart()</p>
+        <p>The following options take a single numeric parameter; a value of 1 will enable the describe functionality, 0 will disable it</p>
+        <table class="configlist">
+          <tr>
+            <th id="setUseToolTip">setUseToolTip():</th>
+            <td>Controls the display of tool tip boxes, defaults to 1 (enabled)</td>
+          </tr>
+          <tr>
+            <th id="setUseFade">setUseFade():</th>
+            <td>Controls use of the fade effect when showing/hiding tool tips, defaults to 1 (enabled)</td>
+          </tr>
+          <tr>
+            <th id="setUseMove">setUseMove():</th>
+            <td>Controls use of the sliding effect when changing between different task tool tips, defaults to 1 (enabled)</td>
+          </tr>
+          <tr>
+            <th id="setUseRowHlt">setUseRowHlt():</th>
+            <td>Controls the use of row mouseover highlighting, defaults to 1 (enabled)</td>
+          </tr>
+          <tr>
+            <th id="setUseSort">setUseSort():</th>
+            <td>Controls whether the task list is sorted into parent task / start time order or is simply displayed in the order created, defaults to 1 (sort enabled)</td>
+          </tr>
+          <tr>
+            <th id="setShowRes">setShowRes():</th>
+            <td>Controls whether the Resource column is displayed in the task list, defaults to 1 (show column)</td>
+          </tr>
+          <tr>
+            <th id="setShowDur">setShowDur():</th>
+            <td>Controls whether the Task Duration column is displayed in the task list, defaults to 1 (show column)</td>
+          </tr>
+          <tr>
+            <th id="setShowComp">setShowComp():</th>
+            <td>Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)</td>
+          </tr>
+          <tr>
+            <th id="setShowStartDate">setShowStartDate():</th>
+            <td>Controls whether the Task Start Date column is displayed in the task list, defaults to 1 (show column)</td>
+          </tr>
+          <tr>
+            <th id="setShowEndDate">setShowEndDate():</th>
+            <td>Controls whether the Task End Date column is displayed in the task list, defaults to 1 (show column)</td>
+          </tr>
+          <tr>
+            <th id="setShowTaskInfoRes">setShowTaskInfoRes():</th>
+            <td>Controls whether the Resource information is displayed in the task tool tip, defaults to 1 (show information)</td>
+          </tr>
+          <tr>
+            <th id="setShowTaskInfoDur">setShowTaskInfoDur():</th>
+            <td>Controls whether the Task Duration information is displayed in the task tool tip, defaults to 1 (show information)</td>
+          </tr>
+          <tr>
+            <th id="setShowTaskInfoComp">setShowTaskInfoComp():</th>
+            <td>Controls whether the Percentage Complete information is displayed in the task tool tip, defaults to 1 (show information)</td>
+          </tr>
+          <tr>
+            <th id="setShowTaskInfoStartDate">setShowTaskInfoStartDate():</th>
+            <td>Controls whether the Task Start Date information is displayed in the task tool tip, defaults to 1 (show information)</td>
+          </tr>
+          <tr>
+            <th id="setShowTaskInfoEndDate">setShowTaskInfoEndDate():</th>
+            <td>Controls whether the Task End Date information is displayed in the task tool tip, defaults to 1 (show information)</td>
+          </tr>
+          <tr>
+            <th id="setShowTaskInfoLink">setShowTaskInfoLink():</th>
+            <td>Controls whether the More Information link is displayed in the task tool tip, defaults to 0 (do NOT show link)</td>
+          </tr>
+          <tr>
+            <th id="setShowTaskInfoNotes">setShowTaskInfoNotes():</th>
+            <td>Controls whether the Additional Notes data is displayed in the task tool tip, defaults to 1 (show notes)</td>
+          </tr>
+          <tr>
+            <th id="setShowEndWeekDate">setShowEndWeekDate():</th>
+            <td>Controls whether the major heading in "Day" view displays the week end-date in the appropriate format (see <a href="#setDayMajorDateDisplayFormat">below</a>), defaults to 1 (show date)</td>
+          </tr>
+          <tr>
+            <th id="setShowDeps">setShowDeps():</th>
+            <td>Controls display of dependancy lines, defaults to 1 (show dependencies)</td>
+          </tr>
+        </table>
+        <h3>Key Values</h3>
+        <p>The following options enable functionality using a set of specific key values</p>
+        <table class="configlist">
+          <tr>
+            <th id="setShowSelector">setShowSelector():</th>
+            <td>Controls where the format selector is displayed, accepts multiple parameters.<br/>Valid parameter values are &quot;Top&quot;, &quot;Bottom&quot;.<br/>Defaults to "Top".</td>
+          </tr>
+          <tr>
+            <th id="setFormatArr">setFormatArr():</th>
+            <td>Controls which format options are shown in the format selector, accepts multiple parameters.<br/>Valid parameter values are &quot;Hour&quot;, &quot;Day&quot;, &quot;Week&quot;, &quot;Month&quot;, &quot;Quarter&quot;.<br/>Defaults to all valid values.</td>
+          </tr>
+          <tr>
+            <th id="setCaptionType">setCaptionType():</th>
+            <td>Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter.<br/>Valid parameter values are &quot;None&quot;, &quot;Caption&quot;, &quot;Resource&quot;, &quot;Duration&quot;, &quot;Complete&quot;.<br/>Defaults to &quot;None&quot;</td>
+          </tr>
+          <tr>
+            <th id="setDateInputFormat">setDateInputFormat():</th>
+            <td>Defines the input format used for dates in task creation, accepts a single parameter.<br/>Valid parameter values are &quot;yyyy-mm-dd&quot;, &quot;dd/mm/yyyy&quot;, &quot;mm/dd/yyyy&quot;.<br/>Defaults to &quot;yyyy-mm-dd&quot;</td>
+          </tr>
+          <tr>
+            <th id="setScrollTo">setScrollTo():</th>
+            <td>Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value &quot;today&quot;<br/>Defaults to minimum display date</td>
+          </tr>
+          <tr>
+            <th id="setUseSingleCell">setUseSingleCell():</th>
+            <td>Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  A value of 0 disables this functionality (always use multiple cells), defaults to 25000</td>
+          </tr>
+          <tr>
+            <th id="setLang">setLang():</th>
+            <td>Sets translation to use when drawing the chart.  Defaults to "en" as this is the only language provided in the base installation (see <a href="#optionsLanguage">internationalization</a> below for details on how to add more translations.)</td>
+          </tr>
+        </table>
+        <h3>Layout</h3>
+        <p>Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.</p>
+        <p>Note that the task bar sizing code assumes the use of collapsed table borders 1px wide.</p>
+        <table class="configlist">
+          <tr>
+            <th id="setHourColWidth">setHourColWidth():</th>
+            <td>Width of Gantt Chart columns in pixels when drawn in "Hour" format. Defaults to 18.</td>
+          </tr>
+          <tr>
+            <th id="setDayColWidth">setDayColWidth():</th>
+            <td>Width of Gantt Chart columns in pixels when drawn in "Day" format. Defaults to 18.</td>
+          </tr>
+          <tr>
+            <th id="setWeekColWidth">setWeekColWidth():</th>
+            <td>Width of Gantt Chart columns in pixels when drawn in "Week" format. Defaults to 36.</td>
+          </tr>
+          <tr>
+            <th id="setMonthColWidth">setMonthColWidth():</th>
+            <td>Width of Gantt Chart columns in pixels when drawn in "Month" format. Defaults to 36.</td>
+          </tr>
+          <tr>
+            <th id="setQuarterColWidth">setQuarterColWidth():</th>
+            <td>Width of Gantt Chart columns in pixels when drawn in "Quarter" format, although not mandatory it is recommended that this be set to a value divisible by 3. Defaults to 18.</td>
+          </tr>
+          <tr>
+            <th id="setRowHeight">setRowHeight():</th>
+            <td>Height of Gantt Chart rows in pixels. Used to route dependency lines near end points. Defaults to 20.</td>
+          </tr>
+          <tr>
+            <th id="setMinGpLen">setMinGpLen():</th>
+            <td>Group tasks have their task bars embellished with end points, this value specifies the width of one of these end points in pixels.  A short task bar&#39;s length will be rounded up to display either a single or both endpoints correctly. Defaults to 8.</td>
+          </tr>
+        </table>
+        <h3>Display Date Formats</h3>
+        <p>Date display formats can be individually controlled. The methods used to set these display formats each take a single format string parameter.  The format string can be made up of the following components (case sensitive)</p>
+        <blockquote>
+          <table>
             <tr>
-              <th>pID:</th>
-              <td>(required) the unique numeric ID of the item to be removed</td>
-            </tr>
-          </table>
-          <p>If the task removed is a group item, all child tasks will also be removed. </p>
-          <p>After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.</p>
-          <h3 id="options">Configuration Options</h3>
-          <h4>Switches</h4>
-          <p>Many of the features of jsGanttImproved can be customised through the use of setter methods available on the GanttChart object returned by a call to JSGantt.GanttChart()</p>
-          <p>The following options take a single numeric parameter; a value of 1 will enable the describe functionality, 0 will disable it</p>
-          <table class="function-table">
-            <tr>
-              <th id="setUseToolTip">setUseToolTip():</th>
-              <td>Controls the display of tool tip boxes, defaults to 1 (enabled)</td>
-            </tr>
-            <tr>
-              <th id="setUseFade">setUseFade():</th>
-              <td>Controls use of the fade effect when showing/hiding tool tips, defaults to 1 (enabled)</td>
-            </tr>
-            <tr>
-              <th id="setUseMove">setUseMove():</th>
-              <td>Controls use of the sliding effect when changing between different task tool tips, defaults to 1 (enabled)</td>
-            </tr>
-            <tr>
-              <th id="setUseRowHlt">setUseRowHlt():</th>
-              <td>Controls the use of row mouseover highlighting, defaults to 1 (enabled)</td>
-            </tr>
-            <tr>
-              <th id="setUseSort">setUseSort():</th>
-              <td>Controls whether the task list is sorted into parent task / start time order or is simply displayed in the order created, defaults to 1 (sort enabled)</td>
-            </tr>
-            <tr>
-              <th id="setShowRes">setShowRes():</th>
-              <td>Controls whether the Resource column is displayed in the task list, defaults to 1 (show column)</td>
-            </tr>
-            <tr>
-              <th id="setShowDur">setShowDur():</th>
-              <td>Controls whether the Task Duration column is displayed in the task list, defaults to 1 (show column)</td>
-            </tr>
-            <tr>
-              <th id="setShowComp">setShowComp():</th>
-              <td>Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)</td>
-            </tr>
-            <tr>
-              <th id="setShowStartDate">setShowStartDate():</th>
-              <td>Controls whether the Task Start Date column is displayed in the task list, defaults to 1 (show column)</td>
-            </tr>
-            <tr>
-              <th id="setShowEndDate">setShowEndDate():</th>
-              <td>Controls whether the Task End Date column is displayed in the task list, defaults to 1 (show column)</td>
-            </tr>
-            <tr>
-              <th id="setShowTaskInfoRes">setShowTaskInfoRes():</th>
-              <td>Controls whether the Resource information is displayed in the task tool tip, defaults to 1 (show information)</td>
-            </tr>
-            <tr>
-              <th id="setShowTaskInfoDur">setShowTaskInfoDur():</th>
-              <td>Controls whether the Task Duration information is displayed in the task tool tip, defaults to 1 (show information)</td>
-            </tr>
-            <tr>
-              <th id="setShowTaskInfoComp">setShowTaskInfoComp():</th>
-              <td>Controls whether the Percentage Complete information is displayed in the task tool tip, defaults to 1 (show information)</td>
-            </tr>
-            <tr>
-              <th id="setShowTaskInfoStartDate">setShowTaskInfoStartDate():</th>
-              <td>Controls whether the Task Start Date information is displayed in the task tool tip, defaults to 1 (show information)</td>
-            </tr>
-            <tr>
-              <th id="setShowTaskInfoEndDate">setShowTaskInfoEndDate():</th>
-              <td>Controls whether the Task End Date information is displayed in the task tool tip, defaults to 1 (show information)</td>
-            </tr>
-            <tr>
-              <th id="setShowTaskInfoLink">setShowTaskInfoLink():</th>
-              <td>Controls whether the More Information link is displayed in the task tool tip, defaults to 0 (do NOT show link)</td>
-            </tr>
-            <tr>
-              <th id="setShowTaskInfoNotes">setShowTaskInfoNotes():</th>
-              <td>Controls whether the Additional Notes data is displayed in the task tool tip, defaults to 1 (show notes)</td>
-            </tr>
-            <tr>
-              <th id="setShowEndWeekDate">setShowEndWeekDate():</th>
-              <td>Controls whether the major heading in "Day" view displays the week end-date in the appropriate format (see <a href="#setDayMajorDateDisplayFormat">below</a>), defaults to 1 (show date)</td>
-            </tr>
-            <tr>
-              <th id="setShowDeps">setShowDeps():</th>
-              <td>Controls display of dependancy lines, defaults to 1 (show dependencies)</td>
-            </tr>
-          </table>
-          <h4>Key Values</h4>
-          <p>The following options enable functionality using a set of specific key values</p>
-          <table class="function-table">
-            <tr>
-              <th id="setShowSelector">setShowSelector():</th>
-              <td>Controls where the format selector is displayed, accepts multiple parameters.<br/>Valid parameter values are &quot;Top&quot;, &quot;Bottom&quot;.<br/>Defaults to "Top".</td>
-            </tr>
-            <tr>
-              <th id="setFormatArr">setFormatArr():</th>
-              <td>Controls which format options are shown in the format selector, accepts multiple parameters.<br/>Valid parameter values are &quot;Hour&quot;, &quot;Day&quot;, &quot;Week&quot;, &quot;Month&quot;, &quot;Quarter&quot;.<br/>Defaults to all valid values.</td>
-            </tr>
-            <tr>
-              <th id="setCaptionType">setCaptionType():</th>
-              <td>Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter.<br/>Valid parameter values are &quot;None&quot;, &quot;Caption&quot;, &quot;Resource&quot;, &quot;Duration&quot;, &quot;Complete&quot;.<br/>Defaults to &quot;None&quot;</td>
-            </tr>
-            <tr>
-              <th id="setDateInputFormat">setDateInputFormat():</th>
-              <td>Defines the input format used for dates in task creation, accepts a single parameter.<br/>Valid parameter values are &quot;yyyy-mm-dd&quot;, &quot;dd/mm/yyyy&quot;, &quot;mm/dd/yyyy&quot;.<br/>Defaults to &quot;yyyy-mm-dd&quot;</td>
-            </tr>
-            <tr>
-              <th id="setScrollTo">setScrollTo():</th>
-              <td>Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value &quot;today&quot;<br/>Defaults to minimum display date</td>
-            </tr>
-            <tr>
-              <th id="setUseSingleCell">setUseSingleCell():</th>
-              <td>Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  A value of 0 disables this functionality (always use multiple cells), defaults to 25000</td>
-            </tr>
-            <tr>
-              <th id="setLang">setLang():</th>
-              <td>Sets translation to use when drawing the chart.  Defaults to "en" as this is the only language provided in the base installation (see <a href="#optionsLanguage">internationalization</a> below for details on how to add more translations.)</td>
-            </tr>
-          </table>
-          <h4>Layout</h4>
-          <p>Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.</p>
-          <p>Note that the task bar sizing code assumes the use of collapsed table borders 1px wide.</p>
-          <table class="function-table">
-            <tr>
-              <th id="setHourColWidth">setHourColWidth():</th>
-              <td>Width of Gantt Chart columns in pixels when drawn in "Hour" format. Defaults to 18.</td>
-            </tr>
-            <tr>
-              <th id="setDayColWidth">setDayColWidth():</th>
-              <td>Width of Gantt Chart columns in pixels when drawn in "Day" format. Defaults to 18.</td>
-            </tr>
-            <tr>
-              <th id="setWeekColWidth">setWeekColWidth():</th>
-              <td>Width of Gantt Chart columns in pixels when drawn in "Week" format. Defaults to 36.</td>
-            </tr>
-            <tr>
-              <th id="setMonthColWidth">setMonthColWidth():</th>
-              <td>Width of Gantt Chart columns in pixels when drawn in "Month" format. Defaults to 36.</td>
-            </tr>
-            <tr>
-              <th id="setQuarterColWidth">setQuarterColWidth():</th>
-              <td>Width of Gantt Chart columns in pixels when drawn in "Quarter" format, although not mandatory it is recommended that this be set to a value divisible by 3. Defaults to 18.</td>
-            </tr>
-            <tr>
-              <th id="setRowHeight">setRowHeight():</th>
-              <td>Height of Gantt Chart rows in pixels. Used to route dependency lines near end points. Defaults to 20.</td>
-            </tr>
-            <tr>
-              <th id="setMinGpLen">setMinGpLen():</th>
-              <td>Group tasks have their task bars embellished with end points, this value specifies the width of one of these end points in pixels.  A short task bar&#39;s length will be rounded up to display either a single or both endpoints correctly. Defaults to 8.</td>
-            </tr>
-          </table>
-          <h4>Display Date Formats</h4>
-          <p>Date display formats can be individually controlled. The methods used to set these display formats each take a single format string parameter.  The format string can be made up of the following components (case sensitive)</p>
-          <table class="function-table">
-            <tr>
-              <th><code>h</code></th>
+              <th>h:</th>
               <td>Hour (1-12)</td>
             </tr>
             <tr>
-              <th><code>hh</code></th>
+              <th>hh:</th>
               <td>Hour (01-12)</td>
             </tr>
             <tr>
-              <th><code>pm</code></th>
+              <th>pm:</th>
               <td>am/pm indicator</td>
             </tr>
             <tr>
-              <th><code>PM</code></th>
+              <th>PM:</th>
               <td>AM/PM indicator</td>
             </tr>
             <tr>
-              <th><code>H</code></th>
+              <th>H:</th>
               <td>Hour (0-23)</td>
             </tr>
             <tr>
-              <th><code>HH</code></th>
+              <th>HH:</th>
               <td>Hour (01-23)</td>
             </tr>
             <tr>
-              <th><code>mi</code></th>
+              <th>mi:</th>
               <td>Minutes (1-59)</td>
             </tr>
             <tr>
-              <th><code>MI</code></th>
+              <th>MI:</th>
               <td>Minutes (01-59)</td>
             </tr>
             <tr>
-              <th><code>d</code></th>
+              <th>d:</th>
               <td>Day (1-31)</td>
             </tr>
             <tr>
-              <th><code>dd</code></th>
+              <th>dd:</th>
               <td>Day (01-31)</td>
             </tr>
             <tr>
-              <th><code>day</code></th>
+              <th>day:</th>
               <td>Abbreviated day of week</td>
             </tr>
             <tr>
-              <th><code>DAY</code></th>
+              <th>DAY:</th>
               <td>Day of week</td>
             </tr>
             <tr>
-              <th><code>m</code></th>
+              <th>m:</th>
               <td>Month (1-12)</td>
             </tr>
             <tr>
-              <th><code>mm</code></th>
+              <th>mm:</th>
               <td>Month (01-12)</td>
             </tr>
             <tr>
-              <th><code>mon</code></th>
+              <th>mon:</th>
               <td>Abbreviated month text</td>
             </tr>
             <tr>
-              <th><code>month</code></th>
+              <th>month:</th>
               <td>Full month text</td>
             </tr>
             <tr>
-              <th><code>yy</code></th>
+              <th>yy:</th>
               <td>Year, excluding century</td>
             </tr>
             <tr>
-              <th><code>yyyy</code></th>
+              <th>yyyy:</th>
               <td>Year</td>
             </tr>
             <tr>
-              <th><code>q</code></th>
+              <th>q:</th>
               <td>Quarter (1-4)</td>
             </tr>
             <tr>
-              <th><code>qq</code></th>
+              <th>qq:</th>
               <td>Quarter (Q1-Q4)</td>
             </tr>
             <tr>
-              <th><code>w</code></th>
+              <th>w:</th>
               <td>ISO Week number (1-53)</td>
             </tr>
             <tr>
-              <th><code>ww</code></th>
+              <th>ww:</th>
               <td>ISO Week number (01-53)</td>
             </tr>
             <tr>
-              <th><code>week</code></th>
+              <th>week:</th>
               <td>Full ISO Week date format</td>
             </tr>
           </table>
-          <p>separated by one of the following characters: <code><strong>&quot;/\-.,&#39;&lt;space&gt;:</strong></code></p>.
+          <p>separated by one of the following characters: <strong>&quot;/\-.,&#39;&lt;space&gt;:</strong></p>
           <p>Any text between separators that does not match one of the components above will be checked using a case insensitive match for a valid internationalized string (see <a href="#optionsLanguage">internationalization</a> below).  If the value is still not found the text will be output unchanged.</p>
-          <p>The available date display methods are:</p>
-          <table class="function-table">
-            <tr>
-              <th id="setDateTaskTableDisplayFormat">setDateTaskTableDisplayFormat():</th>
-              <td>Date format used for start and end dates in the main task list. Defaults to 'dd/mm/yyyy'.</td>
-            </tr>
-            <tr>
-              <th id="setDateTaskDisplayFormat">setDateTaskDisplayFormat():</th>
-              <td>Date format used for start and end dates in task tool tips. Defaults to 'dd month yyyy'.</td>
-            </tr>
-            <tr>
-              <th id="setHourMajorDateDisplayFormat">setHourMajorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart major date headings displayed in "Hour" format. Defaults to 'day dd month yyyy'.</td>
-            </tr>
-            <tr>
-              <th id="setDayMajorDateDisplayFormat">setDayMajorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart major date headings displayed in "Day" format. Defaults to 'dd/mm/yyyy'.</td>
-            </tr>
-            <tr>
-              <th id="setWeekMajorDateDisplayFormat">setWeekMajorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart major date headings displayed in "Week" format. Defaults to 'yyyy'.</td>
-            </tr>
-            <tr>
-              <th id="setMonthMajorDateDisplayFormat">setMonthMajorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart major date headings displayed in "Month" format. Defaults to 'yyyy'.</td>
-            </tr>
-            <tr>
-              <th id="setQuarterMajorDateDisplayFormat">setQuarterMajorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart major date headings displayed in "Year" format. Defaults to 'yyyy'.</td>
-            </tr>
-            <tr>
-              <th id="setHourMinorDateDisplayFormat">setHourMinorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart minor date headings displayed in "Hour" format. Defaults to 'HH'.</td>
-            </tr>
-            <tr>
-              <th id="setDayMinorDateDisplayFormat">setDayMinorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart minor date headings displayed in "Day" format. Defaults to 'dd'.</td>
-            </tr>
-            <tr>
-              <th id="setWeekMinjorDateDisplayFormat">setWeekMinjorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.</td>
-            </tr>
-            <tr>
-              <th id="setMonthMinorDateDisplayFormat">setMonthMinorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.</td>
-            </tr>
-            <tr>
-              <th id="setQuarterMinorDateDisplayFormat">setQuarterMinorDateDisplayFormat():</th>
-              <td>Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.</td>
-            </tr>
-          </table>
-          <h4 id="optionsLanguage">Internationalization</h4>
-          <p>jsGanttImproved only provides English text however all hard coded strings can be replaced by calling the addLang() method available on the GanttChart object returned by a call to JSGantt.GanttChart()</p>
-          <p>The addLang() method takes two parameters.  The first is a string identifier for the language, the second is a javascript object containing all the replacement text pairs, the default English settings are:</p>
-          <table class="function-table">
+        </blockquote>
+        <p>The available date display methods are</p>
+        <table class="dateconfiglist">
+          <tr>
+            <th id="setDateTaskTableDisplayFormat">setDateTaskTableDisplayFormat():</th>
+            <td>Date format used for start and end dates in the main task list. Defaults to 'dd/mm/yyyy'.</td>
+          </tr>
+          <tr>
+            <th id="setDateTaskDisplayFormat">setDateTaskDisplayFormat():</th>
+            <td>Date format used for start and end dates in task tool tips. Defaults to 'dd month yyyy'.</td>
+          </tr>
+          <tr>
+            <th id="setHourMajorDateDisplayFormat">setHourMajorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart major date headings displayed in "Hour" format. Defaults to 'day dd month yyyy'.</td>
+          </tr>
+          <tr>
+            <th id="setDayMajorDateDisplayFormat">setDayMajorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart major date headings displayed in "Day" format. Defaults to 'dd/mm/yyyy'.</td>
+          </tr>
+          <tr>
+            <th id="setWeekMajorDateDisplayFormat">setWeekMajorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart major date headings displayed in "Week" format. Defaults to 'yyyy'.</td>
+          </tr>
+          <tr>
+            <th id="setMonthMajorDateDisplayFormat">setMonthMajorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart major date headings displayed in "Month" format. Defaults to 'yyyy'.</td>
+          </tr>
+          <tr>
+            <th id="setQuarterMajorDateDisplayFormat">setQuarterMajorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart major date headings displayed in "Year" format. Defaults to 'yyyy'.</td>
+          </tr>
+          <tr>
+            <th id="setHourMinorDateDisplayFormat">setHourMinorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart minor date headings displayed in "Hour" format. Defaults to 'HH'.</td>
+          </tr>
+          <tr>
+            <th id="setDayMinorDateDisplayFormat">setDayMinorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart minor date headings displayed in "Day" format. Defaults to 'dd'.</td>
+          </tr>
+          <tr>
+            <th id="setWeekMinjorDateDisplayFormat">setWeekMinjorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.</td>
+          </tr>
+          <tr>
+            <th id="setMonthMinorDateDisplayFormat">setMonthMinorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.</td>
+          </tr>
+          <tr>
+            <th id="setQuarterMinorDateDisplayFormat">setQuarterMinorDateDisplayFormat():</th>
+            <td>Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.</td>
+          </tr>
+        </table>
+        <h3 id="optionsLanguage">Internationalization</h3>
+        <p>jsGanttImproved only provides English text however all hard coded strings can be replaced by calling the addLang() method available on the GanttChart object returned by a call to JSGantt.GanttChart()</p>
+        <p>The addLang() method takes two parameters.  The first is a string identifier for the language, the second is a javascript object containing all the replacement text pairs, the default English settings are:</p>
+        <blockquote>
+          <table class="multipleColumns">
             <tbody>
               <tr>
-                <td>
+                <td class="lang">
                   <table>
                     <tr>
                       <th>january:</th>
@@ -1279,7 +857,7 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
                     </tr>
                   </table>
                 </td>
-                <td>
+                <td class="lang">
                   <table>
                     <tr>
                       <th>sunday:</th>
@@ -1371,7 +949,7 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
                     </tr>
                   </table>
                 </td>
-                <td>
+                <td class="lang">
                   <table>
                     <tr>
                       <th>format:</th>
@@ -1461,14 +1039,15 @@ g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2016-02-20','2016-02-2
                 </td>
             </tbody>
           </table>
-          <p>When adding a language any translations that are not provided will use the default English language value.  This provides a simple way to override default strings e.g.</p>
-          <pre class="prettyprint lang-js"><code>g.addLang('en2', {'format':'Select', 'comp':'Complete'});</code></pre>
-          <p>would create a language called 'en2' where the text in the format selector was "Select" rather than "Format" and the header for the Percentage Complete column in the task list is "Complete" rather than "% Comp."</p>
-          <p>Once a translation has been added a call must be made to <a href="#setLang">setLang()</a> with the appropriate langage identifier before calling Draw().</p>
-          <h4 id="tOptionsExamples">Example Options</h4>
-          <p>The configuration options used in the example chart above are:</p>
-          <!-- Start Code -->
-<pre class="prettyprint"><code>g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+        </blockquote>
+        <p>When adding a language any translations that are not provided will use the default English language value.  This provides a simple way to override default strings e.g.</p>
+        <pre class="prettyprint lang-js"><code>g.addLang('en2', {'format':'Select', 'comp':'Complete'});</code></pre>
+        <p>would create a language called 'en2' where the text in the format selector was "Select" rather than "Format" and the header for the Percentage Complete column in the task list is "Complete" rather than "% Comp."</p>
+        <p>Once a translation has been added a call must be made to <a href="#setLang">setLang()</a> with the appropriate langage identifier before calling Draw().</p>
+        <h3 id="tOptionsExamples">Example Options</h3>
+        <p>The configuration options used in the example chart above are:</p>
+        <pre class="prettyprint lang-js"><code>g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+
 g.setQuarterColWidth(36);
 g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
 g.setDayMajorDateDisplayFormat('mon yyyy - Week ww'); // Set format to display dates in the "Major" header of the "Day" view
@@ -1476,181 +1055,106 @@ g.setWeekMinorDateDisplayFormat('dd mon'); // Set format to display dates in the
 g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
 g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
 g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
-g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers</code></pre>
-          <!-- End Code -->
-          <p>Putting all this information together the final code to produce the chart above is as follows:</p>
-          <!-- Start Code -->
-<pre class="prettyprint"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
+g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+        </code></pre>
+        <p>Putting all this information together the final code to produce the chart above is as follows:</p>
+        <pre class="prettyprint lang-html"><code>&lt;link rel="stylesheet" type="text/css" href="jsgantt.css" /&gt;
 &lt;script language="javascript" src="jsgantt.js"&gt;&lt;/script&gt;
 &lt;div style="position:relative" class="gantt" id="GanttChartDIV"&gt;&lt;/div&gt;
 &lt;script&gt;
 
- var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
+var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
 
- if( g.getDivId() != null ) {
-  g.setCaptionType('Complete');
-  g.setQuarterColWidth(36);
-  g.setDateTaskDisplayFormat('day dd month yyyy');
-  g.setDayMajorDateDisplayFormat('mon yyyy - Week ww');
-  g.setWeekMinorDateDisplayFormat('dd mon');
-  g.setShowTaskInfoLink(1);
-  g.setShowEndWeekDate(0);
-  g.setUseSingleCell(10000);
-  g.setFormatArr('Day', 'Week', 'Month', 'Quarter');
+if( g.getDivId() != null ) {
+g.setCaptionType('Complete');
+g.setQuarterColWidth(36);
+g.setDateTaskDisplayFormat('day dd month yyyy');
+g.setDayMajorDateDisplayFormat('mon yyyy - Week ww');
+g.setWeekMinorDateDisplayFormat('dd mon');
+g.setShowTaskInfoLink(1);
+g.setShowEndWeekDate(0);
+g.setUseSingleCell(10000);
+g.setFormatArr('Day', 'Week', 'Month', 'Quarter');
 
-  g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',       0, 'Brian',    0,   1, 0,  1, '',      '',      'Some Notes text', g ));
-  g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2016-02-20','2016-02-20', 'gmilestone',   '',       1, 'Shlomy',   100, 0, 1,  1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',       0, 'Shlomy',   40,  1, 1,  1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2016-02-21','2016-03-09', 'gtaskblue',    '',       0, 'Brian T.', 60,  0, 12, 1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2016-03-06','2016-03-11', 'gtaskred',     '',       0, 'Brian',    60,  0, 12, 1, 121,     '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2016-03-09','2016-03-14 12:00', 'gtaskyellow', '',  0, 'Ilan',     60,  0, 12, 1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2016-03-09','2016-03-29', 'gtaskred',     '',       0, 'Anyone',   60,  0, 12, 1, '123SS', 'This is a caption', null, g));
-  g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2016-03-24','2016-03-24', 'gtaskyellow',  '',       0, 'Brian',    20,  0, 0,  1, 122,     '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',       0, 'Brian',    0,   1, 0,  1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2016-02-25','2016-03-17', 'gtaskpurple',  '',       0, 'Brian',    30,  0, 3,  1, '',      'Caption 1','',   g));
-  g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2016-03-15','2016-03-24', 'gtaskgreen',   '',       0, 'Shlomy',   40,  0, 3,  1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Task Items',      '',           '',          'ggroupblack',  '',       0, 'Someone',  40,  2, 3,  1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2016-03-06','2016-03-09', 'gtaskblue',    '',       0, 'Brian',    60,  0, 33, 1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2016-03-11','2016-03-20', 'gtaskblue',    '',       0, 'Brian',    0,   0, 33, 1, '332',   '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',       0, 'Anybody',  60,  1, 3,  0, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2016-03-26','2016-04-11', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2016-04-12','2016-05-18', 'gtaskpink',    '',       0, 'Brian',    60,  0, 34, 1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2016-05-13','2016-05-17', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1, '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2016-05-17','2016-06-04', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1, "342,343",'',     '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2016-07-17','2017-09-04', 'gtaskpurple',  '',       0, 'Brian',    30,  0, 3,  1, '333',   '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',       0, 'Brian',    0,   1, 0,  1, '',      '',      'Some Notes text', g ));
+g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2016-02-20','2016-02-20', 'gmilestone',   '',       1, 'Shlomy',   100, 0, 1,  1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',       0, 'Shlomy',   40,  1, 1,  1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2016-02-21','2016-03-09', 'gtaskblue',    '',       0, 'Brian T.', 60,  0, 12, 1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2016-03-06','2016-03-11', 'gtaskred',     '',       0, 'Brian',    60,  0, 12, 1, 121,     '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2016-03-09','2016-03-14 12:00', 'gtaskyellow', '',  0, 'Ilan',     60,  0, 12, 1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2016-03-09','2016-03-29', 'gtaskred',     '',       0, 'Anyone',   60,  0, 12, 1, '123SS', 'This is a caption', null, g));
+g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2016-03-24','2016-03-24', 'gtaskyellow',  '',       0, 'Brian',    20,  0, 0,  1, 122,     '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',       0, 'Brian',    0,   1, 0,  1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2016-02-25','2016-03-17', 'gtaskpurple',  '',       0, 'Brian',    30,  0, 3,  1, '',      'Caption 1','',   g));
+g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2016-03-15','2016-03-24', 'gtaskgreen',   '',       0, 'Shlomy',   40,  0, 3,  1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Task Items',      '',           '',          'ggroupblack',  '',       0, 'Someone',  40,  2, 3,  1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2016-03-06','2016-03-09', 'gtaskblue',    '',       0, 'Brian',    60,  0, 33, 1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2016-03-11','2016-03-20', 'gtaskblue',    '',       0, 'Brian',    0,   0, 33, 1, '332',   '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',       0, 'Anybody',  60,  1, 3,  0, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2016-03-26','2016-04-11', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2016-04-12','2016-05-18', 'gtaskpink',    '',       0, 'Brian',    60,  0, 34, 1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2016-05-13','2016-05-17', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1, '',      '',      '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2016-05-17','2016-06-04', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1, "342,343",'',     '',      g));
+g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2016-07-17','2017-09-04', 'gtaskpurple',  '',       0, 'Brian',    30,  0, 3,  1, '333',   '',      '',      g));
 
-  g.Draw();
- }
- else
- {
-  alert("Error, unable to create Gantt Chart");
- }
+g.Draw();
+}
+else
+{
+alert("Error, unable to create Gantt Chart");
+}
 
 &lt;/script&gt;</code></pre>
-          <!-- End Code -->
-          <h4 id="xmlExport">XML Export</h4>
-          <p>The following methods can be used to extract details of tasks in the project in XML format</p>
-          <p>Method definition: <span class="mdl-color-text--primary-dark mdl-typography--font-bold">getXMLProject()</span></p>
-          <p>Returns a string containing the entire project in JSGantt Improved XML format. Dates will be exported in the currently defined input format as set by setDateInputFormat()</p>
-          <p>Method definition: <span class="mdl-color-text--primary-dark mdl-typography--font-bold">getXMLTask(<em>pID, pIdx</em>)</span></p>
-          <table class="function-table">
-            <tr>
-              <th>pID:</th>
-              <td>(required) the numeric ID that identifies the task to extract</td>
-            </tr>
-            <tr>
-              <th>pIdx:</th>
-              <td>(optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID</td>
-            </tr>
-          </table>
-          <p>Returns a string containing the specified task item in JSGantt Improved XML format. Dates will be exported in the currently defined input format as set by setDateInputFormat()</p>
-        </div>
-
-        <!-- Credits Section -->
-        <div id="credits" class="section">
-          <h2>Credits</h2>
-          <div class="font-serif">
-            <p>Developed by Paul Geldart</p>
-            <p>Based on jsGantt 1.2 developed by Shlomy Gantz and Brian Twidt<br>
-              Contributed: Paul Labuschagne, Kevin Badgett, Ilan Admon<br>
-            </p>
-          </div>
-          <div id="license">
-            <h3>License</h3>
-            <div class="font-serif">
-              jsGanttImproved is released under BSD license.<br>
-              If you plan to use it in a commercial product please consider donating the first sale to charity.
-            </div>
-            <!-- Start Code -->
-<pre class="prettyprint"><code>* Copyright (c) 2013-2017, Paul Geldart and Eduardo Rodrigues.
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of Paul Geldart and Eduardo Rodrigues nor the names of its contributors
-*       may be used to endorse or promote products derived from this software
-*       without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY PAUL GELDART AND EDUARDO RODRIGUES ''AS IS'' AND ANY EXPRESS OR
-* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-* IN NO EVENT SHALL PAUL GELDART AND EDUARDO RODRIGUES BE LIABLE FOR ANY DIRECT,
-* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</code></pre>
-            <!-- End Code -->
-          </div>
-
-          <h3>Maintainers</h3>
-          <div id="team" class="container-contact-card">
-
-            <!-- Eduardo Rodrigues -->
-            <div class="contact-card edu-card mdl-card mdl-shadow--2dp">
-              <div class="mdl-card__title"></div>
-              <div class="mdl-card__contact-name">Eduardo Rodrigues</div>
-              <div class="mdl-card__supporting-text">
-                Developer
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="mailto:eduardomourar@gmail.com?Subject=jsGanttImproved" target="_top">
-                  Contact
-                </a>
-                <div class="mdl-layout-spacer"></div>
-                <i class="material-icons">mail</i>
+        <h2 id="xmlExport">XML Export</h2>
+        <p>The following methods can be used to extract details of tasks in the project in XML format</p>
+        <p>Method definition: <strong>getXMLProject()</strong></p>
+        <p>Returns a string containing the entire project in JSGantt Improved XML format. Dates will be exported in the currently defined input format as set by setDateInputFormat()</p>
+        <p>Method definition: <strong>getXMLTask(<em>pID, pIdx</em>)</strong></p>
+        <table>
+          <tr>
+            <th>pID:</th>
+            <td>(required) the numeric ID that identifies the task to extract</td>
+          </tr>
+          <tr>
+            <th>pIdx:</th>
+            <td>(optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID</td>
+          </tr>
+        </table>
+        <p>Returns a string containing the specified task item in JSGantt Improved XML format. Dates will be exported in the currently defined input format as set by setDateInputFormat()</p>
+      </div>
+    <!-- Credits -->
+      <div class="container-fluid section" id="credits">
+        <h1>Credits</h1>
+        <div class="card-group">
+          <div class="card contact-card">
+            <img class="img-fluid" src="https://avatars.githubusercontent.com/eduardomourar" alt="Eduardo Rodrigues">
+            <div class="card-block">
+              <h4 class="card-title">Eduardo Rodrigues</h4>
+              <p class="card-text">Developer</p>
+              <div class="text-right">
+                <a href="https://github.com/eduardomourar" class="card-link contact-link"><i class="fa fa-github"></i></a>
               </div>
             </div>
-
-            <!-- Ricardo Cardoso -->
-            <div class="contact-card rick-card mdl-card mdl-shadow--2dp">
-              <div class="mdl-card__title"></div>
-              <div class="mdl-card__contact-name">Ricardo Cardoso</div>
-              <div class="mdl-card__supporting-text">
-                Developer & Designer
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="mailto:rickclsilva@gmail.com?Subject=jsGanttImproved" target="_top">
-                  Contact
-                </a>
-                <div class="mdl-layout-spacer"></div>
-                <i class="material-icons">mail</i>
+          </div>
+          <div class="card contact-card">
+            <img class="img-fluid" src="https://avatars.githubusercontent.com/RickCardoso" alt="Ricardo Cardoso">
+            <div class="card-block">
+              <h4 class="card-title">Ricardo Cardoso</h4>
+              <p class="card-text">Developer</p>
+              <div class="text-right">
+                <a href="https://github.com/RickCardoso" class="card-link contact-link"><i class="fa fa-github"></i></a>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Floating Action Buttons on small screen -->
-          <button id="fab" class="fab-small-screen-only mdl-button mdl-js-button mdl-button--fab mdl-button--accent mdl-js-ripple-effect mdl-layout--small-screen-only"
-          ng-click="mc.showFabs = !mc.showFabs" ng-class="{'open': mc.showFabs}">
-            <i class="material-icons">code</i>
-          </button>
-          <div class="mdl-tooltip mdl-tooltip--left" data-mdl-for="fab">Code</div>
+    <!-- Footer -->
+      <div class="footer text-center">
+        <p>© Copyright 2013-2017 jsGanttImproved<br />
+        Designed with <a href="https://v4-alpha.getbootstrap.com" target="_blank">Bootstrap</a> and <a href="http://fontawesome.io" target="_blank">Font Awesome</a></p>
+      </div>
 
-          <a href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball" rel="external">
-            <button id="minifab1" class="minifab-small-screen-only one mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-layout--small-screen-only" ng-class="{'active': mc.showFabs}">
-              <i class="material-icons">file_download</i>
-            </button>
-          </a>
-          <div class="mdl-tooltip mdl-tooltip--left" data-mdl-for="minifab1">Download</div>
-
-          <a href="https://github.com/jsGanttImproved/jsgantt-improved" rel="external" target="_blank">
-            <button id="minifab2" class="minifab-small-screen-only two mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-layout--small-screen-only" ng-class="{'active': mc.showFabs}">
-              <img class="icon icons8-GitHub-Filled" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAADrElEQVRoQ+2Zj5ENQRCHfxcBInAXASJwIkAEiAARIAJEwEWACBABIkAEiID6tra3ZvftbPfMzq5XSle9KuV2evub7uk/syf6R+SkIcdlSTclXZd0Lum0/6Wv+CaJ3wdJnyV9lPSzhQ1rQTD+tqRHPUCNTQC9kPRuDVQtCAAPewD+3ULwDEAva4BqQAB4KqkVwHQTAEI/QGEpASHm36wIobBR/YOE3N3+TLlroyB3JL3a0As5Q/HOA0lvPZIIyP0ewtO15d+Beb30Ag/kGCDM/kWYJRDCiTNxTMKZmQ2zHAgH+9NfOBPepnFmbswlgBwIEFToYxSyGTAjmQOhSj9fIPjVtx4GSgjyu1pJ/b0PFwsZDKWNubSg73FfPIdHpiAUua9OSOUOHRtAIbNein5q2kehnz7MejGep5pPxUsy6D1L9U9BUPzE2Vkv01U6ZrQM4B+Oomf9xnWPpUZFvDFd08LonI7fjvKRV1IQz52mdw+P8C4PhGeGME+NimaqKzXdaaHrIqGFyiGDGUh0IYtv9YNRoW1Fj5MM3gdXdBtrICVV/CD1BV9Y8phXAlJdXbU3kEi2YjE5n/rRZDxdICNCvFpiy7vsZSDkfOZtT0Ypz3t45d+pLwxxnjD3nxsIRZD+yhNaAw7YHhI9J3juzEAiqQ7j90q9tlFhu/6D7BFbwaLYRYp5hCy01G2a3XsUQ3tXtLaRSU9Ls1Z2QtvAQ9HaNspa0fR7IYmebA/hsuFe4EUjkGhBRC9zAClvS6EUUBIiMiqIUTeiGO/Rb20p9FnUkYiMWpTowTLFuJ0WegvhIrAkfEdNIwZRsa/NWEaTyDzNDhGCNpvjGWBahRnhBETUE5j6xS5JIoNV2pbgOQBSYLtBrwUCgENNx1t6MT47WOU6TjzFmbCOdw7GPIrnop8FuBuwi4iaEOU2ZwCPXj5gIIfKBAX837RjBoKdjUg0veZ0ZS8fWLA0B7TufEtmjimM3a0Nc1HJBd0WxTA6c0xB3As6WzCXwQ4uxSLx4zzDtMmlR4kMmSpdtHSJDcy0kSRjcVZajrrRmQO7CSngDzLk0qCUm9CafIVNdrMEJHuD40180Us77PJ05cInClL9ocdeHIXZEmT1pzeDIcyoG0vD11YgLkRpONBKUMRy10atQchOREPo1qbm5fYdZOqdGl1s5tyYXdIhdFFT+3KqMkD8ACp+cXLy06JI0bWPRSW1pRok7bnI69SXNUIIoaO2g14Nssb4pmtrQ6upES2U/QGfysUzRsYlUwAAAABJRU5ErkJggg==" width="24" height="24">
-            </button>
-          </a>
-          <div class="mdl-tooltip mdl-tooltip--left" data-mdl-for="minifab2">View on GitHub</div>
-
-        <!-- Footer -->
-          <div class="footer">&copy; Copyright 2013-2017 jsGanttImproved&nbsp;&nbsp;|&nbsp;&nbsp;Designed using <a href="https://getmdl.io">Material Design Lite</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://icons8.com">Icon pack by Icons8</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#home">Go to top</a></div>
-
-      </main>
-    </div>
   </body>
+
 </html>
