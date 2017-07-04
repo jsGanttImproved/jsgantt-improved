@@ -26,26 +26,38 @@ $(document).ready(function() {
         if ($("#external-Gantt").is(":visible")) {
           $("#external-Gantt").animate({
             height: "toggle",
-            opacity: "toggle"}, 300
+            opacity: "toggle"}, 300, function () {
+              $("#embedded-Gantt").animate({
+                height: "toggle",
+                opacity: "toggle"}, 600
+              );
+            }
           );
           $(".btn-demo:nth-child(2)").removeClass("active");
+        } else {
+          $("#embedded-Gantt").animate({
+            height: "toggle",
+            opacity: "toggle"}, 600
+          );
         }
-        $("#embedded-Gantt").animate({
-          height: "toggle",
-          opacity: "toggle"}, 600
-        );
       } else {
         if ($("#embedded-Gantt").is(":visible")) {
           $("#embedded-Gantt").animate({
             height: "toggle",
-            opacity: "toggle"}, 300
+            opacity: "toggle"}, 300, function() {
+              $("#external-Gantt").animate({
+                height: "toggle",
+                opacity: "toggle"}, 600
+              );
+            }
           );
           $(".btn-demo:nth-child(1)").removeClass("active");
+        } else {
+          $("#external-Gantt").animate({
+            height: "toggle",
+            opacity: "toggle"}, 600
+          );
         }
-        $("#external-Gantt").animate({
-          height: "toggle",
-          opacity: "toggle"}, 600
-        );
       }
     });
 
