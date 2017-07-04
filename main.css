@@ -63,15 +63,9 @@ h2 {
 }
 
 h3 {
-  font-family: Kelly Slab
+  font-family: Kelly Slab;
 }
-
-#embedded-Gantt {
-
-}
-
-#external-Gantt {
-
+#embedded-Gantt, #external-Gantt {
 }
 
 .code-block {

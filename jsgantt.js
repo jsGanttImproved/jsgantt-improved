@@ -774,8 +774,6 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 			if(vShowStartDate==1)this.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', vLangs[vLang]['startdate']);
 			if(vShowEndDate==1)this.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', vLangs[vLang]['enddate']);
 
-			vTmpDiv=this.newNode(vLeftHeader, 'div', null, 'glabelfooter');
-
 			var vLeftTable=document.createDocumentFragment();
 			var vTmpDiv2=this.newNode(vLeftTable, 'div', vDivId+'glistbody', 'glistgrid gcontainercol');
 			this.setListBody(vTmpDiv2);
@@ -1022,6 +1020,8 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 
 			this.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx+1);
 
+			vTmpDiv=this.newNode(vRightHeader, 'div', null, 'glabelfooter');
+
 			var vRightTable=document.createDocumentFragment();
 			vTmpDiv=this.newNode(vRightTable, 'div', vDivId+'gchartbody', 'gchartgrid gcontainercol');
 			this.setChartBody(vTmpDiv);
@@ -1190,10 +1190,10 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 
 			while(vDiv.hasChildNodes())vDiv.removeChild(vDiv.firstChild);
 			vTmpDiv=this.newNode(vDiv, 'div', null, 'gchartcontainer');
-			vTmpDiv.appendChild(vRightHeader);
 			vTmpDiv.appendChild(vLeftHeader);
-			vTmpDiv.appendChild(vRightTable);
+			vTmpDiv.appendChild(vRightHeader);
 			vTmpDiv.appendChild(vLeftTable);
+			vTmpDiv.appendChild(vRightTable);
 			this.newNode(vTmpDiv, 'div', null, 'ggridfooter');
 			vTmpDiv2=this.newNode(this.getChartBody(), 'div', vDivId+'Lines', 'glinediv');
 			vTmpDiv2.style.visibility='hidden';
