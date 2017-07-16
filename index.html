@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 
-<!-- Meta data -->
-  <meta charset="utf-8">
-  <title>jsGantt Improved</title>
-  <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
-  <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Head -->
+  <head>
+  <!-- Meta data -->
+    <meta charset="utf-8">
+    <title>jsGantt Improved</title>
+    <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
+    <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<!-- External resources -->
-  <!-- jQuery + Ajax [required by Bootstrap] -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <!-- Required by smooth scrolling -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <!-- Bootstrap v4.0.0 Alpha -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-  <!-- Font Awesome -->
-    <script src="https://use.fontawesome.com/78d1e57168.js"></script>
-  <!-- Google's Code Prettify -->
-    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
-  <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
+  <!-- External resources -->
+    <!-- jQuery + Ajax [required by Bootstrap] -->
+      <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+      <!-- Required by smooth scrolling -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Bootstrap v4.0.0 Alpha -->
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+      <script src="https://use.fontawesome.com/78d1e57168.js"></script>
+    <!-- Google's Code Prettify -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+    <!-- Google Fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
 
-<!-- Internal resources -->
-  <!-- Webpage -->
-    <link href="main.css" rel="stylesheet" type="text/css" />
-    <script src="main.js" type="text/javascript"></script>
-  <!-- jsGanttImproved App -->
-    <link href="jsgantt.css" rel="stylesheet" type="text/css"/>
-    <script src="jsgantt.js" type="text/javascript"></script>
+  <!-- Internal resources -->
+    <!-- Webpage -->
+      <link href="main.css" rel="stylesheet" type="text/css" />
+      <script src="main.js" type="text/javascript"></script>
+    <!-- jsGanttImproved App -->
+      <link href="jsgantt.css" rel="stylesheet" type="text/css"/>
+      <script src="jsgantt.js" type="text/javascript"></script>
+  </head>
 
 <!-- Content -->
   <body data-spy="scroll" data-target="#my-navbar-nav">
@@ -216,6 +219,11 @@ if (g.getDivId() != null) {
         </ul>
         <h2>Changelog:</h3>
         <p>Check the full list of changes on <a href="https://github.com/jsGanttImproved/jsgantt-improved/releases">GitHub releases page</a>.</p>
+        <h3>v1.7.5.4:</h3>
+        <ul>
+          <li>Left part of the chart is now created first on JavaScript and establishes the left floating reference</li>
+          <li>Minimum width updated to 632px so that the left part of the chart has a fixed width of 532px and the right part fills out the rest with a minimum of 100px</li>
+        </ul>
         <h3>v1.7.5.3:</h3>
         <ul>
           <li>Fixed group completion percentage that now is a weighted average</li>
