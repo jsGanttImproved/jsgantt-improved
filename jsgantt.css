@@ -1,4 +1,4 @@
-/* Sample CSS for jsGanttImproved v1.7.3 */
+/* Sample CSS for jsGanttImproved v1.7.5.4 */
 div.gantt		{ font-family:tahoma, arial, verdana, Sans-serif; font-size:10px; color: #656565; }
 
 .gantt table	{ border-collapse: collapse; }
@@ -180,36 +180,37 @@ div.gtaskbarcontainer		{ z-index: 1; position: absolute; top: 0px }
 .gTaskNotes 		{font-size: 11px; font-weight: normal; color: #323232; padding: 0 15px; display: block;}
 .gTIn	 			{padding-top: 10px;}
 
-.gantt				{ min-width: 1064px;	/* 2x LC width */ }
-.gchartcontainer	{ padding-left: 532px;	/* LC width */ }
-.gcontainercol		{ position: relative; float: left; } /* Add a max-height value here if wanted */
-.glistgrid			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
-.glistlbl			{ width: 532px; /* LC width */ margin-left: -100%; right: 532px; /* LC width */ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
+.gantt				{ min-width: 632px;	/* 2x LC width */ }
+.gchartcontainer	{ /* padding-left: 532px; LC width */ line-height: 1; /* Overrides inherited CSS (e.g. from Bootstrap) */ }
+.gcontainercol		{ position: relative; } /* Add a max-height value here if wanted */
+.glistgrid			{ width: 532px; /* LC width */ float: left; /* LC width */ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
+.glistlbl			{ width: 532px; /* LC width */ float: left; /* LC width */ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; overflow: hidden; }
 .glabelfooter		{ clear: both; }
 .ggridfooter		{ clear: both; }
 
 .rhscrpad			{ width: 150px; position: absolute; top: 0px; height: 1px; }
 
-.gchartgrid			{ width: 100%; padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0%; }
-.gchartlbl			{ width: 100%; padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: hidden; }
+.gchartgrid			{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: auto; min-height: 0%; }
+.gchartlbl			{ padding-right: 0px; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; background-color: #ffffff; position: relative; overflow: hidden; }
 
 /* Old Internet Explorer version hacks */
 .gantt						{ _height: 100% }	/* otherwise the chart disappears! */
-div .gantt					{ _width: 1064px; }	/* ie6 fixed width */
+div .gantt					{ /* _width: 1064px; ie6 fixed width */ }
 div.gchartlbl,
-div.gchartgrid				{ _width: 532px; }	/* ie6 fixed width */
+div.gchartgrid				{/* _width: 532px; */}	/* ie6 fixed width */
 div.glistlbl,
 div.glistgrid {
 	*right: 0px;			/* ie7 pulls the content too far left with the negative margin */
 	_right: 532px;			/* but ie6 fixed width needs this */
 	_margin-left: -532px;	/* ie6 fixed width */
+	float: left;
 }
 div.gchartgrid { *padding-bottom: 20px; *overflow-y: hidden; } /* variable height design, no need for vertical scroll */
 td.gmajorheading div { *overflow: hidden; } /* stops resizing fixed width columns if the text is too wide */
 td.gspanning div { *overflow: hidden; } /* stops resizing fixed width columns if the text is too wide */
 
 /* border transparency tricks */
-.ggroupblackendpointleft { _border-top: 4px solid black; _border-left: 4px solid pink; _border-bottom: 4px solid pink; _border-right: 4px solid pink; _filter: chroma(color=pink); } 
+.ggroupblackendpointleft { _border-top: 4px solid black; _border-left: 4px solid pink; _border-bottom: 4px solid pink; _border-right: 4px solid pink; _filter: chroma(color=pink); }
 .ggroupblackendpointright { _border-top: 4px solid black; _border-left: 4px solid pink; _border-bottom: 4px solid pink; _border-right: 4px solid pink;_filter: chroma(color=pink); }
 
 .gmdtop { _border-left: 5px solid pink; _border-top: 5px solid pink; _border-right: 5px solid pink; _filter: chroma(color=pink);}
@@ -223,7 +224,7 @@ td.gspanning div { *overflow: hidden; } /* stops resizing fixed width columns if
 /* Workaround for odd bug in old versions of Opera - no other browser needs this */
 .glinediv {position: absolute; top: 0px; left: 0px;}
 
-/* if using setUseSingleCell(1) the following is a suggested set of CSS3 styles to recreate the table grid - won't work on old browsers 
+/* if using setUseSingleCell(1) the following is a suggested set of CSS3 styles to recreate the table grid - won't work on old browsers
 .ggrouphour td,
 .gmilehour td,
 .gitemhour td			{ background-size: 19px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px); width: 100%; height: 19px; }

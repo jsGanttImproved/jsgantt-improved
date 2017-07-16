@@ -5,11 +5,11 @@
 	  | \__ \/ /_\\ (_| | | | | |_| |_/\/ /_ | | | | | | |_) | | | (_) \ V /  __/ (_| |
 	 _/ |___/\____/\__,_|_| |_|\__|\__\____/ |_| |_| |_| .__/|_|  \___/ \_/ \___|\__,_|
 	|__/                                               |_|
-	jsGanttImproved 1.7.5.3
+	jsGanttImproved 1.7.5.4
 
 	The current version of this code can be found at https://github.com/jsGanttImproved/jsgantt-improved/
 
-	* Copyright (c) 2013-2017, Paul Geldart and Eduardo Rodrigues.
+	* Copyright (c) 2013-2017, Paul Geldart, Eduardo Rodrigues and Ricardo Cardoso.
 	* All rights reserved.
 	*
 	* Redistribution and use in source and binary forms, with or without
@@ -19,14 +19,14 @@
 	*     * Redistributions in binary form must reproduce the above copyright
 	*       notice, this list of conditions and the following disclaimer in the
 	*       documentation and/or other materials provided with the distribution.
-	*     * Neither the name of Paul Geldart and Eduardo Rodrigues nor the names of its contributors
+	*     * Neither the name of Paul Geldart, Eduardo Rodrigues and Ricardo Cardoso nor the names of its contributors
 	*       may be used to endorse or promote products derived from this software
 	*       without specific prior written permission.
 	*
-	* THIS SOFTWARE IS PROVIDED BY PAUL GELDART AND EDUARDO RODRIGUES ''AS IS'' AND ANY EXPRESS OR
+	* THIS SOFTWARE IS PROVIDED BY PAUL GELDART, EDUARDO RODRIGUES AND RICARDO CARDOSO ''AS IS'' AND ANY EXPRESS OR
 	* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 	* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-	* IN NO EVENT SHALL PAUL GELDART AND EDUARDO RODRIGUES BE LIABLE FOR ANY DIRECT,
+	* IN NO EVENT SHALL PAUL GELDART, EDUARDO RODRIGUES AND RICARDO CARDOSO BE LIABLE FOR ANY DIRECT,
 	* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 	* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 	* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -774,8 +774,6 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 			if(vShowStartDate==1)this.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', vLangs[vLang]['startdate']);
 			if(vShowEndDate==1)this.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', vLangs[vLang]['enddate']);
 
-			vTmpDiv=this.newNode(vLeftHeader, 'div', null, 'glabelfooter');
-
 			var vLeftTable=document.createDocumentFragment();
 			var vTmpDiv2=this.newNode(vLeftTable, 'div', vDivId+'glistbody', 'glistgrid gcontainercol');
 			this.setListBody(vTmpDiv2);
@@ -1022,6 +1020,8 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 
 			this.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx+1);
 
+			vTmpDiv=this.newNode(vRightHeader, 'div', null, 'glabelfooter');
+
 			var vRightTable=document.createDocumentFragment();
 			vTmpDiv=this.newNode(vRightTable, 'div', vDivId+'gchartbody', 'gchartgrid gcontainercol');
 			this.setChartBody(vTmpDiv);
@@ -1190,10 +1190,10 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 
 			while(vDiv.hasChildNodes())vDiv.removeChild(vDiv.firstChild);
 			vTmpDiv=this.newNode(vDiv, 'div', null, 'gchartcontainer');
-			vTmpDiv.appendChild(vRightHeader);
 			vTmpDiv.appendChild(vLeftHeader);
-			vTmpDiv.appendChild(vRightTable);
+			vTmpDiv.appendChild(vRightHeader);
 			vTmpDiv.appendChild(vLeftTable);
+			vTmpDiv.appendChild(vRightTable);
 			this.newNode(vTmpDiv, 'div', null, 'ggridfooter');
 			vTmpDiv2=this.newNode(this.getChartBody(), 'div', vDivId+'Lines', 'glinediv');
 			vTmpDiv2.style.visibility='hidden';
