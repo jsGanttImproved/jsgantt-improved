@@ -346,6 +346,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	var vChartTable=null;
 	var vLines=null;
 	var vTimer=20;
+	var vTooltipDelay=1500;
 
 	this.setUseFade=function(pVal){vUseFade=pVal;};
 	this.setUseMove=function(pVal){vUseMove=pVal;};
@@ -429,6 +430,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	this.setChartTable=function(pTable){if(typeof HTMLTableElement !== 'function' || pTable instanceof HTMLTableElement)vChartTable=pTable;};
 	this.setLines=function(pDiv){if(typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)vLines=pDiv;};
 	this.setTimer=function(pVal){vTimer=pVal*1;};
+	this.setTooltipDelay=function(pVal){vTooltipDelay=pVal*1;};
 	this.addLang=function(pLang, pVals){
 		if(!vLangs[pLang])
 		{
@@ -488,6 +490,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	this.getChartTable=function(){return vChartTable;};
 	this.getLines=function(){return vLines;};
 	this.getTimer=function(){return vTimer;};
+	this.getTooltipDelay=function(){return vTooltipDelay;};
 
 	this.CalcTaskXY=function()
 	{
@@ -1553,7 +1556,7 @@ JSGantt.stripUnwanted=function(pNode){
 };
 
 JSGantt.delayedHide=function(pGanttChartObj, pTool, pTimer){
-	var vDelay=1500;
+	var vDelay=pGanttChartObj.getTooltipDelay();
 	if(pTool) pTool.delayTimeout=setTimeout(function(){JSGantt.hideToolTip(pGanttChartObj, pTool, pTimer);}, vDelay);
 };
 
