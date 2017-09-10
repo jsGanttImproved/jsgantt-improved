@@ -4,7 +4,7 @@ $(document).ready(function() {
     $("body").scrollspy({target:"#my-navbar-nav", offset:50});
 
   // Smooth scroll
-    $("a").click(function(event) {
+    $("a").not(".carousel-control-next").not(".carousel-control-prev").click(function(event) {
       if (this.hash !== "") {
        event.preventDefault();
        var linkOffset = 0;

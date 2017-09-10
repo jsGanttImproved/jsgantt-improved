@@ -16,9 +16,11 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
       <!-- Required by smooth scrolling -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <!-- Bootstrap v4.0.0 Alpha -->
-      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- Popper [required by Bootstrap] -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <!-- Bootstrap v4.0.0 Beta -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
       <script src="https://use.fontawesome.com/78d1e57168.js"></script>
     <!-- Google's Code Prettify -->
@@ -38,11 +40,11 @@
 <!-- Content -->
   <body data-spy="scroll">
   <!-- Navigation bar -->
-    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand product-name" id="my-nav-brand" href="#home">jsGanttImproved</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#my-navbar-nav" aria-controls="my-navbar-nav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand product-name" id="my-nav-brand" href="#home">jsGanttImproved</a>
 
       <div class="collapse navbar-collapse" id="my-navbar-nav">
         <ul class="navbar-nav mr-auto" role="tablist">
@@ -72,59 +74,51 @@
   <!-- Content -->
     <!-- Home -->
       <div class="container-fluid" id="home">
-        <div class="row">
-          <div class="col-lg-1">
-          </div>
+        <div class="row align-items-end justify-content-center">
           <div class="col-lg-5 text-center">
             <h1 class="display-1 product-name" id="home-title">jsGanttImproved</h1>
-            <h2 class="display-2" id="home-subtitle">latest v1.7.5.5</h2>
-            <div class="row" id="home-buttons">
-              <div class="col-md-3">
-              </div>
-              <div class="col-md-3">
-                <a class="btn btn-danger my-2 my-sm-0 mx-1" href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball"><i class="fa fa-download"></i> Download</a>
-              </div>
-              <div class="col-md-3">
-                <a class="btn btn-primary my-2 my-sm-0 mx-1" href="https://github.com/jsGanttImproved/jsgantt-improved" target="_blank"><i class="fa fa-github"></i> View on GitHub</a>
-              </div>
-              <div class="col-md-3">
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5">
-            <div class="card text-center" id="slide-card">
-              <div class="card-block">
-                <span class="card-text slide">
-                  <p><i class="fa fa-code slide-icon"></i></p>
-                  <p>100% HTML + CSS + JavaScript Gantt Chart</p>
-                </span>
-                <span class="card-text slide">
-                  <p><i class="fa fa-usd slide-icon"></i></p>
-                  <p>Completely FREE</p>
-                </span>
-                <span class="card-text slide">
-                  <p><i class="fa fa-github slide-icon"></i></p>
-                  <p>Open source</p>
-                </span>
-              </div>
-              <div class="card-footer text-muted" id="slide-dots">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-              </div>
-            </div>
+            <h2 class="display-2 mb-4" id="home-subtitle">latest v1.7.5.5</h2>
+            <a class="btn btn-danger my-sm-0 mx-1" href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball"><i class="fa fa-download"></i> Download</a>
+            <a class="btn btn-primary my-sm-0 mx-1" href="https://github.com/jsGanttImproved/jsgantt-improved" target="_blank"><i class="fa fa-github"></i> View on GitHub</a>
           </div>
           <div class="col-lg-1">
           </div>
-        </div>
-        <div class="row">
-          <div class="col text-center">
-            <a class="btn btn-outline-info" href="#demo" id="learn-more"><i class="fa fa-chevron-down"></i></a>
+          <div class="col-lg-4">
+            <div id="carouselIndicators" class="carousel slide my-5" data-ride="carousel">
+              <ol class="carousel-indicators mb-0">
+                <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselIndicators" data-slide-to="2"></li>
+              </ol>
+              <div class="carousel-inner text-center px-5">
+                <div class="carousel-item active">
+                  <p><i class="fa fa-code slide-icon"></i></p>
+                  <p>100% HTML + CSS + JavaScript Gantt Chart</p>
+                </div>
+                <div class="carousel-item">
+                  <p><i class="fa fa-usd slide-icon"></i></p>
+                  <p>Completely FREE</p>
+                </div>
+                <div class="carousel-item">
+                  <p><i class="fa fa-github slide-icon"></i></p>
+                  <p>Open source</p>
+                </div>
+              </div>
+              <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
           </div>
         </div>
+        <a class="btn btn-outline-info" href="#demo" id="learn-more"><i class="fa fa-chevron-down"></i></a>
       </div>
     <!-- Demo -->
-      <div class="container-fluid section" id="demo">
+      <div class="section" id="demo">
         <h1>Demo</h1>
         <div class="btn-group" data-toggle="buttons">
           <label class="btn btn-primary btn-demo">
@@ -195,7 +189,7 @@ if (g.getDivId() != null) {
         </div>
       </div>
     <!-- Features -->
-      <div class="container-fluid section" id="features">
+      <div class="section" id="features">
         <h1>Features</h1>
         <p>jsGanttImproved is a fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images.</p>
         <div class="row">
