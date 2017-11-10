@@ -77,6 +77,8 @@ JSGantt.isIE=function ()
 	else return false;
 };
 
+
+
 JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
 {
 
@@ -270,6 +272,196 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	this.setGroupSpan=function(pSpan){if(typeof HTMLSpanElement !== 'function' || pSpan instanceof HTMLSpanElement)vGroupSpan=pSpan;};
 };
 
+JSGantt.TaskItemAsObject = function(taskData){
+	var vID=parseInt(document.createTextNode(taskData.id).data);
+	var vName=document.createTextNode(taskData.name).data;
+	var vStart=new Date(0);
+	var vEnd=new Date(0);
+	var vGroupMinStart=null;
+	var vGroupMinEnd=null;
+	var vClass=document.createTextNode(taskData.class).data;
+	var vLink=document.createTextNode(taskData.link).data;
+	var vMile=parseInt(document.createTextNode(taskData.mile).data);
+	var vRes=document.createTextNode(taskData.res).data;
+	var vComp=parseFloat(document.createTextNode(taskData.comp).data);
+	var vGroup=parseInt(document.createTextNode(taskData.group).data);
+	var vParent=document.createTextNode(taskData.parent).data;
+	var vOpen=(vGroup==2)?1:parseInt(document.createTextNode(taskData.open).data);
+	var vDepend=new Array();
+	var vDependType=new Array();
+	var vCaption=document.createTextNode(taskData.caption).data;
+	var vDuration='';
+	var vLevel=0;
+	var vNumKid=0;
+	var vWeight=0;
+	var vVisible=1;
+	var vSortIdx=0;
+	var vToDelete=false;
+	var x1, y1, x2, y2;
+	var vNotes;
+	var vParItem=null;
+	var vCellDiv=null;
+	var vGantt=(taskData.gantt instanceof JSGantt.GanttChart)? taskData.gantt : g; //hack for backwards compatibility
+	var vBarDiv=null;
+	var vTaskDiv=null;
+	var vListChildRow=null;
+	var vChildRow=null;
+	var vGroupSpan=null;
+
+	vNotes=document.createElement('span');
+	vNotes.className='gTaskNotes';
+	if (taskData.notes!=null)
+	{
+		vNotes.innerHTML=taskData.notes;
+		JSGantt.stripUnwanted(vNotes);
+	}
+
+	if (taskData.start!=null && taskData.start!='')
+	{
+		vStart=(taskData.start instanceof Date)?taskData.start:JSGantt.parseDateStr(document.createTextNode(taskData.start).data,vGantt.getDateInputFormat());
+		vGroupMinStart=vStart;
+	}
+
+	if (taskData.end!=null && taskData.end!='')
+	{
+		vEnd  =(taskData.end instanceof Date)?taskData.end:JSGantt.parseDateStr(document.createTextNode(taskData.end).data,vGantt.getDateInputFormat());
+		vGroupMinEnd=vEnd;
+	}
+
+	if (taskData.depend!=null)
+	{
+		var vDependStr=taskData.depend+'';
+		var vDepList=vDependStr.split(',');
+		var n=vDepList.length;
+
+		for(var k=0;k<n;k++)
+		{
+			if(vDepList[k].toUpperCase().indexOf('SS')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('SS'));
+				vDependType[k]='SS';
+			}
+			else if(vDepList[k].toUpperCase().indexOf('FF')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('FF'));
+				vDependType[k]='FF';
+			}
+			else if(vDepList[k].toUpperCase().indexOf('SF')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('SF'));
+				vDependType[k]='SF';
+			}
+			else if(vDepList[k].toUpperCase().indexOf('FS')!=-1)
+			{
+				vDepend[k]=vDepList[k].substring(0,vDepList[k].toUpperCase().indexOf('FS'));
+				vDependType[k]='FS';
+			}
+			else
+			{
+				vDepend[k]=vDepList[k];
+				vDependType[k]='FS';
+			}
+		}
+	}
+
+	this.getID=function(){return vID;};
+	this.getName=function(){return vName;};
+	this.getStart=function(){return vStart;};
+	this.getEnd=function(){return vEnd;};
+	this.getGroupMinStart=function(){return vGroupMinStart;};
+	this.getGroupMinEnd=function(){return vGroupMinEnd;};
+	this.getClass=function(){return vClass;};
+	this.getLink=function(){return vLink;};
+	this.getMile=function(){return vMile;};
+	this.getDepend=function(){if(vDepend) return vDepend; else return null;};
+	this.getDepType=function(){if(vDependType) return vDependType; else return null;};
+	this.getCaption=function(){if(vCaption) return vCaption; else return '';};
+	this.getResource=function(){if(vRes) return vRes; else return '\u00A0';};
+	this.getCompVal=function(){if(vComp) return vComp; else return 0;};
+	this.getCompStr=function(){if(vComp) return vComp+'%'; else return '';};
+	this.getNotes=function(){return vNotes;};
+	this.getSortIdx=function(){return vSortIdx;};
+	this.getToDelete=function(){return vToDelete;};
+
+	this.getDuration=function(pFormat, pLang)
+	{
+		if (vMile)
+		{
+			vDuration='-';
+		}
+		else
+		{
+			var vTaskEnd=new Date(this.getEnd().getTime());
+			var vUnits=null;
+			switch(pFormat)
+			{
+				case 'week':  vUnits='day'; break;
+				case 'month':  vUnits='week'; break;
+				case 'quarter': vUnits='month'; break;
+				default: vUnits=pFormat; break;
+			}
+
+			if ((vTaskEnd.getTime()-(vTaskEnd.getTimezoneOffset()*60000))%(86400000)==0)
+			{
+				vTaskEnd=new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate()+1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
+			}
+			var tmpPer=(JSGantt.getOffset(this.getStart(), vTaskEnd, 999, vUnits))/1000;
+			if(Math.floor(tmpPer)!=tmpPer) tmpPer=Math.round(tmpPer*10)/10;
+			switch(vUnits)
+			{
+				case 'hour': vDuration=tmpPer+' '+((tmpPer!=1)?pLang['hrs']:pLang['hr']); break;
+				case 'day': vDuration=tmpPer+' '+((tmpPer!=1)?pLang['dys']:pLang['dy']); break;
+				case 'week': vDuration=tmpPer+' '+((tmpPer!=1)?pLang['wks']:pLang['wk']); break;
+				case 'month': vDuration=tmpPer+' '+((tmpPer!=1)?pLang['mths']:pLang['mth']); break;
+				case 'quarter': vDuration=tmpPer+' '+((tmpPer!=1)?pLang['qtrs']:pLang['qtr']); break;
+			}
+		}
+		return vDuration;
+	};
+
+	this.getParent=function(){return vParent;};
+	this.getGroup=function(){return vGroup;};
+	this.getOpen=function(){return vOpen;};
+	this.getLevel=function(){return vLevel;};
+	this.getNumKids=function(){return vNumKid;};
+	this.getWeight=function(){return vWeight;};
+	this.getStartX=function(){return x1;};
+	this.getStartY=function(){return y1;};
+	this.getEndX=function(){return x2;};
+	this.getEndY=function(){return y2;};
+	this.getVisible=function(){return vVisible;};
+	this.getParItem=function(){return vParItem;};
+	this.getCellDiv=function(){return vCellDiv;};
+	this.getBarDiv=function(){return vBarDiv;};
+	this.getTaskDiv=function(){return vTaskDiv;};
+	this.getChildRow=function(){return vChildRow;};
+	this.getListChildRow=function(){return vListChildRow;};
+	this.getGroupSpan=function(){return vGroupSpan;};
+	this.setStart=function(pStart){if(pStart instanceof Date)vStart=pStart;};
+	this.setEnd=function(pEnd){if(pEnd instanceof Date)vEnd=pEnd;};
+	this.setGroupMinStart=function(pStart){if(pStart instanceof Date)vGroupMinStart=pStart;};
+	this.setGroupMinEnd=function(pEnd){if(pEnd instanceof Date)vGroupMinEnd=pEnd;};
+	this.setLevel=function(pLevel){vLevel=parseInt(document.createTextNode(pLevel).data);};
+	this.setNumKid=function(pNumKid){vNumKid=parseInt(document.createTextNode(pNumKid).data);};
+	this.setWeight=function(pWeight){vWeight=parseInt(document.createTextNode(pWeight).data);};
+	this.setCompVal=function(pCompVal){vComp=parseFloat(document.createTextNode(pCompVal).data);};
+	this.setStartX=function(pX){x1=parseInt(document.createTextNode(pX).data);};
+	this.setStartY=function(pY){y1=parseInt(document.createTextNode(pY).data);};
+	this.setEndX=function(pX){x2=parseInt(document.createTextNode(pX).data);};
+	this.setEndY=function(pY){y2=parseInt(document.createTextNode(pY).data);};
+	this.setOpen=function(pOpen){vOpen=parseInt(document.createTextNode(pOpen).data);};
+	this.setVisible=function(pVisible){vVisible=parseInt(document.createTextNode(pVisible).data);};
+	this.setSortIdx=function(pSortIdx){vSortIdx=parseInt(document.createTextNode(pSortIdx).data);};
+	this.setToDelete=function(pToDelete){if (pToDelete) vToDelete=true; else vToDelete=false;};
+	this.setParItem=function(pParItem){if(pParItem instanceof JSGantt.TaskItem) vParItem=pParItem;};
+	this.setCellDiv=function(pCellDiv){if(typeof HTMLDivElement !== 'function' || pCellDiv instanceof HTMLDivElement) vCellDiv=pCellDiv;}; //"typeof HTMLDivElement !== 'function'" to play nice with ie6 and 7
+	this.setGroup=function(pGroup){vGroup=parseInt(document.createTextNode(pGroup).data);};
+	this.setBarDiv=function(pDiv){if(typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)vBarDiv=pDiv;};
+	this.setTaskDiv=function(pDiv){if(typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)vTaskDiv=pDiv;};
+	this.setChildRow=function(pRow){if(typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement)vChildRow=pRow;};
+	this.setListChildRow=function(pRow){if(typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement)vListChildRow=pRow;};
+	this.setGroupSpan=function(pSpan){if(typeof HTMLSpanElement !== 'function' || pSpan instanceof HTMLSpanElement)vGroupSpan=pSpan;};
+}
 // function that loads the main gantt chart properties and functions
 // pDiv: (required) this is a div object created in HTML
 // pFormat: (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
@@ -567,8 +759,8 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	this.addResClick = function(fn){ vEvents.res = fn; };
 	this.addDurClick = function(fn){ vEvents.dur = fn; };
 	this.addCompClick = function(fn){ vEvents.comp = fn; };
-	this.addStartDateClick = function(){ vEvents.startdate = fn; };
-	this.addEndDateClick = function(){ vEvents.enddate = fn; };
+	this.addStartDateClick = function(fn){ vEvents.startdate = fn; };
+	this.addEndDateClick = function(fn){ vEvents.enddate = fn; };
 
 	this.getTaskNameClick = function(){ return vEvents.taskname; };
 	this.getResClick = function(){ return vEvents.res; };
@@ -811,6 +1003,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 
 			for(i=0; i<vTaskList.length; i++)
 			{
+				console.log(i);
 				if(vTaskList[i].getGroup()==1) var vBGColor='ggroupitem';
 				else vBGColor='glineitem';
 
@@ -822,23 +1015,6 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 				vComp = vTaskList[i].getCompVal(),
 				vStart = vTaskList[i].getStart(),
 				vEnd = vTaskList[i].getEnd();
-
-				if(typeof vEventClickRow === "function"){
-					var day = 1*24*60*60*1000;
-					vTmpRow.dataset.id = vID;
-					vTmpRow.dataset.name = vName;
-					vTmpRow.dataset.group = vGroup;
-					vTmpRow.dataset.res = vRes;
-					// vTmpRow.dataset.dur = vDuration;
-					vTmpRow.dataset.comp = vComp;
-					vTmpRow.dataset.start = vStart.getTime();
-					vTmpRow.dataset.end = vEnd.getTime();
-
-					JSGantt.addListener('click', function(){
-						vEventClickRow( this.dataset );
-					}, vTmpRow);
-
-				}
 
 				if((!(vTaskList[i].getParItem() && vTaskList[i].getParItem().getGroup()==2)) || vTaskList[i].getGroup()==2)
 				{
@@ -852,6 +1028,25 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 					{
 						vCellContents+='\u00A0\u00A0\u00A0\u00A0';
 					}
+
+
+									if(typeof vEventClickRow === "function"){
+										var day = 1*24*60*60*1000;
+										vTmpRow.dataset.index = i;
+										vTmpRow.dataset.id = vID;
+										vTmpRow.dataset.name = vName;
+										vTmpRow.dataset.group = vGroup;
+										vTmpRow.dataset.res = vRes;
+										// vTmpRow.dataset.dur = vDuration;
+										vTmpRow.dataset.comp = vComp;
+										vTmpRow.dataset.start = vStart.getTime();
+										vTmpRow.dataset.end = vEnd.getTime();
+
+										JSGantt.addListener('click', function(){
+											vEventClickRow( this.dataset );
+										}, vTmpRow);
+
+									}
 
 					if(vTaskList[i].getGroup()==1)
 					{
@@ -883,7 +1078,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'gresource');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getResource());
-						
+
 						vTmpCell.dataset.res = vRes;
 						JSGantt.addListener('click', function(){
 							if(typeof vEvents.resource === "function"){
@@ -907,7 +1102,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'gpccomplete');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getCompStr());
-						
+
 						vTmpCell.dataset.comp = vComp;
 						JSGantt.addListener('click', function(){
 							if(typeof vEvents.comp === "function"){
@@ -919,7 +1114,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'gstartdate');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]));
-						
+
 						vTmpCell.dataset.start = vStart.getTime(); // save timestamp
 						JSGantt.addListener('click', function(){
 							if(typeof vEvents.startdate === "function"){
@@ -931,7 +1126,7 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'genddate');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]));
-						
+
 						vTmpCell.dataset.end = vEnd.getTime(); // save timestamp
 						JSGantt.addListener('click', function(){
 							if(typeof vEvents.enddate === "function"){

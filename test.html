@@ -26,7 +26,7 @@
     <!-- Google Fonts -->
       <!-- <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet"> -->
 
-  
+
     <!-- jsGanttImproved App -->
       <link href="jsgantt.css" rel="stylesheet" type="text/css"/>
       <script src="jsgantt.js" type="text/javascript"></script>
@@ -34,12 +34,12 @@
 
 <!-- Content -->
   <body data-spy="scroll" data-target="#my-navbar-nav">
-  
+
   <!-- Content -->
     <!-- Demo -->
       <div class="" id="demo">
         <h1>Atividades</h1>
-        
+
         <div id="embedded-Gantt">
           <script type="text/javascript">
 var g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
@@ -47,6 +47,7 @@ console.log(g);
 if (g.getDivId() != null) {
 
   g.setEventClickRow(function(task){
+    alert(task.id+' '+task.name);
     console.log(task);
   });
 
@@ -74,7 +75,7 @@ if (g.getDivId() != null) {
   g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',                 0, 'Shlomy',   40,    1,      1,       1,     '',      '',      '',      g));
   g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2017-02-21','2017-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1,     '',      '',      '',      g));
 
-  
+
 
   g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2017-03-09','2017-03-14 12:00', 'gtaskyellow', '',            0, 'Ilan',     60,    0,      12,      1,     '',      '',      '',      g));
   g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2017-03-09','2017-03-29', 'gtaskred',     '',                 0, 'Anyone',   60,    0,      12,      1,     '123SS', 'This is a caption', null, g));
@@ -98,7 +99,7 @@ if (g.getDivId() != null) {
 }
           </script>
         </div>
-    
+
       </div>
 
 
