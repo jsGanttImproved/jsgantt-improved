@@ -2240,25 +2240,25 @@ JSGantt.parseJSONString=function(pStr, pGanttVar)
 JSGantt.addJSONTask=function(pGanttVar, pJsonObj)
 {
 	if ({}.toString.call(pJsonObj) === '[object Array]') {
-        var id;
-        var name;
-        var start;
-        var end;
-        var itemClass;
-        var link = '';
-        var milestone = 0;
-        var resourceName = '';
-        var completion;
-        var group = 0;
-        var parent;
-        var open;
-        var dependsOn = '';
-        var caption = '';
-        var notes = '';
-
         for (var index = 0; index < pJsonObj.length; index++)
 		{
-			for (var prop in pJsonObj[index])
+            var id;
+            var name;
+            var start;
+            var end;
+            var itemClass;
+            var link = '';
+            var milestone = 0;
+            var resourceName = '';
+            var completion;
+            var group = 0;
+            var parent;
+            var open;
+            var dependsOn = '';
+            var caption = '';
+            var notes = '';
+
+            for (var prop in pJsonObj[index])
 			{
                 var property = prop;
                 var value = pJsonObj[index][property];
@@ -2290,7 +2290,7 @@ JSGantt.addJSONTask=function(pGanttVar, pJsonObj)
                         break;
                     case 'pmile':
                     case 'mile':
-                    	milestone = value
+                    	milestone = value;
                         break;
                     case 'pres':
                     case 'res':
@@ -2325,12 +2325,12 @@ JSGantt.addJSONTask=function(pGanttVar, pJsonObj)
                     	notes = value;
                         break;
 				}
-
-				if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent))
-				{
-                    pGanttVar.AddTaskItem(new JSGantt.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
-                }
 			}
+
+            if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent))
+            {
+                pGanttVar.AddTaskItem(new JSGantt.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
+            }
 		}
     }
 };
