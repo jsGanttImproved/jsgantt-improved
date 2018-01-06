@@ -229,3 +229,7 @@ td.gspanning div { *overflow: hidden; } /* stops resizing fixed width columns if
 .gmilequarter td,
 .gitemquarter td		{ background-size: 19px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px); width: 100%; height: 19px; }
 */
+
+.material-icons{
+	font-size:18px;
+}
