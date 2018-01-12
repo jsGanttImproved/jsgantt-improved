@@ -77,26 +77,24 @@ JSGantt.isIE=function ()
 	else return false;
 };
 
-JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
-{
-
-	var vID=parseInt(document.createTextNode(pID).data);
-	var vName=document.createTextNode(pName).data;
+JSGantt.TaskItem = function(taskData){
+	var vID=(document.createTextNode(taskData.id).data);
+	var vName=document.createTextNode(taskData.name).data;
 	var vStart=new Date(0);
 	var vEnd=new Date(0);
 	var vGroupMinStart=null;
 	var vGroupMinEnd=null;
-	var vClass=document.createTextNode(pClass).data;
-	var vLink=document.createTextNode(pLink).data;
-	var vMile=parseInt(document.createTextNode(pMile).data);
-	var vRes=document.createTextNode(pRes).data;
-	var vComp=parseFloat(document.createTextNode(pComp).data);
-	var vGroup=parseInt(document.createTextNode(pGroup).data);
-	var vParent=document.createTextNode(pParent).data;
-	var vOpen=(vGroup==2)?1:parseInt(document.createTextNode(pOpen).data);
+	var vClass=document.createTextNode(taskData.class).data;
+	var vLink=document.createTextNode(taskData.link).data;
+	var vMile=parseInt(document.createTextNode(taskData.mile).data);
+	var vRes=document.createTextNode(taskData.res).data;
+	var vComp=parseFloat(document.createTextNode(taskData.comp).data);
+	var vGroup=parseInt(document.createTextNode(taskData.group).data);
+	var vParent=document.createTextNode(taskData.parent).data;
+	var vOpen=(vGroup==2)?1:parseInt(document.createTextNode(taskData.open).data);
 	var vDepend=new Array();
 	var vDependType=new Array();
-	var vCaption=document.createTextNode(pCaption).data;
+	var vCaption=document.createTextNode(taskData.caption).data;
 	var vDuration='';
 	var vLevel=0;
 	var vNumKid=0;
@@ -108,36 +106,41 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	var vNotes;
 	var vParItem=null;
 	var vCellDiv=null;
-	var vGantt=(pGantt instanceof JSGantt.GanttChart)? pGantt : g; //hack for backwards compatibility
+	var vGantt=(taskData.gantt instanceof JSGantt.GanttChart)? taskData.gantt : g; //hack for backwards compatibility
 	var vBarDiv=null;
 	var vTaskDiv=null;
 	var vListChildRow=null;
 	var vChildRow=null;
 	var vGroupSpan=null;
 
+	// define ggroupblack
+	if(vGroup === 1){
+		vClass = 'ggroupblack';
+	}
+
 	vNotes=document.createElement('span');
 	vNotes.className='gTaskNotes';
-	if (pNotes!=null)
+	if (taskData.notes!=null)
 	{
-		vNotes.innerHTML=pNotes;
+		vNotes.innerHTML=taskData.notes;
 		JSGantt.stripUnwanted(vNotes);
 	}
 
-	if (pStart!=null && pStart!='')
+	if (taskData.start!=null && taskData.start!='')
 	{
-		vStart=(pStart instanceof Date)?pStart:JSGantt.parseDateStr(document.createTextNode(pStart).data,vGantt.getDateInputFormat());
+		vStart=(taskData.start instanceof Date)?taskData.start:JSGantt.parseDateStr(document.createTextNode(taskData.start).data,vGantt.getDateInputFormat());
 		vGroupMinStart=vStart;
 	}
 
-	if (pEnd!=null && pEnd!='')
+	if (taskData.end!=null && taskData.end!='')
 	{
-		vEnd  =(pEnd instanceof Date)?pEnd:JSGantt.parseDateStr(document.createTextNode(pEnd).data,vGantt.getDateInputFormat());
+		vEnd  =(taskData.end instanceof Date)?taskData.end:JSGantt.parseDateStr(document.createTextNode(taskData.end).data,vGantt.getDateInputFormat());
 		vGroupMinEnd=vEnd;
 	}
 
-	if (pDepend!=null)
+	if (taskData.depend!=null)
 	{
-		var vDependStr=pDepend+'';
+		var vDependStr=taskData.depend+'';
 		var vDepList=vDependStr.split(',');
 		var n=vDepList.length;
 
@@ -249,6 +252,7 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	this.setGroupMinStart=function(pStart){if(pStart instanceof Date)vGroupMinStart=pStart;};
 	this.setGroupMinEnd=function(pEnd){if(pEnd instanceof Date)vGroupMinEnd=pEnd;};
 	this.setLevel=function(pLevel){vLevel=parseInt(document.createTextNode(pLevel).data);};
+	this.setName=function(name){vName = name;};
 	this.setNumKid=function(pNumKid){vNumKid=parseInt(document.createTextNode(pNumKid).data);};
 	this.setWeight=function(pWeight){vWeight=parseInt(document.createTextNode(pWeight).data);};
 	this.setCompVal=function(pCompVal){vComp=parseFloat(document.createTextNode(pCompVal).data);};
@@ -268,7 +272,7 @@ JSGantt.TaskItem=function(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, 
 	this.setChildRow=function(pRow){if(typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement)vChildRow=pRow;};
 	this.setListChildRow=function(pRow){if(typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement)vListChildRow=pRow;};
 	this.setGroupSpan=function(pSpan){if(typeof HTMLSpanElement !== 'function' || pSpan instanceof HTMLSpanElement)vGroupSpan=pSpan;};
-};
+}
 
 // function that loads the main gantt chart properties and functions
 // pDiv: (required) this is a div object created in HTML
