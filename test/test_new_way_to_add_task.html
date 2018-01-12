@@ -7,6 +7,7 @@
     <title>Test the new way to add a new task</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
@@ -33,6 +34,29 @@
             g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
             g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
             g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+
+            // Adding events
+            // g.setEventClickRow((taskData) => {
+            //     console.log(taskData);
+            // });
+
+            // g.setEventDblClickRow( (taskData) => {
+            //     console.log(taskData);
+            // });
+
+            g.setEventsClickCell({
+                task: (t, e) => {
+                    console.log(t, e);
+                },
+
+                resource: (r, e) =>{
+                    alert(r);
+                },
+
+                duration: (d, e) => {
+                    alert(d);
+                }
+            });
 
 
             // Adicionando tasks

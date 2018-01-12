@@ -332,6 +332,16 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	var vQuarterColWidth=18;
 	var vRowHeight=20;
 	var vTodayPx=-1;
+	var vEvents = {
+		task: null,
+		resource: null,
+		duration: null,
+		complete: null,
+		startdate: null,
+		enddate: null
+	};
+	var vEventClickRow = null;
+	var vEventDblClickRow = null;
 	var vLangs={'en':
 			{'format':'Format','hour':'Hour','day':'Day','week':'Week','month':'Month','quarter':'Quarter','hours':'Hours','days':'Days',
 			 'weeks':'Weeks','months':'Months','quarters':'Quarters','hr':'Hr','dy':'Day','wk':'Wk','mth':'Mth','qtr':'Qtr','hrs':'Hrs',
@@ -433,6 +443,9 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 	this.setChartTable=function(pTable){if(typeof HTMLTableElement !== 'function' || pTable instanceof HTMLTableElement)vChartTable=pTable;};
 	this.setLines=function(pDiv){if(typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)vLines=pDiv;};
 	this.setTimer=function(pVal){vTimer=pVal*1;};
+	this.setEventsClickCell=function(pEvents){vEvents=pEvents;};
+	this.setEventClickRow=function(fn){vEventClickRow=fn;};
+	this.setEventDblClickRow=function(fn){vEventDblClickRow=fn;};
 	this.addLang=function(pLang, pVals){
 		if(!vLangs[pLang])
 		{
@@ -790,6 +803,15 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 				else vBGColor='glineitem';
 
 				vID=vTaskList[i].getID();
+				vName = vTaskList[i].getName(),
+				vGroup = vTaskList[i].getGroup(),
+				vRes = vTaskList[i].getResource(),
+				vDuration = vTaskList[i].getDuration(vFormat, vLangs[vLang]),
+				vComp = vTaskList[i].getCompVal(),
+				vStart = vTaskList[i].getStart(),
+				vEnd = vTaskList[i].getEnd();
+				vParent = vTaskList[i].getParent();
+				vLevel = vTaskList[i].getLevel();
 
 				if((!(vTaskList[i].getParItem() && vTaskList[i].getParItem().getGroup()==2)) || vTaskList[i].getGroup()==2)
 				{
@@ -805,6 +827,34 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 						vCellContents+='\u00A0\u00A0\u00A0\u00A0';
 					}
 
+					// Adding to dataset
+					vTmpRow.dataset.index = i;
+					vTmpRow.dataset.id = vID;
+					vTmpRow.dataset.name = vName;
+					vTmpRow.dataset.group = vGroup;
+					vTmpRow.dataset.res = vRes;
+					vTmpRow.dataset.level = vLevel;
+					vTmpRow.dataset.comp = vComp;
+					vTmpRow.dataset.start = vStart.getTime();
+					vTmpRow.dataset.end = vEnd.getTime();
+					vTmpRow.dataset.parent = vParent;
+
+					// Check event click row
+					if(typeof vEventClickRow === 'function'){
+						JSGantt.addListener('click', function(){
+							vEventClickRow( this.dataset, this );
+						}, vTmpRow);
+					}
+
+					// Check event dblclick row
+					if(typeof vEventDblClickRow === 'function'){
+						JSGantt.addListener('dblclick', function(e){
+							vEventDblClickRow( this.dataset, this );
+							return false;
+						}, vTmpRow);
+					}
+
+
 					if(vTaskList[i].getGroup()==1)
 					{
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, vCellContents);
@@ -819,30 +869,75 @@ JSGantt.GanttChart=function(pDiv, pFormat)
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, vCellContents+vTaskList[i].getName());
 					}
 
+					vTmpCell.dataset.id = vID;
+					vTmpCell.dataset.name = vName;
+					vTmpCell.dataset.group = vGroup;
+					vTmpCell.dataset.level = vLevel;
+
+
+					JSGantt.addListener('click', function(){
+						if(typeof vEvents.task === "function"){
+							vEvents.task(this.dataset, this);
+						}
+					}, vTmpCell);
+
 					if(vShowRes==1)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'gresource');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getResource());
+						vTmpCell.dataset.res = vRes;
+						JSGantt.addListener('click', function(){
+							if(typeof vEvents.resource === "function"){
+								vEvents.resource(this.dataset.res, this);
+							}
+						}, vTmpCell);
 					}
 					if(vShowDur==1)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'gduration');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getDuration(vFormat, vLangs[vLang]));
+						vTmpCell.dataset.dur = vTaskList[i].getDuration(vFormat, vLangs[vLang]);
+						vTmpRow.dataset.dur = vTmpCell.dataset.dur;
+						JSGantt.addListener('click', function(){
+							if(typeof vEvents.duration === "function"){
+								vEvents.duration(this.dataset.dur, this);
+							}
+						}, vTmpCell);
 					}
 					if(vShowComp==1)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'gpccomplete');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, vTaskList[i].getCompStr());
+						vTmpCell.dataset.comp = vComp;
+						JSGantt.addListener('click', function(){
+							if(typeof vEvents.complete === "function"){
+								vEvents.complete(this.dataset.comp, this);
+							}
+						}, vTmpCell);
 					}
 					if(vShowStartDate==1)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'gstartdate');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]));
+
+						vTmpCell.dataset.start = vStart.getTime(); // save timestamp
+						JSGantt.addListener('click', function(){
+							if(typeof vEvents.startdate === "function"){
+								vEvents.startdate(new Date(parseInt(this.dataset.start)), this);
+							}
+						}, vTmpCell);
 					}
 					if(vShowEndDate==1)
 					{
 						vTmpCell=this.newNode(vTmpRow, 'td', null, 'genddate');
 						vTmpDiv=this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]));
+
+						vTmpCell.dataset.end = vEnd.getTime(); // save timestamp
+						JSGantt.addListener('click', function(){
+							if(typeof vEvents.enddate === "function"){
+								vEvents.enddate(new Date(parseInt(this.dataset.end)), this);
+							}
+						}, vTmpCell);
 					}
 					vNumRows++;
 				}
