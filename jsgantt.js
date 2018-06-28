@@ -9,8 +9,7 @@
 
 	The current version of this code can be found at https://github.com/jsGanttImproved/jsgantt-improved/
 
-	* Copyright (c) 2013-2017, Paul Geldart, Eduardo Rodrigues and Ricardo Cardoso.
-	* All rights reserved.
+	* Copyright (c) 2013-2018, Paul Geldart, Eduardo Rodrigues and Ricardo Cardoso.
 	*
 	* Redistribution and use in source and binary forms, with or without
 	* modification, are permitted provided that the following conditions are met:
@@ -38,7 +37,7 @@
 	https://code.google.com/p/jsgantt/) and remains under the original BSD license.
 	The original project license follows:
 
-	Copyright (c) 2009, Shlomy Gantz BlueBrick Inc. All rights reserved.
+	Copyright (c) 2009, Shlomy Gantz BlueBrick Inc.
 
 	* Redistribution and use in source and binary forms, with or without
 	* modification, are permitted provided that the following conditions are met:
