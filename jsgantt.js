@@ -1675,7 +1675,7 @@ JSGantt.getOffset=function(pStartDate, pEndDate, pColWidth, pFormat)
 		vPosTmpDate.setDate(curTaskStart.getDate());
 		var vDaysCrctn=(curTaskEnd.getTime()-vPosTmpDate.getTime())/ (86400000);
 
-		vTaskRightPx=Math.ceil((vMonthsDiff * (pColWidth+3))+(vDaysCrctn * (pColWidth/vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
+		vTaskRightPx=Math.ceil((vMonthsDiff * (pColWidth+1))+(vDaysCrctn * (pColWidth/vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
 	}
 	else if(pFormat=='quarter')
 	{
