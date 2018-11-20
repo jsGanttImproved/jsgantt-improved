@@ -12,7 +12,7 @@ include the files `jsgantt.js` and `jsgantt.css` that are inside `demo/` folder.
 
 You can view a live example at 
 
-https://mariohmol.github.io/jsgantt-improved/demo/
+https://mariohmol.github.io/jsgantt-improved/demo/fixes/general.html
 
 ## Features
 
