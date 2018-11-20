@@ -11,7 +11,6 @@ var lang = require("./lang");
 var events_1 = require("./events");
 var utils_1 = require("./utils");
 var task_1 = require("./task");
-console.log(lang);
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
 exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
     var vMinDate = new Date();
@@ -154,7 +153,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     var vRowHeight = 20;
     var vTodayPx = -1;
     var vLangs = lang;
-    var vLang = 'en';
+    var vLang = navigator.language && navigator.language in lang ? navigator.language : 'en';
     var vChartBody = null;
     var vChartHead = null;
     var vListBody = null;
@@ -1697,12 +1696,17 @@ var pt = {
     'dys': 'dias',
     'wks': 'sem.',
     'mths': 'mes.',
+    'jan': 'Jan',
     'feb': 'Fev',
+    'mar': 'Mar',
     'apr': 'Abr',
     'may': 'Mai',
+    'jun': 'Jun',
+    'jul': 'Jul',
     'aug': 'Ago',
     'sep': 'Set',
     'oct': 'Out',
+    'nov': 'Nov',
     'dec': 'Dez',
     'january': 'Janeiro',
     'february': 'Fevereiro',
