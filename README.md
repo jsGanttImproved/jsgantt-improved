@@ -1,4 +1,8 @@
-A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images. Based on https://code.google.com/p/jsgantt/.
+A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images. 
+
+[![Build Status](https://travis-ci.org/mariohmol/jsgantt-improved.svg?branch=master)](https://travis-ci.org/mariohmol/jsgantt-improved)
+
+Start using with
 
 `npm install jsgantt-improved`
 
@@ -32,6 +36,8 @@ https://mariohmol.github.io/jsgantt-improved/demo
 ## Documentation
 
 See the [Documentation](./Documentation.md) wiki page or the included ``demo/index.html`` file for instructions on use.
+
+Project based on https://code.google.com/p/jsgantt/.
 
 
 ## Want to Collaborate?
