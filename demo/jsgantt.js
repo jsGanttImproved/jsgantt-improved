@@ -11,6 +11,7 @@ var lang = require("./lang");
 var events_1 = require("./events");
 var utils_1 = require("./utils");
 var task_1 = require("./task");
+console.log(lang);
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
 exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
     var vMinDate = new Date();
@@ -160,6 +161,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     var vChartTable = null;
     var vLines = null;
     var vTimer = 20;
+    var vTooltipDelay = 1500;
     this.setUseFade = function (pVal) { vUseFade = pVal; };
     this.setUseMove = function (pVal) { vUseMove = pVal; };
     this.setUseRowHlt = function (pVal) { vUseRowHlt = pVal; };
@@ -241,6 +243,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.setLines = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)
         vLines = pDiv; };
     this.setTimer = function (pVal) { vTimer = pVal * 1; };
+    this.setTooltipDelay = function (pVal) { vTooltipDelay = pVal * 1; };
     this.addLang = function (pLang, pVals) {
         if (!vLangs[pLang]) {
             vLangs[pLang] = new Object();
@@ -299,6 +302,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.getChartTable = function () { return vChartTable; };
     this.getLines = function () { return vLines; };
     this.getTimer = function () { return vTimer; };
+    this.getTooltipDelay = function () { return vTooltipDelay; };
     this.CalcTaskXY = function () {
         var vID;
         var vList = this.getList();
@@ -1067,6 +1071,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             if (vTaskList[vIdx].getResource() != '\u00A0')
                 vTask += '<pRes>' + vTaskList[vIdx].getResource() + '</pRes>';
             vTask += '<pComp>' + vTaskList[vIdx].getCompVal() + '</pComp>';
+            vTask += '<pCost>' + vTaskList[vIdx].getCost() + '</pCost>';
             vTask += '<pGroup>' + vTaskList[vIdx].getGroup() + '</pGroup>';
             vTask += '<pParent>' + vTaskList[vIdx].getParent() + '</pParent>';
             vTask += '<pOpen>' + vTaskList[vIdx].getOpen() + '</pOpen>';
@@ -1575,6 +1580,7 @@ var es = {
     'comp': '% Completado',
     'completion': 'Terminado',
     'startdate': 'Inicio',
+    'cost': 'Custo',
     'enddate': 'Fin',
     'moreinfo': '+información',
     'notes': 'Notas',
@@ -1629,6 +1635,7 @@ var en = {
     'completion': 'Completion',
     'startdate': 'Start Date',
     'enddate': 'End Date',
+    'cost': 'Cost',
     'moreinfo': 'More Information',
     'notes': 'Notes',
     'january': 'January',
@@ -1671,6 +1678,138 @@ var en = {
     'sat': 'Sat'
 };
 exports.en = en;
+var de = { 'format': 'Ansicht', 'hour': 'Stunde', 'day': 'Tag', 'week': 'Woche', 'month': 'Monat', 'quarter': 'Quartal', 'hours': 'Stunden', 'days': 'Tage', 'weeks': 'Wochen', 'months': 'Monate', 'quarters': 'Quartale', 'hr': 'h', 'dy': 'T', 'wk': 'W', 'mth': 'M', 'qtr': 'Q', 'hrs': 'Std', 'dys': 'Tage', 'wks': 'Wochen', 'mths': 'Monate', 'qtrs': 'Quartal', 'resource': 'Resource', 'duration': 'Dauer', 'comp': '%Fertig', 'completion': 'Fertigstellung', 'startdate': 'Erste Buchu', 'enddate': 'Letzte Buchung', 'moreinfo': 'Weitere Infos', 'notes': 'Anmerkung', 'january': 'Jänner', 'february': 'Februar', 'march': 'März', 'april': 'April', 'maylong': 'Mai', 'june': 'Juni', 'july': 'Juli', 'august': 'August', 'september': 'September', 'october': 'Oktober', 'november': 'November', 'december': 'Dezember', 'jan': 'Jan', 'feb': 'Feb', 'mar': 'Mar', 'apr': 'Apr', 'may': 'Mai', 'jun': 'Jun', 'jul': 'Jul', 'aug': 'Aug', 'sep': 'Sep', 'oct': 'Okt', 'nov': 'Nov', 'dec': 'Dez', 'sunday': 'Sonntag', 'monday': 'Montag', 'tuesday': 'Dienstag', 'wednesday': 'Mittwoch', 'thursday': 'Donnerstag', 'friday': 'Freitag', 'saturday': 'Samstag', 'sun': 'So', 'mon': 'Mo', 'tue': 'Di', 'wed': 'Mi', 'thu': 'Do', 'fri': 'Fr', 'sat': 'Sa' };
+exports.de = de;
+var pt = {
+    'format': 'Formato',
+    'hour': 'Hora',
+    'day': 'Dia',
+    'week': 'Semana',
+    'month': 'Mês',
+    'quarter': 'Trimestre',
+    'completion': '% Completo',
+    'moreinfo': 'Mais informações',
+    'notes': 'Notas',
+    'resource': 'Responsável',
+    'duration': 'Duração',
+    'startdate': 'Data inicial',
+    'enddate': 'Data final',
+    'dys': 'dias',
+    'wks': 'sem.',
+    'mths': 'mes.',
+    'feb': 'Fev',
+    'apr': 'Abr',
+    'may': 'Mai',
+    'aug': 'Ago',
+    'sep': 'Set',
+    'oct': 'Out',
+    'dec': 'Dez',
+    'january': 'Janeiro',
+    'february': 'Fevereiro',
+    'march': 'Março',
+    'april': 'Abril',
+    'maylong': 'Maio',
+    'june': 'Junho',
+    'july': 'Julho',
+    'august': 'Agosto',
+    'september': 'Setembro',
+    'october': 'Outubro',
+    'november': 'Novembro',
+    'december': 'Dezembro'
+};
+exports.pt = pt;
+var ru = {
+    'january': 'Январь',
+    'february': 'Февраль',
+    'march': 'Март',
+    'april': 'Апрель',
+    'maylong': 'Май',
+    'june': 'Июнь',
+    'july': 'Июль',
+    'august': 'Август', 'september': 'Сентябрь',
+    'october': 'Октябрь',
+    'november': 'Ноябрь',
+    'december': 'Декабрь',
+    'jan': 'Янв',
+    'feb': 'Фев',
+    'mar': 'Мар',
+    'apr': 'Апр',
+    'may': 'Май',
+    'jun': 'Июн',
+    'jul': 'Июл',
+    'aug': 'Авг',
+    'sep': 'Сен',
+    'oct': 'Окт',
+    'nov': 'Ноя',
+    'dec': 'Дек',
+    'sunday': 'Воскресенье',
+    'monday': 'Понедельник',
+    'tuesday': 'Вторник',
+    'wednesday': 'Среда',
+    'thursday': 'Четверг',
+    'friday': 'Пятница',
+    'saturday': 'Суббота',
+    'sun': '	Вс',
+    'mon': '	Пн',
+    'tue': '	Вт',
+    'wed': '	Ср',
+    'thu': '	Чт',
+    'fri': '	Пт',
+    'sat': '	Сб',
+    'resource': 'Ресурс',
+    'duration': 'Длительность',
+    'comp': '% выполнения',
+    'completion': 'Выполнено',
+    'startdate': 'Нач. дата',
+    'enddate': 'Кон. дата',
+    'moreinfo': 'Детали',
+    'notes': 'Заметки',
+    'format': 'Формат',
+    'hour': 'Час',
+    'day': 'День',
+    'week': 'Неделя',
+    'month': 'Месяц',
+    'quarter': 'Кварт',
+    'hours': 'Часов',
+    'days': 'Дней',
+    'weeks': 'Недель',
+    'months': 'Месяцев',
+    'quarters': 'Кварталов',
+    'hr': 'ч.',
+    'dy': 'дн.',
+    'wk': 'нед.',
+    'mth': 'мес.',
+    'qtr': 'кв.',
+    'hrs': 'ч.',
+    'dys': 'дн.',
+    'wks': 'нед.',
+    'mths': 'мес.',
+    'qtrs': 'кв.'
+};
+exports.ru = ru;
+var fr = {
+    // Mois : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3619
+    // Jours : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3617
+    'january': 'Janvier', 'february': 'Février', 'march': 'Mars',
+    'april': 'Avril', 'maylong': 'Mai', 'june': 'Juin', 'july': 'Juillet',
+    'august': 'Août', 'september': 'Septembre', 'october': 'Octobre',
+    'november': 'Novembre', 'december': 'Décembre', 'jan': 'Janv',
+    'feb': 'Févr', 'mar': 'Mars', 'apr': 'Avr', 'may': 'Mai', 'jun': 'Juin',
+    'jul': 'Juil', 'aug': 'Août', 'sep': 'Sept', 'oct': 'Oct', 'nov': 'Nov',
+    'dec': 'Déc', 'sunday': 'Dimanche', 'monday': 'Lundi', 'tuesday': 'Mardi',
+    'wednesday': 'Mercredi', 'thursday': 'Jeudi', 'friday': 'Vendredi',
+    'saturday': 'Samedi', 'sun': 'Dim', 'mon': 'Lun', 'tue': 'Mar',
+    'wed': 'Mer', 'thu': 'Jeu', 'fri': 'Ven', 'sat': 'Sam',
+    'resource': 'Ressource', 'duration': 'Durée', 'comp': '% Term.',
+    'completion': 'Terminé', 'startdate': 'Début', 'enddate': 'Fin',
+    'moreinfo': "Plus d'informations", 'notes': 'Notes', 'format': 'Format',
+    'hour': 'Heure', 'day': 'Jour', 'week': 'Semaine', 'month': 'Mois',
+    'quarter': 'Trimestre', 'hours': 'Heures', 'days': 'Jours',
+    'weeks': 'Semaines', 'months': 'Mois', 'quarters': 'Trimestres', 'hr': 'h',
+    'dy': 'j', 'wk': 'sem', 'mth': 'mois', 'qtr': 'tri', 'hrs': 'h', 'dys': 'j',
+    'wks': 'sem', 'mths': 'mois', 'qtrs': 'tri'
+};
+exports.fr = fr;
 
 },{}],7:[function(require,module,exports){
 "use strict";
@@ -2305,7 +2444,7 @@ exports.stripUnwanted = function (pNode) {
     }
 };
 exports.delayedHide = function (pGanttChartObj, pTool, pTimer) {
-    var vDelay = 1500;
+    var vDelay = pGanttChartObj.getTooltipDelay() || 1500;
     if (pTool)
         pTool.delayTimeout = setTimeout(function () { exports.hideToolTip(pGanttChartObj, pTool, pTimer); }, vDelay);
 };
