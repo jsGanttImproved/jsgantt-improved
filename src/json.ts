@@ -1,6 +1,4 @@
-declare var JSGantt: any;
-
-
+import { TaskItem } from "./task";
 
 export const parseJSON = function (pFile, pGanttVar) {
   if ((<any>window).XMLHttpRequest) {
@@ -13,11 +11,11 @@ export const parseJSON = function (pFile, pGanttVar) {
   xhttp.send(null);
   var jsonObj = eval('(' + xhttp.response + ')');
 
-  JSGantt.addJSONTask(pGanttVar, jsonObj);
+  addJSONTask(pGanttVar, jsonObj);
 };
 
 export const parseJSONString = function (pStr, pGanttVar) {
-  JSGantt.addJSONTask(pGanttVar, eval('(' + pStr + ')'));
+  addJSONTask(pGanttVar, eval('(' + pStr + ')'));
 };
 
 export const addJSONTask = function (pGanttVar, pJsonObj) {
@@ -107,7 +105,7 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
       }
 
       if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-        pGanttVar.AddTaskItem(new JSGantt.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
+        pGanttVar.AddTaskItem(new TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
       }
     }
   }

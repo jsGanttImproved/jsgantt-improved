@@ -9,6 +9,8 @@ module.exports = jsGantt.JSGantt;
 Object.defineProperty(exports, "__esModule", { value: true });
 var lang = require("./lang");
 var events_1 = require("./events");
+var utils_1 = require("./utils");
+var task_1 = require("./task");
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
 exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
     var vMinDate = new Date();
@@ -48,7 +50,7 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
             if (pList[i].getGroup()) {
                 if (pList[i].getParItem() && pList[i].getParItem().getGroup() == 2)
                     pList[i].setGroup(2);
-                JSGantt.processRows(vList, pList[i].getID(), i, vLevel + 1, vVisible, 0);
+                exports.processRows(vList, pList[i].getID(), i, vLevel + 1, vVisible, 0);
             }
             if (vMinSet == 0 || pList[i].getStart() < vMinDate) {
                 vMinDate = pList[i].getStart();
@@ -78,7 +80,7 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
         pList[pRow].setCompVal(Math.ceil(vCompSum / vWeight));
     }
     if (pID == 0 && pUseSort == 1) {
-        JSGantt.sortTasks(pList, 0, 0);
+        task_1.sortTasks(pList, 0, 0);
         pList.sort(function (a, b) { return a.getSortIdx() - b.getSortIdx(); });
     }
     if (pID == 0 && pUseSort != 1) // Need to sort combined tasks regardless
@@ -86,7 +88,7 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
         for (i = 0; i < pList.length; i++) {
             if (pList[i].getGroup() == 2) {
                 vComb = true;
-                JSGantt.sortTasks(pList, pList[i].getID(), pList[i].getSortIdx() + 1);
+                task_1.sortTasks(pList, pList[i].getID(), pList[i].getSortIdx() + 1);
             }
         }
         if (vComb == true)
@@ -122,19 +124,19 @@ exports.GanttChart = function (pDiv, pFormat) {
     var vShowDeps = 1;
     var vShowSelector = new Array('top');
     var vDateInputFormat = 'yyyy-mm-dd';
-    var vDateTaskTableDisplayFormat = JSGantt.parseDateFormatStr('dd/mm/yyyy');
-    var vDateTaskDisplayFormat = JSGantt.parseDateFormatStr('dd month yyyy');
-    var vHourMajorDateDisplayFormat = JSGantt.parseDateFormatStr('day dd month yyyy');
-    var vHourMinorDateDisplayFormat = JSGantt.parseDateFormatStr('HH');
-    var vDayMajorDateDisplayFormat = JSGantt.parseDateFormatStr('dd/mm/yyyy');
-    var vDayMinorDateDisplayFormat = JSGantt.parseDateFormatStr('dd');
-    var vWeekMajorDateDisplayFormat = JSGantt.parseDateFormatStr('yyyy');
-    var vWeekMinorDateDisplayFormat = JSGantt.parseDateFormatStr('dd/mm');
-    var vMonthMajorDateDisplayFormat = JSGantt.parseDateFormatStr('yyyy');
-    var vMonthMinorDateDisplayFormat = JSGantt.parseDateFormatStr('mon');
-    var vQuarterMajorDateDisplayFormat = JSGantt.parseDateFormatStr('yyyy');
-    var vQuarterMinorDateDisplayFormat = JSGantt.parseDateFormatStr('qq');
-    var vUseFullYear = JSGantt.parseDateFormatStr('dd/mm/yyyy');
+    var vDateTaskTableDisplayFormat = utils_1.parseDateFormatStr('dd/mm/yyyy');
+    var vDateTaskDisplayFormat = utils_1.parseDateFormatStr('dd month yyyy');
+    var vHourMajorDateDisplayFormat = utils_1.parseDateFormatStr('day dd month yyyy');
+    var vHourMinorDateDisplayFormat = utils_1.parseDateFormatStr('HH');
+    var vDayMajorDateDisplayFormat = utils_1.parseDateFormatStr('dd/mm/yyyy');
+    var vDayMinorDateDisplayFormat = utils_1.parseDateFormatStr('dd');
+    var vWeekMajorDateDisplayFormat = utils_1.parseDateFormatStr('yyyy');
+    var vWeekMinorDateDisplayFormat = utils_1.parseDateFormatStr('dd/mm');
+    var vMonthMajorDateDisplayFormat = utils_1.parseDateFormatStr('yyyy');
+    var vMonthMinorDateDisplayFormat = utils_1.parseDateFormatStr('mon');
+    var vQuarterMajorDateDisplayFormat = utils_1.parseDateFormatStr('yyyy');
+    var vQuarterMinorDateDisplayFormat = utils_1.parseDateFormatStr('qq');
+    var vUseFullYear = utils_1.parseDateFormatStr('dd/mm/yyyy');
     var vCaptionType;
     var vDepId = 1;
     var vTaskList = new Array();
@@ -201,18 +203,18 @@ exports.GanttChart = function (pDiv, pFormat) {
     };
     this.setShowDeps = function (pVal) { vShowDeps = pVal; };
     this.setDateInputFormat = function (pVal) { vDateInputFormat = pVal; };
-    this.setDateTaskTableDisplayFormat = function (pVal) { vDateTaskTableDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setDateTaskDisplayFormat = function (pVal) { vDateTaskDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setHourMajorDateDisplayFormat = function (pVal) { vHourMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setHourMinorDateDisplayFormat = function (pVal) { vHourMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setDayMajorDateDisplayFormat = function (pVal) { vDayMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setDayMinorDateDisplayFormat = function (pVal) { vDayMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setWeekMajorDateDisplayFormat = function (pVal) { vWeekMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setWeekMinorDateDisplayFormat = function (pVal) { vWeekMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setMonthMajorDateDisplayFormat = function (pVal) { vMonthMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setMonthMinorDateDisplayFormat = function (pVal) { vMonthMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setQuarterMajorDateDisplayFormat = function (pVal) { vQuarterMajorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
-    this.setQuarterMinorDateDisplayFormat = function (pVal) { vQuarterMinorDateDisplayFormat = JSGantt.parseDateFormatStr(pVal); };
+    this.setDateTaskTableDisplayFormat = function (pVal) { vDateTaskTableDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setDateTaskDisplayFormat = function (pVal) { vDateTaskDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setHourMajorDateDisplayFormat = function (pVal) { vHourMajorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setHourMinorDateDisplayFormat = function (pVal) { vHourMinorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setDayMajorDateDisplayFormat = function (pVal) { vDayMajorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setDayMinorDateDisplayFormat = function (pVal) { vDayMinorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setWeekMajorDateDisplayFormat = function (pVal) { vWeekMajorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setWeekMinorDateDisplayFormat = function (pVal) { vWeekMinorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setMonthMajorDateDisplayFormat = function (pVal) { vMonthMajorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setMonthMinorDateDisplayFormat = function (pVal) { vMonthMinorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setQuarterMajorDateDisplayFormat = function (pVal) { vQuarterMajorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
+    this.setQuarterMinorDateDisplayFormat = function (pVal) { vQuarterMinorDateDisplayFormat = utils_1.parseDateFormatStr(pVal); };
     this.setCaptionType = function (pType) { vCaptionType = pType; };
     this.setFormat = function (pFormat) {
         vFormat = pFormat;
@@ -514,11 +516,11 @@ exports.GanttChart = function (pDiv, pFormat) {
         if (vTaskList.length > 0) {
             // Process all tasks, reset parent date and completion % if task list has altered
             if (vProcessNeeded)
-                JSGantt.processRows(vTaskList, 0, -1, 1, 1, this.getUseSort());
+                exports.processRows(vTaskList, 0, -1, 1, 1, this.getUseSort());
             vProcessNeeded = false;
             // get overall min/max dates plus padding
-            vMinDate = JSGantt.getMinDate(vTaskList, vFormat);
-            vMaxDate = JSGantt.getMaxDate(vTaskList, vFormat);
+            vMinDate = utils_1.getMinDate(vTaskList, vFormat);
+            vMaxDate = utils_1.getMaxDate(vTaskList, vFormat);
             // Calculate chart width variables.
             if (vFormat == 'day')
                 vColWidth = vDayColWidth;
@@ -589,7 +591,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
                         var vTmpSpan = this.newNode(vTmpDiv, 'span', vDivId + 'group_' + vID, 'gfoldercollapse', (vTaskList[i].getOpen() == 1) ? '-' : '+');
                         vTaskList[i].setGroupSpan(vTmpSpan);
-                        JSGantt.addFolderListeners(this, vTmpSpan, vID);
+                        events_1.addFolderListeners(this, vTmpSpan, vID);
                         vTmpDiv.appendChild(document.createTextNode('\u00A0' + vTaskList[i].getName()));
                     }
                     else {
@@ -610,11 +612,11 @@ exports.GanttChart = function (pDiv, pFormat) {
                     }
                     if (vShowStartDate == 1) {
                         vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]));
+                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]));
                     }
                     if (vShowEndDate == 1) {
                         vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]));
+                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]));
                     }
                     vNumRows++;
                 }
@@ -660,16 +662,16 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vCellContents = '';
                 if (vFormat == 'day') {
                     vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, 7);
-                    vCellContents += JSGantt.formatDateStr(vTmpDate, vDayMajorDateDisplayFormat, vLangs[vLang]);
+                    vCellContents += utils_1.formatDateStr(vTmpDate, vDayMajorDateDisplayFormat, vLangs[vLang]);
                     vTmpDate.setDate(vTmpDate.getDate() + 6);
                     if (vShowEndWeekDate == 1)
-                        vCellContents += ' - ' + JSGantt.formatDateStr(vTmpDate, vDayMajorDateDisplayFormat, vLangs[vLang]);
+                        vCellContents += ' - ' + utils_1.formatDateStr(vTmpDate, vDayMajorDateDisplayFormat, vLangs[vLang]);
                     this.newNode(vTmpCell, 'div', null, null, vCellContents, vColWidth * 7);
                     vTmpDate.setDate(vTmpDate.getDate() + 1);
                 }
                 else if (vFormat == 'week') {
                     vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, vColWidth);
-                    this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vWeekMajorDateDisplayFormat, vLangs[vLang]), vColWidth);
+                    this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vWeekMajorDateDisplayFormat, vLangs[vLang]), vColWidth);
                     vTmpDate.setDate(vTmpDate.getDate() + 7);
                 }
                 else if (vFormat == 'month') {
@@ -677,7 +679,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     if (vTmpDate.getFullYear() == vMaxDate.getFullYear())
                         vColSpan -= (11 - vMaxDate.getMonth());
                     vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-                    this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vMonthMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
+                    this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vMonthMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
                     vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
                 }
                 else if (vFormat == 'quarter') {
@@ -685,7 +687,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     if (vTmpDate.getFullYear() == vMaxDate.getFullYear())
                         vColSpan -= (3 - Math.floor(vMaxDate.getMonth() / 3));
                     vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-                    this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vQuarterMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
+                    this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vQuarterMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
                     vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
                 }
                 else if (vFormat == 'hour') {
@@ -695,7 +697,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpDate.getDate() == vMaxDate.getDate())
                         vColSpan -= (23 - vMaxDate.getHours());
                     vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-                    this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vHourMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
+                    this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vHourMajorDateDisplayFormat, vLangs[vLang]), vColWidth * vColSpan);
                     vTmpDate.setHours(0);
                     vTmpDate.setDate(vTmpDate.getDate() + 1);
                 }
@@ -716,7 +718,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     }
                     if (vTmpDate <= vMaxDate) {
                         vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-                        this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vDayMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+                        this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vDayMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
                         vNumCols++;
                     }
                     vTmpDate.setDate(vTmpDate.getDate() + 1);
@@ -724,7 +726,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 else if (vFormat == 'week') {
                     if (vTmpDate <= vMaxDate) {
                         vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-                        this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vWeekMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+                        this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vWeekMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
                         vNumCols++;
                     }
                     vTmpDate.setDate(vTmpDate.getDate() + 7);
@@ -732,7 +734,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 else if (vFormat == 'month') {
                     if (vTmpDate <= vMaxDate) {
                         vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-                        this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vMonthMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+                        this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vMonthMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
                         vNumCols++;
                     }
                     vTmpDate.setDate(vTmpDate.getDate() + 1);
@@ -743,7 +745,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 else if (vFormat == 'quarter') {
                     if (vTmpDate <= vMaxDate) {
                         vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-                        this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vQuarterMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+                        this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vQuarterMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
                         vNumCols++;
                     }
                     vTmpDate.setDate(vTmpDate.getDate() + 81);
@@ -755,7 +757,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpDate.setHours(i); //works around daylight savings but may look a little odd on days where the clock goes forward
                         if (vTmpDate <= vMaxDate) {
                             vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
-                            this.newNode(vTmpCell, 'div', null, null, JSGantt.formatDateStr(vTmpDate, vHourMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
+                            this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, vHourMinorDateDisplayFormat, vLangs[vLang]), vColWidth);
                             vNumCols++;
                         }
                     }
@@ -784,8 +786,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                 var curTaskEnd = vTaskList[i].getEnd();
                 if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0)
                     curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
-                vTaskLeftPx = JSGantt.getOffset(vMinDate, curTaskStart, vColWidth, vFormat);
-                vTaskRightPx = JSGantt.getOffset(curTaskStart, curTaskEnd, vColWidth, vFormat);
+                vTaskLeftPx = utils_1.getOffset(vMinDate, curTaskStart, vColWidth, vFormat);
+                vTaskRightPx = utils_1.getOffset(curTaskStart, curTaskEnd, vColWidth, vFormat);
                 vID = vTaskList[i].getID();
                 var vComb = (vTaskList[i].getParItem() && vTaskList[i].getParItem().getGroup() == 2);
                 var vCellFormat = '';
@@ -795,7 +797,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 if (vTaskList[i].getMile() && !vComb) {
                     vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, 'gmileitem gmile' + vFormat, null, null, null, ((vTaskList[i].getVisible() == 0) ? 'none' : null));
                     vTaskList[i].setChildRow(vTmpRow);
-                    JSGantt.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
+                    events_1.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
                     vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
                     vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                     vTmpDiv = this.newNode(vTmpDiv, 'div', vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx - 6);
@@ -829,7 +831,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTaskWidth = (vTaskWidth < vMinGpLen) ? vMinGpLen : vTaskWidth; // expand to show one end point
                         vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, ((vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + vFormat, null, null, null, ((vTaskList[i].getVisible() == 0) ? 'none' : null));
                         vTaskList[i].setChildRow(vTmpRow);
-                        JSGantt.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
+                        events_1.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
                         vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
                         vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                         vTaskList[i].setCellDiv(vTmpDiv);
@@ -863,7 +865,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         else {
                             vTmpRow = this.newNode(vTmpTBody, 'tr', vDivId + 'childrow_' + vID, 'glineitem gitem' + vFormat, null, null, null, ((vTaskList[i].getVisible() == 0) ? 'none' : null));
                             vTaskList[i].setChildRow(vTmpRow);
-                            JSGantt.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
+                            events_1.addThisRowListeners(this, vTaskList[i].getListChildRow(), vTmpRow);
                             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
                             vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                         }
@@ -911,7 +913,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     // Add Task Info div for tooltip
                     vTmpDiv2 = this.newNode(vTmpDiv, 'div', vDivId + 'tt' + vID, null, null, null, null, 'none');
                     vTmpDiv2.appendChild(this.createTaskInfo(vTaskList[i]));
-                    JSGantt.addTooltipListeners(this, vTaskList[i].getTaskDiv(), vTmpDiv2);
+                    events_1.addTooltipListeners(this, vTaskList[i].getTaskDiv(), vTmpDiv2);
                 }
             }
             if (!vSingleCell)
@@ -933,7 +935,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                   vDiv.appendChild(tmpGenSrc);
             //*/
             // Now all the content exists, register scroll listeners
-            JSGantt.addScrollListeners(this);
+            events_1.addScrollListeners(this);
             // now check if we are actually scrolling the pane
             if (vScrollTo != '') {
                 var vScrollDate = new Date(vMinDate.getTime());
@@ -942,17 +944,17 @@ exports.GanttChart = function (pDiv, pFormat) {
                     vScrollPx = parseInt(vScrollTo.substr(2));
                 }
                 else {
-                    vScrollDate = JSGantt.parseDateStr(vScrollTo, this.getDateInputFormat());
+                    vScrollDate = utils_1.parseDateStr(vScrollTo, this.getDateInputFormat());
                     if (vFormat == 'hour')
                         vScrollDate.setMinutes(0, 0, 0);
                     else
                         vScrollDate.setHours(0, 0, 0, 0);
-                    vScrollPx = JSGantt.getOffset(vMinDate, vScrollDate, vColWidth, vFormat);
+                    vScrollPx = utils_1.getOffset(vMinDate, vScrollDate, vColWidth, vFormat);
                 }
                 this.getChartBody().scrollLeft = vScrollPx;
             }
             if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime())
-                vTodayPx = JSGantt.getOffset(vMinDate, new Date(), vColWidth, vFormat);
+                vTodayPx = utils_1.getOffset(vMinDate, new Date(), vColWidth, vFormat);
             else
                 vTodayPx = -1;
             this.DrawDependencies();
@@ -970,15 +972,15 @@ exports.GanttChart = function (pDiv, pFormat) {
         if (vDisplay) {
             var vTmpDiv = this.newNode(vOutput, 'div', null, 'gselector', vLangs[vLang]['format'] + ':');
             if (vFormatArr.join().toLowerCase().indexOf('hour') != -1)
-                JSGantt.addFormatListeners(this, 'hour', this.newNode(vTmpDiv, 'span', vDivId + 'formathour' + pPos, 'gformlabel' + ((vFormat == 'hour') ? ' gselected' : ''), vLangs[vLang]['hour']));
+                events_1.addFormatListeners(this, 'hour', this.newNode(vTmpDiv, 'span', vDivId + 'formathour' + pPos, 'gformlabel' + ((vFormat == 'hour') ? ' gselected' : ''), vLangs[vLang]['hour']));
             if (vFormatArr.join().toLowerCase().indexOf('day') != -1)
-                JSGantt.addFormatListeners(this, 'day', this.newNode(vTmpDiv, 'span', vDivId + 'formatday' + pPos, 'gformlabel' + ((vFormat == 'day') ? ' gselected' : ''), vLangs[vLang]['day']));
+                events_1.addFormatListeners(this, 'day', this.newNode(vTmpDiv, 'span', vDivId + 'formatday' + pPos, 'gformlabel' + ((vFormat == 'day') ? ' gselected' : ''), vLangs[vLang]['day']));
             if (vFormatArr.join().toLowerCase().indexOf('week') != -1)
-                JSGantt.addFormatListeners(this, 'week', this.newNode(vTmpDiv, 'span', vDivId + 'formatweek' + pPos, 'gformlabel' + ((vFormat == 'week') ? ' gselected' : ''), vLangs[vLang]['week']));
+                events_1.addFormatListeners(this, 'week', this.newNode(vTmpDiv, 'span', vDivId + 'formatweek' + pPos, 'gformlabel' + ((vFormat == 'week') ? ' gselected' : ''), vLangs[vLang]['week']));
             if (vFormatArr.join().toLowerCase().indexOf('month') != -1)
-                JSGantt.addFormatListeners(this, 'month', this.newNode(vTmpDiv, 'span', vDivId + 'formatmonth' + pPos, 'gformlabel' + ((vFormat == 'month') ? ' gselected' : ''), vLangs[vLang]['month']));
+                events_1.addFormatListeners(this, 'month', this.newNode(vTmpDiv, 'span', vDivId + 'formatmonth' + pPos, 'gformlabel' + ((vFormat == 'month') ? ' gselected' : ''), vLangs[vLang]['month']));
             if (vFormatArr.join().toLowerCase().indexOf('quarter') != -1)
-                JSGantt.addFormatListeners(this, 'quarter', this.newNode(vTmpDiv, 'span', vDivId + 'formatquarter' + pPos, 'gformlabel' + ((vFormat == 'quarter') ? ' gselected' : ''), vLangs[vLang]['quarter']));
+                events_1.addFormatListeners(this, 'quarter', this.newNode(vTmpDiv, 'span', vDivId + 'formatquarter' + pPos, 'gformlabel' + ((vFormat == 'quarter') ? ' gselected' : ''), vLangs[vLang]['quarter']));
         }
         else {
             this.newNode(vOutput, 'div', null, 'gselector');
@@ -993,12 +995,12 @@ exports.GanttChart = function (pDiv, pFormat) {
         if (vShowTaskInfoStartDate == 1) {
             vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
             this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['startdate'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', JSGantt.formatDateStr(pTask.getStart(), vDateTaskDisplayFormat, vLangs[vLang]));
+            this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getStart(), vDateTaskDisplayFormat, vLangs[vLang]));
         }
         if (vShowTaskInfoEndDate == 1) {
             vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
             this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', vLangs[vLang]['enddate'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', JSGantt.formatDateStr(pTask.getEnd(), vDateTaskDisplayFormat, vLangs[vLang]));
+            this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getEnd(), vDateTaskDisplayFormat, vLangs[vLang]));
         }
         if (vShowTaskInfoDur == 1 && !pTask.getMile()) {
             vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
@@ -1041,7 +1043,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         var i = 0;
         var vIdx = -1;
         var vTask = '';
-        var vOutFrmt = JSGantt.parseDateFormatStr(this.getDateInputFormat() + ' HH:MI');
+        var vOutFrmt = utils_1.parseDateFormatStr(this.getDateInputFormat() + ' HH:MI');
         if (pIdx === true)
             vIdx = pID;
         else {
@@ -1057,8 +1059,8 @@ exports.GanttChart = function (pDiv, pFormat) {
             vTask = '<task>';
             vTask += '<pID>' + vTaskList[vIdx].getID() + '</pID>';
             vTask += '<pName>' + vTaskList[vIdx].getName() + '</pName>';
-            vTask += '<pStart>' + JSGantt.formatDateStr(vTaskList[vIdx].getStart(), vOutFrmt, vLangs[vLang]) + '</pStart>';
-            vTask += '<pEnd>' + JSGantt.formatDateStr(vTaskList[vIdx].getEnd(), vOutFrmt, vLangs[vLang]) + '</pEnd>';
+            vTask += '<pStart>' + utils_1.formatDateStr(vTaskList[vIdx].getStart(), vOutFrmt, vLangs[vLang]) + '</pStart>';
+            vTask += '<pEnd>' + utils_1.formatDateStr(vTaskList[vIdx].getEnd(), vOutFrmt, vLangs[vLang]) + '</pEnd>';
             vTask += '<pClass>' + vTaskList[vIdx].getClass() + '</pClass>';
             vTask += '<pLink>' + vTaskList[vIdx].getLink() + '</pLink>';
             vTask += '<pMile>' + vTaskList[vIdx].getMile() + '</pMile>';
@@ -1103,13 +1105,13 @@ exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
         // the clientX and clientY properties include the left and top borders of the client area
         vMouseX -= document.documentElement.clientLeft;
         vMouseY -= document.documentElement.clientTop;
-        var vZoomFactor = JSGantt.getZoomFactor();
+        var vZoomFactor = utils_1.getZoomFactor();
         if (vZoomFactor != 1) { // IE 7 at non-default zoom level
             vMouseX = Math.round(vMouseX / vZoomFactor);
             vMouseY = Math.round(vMouseY / vZoomFactor);
         }
     }
-    var vScrollPos = JSGantt.getScrollPositions();
+    var vScrollPos = utils_1.getScrollPositions();
     /* Code for positioned right of the mouse by default*/
     /*
     if (vMouseX+vCurRightBuf+pGanttChartObj.vTool.offsetWidth>vViewportX)
@@ -1148,7 +1150,7 @@ exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
     */
     if (pGanttChartObj.getUseMove()) {
         clearInterval(pGanttChartObj.vTool.moveInterval);
-        pGanttChartObj.vTool.moveInterval = setInterval(function () { JSGantt.moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer); }, pTimer);
+        pGanttChartObj.vTool.moveInterval = setInterval(function () { events_1.moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer); }, pTimer);
     }
     else {
         pGanttChartObj.vTool.style.left = vNewX + 'px';
@@ -1156,9 +1158,12 @@ exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
     }
 };
 
-},{"./events":3,"./lang":6}],3:[function(require,module,exports){
+},{"./events":3,"./lang":6,"./task":7,"./utils":8}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var utils_1 = require("./utils");
+var task_1 = require("./task");
+var draw_1 = require("./draw");
 exports.mouseOver = function (pObj1, pObj2) {
     if (this.getUseRowHlt()) {
         pObj1.className += ' gitemhighlight';
@@ -1196,7 +1201,7 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
             pGanttChartObj.vTool.style.left = Math.floor(((e) ? e.clientX : window.event.clientX) / 2) + 'px';
             pGanttChartObj.vTool.style.top = Math.floor(((e) ? e.clientY : window.event.clientY) / 2) + 'px';
             this.addListener('mouseover', function () { clearTimeout(pGanttChartObj.vTool.delayTimeout); }, pGanttChartObj.vTool);
-            this.addListener('mouseout', function () { JSGantt.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
+            this.addListener('mouseout', function () { utils_1.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
         }
         clearTimeout(pGanttChartObj.vTool.delayTimeout);
         if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
@@ -1204,13 +1209,13 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
                 pGanttChartObj.vTool.vToolCont.setAttribute('showing', vShowing);
                 pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
                 // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
-                JSGantt.stripIds(pGanttChartObj.vTool.vToolCont);
+                utils_1.stripIds(pGanttChartObj.vTool.vToolCont);
             }
             pGanttChartObj.vTool.style.visibility = 'visible';
             // Rather than follow the mouse just have it stay put
-            JSGantt.updateFlyingObj(e, pGanttChartObj, pTimer);
+            draw_1.updateFlyingObj(e, pGanttChartObj, pTimer);
             pGanttChartObj.vTool.style.width = (pWidth) ? pWidth + 'px' : 'auto';
-            if (!pWidth && JSGantt.isIE()) {
+            if (!pWidth && utils_1.isIE()) {
                 pGanttChartObj.vTool.style.width = pGanttChartObj.vTool.offsetWidth;
             }
             if (pGanttChartObj.vTool.offsetWidth > vMaxW) {
@@ -1219,7 +1224,7 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
         }
         if (pGanttChartObj.getUseFade()) {
             clearInterval(pGanttChartObj.vTool.fadeInterval);
-            pGanttChartObj.vTool.fadeInterval = setInterval(function () { JSGantt.fadeToolTip(1, pGanttChartObj.vTool, vMaxAlpha); }, pTimer);
+            pGanttChartObj.vTool.fadeInterval = setInterval(function () { utils_1.fadeToolTip(1, pGanttChartObj.vTool, vMaxAlpha); }, pTimer);
         }
         else {
             pGanttChartObj.vTool.style.opacity = vMaxAlpha * 0.01;
@@ -1227,44 +1232,7 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
         }
     }
 };
-exports.hideToolTip = function (pGanttChartObj, pTool, pTimer) {
-    if (pGanttChartObj.getUseFade()) {
-        clearInterval(pTool.fadeInterval);
-        pTool.fadeInterval = setInterval(function () { JSGantt.fadeToolTip(-1, pTool, 0); }, pTimer);
-    }
-    else {
-        pTool.style.opacity = 0;
-        pTool.style.filter = 'alpha(opacity=0)';
-        pTool.style.visibility = 'hidden';
-    }
-};
-exports.fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
-    var vIncrement = parseInt(pTool.getAttribute('fadeIncrement'));
-    var vAlpha = pTool.getAttribute('currentOpacity');
-    var vCurAlpha = parseInt(vAlpha);
-    if ((vCurAlpha != pMaxAlpha && pDirection == 1) || (vCurAlpha != 0 && pDirection == -1)) {
-        var i = vIncrement;
-        if (pMaxAlpha - vCurAlpha < vIncrement && pDirection == 1) {
-            i = pMaxAlpha - vCurAlpha;
-        }
-        else if (vAlpha < vIncrement && pDirection == -1) {
-            i = vCurAlpha;
-        }
-        vAlpha = vCurAlpha + (i * pDirection);
-        pTool.style.opacity = vAlpha * 0.01;
-        pTool.style.filter = 'alpha(opacity=' + vAlpha + ')';
-        pTool.setAttribute('currentOpacity', vAlpha);
-    }
-    else {
-        clearInterval(pTool.fadeInterval);
-        if (pDirection == -1) {
-            pTool.style.opacity = 0;
-            pTool.style.filter = 'alpha(opacity=0)';
-            pTool.style.visibility = 'hidden';
-        }
-    }
-};
-exports.moveToolTip = function (pNewX, pNewY, pTool) {
+exports.moveToolTip = function (pNewX, pNewY, pTool, timer) {
     var vSpeed = parseInt(pTool.getAttribute('moveSpeed'));
     var vOldX = parseInt(pTool.style.left);
     var vOldY = parseInt(pTool.style.top);
@@ -1285,8 +1253,48 @@ exports.moveToolTip = function (pNewX, pNewY, pTool) {
         }
     }
 };
+exports.addListener = function (eventName, handler, control) {
+    // Check if control is a string
+    if (control === String(control))
+        control = utils_1.findObj(control);
+    if (control.addEventListener) //Standard W3C
+     {
+        return control.addEventListener(eventName, handler, false);
+    }
+    else if (control.attachEvent) //IExplore
+     {
+        return control.attachEvent('on' + eventName, handler);
+    }
+    else {
+        return false;
+    }
+};
+exports.addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
+    exports.addListener('mouseover', function (e) { exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
+    exports.addListener('mouseout', function (e) { utils_1.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
+};
+exports.addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
+    exports.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj1);
+    exports.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj2);
+    exports.addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj1);
+    exports.addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
+};
+exports.addFolderListeners = function (pGanttChart, pObj, pID) {
+    exports.addListener('click', function () { task_1.folder(pID, pGanttChart); }, pObj);
+};
+exports.addFormatListeners = function (pGanttChart, pFormat, pObj) {
+    exports.addListener('click', function () { utils_1.changeFormat(pFormat, pGanttChart); }, pObj);
+};
+exports.addScrollListeners = function (pGanttChart) {
+    exports.addListener('scroll', function () { pGanttChart.getChartBody().scrollTop = pGanttChart.getListBody().scrollTop; }, pGanttChart.getListBody());
+    exports.addListener('scroll', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, pGanttChart.getChartBody());
+    exports.addListener('scroll', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, pGanttChart.getChartBody());
+    exports.addListener('scroll', function () { pGanttChart.getChartBody().scrollLeft = pGanttChart.getChartHead().scrollLeft; }, pGanttChart.getChartHead());
+    exports.addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
+    exports.addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
+};
 
-},{}],4:[function(require,module,exports){
+},{"./draw":2,"./task":7,"./utils":8}],4:[function(require,module,exports){
 "use strict";
 /*
        _        ___            _   _    _____                                        _
@@ -1368,8 +1376,8 @@ exports.JSGantt.showToolTip = events_1.showToolTip;
 exports.JSGantt.stripIds = utils_1.stripIds;
 exports.JSGantt.stripUnwanted = utils_1.stripUnwanted;
 exports.JSGantt.delayedHide = utils_1.delayedHide;
-exports.JSGantt.hideToolTip = events_1.hideToolTip;
-exports.JSGantt.fadeToolTip = events_1.fadeToolTip;
+exports.JSGantt.hideToolTip = utils_1.hideToolTip;
+exports.JSGantt.fadeToolTip = utils_1.fadeToolTip;
 exports.JSGantt.moveToolTip = events_1.moveToolTip;
 exports.JSGantt.getZoomFactor = utils_1.getZoomFactor;
 exports.JSGantt.getOffset = utils_1.getOffset;
@@ -1403,50 +1411,17 @@ exports.JSGantt.parseJSONString = json_1.parseJSONString;
 exports.JSGantt.addJSONTask = json_1.addJSONTask;
 exports.JSGantt.benchMark = utils_1.benchMark;
 exports.JSGantt.getIsoWeek = utils_1.getIsoWeek;
-exports.JSGantt.addListener = function (eventName, handler, control) {
-    // Check if control is a string
-    if (control === String(control))
-        control = exports.JSGantt.findObj(control);
-    if (control.addEventListener) //Standard W3C
-     {
-        return control.addEventListener(eventName, handler, false);
-    }
-    else if (control.attachEvent) //IExplore
-     {
-        return control.attachEvent('on' + eventName, handler);
-    }
-    else {
-        return false;
-    }
-};
-exports.JSGantt.addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
-    exports.JSGantt.addListener('mouseover', function (e) { exports.JSGantt.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
-    exports.JSGantt.addListener('mouseout', function (e) { exports.JSGantt.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
-};
-exports.JSGantt.addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
-    exports.JSGantt.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj1);
-    exports.JSGantt.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj2);
-    exports.JSGantt.addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj1);
-    exports.JSGantt.addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
-};
-exports.JSGantt.addFolderListeners = function (pGanttChart, pObj, pID) {
-    exports.JSGantt.addListener('click', function () { exports.JSGantt.folder(pID, pGanttChart); }, pObj);
-};
-exports.JSGantt.addFormatListeners = function (pGanttChart, pFormat, pObj) {
-    exports.JSGantt.addListener('click', function () { exports.JSGantt.changeFormat(pFormat, pGanttChart); }, pObj);
-};
-exports.JSGantt.addScrollListeners = function (pGanttChart) {
-    exports.JSGantt.addListener('scroll', function () { pGanttChart.getChartBody().scrollTop = pGanttChart.getListBody().scrollTop; }, pGanttChart.getListBody());
-    exports.JSGantt.addListener('scroll', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, pGanttChart.getChartBody());
-    exports.JSGantt.addListener('scroll', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, pGanttChart.getChartBody());
-    exports.JSGantt.addListener('scroll', function () { pGanttChart.getChartBody().scrollLeft = pGanttChart.getChartHead().scrollLeft; }, pGanttChart.getChartHead());
-    exports.JSGantt.addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-    exports.JSGantt.addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
-};
+exports.JSGantt.addListener = events_1.addListener;
+exports.JSGantt.addTooltipListeners = events_1.addTooltipListeners;
+exports.JSGantt.addThisRowListeners = events_1.addThisRowListeners;
+exports.JSGantt.addFolderListeners = events_1.addFolderListeners;
+exports.JSGantt.addFormatListeners = events_1.addFormatListeners;
+exports.JSGantt.addScrollListeners = events_1.addScrollListeners;
 
 },{"./draw":2,"./events":3,"./json":5,"./task":7,"./utils":8,"./xml":9}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var task_1 = require("./task");
 exports.parseJSON = function (pFile, pGanttVar) {
     if (window.XMLHttpRequest) {
         var xhttp = new XMLHttpRequest();
@@ -1457,10 +1432,10 @@ exports.parseJSON = function (pFile, pGanttVar) {
     xhttp.open('GET', pFile, false);
     xhttp.send(null);
     var jsonObj = eval('(' + xhttp.response + ')');
-    JSGantt.addJSONTask(pGanttVar, jsonObj);
+    exports.addJSONTask(pGanttVar, jsonObj);
 };
 exports.parseJSONString = function (pStr, pGanttVar) {
-    JSGantt.addJSONTask(pGanttVar, eval('(' + pStr + ')'));
+    exports.addJSONTask(pGanttVar, eval('(' + pStr + ')'));
 };
 exports.addJSONTask = function (pGanttVar, pJsonObj) {
     if ({}.toString.call(pJsonObj) === '[object Array]') {
@@ -1547,13 +1522,13 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                 }
             }
             if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-                pGanttVar.AddTaskItem(new JSGantt.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
             }
         }
     }
 };
 
-},{}],6:[function(require,module,exports){
+},{"./task":7}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var es = {
@@ -1700,6 +1675,7 @@ exports.en = en;
 },{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var utils_1 = require("./utils");
 // Function to open/close and hide/show children of specified task
 exports.folder = function (pID, ganttObj) {
     var vList = ganttObj.getList();
@@ -1709,16 +1685,16 @@ exports.folder = function (pID, ganttObj) {
         if (vList[i].getID() == pID) {
             if (vList[i].getOpen() == 1) {
                 vList[i].setOpen(0);
-                JSGantt.hide(pID, ganttObj);
-                if (JSGantt.isIE())
+                exports.hide(pID, ganttObj);
+                if (utils_1.isIE())
                     vList[i].getGroupSpan().innerText = '+';
                 else
                     vList[i].getGroupSpan().textContent = '+';
             }
             else {
                 vList[i].setOpen(1);
-                JSGantt.show(pID, 1, ganttObj);
-                if (JSGantt.isIE())
+                exports.show(pID, 1, ganttObj);
+                if (utils_1.isIE())
                     vList[i].getGroupSpan().innerText = '-';
                 else
                     vList[i].getGroupSpan().textContent = '-';
@@ -1742,7 +1718,7 @@ exports.hide = function (pID, ganttObj) {
                 vList[i].getChildRow().style.display = 'none';
             vList[i].setVisible(0);
             if (vList[i].getGroup())
-                JSGantt.hide(vID, ganttObj);
+                exports.hide(vID, ganttObj);
         }
     }
 };
@@ -1755,7 +1731,7 @@ exports.show = function (pID, pTop, ganttObj) {
     for (var i = 0; i < vList.length; i++) {
         if (vList[i].getParent() == pID) {
             if (vList[i].getParItem().getGroupSpan()) {
-                if (JSGantt.isIE())
+                if (utils_1.isIE())
                     vState = vList[i].getParItem().getGroupSpan().innerText;
                 else
                     vState = vList[i].getParItem().getGroupSpan().textContent;
@@ -1781,7 +1757,7 @@ exports.show = function (pID, pTop, ganttObj) {
                 vList[i].setVisible(1);
             }
             if (vList[i].getGroup())
-                JSGantt.show(vID, 0, ganttObj);
+                exports.show(vID, 0, ganttObj);
         }
     }
 };
@@ -1819,7 +1795,7 @@ exports.sortTasks = function (pList, pID, pIdx) {
         for (i = 0; i < pList.length; i++) {
             if (pList[i].getID() == sortArr[j].getID()) {
                 pList[i].setSortIdx(sortIdx++);
-                sortIdx = JSGantt.sortTasks(pList, pList[i].getID(), sortIdx);
+                sortIdx = exports.sortTasks(pList, pList[i].getID(), sortIdx);
             }
         }
     }
@@ -1855,7 +1831,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vNotes;
     var vParItem = null;
     var vCellDiv = null;
-    var vGantt = (pGantt instanceof JSGantt.GanttChart) ? pGantt : g; //hack for backwards compatibility
+    var vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
     var vBarDiv = null;
     var vTaskDiv = null;
     var vListChildRow = null;
@@ -1865,14 +1841,14 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     vNotes.className = 'gTaskNotes';
     if (pNotes != null) {
         vNotes.innerHTML = pNotes;
-        JSGantt.stripUnwanted(vNotes);
+        utils_1.stripUnwanted(vNotes);
     }
     if (pStart != null && pStart != '') {
-        vStart = (pStart instanceof Date) ? pStart : JSGantt.parseDateStr(document.createTextNode(pStart).data, vGantt.getDateInputFormat());
+        vStart = (pStart instanceof Date) ? pStart : utils_1.parseDateStr(document.createTextNode(pStart).data, vGantt.getDateInputFormat());
         vGroupMinStart = vStart;
     }
     if (pEnd != null && pEnd != '') {
-        vEnd = (pEnd instanceof Date) ? pEnd : JSGantt.parseDateStr(document.createTextNode(pEnd).data, vGantt.getDateInputFormat());
+        vEnd = (pEnd instanceof Date) ? pEnd : utils_1.parseDateStr(document.createTextNode(pEnd).data, vGantt.getDateInputFormat());
         vGroupMinEnd = vEnd;
     }
     if (pDepend != null) {
@@ -1962,7 +1938,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
             if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
                 vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
             }
-            var tmpPer = (JSGantt.getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
+            var tmpPer = (utils_1.getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
             if (Math.floor(tmpPer) != tmpPer)
                 tmpPer = Math.round(tmpPer * 10) / 10;
             switch (vUnits) {
@@ -2026,7 +2002,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         vToDelete = true;
     else
         vToDelete = false; };
-    this.setParItem = function (pParItem) { if (pParItem instanceof JSGantt.TaskItem)
+    this.setParItem = function (pParItem) { if (pParItem)
         vParItem = pParItem; };
     this.setCellDiv = function (pCellDiv) { if (typeof HTMLDivElement !== 'function' || pCellDiv instanceof HTMLDivElement)
         vCellDiv = pCellDiv; }; //"typeof HTMLDivElement !== 'function'" to play nice with ie6 and 7
@@ -2043,7 +2019,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         vGroupSpan = pSpan; };
 };
 
-},{}],8:[function(require,module,exports){
+},{"./utils":8}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMinDate = function (pList, pFormat) {
@@ -2139,6 +2115,7 @@ exports.getMaxDate = function (pList, pFormat) {
     return (vDate);
 };
 exports.findObj = function (theObj, theDoc) {
+    if (theDoc === void 0) { theDoc = null; }
     var p, i, foundObj;
     if (!theDoc)
         theDoc = document;
@@ -2242,13 +2219,13 @@ exports.formatDateStr = function (pDate, pDateFormatArr, pL) {
                 vDateStr += ((pDate.getHours()) < 12) ? 'AM' : 'PM';
                 break;
             case 'ww':
-                if (JSGantt.getIsoWeek(pDate) < 10)
+                if (exports.getIsoWeek(pDate) < 10)
                     vDateStr += '0'; // now fall through
             case 'w':
-                vDateStr += JSGantt.getIsoWeek(pDate);
+                vDateStr += exports.getIsoWeek(pDate);
                 break;
             case 'week':
-                var vWeekNum = JSGantt.getIsoWeek(pDate);
+                var vWeekNum = exports.getIsoWeek(pDate);
                 var vYear = pDate.getFullYear();
                 var vDayOfWeek = (pDate.getDay() == 0) ? 7 : pDate.getDay();
                 if (vWeekNum >= 52 && parseInt(vMonthStr, 10) === 1)
@@ -2256,7 +2233,7 @@ exports.formatDateStr = function (pDate, pDateFormatArr, pL) {
                 if (vWeekNum == 1 && parseInt(vMonthStr, 10) === 12)
                     vYear++;
                 if (vWeekNum < 10)
-                    vWeekNum = '0' + vWeekNum;
+                    vWeekNum = parseInt('0' + vWeekNum, 10);
                 vDateStr += vYear + '-W' + vWeekNum + '-' + vDayOfWeek;
                 break;
             default:
@@ -2299,7 +2276,7 @@ exports.stripIds = function (pNode) {
         if ('removeAttribute' in pNode.childNodes[i])
             pNode.childNodes[i].removeAttribute('id');
         if (pNode.childNodes[i].hasChildNodes())
-            JSGantt.stripIds(pNode.childNodes[i]);
+            exports.stripIds(pNode.childNodes[i]);
     }
 };
 exports.stripUnwanted = function (pNode) {
@@ -2310,13 +2287,13 @@ exports.stripUnwanted = function (pNode) {
             pNode.replaceChild(document.createTextNode(pNode.childNodes[i].outerHTML), pNode.childNodes[i]);
         }
         if (pNode.childNodes[i].hasChildNodes())
-            JSGantt.stripUnwanted(pNode.childNodes[i]);
+            exports.stripUnwanted(pNode.childNodes[i]);
     }
 };
 exports.delayedHide = function (pGanttChartObj, pTool, pTimer) {
     var vDelay = 1500;
     if (pTool)
-        pTool.delayTimeout = setTimeout(function () { JSGantt.hideToolTip(pGanttChartObj, pTool, pTimer); }, vDelay);
+        pTool.delayTimeout = setTimeout(function () { exports.hideToolTip(pGanttChartObj, pTool, pTimer); }, vDelay);
 };
 exports.getZoomFactor = function () {
     var vFactor = 1;
@@ -2350,7 +2327,7 @@ exports.getIsoWeek = function (pDate) {
     var firstMondayYear = new Date(firstMondayYearTime);
     thisWeek = Math.ceil((daysFromFirstMonday + 1) / 7);
     if (thisWeek <= 0)
-        thisWeek = JSGantt.getIsoWeek(new Date(pDate.getFullYear() - 1, 11, 31, 0, 0, 0));
+        thisWeek = exports.getIsoWeek(new Date(pDate.getFullYear() - 1, 11, 31, 0, 0, 0));
     else if (thisWeek == 53 && (new Date(pDate.getFullYear(), 0, 1, 0, 0, 0)).getDay() != 4 && (new Date(pDate.getFullYear(), 11, 31, 0, 0, 0)).getDay() != 4)
         thisWeek = 1;
     return thisWeek;
@@ -2360,7 +2337,7 @@ exports.getScrollPositions = function () {
     var vScrollTop = window.pageYOffset;
     if (!('pageXOffset' in window)) // Internet Explorer before version 9
      {
-        var vZoomFactor = JSGantt.getZoomFactor();
+        var vZoomFactor = exports.getZoomFactor();
         vScrollLeft = Math.round(document.documentElement.scrollLeft / vZoomFactor);
         vScrollTop = Math.round(document.documentElement.scrollTop / vZoomFactor);
     }
@@ -2418,10 +2395,48 @@ exports.isIE = function () {
     else
         return false;
 };
+exports.hideToolTip = function (pGanttChartObj, pTool, pTimer) {
+    if (pGanttChartObj.getUseFade()) {
+        clearInterval(pTool.fadeInterval);
+        pTool.fadeInterval = setInterval(function () { exports.fadeToolTip(-1, pTool, 0); }, pTimer);
+    }
+    else {
+        pTool.style.opacity = 0;
+        pTool.style.filter = 'alpha(opacity=0)';
+        pTool.style.visibility = 'hidden';
+    }
+};
+exports.fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
+    var vIncrement = parseInt(pTool.getAttribute('fadeIncrement'));
+    var vAlpha = pTool.getAttribute('currentOpacity');
+    var vCurAlpha = parseInt(vAlpha);
+    if ((vCurAlpha != pMaxAlpha && pDirection == 1) || (vCurAlpha != 0 && pDirection == -1)) {
+        var i = vIncrement;
+        if (pMaxAlpha - vCurAlpha < vIncrement && pDirection == 1) {
+            i = pMaxAlpha - vCurAlpha;
+        }
+        else if (vAlpha < vIncrement && pDirection == -1) {
+            i = vCurAlpha;
+        }
+        vAlpha = vCurAlpha + (i * pDirection);
+        pTool.style.opacity = vAlpha * 0.01;
+        pTool.style.filter = 'alpha(opacity=' + vAlpha + ')';
+        pTool.setAttribute('currentOpacity', vAlpha);
+    }
+    else {
+        clearInterval(pTool.fadeInterval);
+        if (pDirection == -1) {
+            pTool.style.opacity = 0;
+            pTool.style.filter = 'alpha(opacity=0)';
+            pTool.style.visibility = 'hidden';
+        }
+    }
+};
 
 },{}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var task_1 = require("./task");
 exports.parseXML = function (pFile, pGanttVar) {
     if (window.XMLHttpRequest) {
         var xhttp = new window.XMLHttpRequest();
@@ -2432,7 +2447,7 @@ exports.parseXML = function (pFile, pGanttVar) {
     xhttp.open('GET', pFile, false);
     xhttp.send(null);
     var xmlDoc = xhttp.responseXML;
-    JSGantt.AddXMLTask(pGanttVar, xmlDoc);
+    exports.AddXMLTask(pGanttVar, xmlDoc);
 };
 exports.parseXMLString = function (pStr, pGanttVar) {
     if (typeof window.DOMParser != 'undefined') {
@@ -2444,7 +2459,7 @@ exports.parseXMLString = function (pStr, pGanttVar) {
         xmlDoc.async = 'false';
         xmlDoc.loadXML(pStr);
     }
-    JSGantt.AddXMLTask(pGanttVar, xmlDoc);
+    exports.AddXMLTask(pGanttVar, xmlDoc);
 };
 exports.findXMLNode = function (pRoot, pNodeName) {
     var vRetValue;
@@ -2488,18 +2503,18 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
     var assRes = new Array();
     var res = new Array();
     var pars = new Array();
-    var projNode = JSGantt.findXMLNode(pXmlDoc, 'Project');
+    var projNode = exports.findXMLNode(pXmlDoc, 'Project');
     if (typeof projNode != 'undefined' && projNode.length > 0)
         project = projNode[0].getAttribute('xmlns');
     if (project == 'http://schemas.microsoft.com/project') {
         vMSP = true;
         pGanttVar.setDateInputFormat('yyyy-mm-dd');
-        Task = JSGantt.findXMLNode(pXmlDoc, 'Task');
+        Task = exports.findXMLNode(pXmlDoc, 'Task');
         if (typeof Task == 'undefined')
             n = 0;
         else
             n = Task.length;
-        var resources = JSGantt.findXMLNode(pXmlDoc, 'Resource');
+        var resources = exports.findXMLNode(pXmlDoc, 'Resource');
         if (typeof resources == 'undefined') {
             n = 0;
             m = 0;
@@ -2507,19 +2522,19 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
         else
             m = resources.length;
         for (i = 0; i < m; i++) {
-            var resname = JSGantt.getXMLNodeValue(resources[i], 'Name', 2, '');
-            var uid = JSGantt.getXMLNodeValue(resources[i], 'UID', 1, -1);
+            var resname = exports.getXMLNodeValue(resources[i], 'Name', 2, '');
+            var uid = exports.getXMLNodeValue(resources[i], 'UID', 1, -1);
             if (resname.length > 0 && uid > 0)
                 res[uid] = resname;
         }
-        var assignments = JSGantt.findXMLNode(pXmlDoc, 'Assignment');
+        var assignments = exports.findXMLNode(pXmlDoc, 'Assignment');
         if (typeof assignments == 'undefined')
             j = 0;
         else
             j = assignments.length;
         for (i = 0; i < j; i++) {
-            var resUID = JSGantt.getXMLNodeValue(assignments[i], 'ResourceUID', 1, -1);
-            uid = JSGantt.getXMLNodeValue(assignments[i], 'TaskUID', 1, -1);
+            var resUID = exports.getXMLNodeValue(assignments[i], 'ResourceUID', 1, -1);
+            uid = exports.getXMLNodeValue(assignments[i], 'TaskUID', 1, -1);
             if (uid > 0) {
                 if (resUID > 0)
                     assRes[uid] = res[resUID];
@@ -2528,9 +2543,9 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
         }
         // Store information about parent UIDs in an easily searchable form
         for (i = 0; i < n; i++) {
-            uid = JSGantt.getXMLNodeValue(Task[i], 'UID', 1, 0);
+            uid = exports.getXMLNodeValue(Task[i], 'UID', 1, 0);
             if (uid != 0)
-                var vOutlineNumber = JSGantt.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
+                var vOutlineNumber = exports.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
             if (uid > 0)
                 pars[vOutlineNumber] = uid;
             if (uid > maxPID)
@@ -2539,19 +2554,19 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
         for (i = 0; i < n; i++) {
             // optional parameters may not have an entry
             // Task ID must NOT be zero otherwise it will be skipped
-            var pID = JSGantt.getXMLNodeValue(Task[i], 'UID', 1, 0);
+            var pID = exports.getXMLNodeValue(Task[i], 'UID', 1, 0);
             if (pID != 0) {
-                var pName = JSGantt.getXMLNodeValue(Task[i], 'Name', 2, 'No Task Name');
-                var pStart = JSGantt.getXMLNodeValue(Task[i], 'Start', 2, '');
-                var pEnd = JSGantt.getXMLNodeValue(Task[i], 'Finish', 2, '');
-                var pLink = JSGantt.getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
-                var pMile = JSGantt.getXMLNodeValue(Task[i], 'Milestone', 1, 0);
-                var pComp = JSGantt.getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
-                var pGroup = JSGantt.getXMLNodeValue(Task[i], 'Summary', 1, 0);
+                var pName = exports.getXMLNodeValue(Task[i], 'Name', 2, 'No Task Name');
+                var pStart = exports.getXMLNodeValue(Task[i], 'Start', 2, '');
+                var pEnd = exports.getXMLNodeValue(Task[i], 'Finish', 2, '');
+                var pLink = exports.getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
+                var pMile = exports.getXMLNodeValue(Task[i], 'Milestone', 1, 0);
+                var pComp = exports.getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
+                var pGroup = exports.getXMLNodeValue(Task[i], 'Summary', 1, 0);
                 var pParent = 0;
-                var vOutlineLevel = JSGantt.getXMLNodeValue(Task[i], 'OutlineLevel', 1, 0);
+                var vOutlineLevel = exports.getXMLNodeValue(Task[i], 'OutlineLevel', 1, 0);
                 if (vOutlineLevel > 1) {
-                    vOutlineNumber = JSGantt.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
+                    vOutlineNumber = exports.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
                     pParent = pars[vOutlineNumber.substr(0, vOutlineNumber.lastIndexOf('.'))];
                 }
                 try {
@@ -2564,15 +2579,15 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                     var pRes = assRes[pID];
                 else
                     pRes = '';
-                var predecessors = JSGantt.findXMLNode(Task[i], 'PredecessorLink');
+                var predecessors = exports.findXMLNode(Task[i], 'PredecessorLink');
                 if (typeof predecessors == 'undefined')
                     j = 0;
                 else
                     j = predecessors.length;
                 var pDepend = '';
                 for (k = 0; k < j; k++) {
-                    var depUID = JSGantt.getXMLNodeValue(predecessors[k], 'PredecessorUID', 1, -1);
-                    var depType = JSGantt.getXMLNodeValue(predecessors[k], 'Type', 1, 1);
+                    var depUID = exports.getXMLNodeValue(predecessors[k], 'PredecessorUID', 1, -1);
+                    var depType = exports.getXMLNodeValue(predecessors[k], 'Type', 1, 1);
                     if (depUID > 0) {
                         if (pDepend.length > 0)
                             pDepend += ',';
@@ -2604,7 +2619,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 else
                     pClass = 'gtaskblue';
                 // check for split tasks
-                var splits = JSGantt.findXMLNode(ass[pID], 'TimephasedData');
+                var splits = exports.findXMLNode(ass[pID], 'TimephasedData');
                 if (typeof splits == 'undefined')
                     j = 0;
                 else
@@ -2614,7 +2629,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var vSubCreated = false;
                 var vDepend = pDepend.replace(/,*[0-9]+[FS]F/g, '');
                 for (k = 0; k < j; k++) {
-                    var vDuration = JSGantt.getXMLNodeValue(splits[k], 'Value', 2, '0');
+                    var vDuration = exports.getXMLNodeValue(splits[k], 'Value', 2, '0');
                     //remove all text
                     vDuration = '0' + vDuration.replace(/\D/g, '');
                     vDuration *= 1;
@@ -2627,20 +2642,20 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                             vDepend = pDepend.replace(/,*[0-9]+[FS]S/g, '');
                         // Now create a subtask
                         maxPID++;
-                        vSplitEnd = JSGantt.getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-                        pGanttVar.AddTaskItem(new JSGantt.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
+                        vSplitEnd = exports.getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
+                        pGanttVar.AddTaskItem(new task_1.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
                         vSubCreated = true;
                         vDepend = '';
                     }
                     else if (vDuration != 0 && vSubCreated) {
-                        vSplitStart = JSGantt.getXMLNodeValue(splits[k], 'Start', 2, '');
+                        vSplitStart = exports.getXMLNodeValue(splits[k], 'Start', 2, '');
                         vSubCreated = false;
                     }
                 }
                 if (vSubCreated)
                     pDepend = '';
                 // Finally add the task
-                pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
             }
         }
     }
@@ -2650,22 +2665,22 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
         for (i = 0; i < n; i++) {
             // optional parameters may not have an entry
             // Task ID must NOT be zero otherwise it will be skipped
-            pID = JSGantt.getXMLNodeValue(Task[i], 'pID', 1, 0);
+            pID = exports.getXMLNodeValue(Task[i], 'pID', 1, 0);
             if (pID != 0) {
-                pName = JSGantt.getXMLNodeValue(Task[i], 'pName', 2, 'No Task Name');
-                pStart = JSGantt.getXMLNodeValue(Task[i], 'pStart', 2, '');
-                pEnd = JSGantt.getXMLNodeValue(Task[i], 'pEnd', 2, '');
-                pLink = JSGantt.getXMLNodeValue(Task[i], 'pLink', 2, '');
-                pMile = JSGantt.getXMLNodeValue(Task[i], 'pMile', 1, 0);
-                pComp = JSGantt.getXMLNodeValue(Task[i], 'pComp', 1, 0);
-                pGroup = JSGantt.getXMLNodeValue(Task[i], 'pGroup', 1, 0);
-                pParent = JSGantt.getXMLNodeValue(Task[i], 'pParent', 1, 0);
-                pRes = JSGantt.getXMLNodeValue(Task[i], 'pRes', 2, '');
-                pOpen = JSGantt.getXMLNodeValue(Task[i], 'pOpen', 1, 1);
-                pDepend = JSGantt.getXMLNodeValue(Task[i], 'pDepend', 2, '');
-                pCaption = JSGantt.getXMLNodeValue(Task[i], 'pCaption', 2, '');
-                pNotes = JSGantt.getXMLNodeValue(Task[i], 'pNotes', 2, '');
-                pClass = JSGantt.getXMLNodeValue(Task[i], 'pClass', 2);
+                pName = exports.getXMLNodeValue(Task[i], 'pName', 2, 'No Task Name');
+                pStart = exports.getXMLNodeValue(Task[i], 'pStart', 2, '');
+                pEnd = exports.getXMLNodeValue(Task[i], 'pEnd', 2, '');
+                pLink = exports.getXMLNodeValue(Task[i], 'pLink', 2, '');
+                pMile = exports.getXMLNodeValue(Task[i], 'pMile', 1, 0);
+                pComp = exports.getXMLNodeValue(Task[i], 'pComp', 1, 0);
+                pGroup = exports.getXMLNodeValue(Task[i], 'pGroup', 1, 0);
+                pParent = exports.getXMLNodeValue(Task[i], 'pParent', 1, 0);
+                pRes = exports.getXMLNodeValue(Task[i], 'pRes', 2, '');
+                pOpen = exports.getXMLNodeValue(Task[i], 'pOpen', 1, 1);
+                pDepend = exports.getXMLNodeValue(Task[i], 'pDepend', 2, '');
+                pCaption = exports.getXMLNodeValue(Task[i], 'pCaption', 2, '');
+                pNotes = exports.getXMLNodeValue(Task[i], 'pNotes', 2, '');
+                pClass = exports.getXMLNodeValue(Task[i], 'pClass', 2, '');
                 if (typeof pClass == 'undefined') {
                     if (pGroup > 0)
                         pClass = 'ggroupblack';
@@ -2675,11 +2690,11 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                         pClass = 'gtaskblue';
                 }
                 // Finally add the task
-                pGanttVar.AddTaskItem(new JSGantt.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
             }
         }
     }
 };
 
-},{}]},{},[1])(1)
+},{"./task":7}]},{},[1])(1)
 });

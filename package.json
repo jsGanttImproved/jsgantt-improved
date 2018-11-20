@@ -1,6 +1,6 @@
 {
   "name": "jsgantt-improved",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "jsgantt-improved",
   "main": "dist/index.js",
   "scripts": {
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jsGanttImproved/jsgantt-improved"
+    "url": "git+https://github.com/mariohmol/jsgantt-improved"
   },
   "author": "Eduardo Rodrigues, Ricardo Cardoso, Mario Mol <mariohmol@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jsGanttImproved/jsgantt-improved/issues"
+    "url": "https://github.com/mariohmol/jsgantt-improved/issues"
   },
-  "homepage": "https://github.com/jsGanttImproved/jsgantt-improved#readme",
+  "homepage": "https://github.com/mariohmol/jsgantt-improved#readme",
   "dependencies": {
     "randexp": "^0.5.3",
     "text-mask-addons": "^3.8.0"

@@ -1,4 +1,6 @@
-declare var JSGantt: any;
+import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip } from "./utils";
+import { folder } from "./task";
+import { updateFlyingObj } from "./draw";
 
 export const mouseOver = function (pObj1, pObj2) {
   if (this.getUseRowHlt()) {
@@ -40,7 +42,7 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
       pGanttChartObj.vTool.style.left = Math.floor(((e) ? e.clientX : (<MouseEvent>window.event).clientX) / 2) + 'px';
       pGanttChartObj.vTool.style.top = Math.floor(((e) ? e.clientY : (<MouseEvent>window.event).clientY) / 2) + 'px';
       this.addListener('mouseover', function () { clearTimeout(pGanttChartObj.vTool.delayTimeout); }, pGanttChartObj.vTool);
-      this.addListener('mouseout', function () { JSGantt.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
+      this.addListener('mouseout', function () { delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
     }
     clearTimeout(pGanttChartObj.vTool.delayTimeout);
     if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
@@ -49,14 +51,14 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
 
         pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
         // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
-        JSGantt.stripIds(pGanttChartObj.vTool.vToolCont);
+        stripIds(pGanttChartObj.vTool.vToolCont);
       }
 
       pGanttChartObj.vTool.style.visibility = 'visible';
       // Rather than follow the mouse just have it stay put
-      JSGantt.updateFlyingObj(e, pGanttChartObj, pTimer);
+      updateFlyingObj(e, pGanttChartObj, pTimer);
       pGanttChartObj.vTool.style.width = (pWidth) ? pWidth + 'px' : 'auto';
-      if (!pWidth && JSGantt.isIE()) {
+      if (!pWidth && isIE()) {
         pGanttChartObj.vTool.style.width = pGanttChartObj.vTool.offsetWidth;
       }
       if (pGanttChartObj.vTool.offsetWidth > vMaxW) { pGanttChartObj.vTool.style.width = vMaxW + 'px'; }
@@ -64,7 +66,7 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
 
     if (pGanttChartObj.getUseFade()) {
       clearInterval(pGanttChartObj.vTool.fadeInterval);
-      pGanttChartObj.vTool.fadeInterval = setInterval(function () { JSGantt.fadeToolTip(1, pGanttChartObj.vTool, vMaxAlpha); }, pTimer);
+      pGanttChartObj.vTool.fadeInterval = setInterval(function () { fadeToolTip(1, pGanttChartObj.vTool, vMaxAlpha); }, pTimer);
     }
     else {
       pGanttChartObj.vTool.style.opacity = vMaxAlpha * 0.01;
@@ -73,44 +75,9 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
   }
 };
 
-export const hideToolTip = function (pGanttChartObj, pTool, pTimer) {
-  if (pGanttChartObj.getUseFade()) {
-    clearInterval(pTool.fadeInterval);
-    pTool.fadeInterval = setInterval(function () { JSGantt.fadeToolTip(-1, pTool, 0); }, pTimer);
-  }
-  else {
-    pTool.style.opacity = 0;
-    pTool.style.filter = 'alpha(opacity=0)';
-    pTool.style.visibility = 'hidden';
-  }
-};
 
-export const fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
-  var vIncrement = parseInt(pTool.getAttribute('fadeIncrement'));
-  var vAlpha = pTool.getAttribute('currentOpacity');
-  var vCurAlpha = parseInt(vAlpha);
-  if ((vCurAlpha != pMaxAlpha && pDirection == 1) || (vCurAlpha != 0 && pDirection == -1)) {
-    var i = vIncrement;
-    if (pMaxAlpha - vCurAlpha < vIncrement && pDirection == 1) {
-      i = pMaxAlpha - vCurAlpha;
-    } else if (vAlpha < vIncrement && pDirection == -1) {
-      i = vCurAlpha;
-    }
-    vAlpha = vCurAlpha + (i * pDirection);
-    pTool.style.opacity = vAlpha * 0.01;
-    pTool.style.filter = 'alpha(opacity=' + vAlpha + ')';
-    pTool.setAttribute('currentOpacity', vAlpha);
-  } else {
-    clearInterval(pTool.fadeInterval);
-    if (pDirection == -1) {
-      pTool.style.opacity = 0;
-      pTool.style.filter = 'alpha(opacity=0)';
-      pTool.style.visibility = 'hidden';
-    }
-  }
-};
 
-export const moveToolTip = function (pNewX, pNewY, pTool) {
+export const moveToolTip = function (pNewX, pNewY, pTool, timer) {
   var vSpeed = parseInt(pTool.getAttribute('moveSpeed'));
   var vOldX = parseInt(pTool.style.left);
   var vOldY = parseInt(pTool.style.top);
@@ -131,4 +98,52 @@ export const moveToolTip = function (pNewX, pNewY, pTool) {
       clearInterval(pTool.moveInterval);
     }
   }
+};
+
+
+export const addListener = function (eventName, handler, control) {
+  // Check if control is a string
+  if (control === String(control)) control = findObj(control);
+
+  if (control.addEventListener) //Standard W3C
+  {
+    return control.addEventListener(eventName, handler, false);
+  }
+  else if (control.attachEvent) //IExplore
+  {
+    return control.attachEvent('on' + eventName, handler);
+  }
+  else {
+    return false;
+  }
+};
+
+
+export const addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
+  addListener('mouseover', function (e) { showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
+  addListener('mouseout', function (e) { delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
+};
+
+export const addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
+  addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj1);
+  addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj2);
+  addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj1);
+  addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
+};
+
+export const addFolderListeners = function (pGanttChart, pObj, pID) {
+  addListener('click', function () { folder(pID, pGanttChart); }, pObj);
+};
+
+export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
+  addListener('click', function () { changeFormat(pFormat, pGanttChart); }, pObj);
+};
+
+export const addScrollListeners = function (pGanttChart) {
+  addListener('scroll', function () { pGanttChart.getChartBody().scrollTop = pGanttChart.getListBody().scrollTop; }, pGanttChart.getListBody());
+  addListener('scroll', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, pGanttChart.getChartBody());
+  addListener('scroll', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, pGanttChart.getChartBody());
+  addListener('scroll', function () { pGanttChart.getChartBody().scrollLeft = pGanttChart.getChartHead().scrollLeft; }, pGanttChart.getChartHead());
+  addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
+  addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
 };

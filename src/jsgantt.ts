@@ -62,8 +62,10 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import { showToolTip, hideToolTip, fadeToolTip, moveToolTip } from "./events";
-import { getMinDate, getMaxDate, findObj, changeFormat, parseDateStr, formatDateStr, parseDateFormatStr, stripIds, stripUnwanted, delayedHide, getOffset, getScrollPositions, isIE, benchMark, getIsoWeek, getZoomFactor } from "./utils";
+import { showToolTip, moveToolTip, addTooltipListeners, addThisRowListeners, addFormatListeners, addScrollListeners, addFolderListeners, addListener } from "./events";
+import { getMinDate, getMaxDate, findObj, changeFormat, parseDateStr, 
+  formatDateStr, parseDateFormatStr, stripIds, stripUnwanted, delayedHide, getOffset, 
+  getScrollPositions, isIE, benchMark, getIsoWeek, getZoomFactor, hideToolTip, fadeToolTip } from "./utils";
 import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } from './xml';
 import { folder, hide, show, taskLink, sortTasks, TaskItem } from "./task";
 import { processRows, GanttChart, updateFlyingObj } from "./draw";
@@ -128,49 +130,9 @@ JSGantt.addJSONTask = addJSONTask;
 JSGantt.benchMark = benchMark;
 JSGantt.getIsoWeek = getIsoWeek;
 
-JSGantt.addListener = function (eventName, handler, control) {
-  // Check if control is a string
-  if (control === String(control)) control = JSGantt.findObj(control);
-
-  if (control.addEventListener) //Standard W3C
-  {
-    return control.addEventListener(eventName, handler, false);
-  }
-  else if (control.attachEvent) //IExplore
-  {
-    return control.attachEvent('on' + eventName, handler);
-  }
-  else {
-    return false;
-  }
-};
-
-JSGantt.addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
-  JSGantt.addListener('mouseover', function (e) { JSGantt.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
-  JSGantt.addListener('mouseout', function (e) { JSGantt.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
-};
-
-JSGantt.addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
-  JSGantt.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj1);
-  JSGantt.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj2);
-  JSGantt.addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj1);
-  JSGantt.addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
-};
-
-JSGantt.addFolderListeners = function (pGanttChart, pObj, pID) {
-  JSGantt.addListener('click', function () { JSGantt.folder(pID, pGanttChart); }, pObj);
-};
-
-JSGantt.addFormatListeners = function (pGanttChart, pFormat, pObj) {
-  JSGantt.addListener('click', function () { JSGantt.changeFormat(pFormat, pGanttChart); }, pObj);
-};
-
-JSGantt.addScrollListeners = function (pGanttChart) {
-  JSGantt.addListener('scroll', function () { pGanttChart.getChartBody().scrollTop = pGanttChart.getListBody().scrollTop; }, pGanttChart.getListBody());
-  JSGantt.addListener('scroll', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, pGanttChart.getChartBody());
-  JSGantt.addListener('scroll', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, pGanttChart.getChartBody());
-  JSGantt.addListener('scroll', function () { pGanttChart.getChartBody().scrollLeft = pGanttChart.getChartHead().scrollLeft; }, pGanttChart.getChartHead());
-  JSGantt.addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-  JSGantt.addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
-};
-
+JSGantt.addListener = addListener;
+JSGantt.addTooltipListeners = addTooltipListeners;
+JSGantt.addThisRowListeners = addThisRowListeners;
+JSGantt.addFolderListeners = addFolderListeners;
+JSGantt.addFormatListeners = addFormatListeners;
+JSGantt.addScrollListeners = addScrollListeners;

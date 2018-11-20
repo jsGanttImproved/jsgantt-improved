@@ -1,4 +1,3 @@
-declare var JSGantt: any;
 
 export const getMinDate = function (pList, pFormat) {
   var vDate = new Date();
@@ -91,7 +90,7 @@ export const getMaxDate = function (pList, pFormat) {
 };
 
 
-export const findObj = function (theObj, theDoc) {
+export const findObj = function (theObj, theDoc = null) {
   var p, i, foundObj;
   if (!theDoc) theDoc = document;
   if (document.getElementById) foundObj = document.getElementById(theObj);
@@ -191,17 +190,17 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
         vDateStr += ((pDate.getHours()) < 12) ? 'AM' : 'PM';
         break;
       case 'ww':
-        if (JSGantt.getIsoWeek(pDate) < 10) vDateStr += '0'; // now fall through
+        if (getIsoWeek(pDate) < 10) vDateStr += '0'; // now fall through
       case 'w':
-        vDateStr += JSGantt.getIsoWeek(pDate);
+        vDateStr += getIsoWeek(pDate);
         break;
       case 'week':
-        var vWeekNum = JSGantt.getIsoWeek(pDate);
+        var vWeekNum = getIsoWeek(pDate);
         var vYear = pDate.getFullYear();
         var vDayOfWeek = (pDate.getDay() == 0) ? 7 : pDate.getDay();
         if (vWeekNum >= 52 && parseInt(vMonthStr, 10) === 1) vYear--;
         if (vWeekNum == 1 && parseInt(vMonthStr, 10) === 12) vYear++;
-        if (vWeekNum < 10) vWeekNum = '0' + vWeekNum;
+        if (vWeekNum < 10) vWeekNum = parseInt('0' + vWeekNum, 10);
 
         vDateStr += vYear + '-W' + vWeekNum + '-' + vDayOfWeek;
         break;
@@ -245,7 +244,7 @@ export const parseDateFormatStr = function (pFormatStr) {
 export const stripIds = function (pNode) {
   for (var i = 0; i < pNode.childNodes.length; i++) {
     if ('removeAttribute' in pNode.childNodes[i]) pNode.childNodes[i].removeAttribute('id');
-    if (pNode.childNodes[i].hasChildNodes()) JSGantt.stripIds(pNode.childNodes[i]);
+    if (pNode.childNodes[i].hasChildNodes()) stripIds(pNode.childNodes[i]);
   }
 };
 
@@ -256,13 +255,13 @@ export const stripUnwanted = function (pNode) {
     if ((vAllowedTags.join().toLowerCase() + ',').indexOf(pNode.childNodes[i].nodeName.toLowerCase() + ',') == -1) {
       pNode.replaceChild(document.createTextNode(pNode.childNodes[i].outerHTML), pNode.childNodes[i]);
     }
-    if (pNode.childNodes[i].hasChildNodes()) JSGantt.stripUnwanted(pNode.childNodes[i]);
+    if (pNode.childNodes[i].hasChildNodes()) stripUnwanted(pNode.childNodes[i]);
   }
 };
 
 export const delayedHide = function (pGanttChartObj, pTool, pTimer) {
   var vDelay = 1500;
-  if (pTool) pTool.delayTimeout = setTimeout(function () { JSGantt.hideToolTip(pGanttChartObj, pTool, pTimer); }, vDelay);
+  if (pTool) pTool.delayTimeout = setTimeout(function () { hideToolTip(pGanttChartObj, pTool, pTimer); }, vDelay);
 };
 
 export const getZoomFactor = function () {
@@ -303,7 +302,7 @@ export const getIsoWeek = function (pDate) {
 
   thisWeek = Math.ceil((daysFromFirstMonday + 1) / 7);
 
-  if (thisWeek <= 0) thisWeek = JSGantt.getIsoWeek(new Date(pDate.getFullYear() - 1, 11, 31, 0, 0, 0));
+  if (thisWeek <= 0) thisWeek = getIsoWeek(new Date(pDate.getFullYear() - 1, 11, 31, 0, 0, 0));
   else if (thisWeek == 53 && (new Date(pDate.getFullYear(), 0, 1, 0, 0, 0)).getDay() != 4 && (new Date(pDate.getFullYear(), 11, 31, 0, 0, 0)).getDay() != 4) thisWeek = 1;
   return thisWeek;
 };
@@ -313,7 +312,7 @@ export const getScrollPositions = function () {
   var vScrollTop = window.pageYOffset;
   if (!('pageXOffset' in window))	// Internet Explorer before version 9
   {
-    var vZoomFactor = JSGantt.getZoomFactor();
+    var vZoomFactor = getZoomFactor();
     vScrollLeft = Math.round(document.documentElement.scrollLeft / vZoomFactor);
     vScrollTop = Math.round(document.documentElement.scrollTop / vZoomFactor);
   }
@@ -377,3 +376,41 @@ export const isIE = function () {
   else return false;
 };
 
+export const hideToolTip = function (pGanttChartObj, pTool, pTimer) {
+  if (pGanttChartObj.getUseFade()) {
+    clearInterval(pTool.fadeInterval);
+    pTool.fadeInterval = setInterval(function () { fadeToolTip(-1, pTool, 0); }, pTimer);
+  }
+  else {
+    pTool.style.opacity = 0;
+    pTool.style.filter = 'alpha(opacity=0)';
+    pTool.style.visibility = 'hidden';
+  }
+};
+
+
+
+export const fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
+  var vIncrement = parseInt(pTool.getAttribute('fadeIncrement'));
+  var vAlpha = pTool.getAttribute('currentOpacity');
+  var vCurAlpha = parseInt(vAlpha);
+  if ((vCurAlpha != pMaxAlpha && pDirection == 1) || (vCurAlpha != 0 && pDirection == -1)) {
+    var i = vIncrement;
+    if (pMaxAlpha - vCurAlpha < vIncrement && pDirection == 1) {
+      i = pMaxAlpha - vCurAlpha;
+    } else if (vAlpha < vIncrement && pDirection == -1) {
+      i = vCurAlpha;
+    }
+    vAlpha = vCurAlpha + (i * pDirection);
+    pTool.style.opacity = vAlpha * 0.01;
+    pTool.style.filter = 'alpha(opacity=' + vAlpha + ')';
+    pTool.setAttribute('currentOpacity', vAlpha);
+  } else {
+    clearInterval(pTool.fadeInterval);
+    if (pDirection == -1) {
+      pTool.style.opacity = 0;
+      pTool.style.filter = 'alpha(opacity=0)';
+      pTool.style.visibility = 'hidden';
+    }
+  }
+};

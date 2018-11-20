@@ -1,4 +1,5 @@
-declare var JSGantt: any;
+import { parseDateStr, isIE, stripUnwanted, getOffset } from "./utils";
+
 declare var g: any;
 
 // Function to open/close and hide/show children of specified task
@@ -12,18 +13,18 @@ export const folder = function (pID, ganttObj) {
     if (vList[i].getID() == pID) {
       if (vList[i].getOpen() == 1) {
         vList[i].setOpen(0);
-        JSGantt.hide(pID, ganttObj);
+        hide(pID, ganttObj);
 
-        if (JSGantt.isIE())
+        if (isIE())
           vList[i].getGroupSpan().innerText = '+';
         else
           vList[i].getGroupSpan().textContent = '+';
       }
       else {
         vList[i].setOpen(1);
-        JSGantt.show(pID, 1, ganttObj);
+        show(pID, 1, ganttObj);
 
-        if (JSGantt.isIE())
+        if (isIE())
           vList[i].getGroupSpan().innerText = '-';
         else
           vList[i].getGroupSpan().textContent = '-';
@@ -46,7 +47,7 @@ export const hide = function (pID, ganttObj) {
       if (vList[i].getListChildRow()) vList[i].getListChildRow().style.display = 'none';
       if (vList[i].getChildRow()) vList[i].getChildRow().style.display = 'none';
       vList[i].setVisible(0);
-      if (vList[i].getGroup()) JSGantt.hide(vID, ganttObj);
+      if (vList[i].getGroup()) hide(vID, ganttObj);
     }
   }
 };
@@ -61,7 +62,7 @@ export const show = function (pID, pTop, ganttObj) {
   for (var i = 0; i < vList.length; i++) {
     if (vList[i].getParent() == pID) {
       if (vList[i].getParItem().getGroupSpan()) {
-        if (JSGantt.isIE()) vState = vList[i].getParItem().getGroupSpan().innerText;
+        if (isIE()) vState = vList[i].getParItem().getGroupSpan().innerText;
         else vState = vList[i].getParItem().getGroupSpan().textContent;
       }
       i = vList.length;
@@ -82,7 +83,7 @@ export const show = function (pID, pTop, ganttObj) {
         if (vList[i].getChildRow()) vList[i].getChildRow().style.display = '';
         vList[i].setVisible(1);
       }
-      if (vList[i].getGroup()) JSGantt.show(vID, 0, ganttObj);
+      if (vList[i].getGroup()) show(vID, 0, ganttObj);
     }
   }
 };
@@ -118,7 +119,7 @@ export const sortTasks = function (pList, pID, pIdx) {
     for (i = 0; i < pList.length; i++) {
       if (pList[i].getID() == sortArr[j].getID()) {
         pList[i].setSortIdx(sortIdx++);
-        sortIdx = JSGantt.sortTasks(pList, pList[i].getID(), sortIdx);
+        sortIdx = sortTasks(pList, pList[i].getID(), sortIdx);
       }
     }
   }
@@ -157,7 +158,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   var vNotes;
   var vParItem = null;
   var vCellDiv = null;
-  var vGantt = (pGantt instanceof JSGantt.GanttChart) ? pGantt : g; //hack for backwards compatibility
+  var vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
   var vBarDiv = null;
   var vTaskDiv = null;
   var vListChildRow = null;
@@ -168,16 +169,16 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   vNotes.className = 'gTaskNotes';
   if (pNotes != null) {
     vNotes.innerHTML = pNotes;
-    JSGantt.stripUnwanted(vNotes);
+    stripUnwanted(vNotes);
   }
 
   if (pStart != null && pStart != '') {
-    vStart = (pStart instanceof Date) ? pStart : JSGantt.parseDateStr(document.createTextNode(pStart).data, vGantt.getDateInputFormat());
+    vStart = (pStart instanceof Date) ? pStart : parseDateStr(document.createTextNode(pStart).data, vGantt.getDateInputFormat());
     vGroupMinStart = vStart;
   }
 
   if (pEnd != null && pEnd != '') {
-    vEnd = (pEnd instanceof Date) ? pEnd : JSGantt.parseDateStr(document.createTextNode(pEnd).data, vGantt.getDateInputFormat());
+    vEnd = (pEnd instanceof Date) ? pEnd : parseDateStr(document.createTextNode(pEnd).data, vGantt.getDateInputFormat());
     vGroupMinEnd = vEnd;
   }
 
@@ -246,7 +247,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
         vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       }
-      var tmpPer = (JSGantt.getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
+      var tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
       if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer * 10) / 10;
       switch (vUnits) {
         case 'hour': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']); break;
@@ -293,7 +294,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setVisible = function (pVisible) { vVisible = parseInt(document.createTextNode(pVisible).data); };
   this.setSortIdx = function (pSortIdx) { vSortIdx = parseInt(document.createTextNode(pSortIdx).data); };
   this.setToDelete = function (pToDelete) { if (pToDelete) vToDelete = true; else vToDelete = false; };
-  this.setParItem = function (pParItem) { if (pParItem instanceof JSGantt.TaskItem) vParItem = pParItem; };
+  this.setParItem = function (pParItem) { if (pParItem) vParItem = pParItem; };
   this.setCellDiv = function (pCellDiv) { if (typeof HTMLDivElement !== 'function' || pCellDiv instanceof HTMLDivElement) vCellDiv = pCellDiv; }; //"typeof HTMLDivElement !== 'function'" to play nice with ie6 and 7
   this.setGroup = function (pGroup) { vGroup = parseInt(document.createTextNode(pGroup).data); };
   this.setBarDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vBarDiv = pDiv; };
