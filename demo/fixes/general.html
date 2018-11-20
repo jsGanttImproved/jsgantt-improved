@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<!-- Head -->
+
+<head>
+  <!-- Meta data -->
+  <meta charset="utf-8">
+  <title>jsGantt Improved</title>
+  <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
+  <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- External resources -->
+  <!-- jQuery + Ajax [required by Bootstrap] -->
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <!-- Required by smooth scrolling -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!-- Bootstrap v4.0.0 Alpha -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+    crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
+  <!-- Font Awesome -->
+  <script src="https://use.fontawesome.com/78d1e57168.js"></script>
+  <!-- Google's Code Prettify -->
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
+
+  <!-- jsGanttImproved App -->
+  <link href="../jsgantt.css" rel="stylesheet" type="text/css" />
+  <script src="../jsgantt.js" type="text/javascript"></script>
+</head>
+
+<!-- Content -->
+
+<body data-spy="scroll" data-target="#my-navbar-nav">
+  Choose a language:
+  <select onchange="start(event)">
+    <option value='pt'>pt</option>
+    <option value='en'>en</option>
+    <option value='ru'>ru</option>
+    <option value='es'>es</option>
+    <option value='fr'>fr</option>
+    <option value='de'>de</option>
+  </select>
+
+  <br />
+  <div id="embedded-Gantt">
+    <script type="text/javascript">
+
+      function start(e) {
+        lang = e && e.target ? e.target.value : 'pt';
+        var g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
+        if (g.getDivId() != null) {
+          g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+          g.setQuarterColWidth(36);
+          g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
+          g.setDayMajorDateDisplayFormat('mon yyyy - Week ww') // Set format to display dates in the "Major" header of the "Day" view
+          g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
+          g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
+          g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
+          g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
+          g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+          // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
+
+
+
+          const data = [{ pID: 1, pName: 'Define Chart API', pStart: '', pEnd: '', pClass: 'ggroupblack', pLink: '', pMile: 0, pRes: 'Brian', pComp: 0, pGroup: 1, pParent: 0, pOpen: 1, pDepend: '', pCaption: '', pNotes: 'Some Notes text', pGantt: g },
+          { pID: 11, pName: 'Chart Object', pStart: '2017-02-20', pEnd: '2017-02-20', pClass: 'gmilestone', pLink: '', pMile: 1, pRes: 'Shlomy', pComp: 100, pGroup: 0, pParent: 1, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 12, pName: 'Task Objects', pStart: '', pEnd: '', pClass: 'ggroupblack', pLink: '', pMile: 0, pRes: 'Shlomy', pComp: 40, pGroup: 1, pParent: 1, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 121, pName: 'Constructor Proc #1234 of February 2017', pStart: '2017-02-21', pEnd: '2017-03-09', pClass: 'gtaskblue', pLink: '', pMile: 0, pRes: 'Brian T.', pComp: 60, pGroup: 0, pParent: 12, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 122, pName: 'Task Variables', pStart: '2017-03-06', pEnd: '2017-03-11', pClass: 'gtaskred', pLink: '', pMile: 0, pRes: 'Brian', pComp: 60, pGroup: 0, pParent: 12, pOpen: 1, pDepend: 121, pCaption: '', pNotes: '', pGantt: g },
+          { pID: 123, pName: 'Task by Minute/Hour', pStart: '2017-03-09', pEnd: '2017-03-14 12:00', pClass: 'gtaskyellow', pLink: '', pMile: 0, pRes: 'Ilan', pComp: 60, pGroup: 0, pParent: 12, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 124, pName: 'Task Functions', pStart: '2017-03-09', pEnd: '2017-03-29', pClass: 'gtaskred', '', 0, 'Anyone', 60, 0, 12, 1, '123SS', 'This is a caption', null, pGantt: g },
+          { pID: 2, pName: 'Create HTML Shell', pStart: '2017-03-24', pEnd: '2017-03-24', pClass: 'gtaskyellow', pLink: '', pMile: 0, pRes: 'Brian', pComp: 20, pGroup: 0, pParent: 0, pOpen: 1, pDepend: 122, pCaption: '', pNotes: '', pGantt: g },
+          { pID: 3, pName: 'Code Javascript', '', pEnd: '', pClass: 'ggroupblack', pLink: '', pMile: 0, pRes: 'Brian', pComp: 0, pGroup: 1, pParent: 0, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 31, pName: 'Define Variables', pStart: '2017-02-25', pEnd: '2017-03-17', pClass: 'gtaskpurple', pLink: '', pMile: 0, pRes: 'Brian', pComp: 30, pGroup: 0, pComp: 3, 1, pGroup: '', pParent: 'CpOpen: aptpDepend: ion pCaption: 1', pNotes: '', pGantt: g },
+          { pID: 32, pName: 'Calculate Chart Size', pStart: '2017-03-15', pEnd: '2017-03-24', 'gtaskgreen', pLink: '', pMile: 0, pRes: 'Shlomy', pComp: 40, pGroup: 0, pParent: 3, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 33, pName: 'Draw Task Items', pStart: '', pEnd: '', pClass: 'ggroupblack', '', 0, 'Someone', pComp: 40, pGroup: 2, pParent: 3, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 332, pName: 'Task Label Table', 'pStart: 2017-03-06', pEnd: '2017-03-09', pClass: 'gtaskblue', pLink: '', pMile: 0, pRes: 'Brian', pComp: 60, pGroup: 0, pParent: 33, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 333, pName: 'Task Scrolling Grid', pStart: '2017-03-11', pEnd: '2017-03-20', pClass: 'gtaskblue', pLink: '', pMile: 0, pRes: 'Brian', 0, pComp: 0, pGroup: 33, pParent: 1, pOpen: '33pDepend: 2', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 34, pName: 'Draw Task Bars', pStart: '', pEnd: '', pClass: 'ggroupblack', '', 0, 'Anybody', pComp: 60, pGroup: 1, pParent: 3, pOpen: 0, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 341, pName: 'Loop each Task', pStart: '2017-03-26', pEnd: '2017-04-11', pClass: 'gtaskred', pLink: '', pMile: 0, pRes: 'Brian', pComp: 60, pGroup: 0, pParent: 34, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 342, pName: 'Calculate Start/Stop', pStart: '2017-04-12', pEnd: '2017-05-18', 'gtaskpink', pLink: '', pMile: 0, pRes: 'Brian', pComp: 60, pGroup: 0, pParent: 34, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 343, pName: 'Draw Task Div', pStart: '2017-05-13', pEnd: '2017-05-17', pClass: 'gtaskred', pLink: '', pMile: 0, pRes: 'Brian', pComp: 60, pGroup: 0, pParent: 34, pOpen: 1, pDepend: '', pCaption: '', pNotes: '', pGantt: g },
+          { pID: 344, pName: 'Draw Completion Div', '2017-05-17', pEnd: '2017-06-04', pClass: 'gtaskred', pLink: '', pMile: 0, pRes: 'Brian', pComp: 60, pGroup: 0, pComp: 34, pGroup: 1, "pParent: 342pOpen: ,34pDepend: 3", pCaption: '', pNotes: '', pGantt: g },
+          { pID: 35, pName: 'Make Updates', pStart: '2017-07-17', pEnd: '2017-09-04', pClass: 'gtaskpurple', pLink: '', pMile: 0, pRes: 'Brian', pComp: 30, pGroup: 0, pGroup: 3, pParent: 1, pOpen: '33pDepend: 3', pCaption: '', pNotes: '', pGantt: g }
+          ];
+
+          data.forEach(r => g.AddTaskItem(new JSGantt.TaskItem(r)))
+          g.setLang(lang);
+          g.Draw();
+        } else {
+          alert("Error, unable to create Gantt Chart");
+        }
+      }
+
+      start('pt')
+    </script>
+  </div>
+
+</body>
+
+</html>

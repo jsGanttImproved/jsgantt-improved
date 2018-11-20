@@ -4,7 +4,7 @@ import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
   getScrollPositions, getMaxDate, getMinDate
 } from './utils';
-import { sortTasks } from './task';
+import { sortTasks, TaskItemObject } from './task';
 
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
 export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
@@ -343,6 +343,10 @@ export const GanttChart = function (pDiv, pFormat) {
       vProcessNeeded = true;
     }
   };
+
+  this.AddTaskItemObject = function (object) {
+    return this.AddTaskItem(TaskItemObject(object));
+  }
 
   this.RemoveTaskItem = function (pID) {
     // simply mark the task for removal at this point - actually remove it next time we re-draw the chart

@@ -128,7 +128,7 @@ export const sortTasks = function (pList, pID, pIdx) {
 
 
 export const TaskItemObject = function (object) {
-  return TaskItem(object.pID,
+  return new TaskItem(object.pID,
     object.pName,
     object.pStart,
     object.pEnd,
