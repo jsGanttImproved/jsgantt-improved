@@ -1,6 +1,6 @@
 {
   "name": "jsgantt-improved",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "jsgantt-improved",
   "main": "dist/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "dist": "npm run build && npm run browserify",
     "publish-npm": "npm run dist && cp jsgantt.js dist/ && npm publish",
     "demo": "cp jsgantt.js demo/ && cp src/jsgantt.css demo/ && cd demo && http-server",
-    "demo-full": "npm run dist && cp jsgantt.js demo/ && cd demo && http-server"
+    "demo-full": "npm run dist && npm run demo"
   },
   "repository": {
     "type": "git",

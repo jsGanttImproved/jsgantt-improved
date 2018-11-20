@@ -315,8 +315,6 @@
   "pRes": "Brian",
   "pComp": 60,
   "pGroup": 0,
-  "pComp": 34,
-  "pGroup": 1,
   "pParent": 34,
   "pOpen": 1,
   "pDepend": "342,343",
@@ -334,10 +332,9 @@
   "pRes": "Brian",
   "pComp": 30,
   "pGroup": 0,
-  "pGroup": 3,
-  "pParent": 1,
-  "pOpen": "33",
-  "pDepend": 3,
+  "pParent": 3,
+  "pOpen": 1,
+  "pDepend": "333",
   "pCaption": "",
   "pNotes": ""
 }]

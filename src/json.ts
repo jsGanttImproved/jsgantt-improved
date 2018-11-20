@@ -1,5 +1,10 @@
 import { TaskItem } from "./task";
 
+/**
+ * 
+ * @param pFile 
+ * @param pGanttVar 
+ */
 export const parseJSON = function (pFile, pGanttVar) {
   if ((<any>window).XMLHttpRequest) {
     var xhttp = new XMLHttpRequest();
@@ -104,9 +109,9 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
         }
       }
 
-      if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
+      //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
         pGanttVar.AddTaskItem(new TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
-      }
+      //}
     }
   }
 };
