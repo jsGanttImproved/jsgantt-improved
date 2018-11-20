@@ -28,4 +28,4 @@ Or include the `jsgantt.js` and `jsgantt.css` that are inside `demo/`  folder
 
 Project forked as I was unable to contact the original maintainers. This work was done to support a personal project that didn't warrant a more heavyweight system (e.g. the dojo toolkit gantt chart features).
 
-See the [Documentation](https://github.com/jsGanttImproved/jsgantt-improved/wiki/Documentation) wiki page or the included ``index.html`` file for instructions on use.
+See the [Documentation](./Documentation.md) wiki page or the included ``index.html`` file for instructions on use.
