@@ -32,3 +32,10 @@ https://mariohmol.github.io/jsgantt-improved/demo
 ## Documentation
 
 See the [Documentation](./Documentation.md) wiki page or the included ``demo/index.html`` file for instructions on use.
+
+
+## Want to Collaborate?
+
+Clone this repo and run `npm run demo-full`, this will start a `localhost:8080` with a live  example. 
+Do your change in `src` and restart this command to test.
+
