@@ -3,6 +3,8 @@
   "pName": "Define Chart API",
   "pStart": "",
   "pEnd": "",
+  "pPlanStart": "",
+  "pPlanEnd": "",
   "pClass": "ggroupblack",
   "pLink": "",
   "pMile": 0,
@@ -71,6 +73,8 @@
   "pName": "Task Variables",
   "pStart": "2017-03-06",
   "pEnd": "2017-03-11",
+  "pPlanStart": "2017-03-03",
+  "pPlanEnd": "2017-03-09",
   "pClass": "gtaskred",
   "pLink": "",
   "pMile": 0,
@@ -87,7 +91,9 @@
   "pID": 123,
   "pName": "Task by Minute/Hour",
   "pStart": "2017-03-09",
-  "pEnd": "2017-03-14 12: 00",
+  "pEnd": "2017-03-14 12:00",
+  "pPlanStart": "2017-03-01",
+  "pPlanEnd": "2017-03-15 12:00",
   "pClass": "gtaskyellow",
   "pLink": "",
   "pMile": 0,
@@ -98,7 +104,8 @@
   "pOpen": 1,
   "pDepend": "",
   "pCaption": "",
-  "pNotes": ""
+  "pNotes": "",
+  "pCost": 1000
 },
 {
   "pID": 124,
@@ -115,7 +122,8 @@
   "pOpen": 1,
   "pDepend": "123SS",
   "pCaption": "This is a caption",
-  "pNotes": null
+  "pNotes": null,
+  "pCost": 34
 },
 {
   "pID": 2,

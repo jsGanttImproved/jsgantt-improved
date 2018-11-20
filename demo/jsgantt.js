@@ -32,6 +32,9 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vShowComp = 1;
     this.vShowStartDate = 1;
     this.vShowEndDate = 1;
+    this.vShowPlanStartDate = 0;
+    this.vShowCost = 0;
+    this.vShowPlanEndDate = 0;
     this.vShowEndWeekDate = 1;
     this.vShowTaskInfoRes = 1;
     this.vShowTaskInfoDur = 1;
@@ -318,6 +321,12 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
             if (this.vShowEndDate == 1)
                 this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
+            if (this.vShowPlanStartDate == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
+            if (this.vShowPlanEndDate == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
+            if (this.vShowCost == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
             vTmpRow = this.newNode(vTmpTBody, 'tr');
             this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
             this.newNode(vTmpRow, 'td', null, 'gtaskname', '\u00A0');
@@ -331,6 +340,12 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', this.vLangs[this.vLang]['startdate']);
             if (this.vShowEndDate == 1)
                 this.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', this.vLangs[this.vLang]['enddate']);
+            if (this.vShowPlanStartDate == 1)
+                this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanstartdate', this.vLangs[this.vLang]['planstartdate']);
+            if (this.vShowPlanEndDate == 1)
+                this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', this.vLangs[this.vLang]['planenddate']);
+            if (this.vShowCost == 1)
+                this.newNode(vTmpRow, 'td', null, 'gtaskheading gcost', this.vLangs[this.vLang]['cost']);
             var vLeftTable = document.createDocumentFragment();
             var vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
             this.setListBody(vTmpDiv2);
@@ -385,6 +400,20 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
                         vTmpDiv = this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(this.vTaskList[i].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
                     }
+                    if (this.vShowPlanStartDate == 1) {
+                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanstartdate');
+                        var v = this.vTaskList[i].getPlanStart() ? utils_1.formatDateStr(this.vTaskList[i].getPlanStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
+                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
+                    }
+                    if (this.vShowPlanEndDate == 1) {
+                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanenddate');
+                        var v = this.vTaskList[i].getPlanEnd() ? utils_1.formatDateStr(this.vTaskList[i].getPlanEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
+                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
+                    }
+                    if (this.vShowCost == 1) {
+                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gcost');
+                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCost());
+                    }
                     vNumRows++;
                 }
             }
@@ -403,6 +432,10 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
             if (this.vShowEndDate == 1)
                 this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
+            if (this.vShowPlanStartDate == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
+            if (this.vShowPlanEndDate == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
             // Add some white space so the vertical scroll distance should always be greater
             // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
             this.newNode(vTmpDiv2, 'br');
@@ -1080,6 +1113,8 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
             var name;
             var start;
             var end;
+            var planstart;
+            var planend;
             var itemClass;
             var link = '';
             var milestone = 0;
@@ -1091,6 +1126,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
             var dependsOn = '';
             var caption = '';
             var notes = '';
+            var cost;
             for (var prop in pJsonObj[index]) {
                 var property = prop;
                 var value = pJsonObj[index][property];
@@ -1110,6 +1146,14 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                     case 'pend':
                     case 'end':
                         end = value;
+                        break;
+                    case 'pplanstart':
+                    case 'planstart':
+                        planstart = value;
+                        break;
+                    case 'pplanend':
+                    case 'planend':
+                        planend = value;
                         break;
                     case 'pclass':
                     case 'class':
@@ -1155,10 +1199,14 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                     case 'notes':
                         notes = value;
                         break;
+                    case 'pcost':
+                    case 'cost':
+                        cost = value;
+                        break;
                 }
             }
             //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
+            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar, cost, planstart, planend));
             //}
         }
     }
@@ -1211,8 +1259,10 @@ var es = {
     'comp': '% Completado',
     'completion': 'Terminado',
     'startdate': 'Inicio',
+    'planstartdate': 'Inicio Plan',
     'cost': 'Custo',
     'enddate': 'Fin',
+    'planenddate': 'Plan Fin',
     'moreinfo': '+información',
     'notes': 'Notas',
     'format': 'Formato',
@@ -1265,7 +1315,9 @@ var en = {
     'comp': '% Comp.',
     'completion': 'Completion',
     'startdate': 'Start Date',
+    'planstartdate': 'Plan Start Date',
     'enddate': 'End Date',
+    'planenddate': 'Plan End Date',
     'cost': 'Cost',
     'moreinfo': 'More Information',
     'notes': 'Notes',
@@ -1309,7 +1361,72 @@ var en = {
     'sat': 'Sat'
 };
 exports.en = en;
-var de = { 'format': 'Ansicht', 'hour': 'Stunde', 'day': 'Tag', 'week': 'Woche', 'month': 'Monat', 'quarter': 'Quartal', 'hours': 'Stunden', 'days': 'Tage', 'weeks': 'Wochen', 'months': 'Monate', 'quarters': 'Quartale', 'hr': 'h', 'dy': 'T', 'wk': 'W', 'mth': 'M', 'qtr': 'Q', 'hrs': 'Std', 'dys': 'Tage', 'wks': 'Wochen', 'mths': 'Monate', 'qtrs': 'Quartal', 'resource': 'Resource', 'duration': 'Dauer', 'comp': '%Fertig', 'completion': 'Fertigstellung', 'startdate': 'Erste Buchu', 'enddate': 'Letzte Buchung', 'moreinfo': 'Weitere Infos', 'notes': 'Anmerkung', 'january': 'Jänner', 'february': 'Februar', 'march': 'März', 'april': 'April', 'maylong': 'Mai', 'june': 'Juni', 'july': 'Juli', 'august': 'August', 'september': 'September', 'october': 'Oktober', 'november': 'November', 'december': 'Dezember', 'jan': 'Jan', 'feb': 'Feb', 'mar': 'Mar', 'apr': 'Apr', 'may': 'Mai', 'jun': 'Jun', 'jul': 'Jul', 'aug': 'Aug', 'sep': 'Sep', 'oct': 'Okt', 'nov': 'Nov', 'dec': 'Dez', 'sunday': 'Sonntag', 'monday': 'Montag', 'tuesday': 'Dienstag', 'wednesday': 'Mittwoch', 'thursday': 'Donnerstag', 'friday': 'Freitag', 'saturday': 'Samstag', 'sun': 'So', 'mon': 'Mo', 'tue': 'Di', 'wed': 'Mi', 'thu': 'Do', 'fri': 'Fr', 'sat': 'Sa' };
+var de = {
+    'format': 'Ansicht',
+    'hour': 'Stunde',
+    'day': 'Tag',
+    'week': 'Woche',
+    'month': 'Monat',
+    'quarter': 'Quartal',
+    'hours': 'Stunden',
+    'days': 'Tage',
+    'weeks': 'Wochen',
+    'months': 'Monate',
+    'quarters': 'Quartale',
+    'hr': 'h',
+    'dy': 'T',
+    'wk': 'W',
+    'mth': 'M',
+    'qtr': 'Q',
+    'hrs': 'Std',
+    'dys': 'Tage',
+    'wks': 'Wochen',
+    'mths': 'Monate',
+    'qtrs': 'Quartal',
+    'resource': 'Resource',
+    'duration': 'Dauer',
+    'comp': '%Fertig',
+    'completion': 'Fertigstellung',
+    'startdate': 'Erste Buchu',
+    'planstartdate': 'Erste Buchu Plan',
+    'enddate': 'Letzte Buchung',
+    'planenddate': 'Plan Letzte Buchung',
+    'moreinfo': 'Weitere Infos',
+    'notes': 'Anmerkung',
+    'january': 'Jänner',
+    'february': 'Februar',
+    'march': 'März',
+    'april': 'April',
+    'maylong': 'Mai',
+    'june': 'Juni',
+    'july': 'Juli',
+    'august': 'August',
+    'september': 'September',
+    'october': 'Oktober',
+    'november': 'November',
+    'december': 'Dezember',
+    'jan': 'Jan',
+    'feb': 'Feb',
+    'mar': 'Mar',
+    'apr': 'Apr',
+    'may': 'Mai',
+    'jun': 'Jun',
+    'jul': 'Jul',
+    'aug': 'Aug',
+    'sep': 'Sep',
+    'oct': 'Okt',
+    'nov': 'Nov',
+    'dec': 'Dez',
+    'sunday': 'Sonntag',
+    'monday': 'Montag',
+    'tuesday': 'Dienstag',
+    'wednesday': 'Mittwoch',
+    'thursday': 'Donnerstag',
+    'friday': 'Freitag',
+    'saturday': 'Samstag',
+    'sun': 'So',
+    'mon': 'Mo', 'tue': 'Di', 'wed': 'Mi', 'thu': 'Do', 'fri': 'Fr', 'sat': 'Sa'
+};
 exports.de = de;
 var pt = {
     'format': 'Formato',
@@ -1324,7 +1441,9 @@ var pt = {
     'resource': 'Responsável',
     'duration': 'Duração',
     'startdate': 'Data inicial',
+    'planstartdate': 'Plan Data inicial',
     'enddate': 'Data final',
+    'planenddate': 'Plan Data final',
     'dys': 'dias',
     'wks': 'sem.',
     'mths': 'mes.',
@@ -1397,7 +1516,9 @@ var ru = {
     'comp': '% выполнения',
     'completion': 'Выполнено',
     'startdate': 'Нач. дата',
+    'planstartdate': 'Plan Нач. дата',
     'enddate': 'Кон. дата',
+    'planenddate': 'Plan Кон. дата',
     'moreinfo': 'Детали',
     'notes': 'Заметки',
     'format': 'Формат',
@@ -1426,24 +1547,75 @@ exports.ru = ru;
 var fr = {
     // Mois : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3619
     // Jours : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3617
-    'january': 'Janvier', 'february': 'Février', 'march': 'Mars',
-    'april': 'Avril', 'maylong': 'Mai', 'june': 'Juin', 'july': 'Juillet',
-    'august': 'Août', 'september': 'Septembre', 'october': 'Octobre',
-    'november': 'Novembre', 'december': 'Décembre', 'jan': 'Janv',
-    'feb': 'Févr', 'mar': 'Mars', 'apr': 'Avr', 'may': 'Mai', 'jun': 'Juin',
-    'jul': 'Juil', 'aug': 'Août', 'sep': 'Sept', 'oct': 'Oct', 'nov': 'Nov',
-    'dec': 'Déc', 'sunday': 'Dimanche', 'monday': 'Lundi', 'tuesday': 'Mardi',
-    'wednesday': 'Mercredi', 'thursday': 'Jeudi', 'friday': 'Vendredi',
-    'saturday': 'Samedi', 'sun': 'Dim', 'mon': 'Lun', 'tue': 'Mar',
-    'wed': 'Mer', 'thu': 'Jeu', 'fri': 'Ven', 'sat': 'Sam',
-    'resource': 'Ressource', 'duration': 'Durée', 'comp': '% Term.',
-    'completion': 'Terminé', 'startdate': 'Début', 'enddate': 'Fin',
-    'moreinfo': "Plus d'informations", 'notes': 'Notes', 'format': 'Format',
-    'hour': 'Heure', 'day': 'Jour', 'week': 'Semaine', 'month': 'Mois',
-    'quarter': 'Trimestre', 'hours': 'Heures', 'days': 'Jours',
-    'weeks': 'Semaines', 'months': 'Mois', 'quarters': 'Trimestres', 'hr': 'h',
-    'dy': 'j', 'wk': 'sem', 'mth': 'mois', 'qtr': 'tri', 'hrs': 'h', 'dys': 'j',
-    'wks': 'sem', 'mths': 'mois', 'qtrs': 'tri'
+    'january': 'Janvier',
+    'february': 'Février',
+    'march': 'Mars',
+    'april': 'Avril',
+    'maylong': 'Mai',
+    'june': 'Juin',
+    'july': 'Juillet',
+    'august': 'Août',
+    'september': 'Septembre',
+    'october': 'Octobre',
+    'november': 'Novembre',
+    'december': 'Décembre',
+    'jan': 'Janv',
+    'feb': 'Févr',
+    'mar': 'Mars',
+    'apr': 'Avr',
+    'may': 'Mai',
+    'jun': 'Juin',
+    'jul': 'Juil',
+    'aug': 'Août',
+    'sep': 'Sept',
+    'oct': 'Oct',
+    'nov': 'Nov',
+    'dec': 'Déc',
+    'sunday': 'Dimanche',
+    'monday': 'Lundi',
+    'tuesday': 'Mardi',
+    'wednesday': 'Mercredi',
+    'thursday': 'Jeudi',
+    'friday': 'Vendredi',
+    'saturday': 'Samedi',
+    'sun': 'Dim',
+    'mon': 'Lun',
+    'tue': 'Mar',
+    'wed': 'Mer',
+    'thu': 'Jeu',
+    'fri': 'Ven',
+    'sat': 'Sam',
+    'resource': 'Ressource',
+    'duration': 'Durée',
+    'comp': '% Term.',
+    'completion': 'Terminé',
+    'startdate': 'Début',
+    'planstartdate': 'Plan Début',
+    'enddate': 'Fin',
+    'planenddate': 'Plan Fin',
+    'moreinfo': "Plus d'informations",
+    'notes': 'Notes',
+    'format': 'Format',
+    'hour': 'Heure',
+    'day': 'Jour',
+    'week': 'Semaine',
+    'month': 'Mois',
+    'quarter': 'Trimestre',
+    'hours': 'Heures',
+    'days': 'Jours',
+    'weeks': 'Semaines',
+    'months': 'Mois',
+    'quarters': 'Trimestres',
+    'hr': 'h',
+    'dy': 'j',
+    'wk': 'sem',
+    'mth': 'mois',
+    'qtr': 'tri',
+    'hrs': 'h',
+    'dys': 'j',
+    'wks': 'sem',
+    'mths': 'mois',
+    'qtrs': 'tri'
 };
 exports.fr = fr;
 
@@ -1454,9 +1626,7 @@ var utils_1 = require("./utils");
 exports.includeGetSet = function () {
     this.setOptions = function (options) {
         var keys = Object.keys(options);
-        console.log(this);
         for (var i = 0; i < keys.length; i++) {
-            console.log(this);
             var key = keys[i];
             var val = options[key];
             var ev = void 0;
@@ -1491,6 +1661,9 @@ exports.includeGetSet = function () {
     this.setShowComp = function (pVal) { this.vShowComp = pVal; };
     this.setShowStartDate = function (pVal) { this.vShowStartDate = pVal; };
     this.setShowEndDate = function (pVal) { this.vShowEndDate = pVal; };
+    this.setShowPlanStartDate = function (pVal) { this.vShowPlanStartDate = pVal; };
+    this.setShowPlanEndDate = function (pVal) { this.vShowPlanEndDate = pVal; };
+    this.setShowCost = function (pVal) { this.vShowCost = pVal; };
     this.setShowTaskInfoRes = function (pVal) { this.vShowTaskInfoRes = pVal; };
     this.setShowTaskInfoDur = function (pVal) { this.vShowTaskInfoDur = pVal; };
     this.setShowTaskInfoComp = function (pVal) { this.vShowTaskInfoComp = pVal; };
@@ -1571,6 +1744,9 @@ exports.includeGetSet = function () {
     this.getShowComp = function () { return this.vShowComp; };
     this.getShowStartDate = function () { return this.vShowStartDate; };
     this.getShowEndDate = function () { return this.vShowEndDate; };
+    this.getShowPlanStartDate = function () { return this.vShowPlanStartDate; };
+    this.getShowPlanEndDate = function () { return this.vShowPlanEndDate; };
+    this.getShowCost = function () { return this.vShowCost; };
     this.getShowTaskInfoRes = function () { return this.vShowTaskInfoRes; };
     this.getShowTaskInfoDur = function () { return this.vShowTaskInfoDur; };
     this.getShowTaskInfoComp = function () { return this.vShowTaskInfoComp; };
@@ -1745,13 +1921,17 @@ exports.sortTasks = function (pList, pID, pIdx) {
 exports.TaskItemObject = function (object) {
     return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost);
 };
-exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost) {
+exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd) {
     if (pCost === void 0) { pCost = null; }
+    if (pPlanStart === void 0) { pPlanStart = null; }
+    if (pPlanEnd === void 0) { pPlanEnd = null; }
     var vBenchTime = new Date().getTime();
     var vID = parseInt(document.createTextNode(pID).data);
     var vName = document.createTextNode(pName).data;
     var vStart = new Date(0);
     var vEnd = new Date(0);
+    var vPlanStart = null;
+    var vPlanEnd = null;
     var vGroupMinStart = null;
     var vGroupMinEnd = null;
     var vClass = document.createTextNode(pClass).data;
@@ -1783,6 +1963,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vListChildRow = null;
     var vChildRow = null;
     var vGroupSpan = null;
+    var pPlanStart = pPlanStart;
+    pPlanStart = null, pPlanEnd;
     vNotes = document.createElement('span');
     vNotes.className = 'gTaskNotes';
     if (pNotes != null) {
@@ -1796,6 +1978,14 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     if (pEnd != null && pEnd != '') {
         vEnd = (pEnd instanceof Date) ? pEnd : utils_1.parseDateStr(document.createTextNode(pEnd).data, vGantt.getDateInputFormat());
         vGroupMinEnd = vEnd;
+    }
+    if (pPlanStart != null && pPlanStart != '') {
+        vPlanStart = (pPlanStart instanceof Date) ? pPlanStart : utils_1.parseDateStr(document.createTextNode(pPlanStart).data, vGantt.getDateInputFormat());
+        vGroupMinStart = vPlanStart;
+    }
+    if (pPlanEnd != null && pPlanEnd != '') {
+        vPlanEnd = (pPlanEnd instanceof Date) ? pPlanEnd : utils_1.parseDateStr(document.createTextNode(pPlanEnd).data, vGantt.getDateInputFormat());
+        vGroupMinEnd = vPlanEnd;
     }
     if (pDepend != null) {
         var vDependStr = pDepend + '';
@@ -1828,6 +2018,9 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getName = function () { return vName; };
     this.getStart = function () { return vStart; };
     this.getEnd = function () { return vEnd; };
+    this.getPlanStart = function () { return vPlanStart; };
+    this.getPlanEnd = function () { return vPlanEnd; };
+    this.getCost = function () { return vCost; };
     this.getGroupMinStart = function () { return vGroupMinStart; };
     this.getGroupMinEnd = function () { return vGroupMinEnd; };
     this.getClass = function () { return vClass; };
@@ -1931,10 +2124,15 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getChildRow = function () { return vChildRow; };
     this.getListChildRow = function () { return vListChildRow; };
     this.getGroupSpan = function () { return vGroupSpan; };
+    this.setCost = function (pCost) { vCost = pCost; };
     this.setStart = function (pStart) { if (pStart instanceof Date)
         vStart = pStart; };
     this.setEnd = function (pEnd) { if (pEnd instanceof Date)
         vEnd = pEnd; };
+    this.setPlanStart = function (pPlanStart) { if (pPlanStart instanceof Date)
+        vPlanStart = pPlanStart; };
+    this.setPlanEnd = function (pPlanEnd) { if (pPlanEnd instanceof Date)
+        vPlanEnd = pPlanEnd; };
     this.setGroupMinStart = function (pStart) { if (pStart instanceof Date)
         vGroupMinStart = pStart; };
     this.setGroupMinEnd = function (pEnd) { if (pEnd instanceof Date)

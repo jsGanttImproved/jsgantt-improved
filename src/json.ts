@@ -30,6 +30,8 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
       var name;
       var start;
       var end;
+      var planstart;
+      var planend;
       var itemClass;
       var link = '';
       var milestone = 0;
@@ -41,6 +43,7 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
       var dependsOn = '';
       var caption = '';
       var notes = '';
+      var cost;
 
       for (var prop in pJsonObj[index]) {
         var property = prop;
@@ -61,6 +64,14 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
           case 'pend':
           case 'end':
             end = value;
+            break;
+          case 'pplanstart':
+          case 'planstart':
+            planstart = value;
+            break;
+          case 'pplanend':
+          case 'planend':
+            planend = value;
             break;
           case 'pclass':
           case 'class':
@@ -106,11 +117,15 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
           case 'notes':
             notes = value;
             break;
+          case 'pcost':
+          case 'cost':
+            cost = value;
+            break;
         }
       }
 
       //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-        pGanttVar.AddTaskItem(new TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
+      pGanttVar.AddTaskItem(new TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar, cost, planstart, planend));
       //}
     }
   }

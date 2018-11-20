@@ -40,6 +40,9 @@ export const includeGetSet = function () {
   this.setShowComp = function (pVal) { this.vShowComp = pVal; };
   this.setShowStartDate = function (pVal) { this.vShowStartDate = pVal; };
   this.setShowEndDate = function (pVal) { this.vShowEndDate = pVal; };
+  this.setShowPlanStartDate = function (pVal) { this.vShowPlanStartDate = pVal; };
+  this.setShowPlanEndDate = function (pVal) { this.vShowPlanEndDate = pVal; };
+  this.setShowCost = function (pVal) { this.vShowCost = pVal; };
   this.setShowTaskInfoRes = function (pVal) { this.vShowTaskInfoRes = pVal; };
   this.setShowTaskInfoDur = function (pVal) { this.vShowTaskInfoDur = pVal; };
   this.setShowTaskInfoComp = function (pVal) { this.vShowTaskInfoComp = pVal; };
@@ -114,6 +117,9 @@ export const includeGetSet = function () {
   this.getShowComp = function () { return this.vShowComp; };
   this.getShowStartDate = function () { return this.vShowStartDate; };
   this.getShowEndDate = function () { return this.vShowEndDate; };
+  this.getShowPlanStartDate = function () { return this.vShowPlanStartDate; };
+  this.getShowPlanEndDate = function () { return this.vShowPlanEndDate; };
+  this.getShowCost = function () { return this.vShowCost; };
   this.getShowTaskInfoRes = function () { return this.vShowTaskInfoRes; };
   this.getShowTaskInfoDur = function () { return this.vShowTaskInfoDur; };
   this.getShowTaskInfoComp = function () { return this.vShowTaskInfoComp; };

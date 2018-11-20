@@ -80,6 +80,9 @@ td.gspanning {
 .gduration,
 .gpccomplete,
 .gstartdate,
+.gplanstartdate,
+.gplanenddate,
+.gcost,
 .genddate {
   height: 18px;
   white-space: nowrap;
@@ -104,7 +107,9 @@ td.gspanning {
 
 .genddate div,
 /* needed for IE8 */
-
+.gcost,
+.gplanstartdate,
+.gplanenddate,
 .genddate {
   text-align: center;
   min-width: 70px;
@@ -165,6 +170,13 @@ span.gfoldercollapse {
 .gtasktableh,
 .gtasktable {
   border-right: #efefef 1px solid;
+}
+
+.gcharttableh,
+.gtasktableh,
+.gtasktable ,
+.gcharttable{
+  border-collapse: collapse;
 }
 
 .gcharttable {
@@ -577,7 +589,7 @@ div.gtaskbarcontainer {
 /* Add a max-height value here if wanted */
 
 .glistgrid {
-  width: 532px;
+  min-width: 532px;
   /* LC width */
   float: left;
   /* LC width */
@@ -590,7 +602,7 @@ div.gtaskbarcontainer {
 }
 
 .glistlbl {
-  width: 532px;
+  min-width: 532px;
   /* LC width */
   float: left;
   /* LC width */

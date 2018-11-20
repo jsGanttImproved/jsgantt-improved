@@ -29,6 +29,9 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowComp = 1;
   this.vShowStartDate = 1;
   this.vShowEndDate = 1;
+  this.vShowPlanStartDate = 0;
+  this.vShowCost = 0;
+  this.vShowPlanEndDate = 0;
   this.vShowEndWeekDate = 1;
   this.vShowTaskInfoRes = 1;
   this.vShowTaskInfoDur = 1;
@@ -315,6 +318,9 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowComp == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
       if (this.vShowStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
       if (this.vShowEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
+      if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
+      if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
+      if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
 
       vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -324,6 +330,9 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowComp == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', this.vLangs[this.vLang]['comp']);
       if (this.vShowStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', this.vLangs[this.vLang]['startdate']);
       if (this.vShowEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', this.vLangs[this.vLang]['enddate']);
+      if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanstartdate', this.vLangs[this.vLang]['planstartdate']);
+      if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', this.vLangs[this.vLang]['planenddate']);
+      if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gcost', this.vLangs[this.vLang]['cost']);
 
       var vLeftTable = document.createDocumentFragment();
       var vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
@@ -381,6 +390,20 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, formatDateStr(this.vTaskList[i].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
           }
+          if (this.vShowPlanStartDate == 1) {
+            vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanstartdate');
+            const v = this.vTaskList[i].getPlanStart() ? formatDateStr(this.vTaskList[i].getPlanStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
+          }
+          if (this.vShowPlanEndDate == 1) {
+            vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanenddate');
+            const v = this.vTaskList[i].getPlanEnd() ? formatDateStr(this.vTaskList[i].getPlanEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
+          }
+          if (this.vShowCost == 1) {
+            vTmpCell = this.newNode(vTmpRow, 'td', null, 'gcost');
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCost());
+          }
           vNumRows++;
         }
       }
@@ -395,6 +418,8 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowComp == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
       if (this.vShowStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
       if (this.vShowEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
+      if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
+      if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
       // Add some white space so the vertical scroll distance should always be greater
       // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
       this.newNode(vTmpDiv2, 'br');
