@@ -1801,7 +1801,11 @@ exports.sortTasks = function (pList, pID, pIdx) {
     }
     return sortIdx;
 };
-exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt) {
+exports.TaskItemObject = function (object) {
+    return exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost);
+};
+exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost) {
+    if (pCost === void 0) { pCost = null; }
     var vBenchTime = new Date().getTime();
     var vID = parseInt(document.createTextNode(pID).data);
     var vName = document.createTextNode(pName).data;
@@ -1814,6 +1818,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vMile = parseInt(document.createTextNode(pMile).data);
     var vRes = document.createTextNode(pRes).data;
     var vComp = parseFloat(document.createTextNode(pComp).data);
+    var vCost = parseInt(document.createTextNode(pCost).data);
     var vGroup = parseInt(document.createTextNode(pGroup).data);
     var vParent = document.createTextNode(pParent).data;
     var vOpen = (vGroup == 2) ? 1 : parseInt(document.createTextNode(pOpen).data);
@@ -1903,6 +1908,12 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         return vRes;
     else
         return '\u00A0'; };
+    this.getCost = function () {
+        if (vCost)
+            return vCost;
+        else
+            return 0;
+    };
     this.getCompVal = function () { if (vComp)
         return vComp;
     else
@@ -1991,6 +2002,9 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.setNumKid = function (pNumKid) { vNumKid = parseInt(document.createTextNode(pNumKid).data); };
     this.setWeight = function (pWeight) { vWeight = parseInt(document.createTextNode(pWeight).data); };
     this.setCompVal = function (pCompVal) { vComp = parseFloat(document.createTextNode(pCompVal).data); };
+    this.setCost = function (pCost) {
+        vComp = parseInt(document.createTextNode(pCost).data);
+    };
     this.setStartX = function (pX) { x1 = parseInt(document.createTextNode(pX).data); };
     this.setStartY = function (pY) { y1 = parseInt(document.createTextNode(pY).data); };
     this.setEndX = function (pX) { x2 = parseInt(document.createTextNode(pX).data); };
@@ -2562,6 +2576,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var pLink = exports.getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
                 var pMile = exports.getXMLNodeValue(Task[i], 'Milestone', 1, 0);
                 var pComp = exports.getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
+                var pCost = exports.getXMLNodeValue(Task[i], 'Cost', 2, 0);
                 var pGroup = exports.getXMLNodeValue(Task[i], 'Summary', 1, 0);
                 var pParent = 0;
                 var vOutlineLevel = exports.getXMLNodeValue(Task[i], 'OutlineLevel', 1, 0);
@@ -2643,7 +2658,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                         // Now create a subtask
                         maxPID++;
                         vSplitEnd = exports.getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-                        pGanttVar.AddTaskItem(new task_1.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
+                        pGanttVar.AddTaskItem(new task_1.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost));
                         vSubCreated = true;
                         vDepend = '';
                     }
@@ -2655,7 +2670,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 if (vSubCreated)
                     pDepend = '';
                 // Finally add the task
-                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
             }
         }
     }
@@ -2673,6 +2688,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 pLink = exports.getXMLNodeValue(Task[i], 'pLink', 2, '');
                 pMile = exports.getXMLNodeValue(Task[i], 'pMile', 1, 0);
                 pComp = exports.getXMLNodeValue(Task[i], 'pComp', 1, 0);
+                pCost = exports.getXMLNodeValue(Task[i], 'pCost', 2, 0);
                 pGroup = exports.getXMLNodeValue(Task[i], 'pGroup', 1, 0);
                 pParent = exports.getXMLNodeValue(Task[i], 'pParent', 1, 0);
                 pRes = exports.getXMLNodeValue(Task[i], 'pRes', 2, '');
@@ -2690,7 +2706,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                         pClass = 'gtaskblue';
                 }
                 // Finally add the task
-                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
             }
         }
     }

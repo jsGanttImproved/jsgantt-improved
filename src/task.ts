@@ -127,8 +127,27 @@ export const sortTasks = function (pList, pID, pIdx) {
 };
 
 
+export const TaskItemObject = function (object) {
+  return TaskItem(object.pID,
+    object.pName,
+    object.pStart,
+    object.pEnd,
+    object.pClass,
+    object.pLink,
+    object.pMile,
+    object.pRes,
+    object.pComp,
+    object.pGroup,
+    object.pParent,
+    object.pOpen,
+    object.pDepend,
+    object.pCaption,
+    object.pNotes,
+    object.pGantt,
+    object.pCost);
+}
 
-export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt) {
+export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost = null) {
   var vBenchTime = new Date().getTime();
   var vID = parseInt(document.createTextNode(pID).data);
   var vName = document.createTextNode(pName).data;
@@ -141,6 +160,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   var vMile = parseInt(document.createTextNode(pMile).data);
   var vRes = document.createTextNode(pRes).data;
   var vComp = parseFloat(document.createTextNode(pComp).data);
+  var vCost = parseInt(document.createTextNode(pCost).data)
   var vGroup = parseInt(document.createTextNode(pGroup).data);
   var vParent = document.createTextNode(pParent).data;
   var vOpen = (vGroup == 2) ? 1 : parseInt(document.createTextNode(pOpen).data);
@@ -224,6 +244,10 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getDepType = function () { if (vDependType) return vDependType; else return null; };
   this.getCaption = function () { if (vCaption) return vCaption; else return ''; };
   this.getResource = function () { if (vRes) return vRes; else return '\u00A0'; };
+  this.getCost = function () {
+    if (vCost) return vCost;
+    else return 0;
+  };
   this.getCompVal = function () { if (vComp) return vComp; else return 0; };
   this.getCompStr = function () { if (vComp) return vComp + '%'; else return ''; };
   this.getNotes = function () { return vNotes; };
@@ -286,6 +310,9 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setNumKid = function (pNumKid) { vNumKid = parseInt(document.createTextNode(pNumKid).data); };
   this.setWeight = function (pWeight) { vWeight = parseInt(document.createTextNode(pWeight).data); };
   this.setCompVal = function (pCompVal) { vComp = parseFloat(document.createTextNode(pCompVal).data); };
+  this.setCost = function (pCost) {
+    vComp = parseInt(document.createTextNode(pCost).data);
+  };
   this.setStartX = function (pX) { x1 = parseInt(document.createTextNode(pX).data); };
   this.setStartY = function (pY) { y1 = parseInt(document.createTextNode(pY).data); };
   this.setEndX = function (pX) { x2 = parseInt(document.createTextNode(pX).data); };

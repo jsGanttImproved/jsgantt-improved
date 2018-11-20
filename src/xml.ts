@@ -126,6 +126,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         var pLink = getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
         var pMile = getXMLNodeValue(Task[i], 'Milestone', 1, 0);
         var pComp = getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
+        var pCost = getXMLNodeValue(Task[i], 'Cost', 2, 0);
         var pGroup = getXMLNodeValue(Task[i], 'Summary', 1, 0);
 
         var pParent = 0;
@@ -196,7 +197,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
             // Now create a subtask
             maxPID++;
             vSplitEnd = getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-            pGanttVar.AddTaskItem(new TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar));
+            pGanttVar.AddTaskItem(new TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost));
             vSubCreated = true;
             vDepend = '';
           }
@@ -208,7 +209,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         if (vSubCreated) pDepend = '';
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
       }
     }
   }
@@ -228,6 +229,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         pLink = getXMLNodeValue(Task[i], 'pLink', 2, '');
         pMile = getXMLNodeValue(Task[i], 'pMile', 1, 0);
         pComp = getXMLNodeValue(Task[i], 'pComp', 1, 0);
+        pCost = getXMLNodeValue(Task[i], 'pCost', 2, 0);
         pGroup = getXMLNodeValue(Task[i], 'pGroup', 1, 0);
         pParent = getXMLNodeValue(Task[i], 'pParent', 1, 0);
         pRes = getXMLNodeValue(Task[i], 'pRes', 2, '');
@@ -243,7 +245,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         }
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar));
+        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
       }
     }
   }

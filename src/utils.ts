@@ -260,7 +260,7 @@ export const stripUnwanted = function (pNode) {
 };
 
 export const delayedHide = function (pGanttChartObj, pTool, pTimer) {
-  var vDelay = 1500;
+  var vDelay = pGanttChartObj.getTooltipDelay() || 1500;
   if (pTool) pTool.delayTimeout = setTimeout(function () { hideToolTip(pGanttChartObj, pTool, pTimer); }, vDelay);
 };
 

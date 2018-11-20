@@ -165,6 +165,7 @@ export const GanttChart = function (pDiv, pFormat) {
   var vChartTable = null;
   var vLines = null;
   var vTimer = 20;
+  var vTooltipDelay = 1500;
 
   this.setUseFade = function (pVal) { vUseFade = pVal; };
   this.setUseMove = function (pVal) { vUseMove = pVal; };
@@ -241,6 +242,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.setChartTable = function (pTable) { if (typeof HTMLTableElement !== 'function' || pTable instanceof HTMLTableElement) vChartTable = pTable; };
   this.setLines = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vLines = pDiv; };
   this.setTimer = function (pVal) { vTimer = pVal * 1; };
+  this.setTooltipDelay = function (pVal) { vTooltipDelay = pVal * 1; };
   this.addLang = function (pLang, pVals) {
     if (!vLangs[pLang]) {
       vLangs[pLang] = new Object();
@@ -299,6 +301,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.getChartTable = function () { return vChartTable; };
   this.getLines = function () { return vLines; };
   this.getTimer = function () { return vTimer; };
+  this.getTooltipDelay = function () { return vTooltipDelay; };
 
   this.CalcTaskXY = function () {
     var vID;
@@ -1076,6 +1079,7 @@ export const GanttChart = function (pDiv, pFormat) {
       vTask += '<pMile>' + vTaskList[vIdx].getMile() + '</pMile>';
       if (vTaskList[vIdx].getResource() != '\u00A0') vTask += '<pRes>' + vTaskList[vIdx].getResource() + '</pRes>';
       vTask += '<pComp>' + vTaskList[vIdx].getCompVal() + '</pComp>';
+      vTask += '<pCost>' + vTaskList[vIdx].getCost() + '</pCost>';
       vTask += '<pGroup>' + vTaskList[vIdx].getGroup() + '</pGroup>';
       vTask += '<pParent>' + vTaskList[vIdx].getParent() + '</pParent>';
       vTask += '<pOpen>' + vTaskList[vIdx].getOpen() + '</pOpen>';
