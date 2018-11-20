@@ -7,12 +7,14 @@
     "build": "tsc",
     "watch": "onchange 'src/**/*.ts' '*.ts' -- npm run build",
     "watch:test": "onchange 'src/**/*.ts' '*.ts' -- npm run test",
-    "test": "mocha -r ts-node/register test/**.ts",
+    "test": "babel-node node_modules/.bin/protractor protractor.conf.js",
+    "test-unit": "mocha -r ts-node/register test/**.ts",
     "browserify": "browserify dist/index.js --standalone JSGantt > jsgantt.js",
     "dist": "npm run build && npm run browserify",
     "publish-npm": "npm run dist && cp jsgantt.js dist/ && npm publish",
     "demo": "cp jsgantt.js demo/ && cp src/jsgantt.css demo/ && cd demo && http-server",
-    "demo-full": "npm run dist && npm run demo"
+    "demo-full": "npm run dist && npm run demo",
+    "e2e-prepare": "npm i -g webdriver-manager && webdriver-manager update && ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager update"
   },
   "repository": {
     "type": "git",
@@ -24,13 +26,19 @@
     "url": "https://github.com/mariohmol/jsgantt-improved/issues"
   },
   "homepage": "https://github.com/mariohmol/jsgantt-improved#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/chai": "^4.1.5",
+    "@types/jasmine": "^3.3.0",
+    "@types/jest": "^23.3.9",
     "@types/mocha": "^5.2.5",
     "chai": "^4.1.2",
+    "jasmine": "^3.3.0",
+    "jasmine-core": "^3.3.0",
+    "jasmine-spec-reporter": "^4.2.1",
     "mocha": "^5.2.0",
+    "protractor": "^5.4.1",
+    "selenium-webdriver": "^4.0.0-alpha.1",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   }

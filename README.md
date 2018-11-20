@@ -39,3 +39,4 @@ See the [Documentation](./Documentation.md) wiki page or the included ``demo/ind
 Clone this repo and run `npm run demo-full`, this will start a `localhost:8080` with a live  example. 
 Do your change in `src` and restart this command to test.
 
+For testing use `npm run test` with e2e tests.
