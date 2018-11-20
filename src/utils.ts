@@ -321,6 +321,12 @@ export const getScrollPositions = function () {
 };
 
 export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
+  const DAY_CELL_MARGIN_WIDTH = 1; // Cell margin for 'day' format
+  const WEEK_CELL_MARGIN_WIDTH = 1; // Cell margin for 'week' format
+  const MONTH_CELL_MARGIN_WIDTH = 1; // Cell margin for 'month' format
+  const QUARTER_CELL_MARGIN_WIDTH = 1; // Cell margin for 'quarter' format
+  const HOUR_CELL_MARGIN_WIDTH = 1; // Cell margin for 'hour' format
+
   var vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
   var curTaskStart = new Date(pStartDate.getTime());
   var curTaskEnd = new Date(pEndDate.getTime());
@@ -331,10 +337,10 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
   var vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
 
   if (pFormat == 'day') {
-    vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + 3) - 1);
+    vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + DAY_CELL_MARGIN_WIDTH) - 1);
   }
   else if (pFormat == 'week') {
-    vTaskRightPx = Math.ceil((vTaskRight / (24 * 7)) * (pColWidth + 3) - 1);
+    vTaskRightPx = Math.ceil((vTaskRight / (24 * 7)) * (pColWidth + WEEK_CELL_MARGIN_WIDTH) - 1);
   }
   else if (pFormat == 'month') {
     var vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
@@ -342,7 +348,7 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     vPosTmpDate.setDate(curTaskStart.getDate());
     var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
 
-    vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + 3)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
+    vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + MONTH_CELL_MARGIN_WIDTH)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
   }
   else if (pFormat == 'quarter') {
     vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
@@ -350,7 +356,7 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     vPosTmpDate.setDate(curTaskStart.getDate());
     vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
 
-    vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + 3) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
+    vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + QUARTER_CELL_MARGIN_WIDTH) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
   }
   else if (pFormat == 'hour') {
     // can't just calculate sum because of daylight savings changes
@@ -358,7 +364,7 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     vPosTmpDate.setMinutes(curTaskStart.getMinutes(), 0);
     var vMinsCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (3600000);
 
-    vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + 1)) + (vMinsCrctn * (pColWidth)));
+    vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + HOUR_CELL_MARGIN_WIDTH)) + (vMinsCrctn * (pColWidth)));
   }
   return vTaskRightPx;
 };
