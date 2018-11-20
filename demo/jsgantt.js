@@ -1156,7 +1156,7 @@ exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
     }
 };
 
-},{"./events":3,"./lang":5}],3:[function(require,module,exports){
+},{"./events":3,"./lang":6}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mouseOver = function (pObj1, pObj2) {
@@ -1357,6 +1357,7 @@ var utils_1 = require("./utils");
 var xml_1 = require("./xml");
 var task_1 = require("./task");
 var draw_1 = require("./draw");
+var json_1 = require("./json");
 if (!exports.JSGantt)
     exports.JSGantt = {};
 exports.JSGantt.isIE = utils_1.isIE;
@@ -1382,6 +1383,7 @@ exports.JSGantt.getMaxDate = utils_1.getMaxDate;
 // This function finds the document id of the specified object
 exports.JSGantt.findObj = utils_1.findObj;
 exports.JSGantt.changeFormat = utils_1.changeFormat;
+// Tasks
 exports.JSGantt.folder = task_1.folder;
 exports.JSGantt.hide = task_1.hide;
 exports.JSGantt.show = task_1.show;
@@ -1389,11 +1391,16 @@ exports.JSGantt.taskLink = task_1.taskLink;
 exports.JSGantt.parseDateStr = utils_1.parseDateStr;
 exports.JSGantt.formatDateStr = utils_1.formatDateStr;
 exports.JSGantt.parseDateFormatStr = utils_1.parseDateFormatStr;
+// XML 
 exports.JSGantt.parseXML = xml_1.parseXML;
 exports.JSGantt.parseXMLString = xml_1.parseXMLString;
 exports.JSGantt.findXMLNode = xml_1.findXMLNode;
 exports.JSGantt.getXMLNodeValue = xml_1.getXMLNodeValue;
 exports.JSGantt.AddXMLTask = xml_1.AddXMLTask;
+// JSON
+exports.JSGantt.parseJSON = json_1.parseJSON;
+exports.JSGantt.parseJSONString = json_1.parseJSONString;
+exports.JSGantt.addJSONTask = json_1.addJSONTask;
 exports.JSGantt.benchMark = utils_1.benchMark;
 exports.JSGantt.getIsoWeek = utils_1.getIsoWeek;
 exports.JSGantt.addListener = function (eventName, handler, control) {
@@ -1437,7 +1444,116 @@ exports.JSGantt.addScrollListeners = function (pGanttChart) {
     exports.JSGantt.addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
 };
 
-},{"./draw":2,"./events":3,"./task":6,"./utils":7,"./xml":8}],5:[function(require,module,exports){
+},{"./draw":2,"./events":3,"./json":5,"./task":7,"./utils":8,"./xml":9}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseJSON = function (pFile, pGanttVar) {
+    if (window.XMLHttpRequest) {
+        var xhttp = new XMLHttpRequest();
+    }
+    else { // IE 5/6
+        xhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
+    }
+    xhttp.open('GET', pFile, false);
+    xhttp.send(null);
+    var jsonObj = eval('(' + xhttp.response + ')');
+    JSGantt.addJSONTask(pGanttVar, jsonObj);
+};
+exports.parseJSONString = function (pStr, pGanttVar) {
+    JSGantt.addJSONTask(pGanttVar, eval('(' + pStr + ')'));
+};
+exports.addJSONTask = function (pGanttVar, pJsonObj) {
+    if ({}.toString.call(pJsonObj) === '[object Array]') {
+        for (var index = 0; index < pJsonObj.length; index++) {
+            var id;
+            var name;
+            var start;
+            var end;
+            var itemClass;
+            var link = '';
+            var milestone = 0;
+            var resourceName = '';
+            var completion;
+            var group = 0;
+            var parent;
+            var open;
+            var dependsOn = '';
+            var caption = '';
+            var notes = '';
+            for (var prop in pJsonObj[index]) {
+                var property = prop;
+                var value = pJsonObj[index][property];
+                switch (property.toLowerCase()) {
+                    case 'pid':
+                    case 'id':
+                        id = value;
+                        break;
+                    case 'pname':
+                    case 'name':
+                        name = value;
+                        break;
+                    case 'pstart':
+                    case 'start':
+                        start = value;
+                        break;
+                    case 'pend':
+                    case 'end':
+                        end = value;
+                        break;
+                    case 'pclass':
+                    case 'class':
+                        itemClass = value;
+                        break;
+                    case 'plink':
+                    case 'link':
+                        link = value;
+                        break;
+                    case 'pmile':
+                    case 'mile':
+                        milestone = value;
+                        break;
+                    case 'pres':
+                    case 'res':
+                        resourceName = value;
+                        break;
+                    case 'pcomp':
+                    case 'comp':
+                        completion = value;
+                        break;
+                    case 'pgroup':
+                    case 'group':
+                        group = value;
+                        break;
+                    case 'pparent':
+                    case 'parent':
+                        parent = value;
+                        break;
+                    case 'popen':
+                    case 'open':
+                        open = value;
+                        break;
+                    case 'pdepend':
+                    case 'depend':
+                        dependsOn = value;
+                        break;
+                    case 'pcaption':
+                    case 'caption':
+                        caption = value;
+                        break;
+                    case 'pnotes':
+                    case 'notes':
+                        notes = value;
+                        break;
+                }
+            }
+            if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
+                pGanttVar.AddTaskItem(new JSGantt.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar));
+            }
+        }
+    }
+};
+
+},{}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var es = {
@@ -1581,7 +1697,7 @@ var en = {
 };
 exports.en = en;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 // Function to open/close and hide/show children of specified task
@@ -1927,7 +2043,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         vGroupSpan = pSpan; };
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMinDate = function (pList, pFormat) {
@@ -2251,6 +2367,11 @@ exports.getScrollPositions = function () {
     return { x: vScrollLeft, y: vScrollTop };
 };
 exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
+    var DAY_CELL_MARGIN_WIDTH = 1; // Cell margin for 'day' format
+    var WEEK_CELL_MARGIN_WIDTH = 1; // Cell margin for 'week' format
+    var MONTH_CELL_MARGIN_WIDTH = 1; // Cell margin for 'month' format
+    var QUARTER_CELL_MARGIN_WIDTH = 1; // Cell margin for 'quarter' format
+    var HOUR_CELL_MARGIN_WIDTH = 3; // Cell margin for 'hour' format
     var vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
     var curTaskStart = new Date(pStartDate.getTime());
     var curTaskEnd = new Date(pEndDate.getTime());
@@ -2259,31 +2380,31 @@ exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
     var vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
     if (pFormat == 'day') {
-        vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + 3) - 1);
+        vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + DAY_CELL_MARGIN_WIDTH) - 1);
     }
     else if (pFormat == 'week') {
-        vTaskRightPx = Math.ceil((vTaskRight / (24 * 7)) * (pColWidth + 3) - 1);
+        vTaskRightPx = Math.ceil((vTaskRight / (24 * 7)) * (pColWidth + WEEK_CELL_MARGIN_WIDTH) - 1);
     }
     else if (pFormat == 'month') {
         var vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
         var vPosTmpDate = new Date(curTaskEnd.getTime());
         vPosTmpDate.setDate(curTaskStart.getDate());
         var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
-        vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + 3)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
+        vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + MONTH_CELL_MARGIN_WIDTH)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
     }
     else if (pFormat == 'quarter') {
         vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
         vPosTmpDate = new Date(curTaskEnd.getTime());
         vPosTmpDate.setDate(curTaskStart.getDate());
         vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
-        vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + 3) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
+        vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + QUARTER_CELL_MARGIN_WIDTH) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
     }
     else if (pFormat == 'hour') {
         // can't just calculate sum because of daylight savings changes
         vPosTmpDate = new Date(curTaskEnd.getTime());
         vPosTmpDate.setMinutes(curTaskStart.getMinutes(), 0);
         var vMinsCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (3600000);
-        vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + 1)) + (vMinsCrctn * (pColWidth)));
+        vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + HOUR_CELL_MARGIN_WIDTH)) + (vMinsCrctn * (pColWidth)));
     }
     return vTaskRightPx;
 };
@@ -2298,7 +2419,7 @@ exports.isIE = function () {
         return false;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseXML = function (pFile, pGanttVar) {

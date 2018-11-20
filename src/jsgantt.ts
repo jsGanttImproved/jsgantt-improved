@@ -67,7 +67,7 @@ import { getMinDate, getMaxDate, findObj, changeFormat, parseDateStr, formatDate
 import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } from './xml';
 import { folder, hide, show, taskLink, sortTasks, TaskItem } from "./task";
 import { processRows, GanttChart, updateFlyingObj } from "./draw";
-import { parseJSON, parseJSONString, addJSONTask } from "json";
+import { parseJSON, parseJSONString, addJSONTask } from "./json";
 
 export let JSGantt; if (!JSGantt) JSGantt = {};
 

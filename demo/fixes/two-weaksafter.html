@@ -1,0 +1,22 @@
+<link rel="stylesheet" type="text/css" href="../../jsgantt.css" />
+<script language="javascript" src="../../jsgantt.js"></script>
+
+<div style="position:relative" class="gantt" id="GanttChartDIV"></div>
+
+
+<script type="text/javascript">
+var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'week');
+
+
+ g.AddTaskItem(new JSGantt.TaskItem(11,"Title", '2018-09-14','2018-09-14','gmilestone', '', 1, 'description',100,1,1,1,'','','',g));
+
+/*g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','', '',   'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));*/
+g.AddTaskItem(new JSGantt.TaskItem(12,'tendance rouge',    '2018-01-14','2018-01-14','gmilestone', '', 1, 'description',100,1,1,1,'','','',g));
+g.AddTaskItem(new JSGantt.TaskItem(13,'tendance green',    '2018-12-14','2018-12-14','gmilestone', '', 1, 'description',100,1,1,1,'','','',g));
+g.AddTaskItem(new JSGantt.TaskItem(14,'tendance 456',    '2018-08-12','2018-08-12','gmilestone', '', 1, 'description',100,1,1,1,'','','',g));
+g.AddTaskItem(new JSGantt.TaskItem(15,'tendance rou453ge',    '2020-12-10','2020-12-10','gmilestone', '', 1, 'description',100,1,1,1,'','','',g));
+
+g.Draw();
+
+	
+</script>
