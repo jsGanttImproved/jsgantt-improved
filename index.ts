@@ -4,3 +4,5 @@ import
 
 declare var module: any;
 module.exports = jsGantt.JSGantt;
+
+export const JSGantt = jsGantt.JSGantt;

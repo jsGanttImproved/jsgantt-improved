@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsGantt = require("./src/jsgantt");
 module.exports = jsGantt.JSGantt;
+exports.JSGantt = jsGantt.JSGantt;
 
 },{"./src/jsgantt":4}],2:[function(require,module,exports){
 "use strict";

@@ -2,14 +2,18 @@ A fully featured gantt chart component built entirely in Javascript, CSS and AJA
 
 [![Build Status](https://travis-ci.org/mariohmol/jsgantt-improved.svg?branch=master)](https://travis-ci.org/mariohmol/jsgantt-improved)
 
-Start using with
+Start using with including the files `jsgantt.js` and `jsgantt.css` that are inside `demo/` folder.
+
+
+Or install and use in JS 
 
 `npm install jsgantt-improved`
 
+Import in your JS `import {JSGantt} from 'jsgantt-improved';`
 
-Or 
+For **Angular** use the component [ng-gantt](https://github.com/mariohmol/ng-gantt) 
 
-include the files `jsgantt.js` and `jsgantt.css` that are inside `demo/` folder.
+
 
 
 ## Example
