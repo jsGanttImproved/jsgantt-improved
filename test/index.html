@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>JS Brasil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="../js-brasil.js"></script>
+  <!-- <script src="https://rawgit.com/mariohmol/js-brasil/master/js-brasil.js"></script> -->
+  <script>
+    window.onload = () => {
+      /*
+      MASK
+      */
+      document.querySelector('#maskcep').innerHTML = jsbrasil.maskBr.cep('30380740');
+      document.querySelector('#masktelefone9').innerHTML = jsbrasil.maskBr.telefone('31988886565');
+      document.querySelector('#masktelefone').innerHTML = jsbrasil.maskBr.telefone('3135003500');
+
+      /*
+     VALIDATE
+     */
+      document.querySelector('#validatecep').innerHTML = jsbrasil.validateBr.cep('30.380-740');
+
+      /*
+     FAKER
+     */
+      document.querySelector('#fakercep').innerHTML = jsbrasil.fakerBr.cep();
+      document.querySelector('#fakercep').innerHTML = jsbrasil.fakerBr.cep();
+
+
+      document.querySelector('#fakercep').innerHTML = jsbrasil.fakerBr.cep();
+      document.querySelector('#fakercnpj').innerHTML = jsbrasil.fakerBr.cnpj();
+      document.querySelector('#fakercpf').innerHTML = jsbrasil.fakerBr.cpf();
+      // document.querySelector('#fakercurrency').innerHTML = jsbrasil.fakerBr.currency();
+      document.querySelector('#fakerinscricaoestadual').innerHTML = jsbrasil.fakerBr.inscricaoestadual();
+      document.querySelector('#fakerpercentage').innerHTML = jsbrasil.fakerBr.percentage();
+      document.querySelector('#fakerrg').innerHTML = jsbrasil.fakerBr.rg();
+      document.querySelector('#fakerplaca').innerHTML = jsbrasil.fakerBr.placa();
+      document.querySelector('#fakertelefone').innerHTML = jsbrasil.fakerBr.telefone();
+      document.querySelector('#fakertime').innerHTML = jsbrasil.fakerBr.time();
+      document.querySelector('#fakertitulo').innerHTML = jsbrasil.fakerBr.titulo();
+
+
+    }
+
+  </script>
+</head>
+
+<body>
+
+  <h1>JS Brasil</h1>
+
+  <h2>Mask</h2>
+
+  <p>CEP: <span id="maskcep"></span></p>
+  <p>TELEFONE: <span id="masktelefone"></span></p>
+  <p>TELEFONE 9 Digito: <span id="masktelefone9"></span></p>
+
+
+  <h2>Validation</h2>
+
+  <p>CEP: <span id="validatecep"></span></p>
+
+
+  <h2>Faker</h2>
+
+  <p>CEP: <span id="fakercep"></span></p>
+  <p>cnpj: <span id="fakercnpj"></span></p>
+  <p>cpf: <span id="fakercpf"></span></p>
+  <p>rg: <span id="fakerrg"></span></p>
+  <p>currency: <span id="fakercurrency"></span></p>
+  <p>percentage: <span id="fakerpercentage"></span></p>
+  <p>placa: <span id="fakerplaca"></span></p>
+  <p>titulo: <span id="fakertitulo"></span></p>
+  <p>time: <span id="fakertime"></span></p>
+  <p>telefone: <span id="fakertelefone"></span></p>
+  <p>inscricaoestadual: <span id="fakerinscricaoestadual"></span></p>
+  <p>CEP: <span id="fakercep"></span></p>
+
+</body>
+
+</html>
