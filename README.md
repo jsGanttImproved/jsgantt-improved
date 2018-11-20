@@ -1,8 +1,18 @@
 A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images.
 
-You can view a live example at https://jsGanttImproved.github.io/jsgantt-improved
+`npm install jsgantt-improved`
 
-Features include:
+You can view a live example at 
+
+https://mariohmol.github.io/jsgantt-improved/demo/
+
+
+Or include the `jsgantt.js` and `jsgantt.css` that are inside `demo/`  folder
+
+
+
+## Features include
+
   * Tasks & Collapsible Task Groups
   * Dependencies
   * Task Completion
