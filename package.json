@@ -7,7 +7,7 @@
     "build": "tsc",
     "watch": "onchange 'src/**/*.ts' '*.ts' -- npm run build",
     "watch:test": "onchange 'src/**/*.ts' '*.ts' -- npm run test",
-    "test": "babel-node node_modules/.bin/protractor protractor.conf.js",
+    "test": "node node_modules/.bin/protractor protractor.conf.js",
     "test-unit": "mocha -r ts-node/register test/**.ts",
     "browserify": "browserify dist/index.js --standalone JSGantt > jsgantt.js",
     "dist": "npm run build && npm run browserify",
