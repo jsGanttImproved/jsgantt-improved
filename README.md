@@ -1,17 +1,20 @@
-A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images.
+A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images. Based on https://code.google.com/p/jsgantt/.
 
 `npm install jsgantt-improved`
+
+
+Or 
+
+include the files `jsgantt.js` and `jsgantt.css` that are inside `demo/` folder.
+
+
+## Example
 
 You can view a live example at 
 
 https://mariohmol.github.io/jsgantt-improved/demo/
 
-
-Or include the `jsgantt.js` and `jsgantt.css` that are inside `demo/`  folder
-
-
-
-## Features include
+## Features
 
   * Tasks & Collapsible Task Groups
   * Dependencies
@@ -21,11 +24,11 @@ Or include the `jsgantt.js` and `jsgantt.css` that are inside `demo/`  folder
   * Resources
   * Dynamic Loading of Tasks
   * Dynamic change of format: Hour, Day, Week, Month, Quarter
-  * Load Gantt from XML
+  * Load Gantt from XML and JSON
     * From external files (including experimental support for MS Project XML files)
     * From JavaScript Strings
   * Support for Internationalization (all hard coded strings can be overridden)
 
-Project forked as I was unable to contact the original maintainers. This work was done to support a personal project that didn't warrant a more heavyweight system (e.g. the dojo toolkit gantt chart features).
+## Documentation
 
-See the [Documentation](./Documentation.md) wiki page or the included ``index.html`` file for instructions on use.
+See the [Documentation](./Documentation.md) wiki page or the included ``demo/index.html`` file for instructions on use.
