@@ -167,6 +167,13 @@ span.gfoldercollapse {
   border-right: #efefef 1px solid;
 }
 
+.gcharttableh,
+.gtasktableh,
+.gtasktable ,
+.gcharttable{
+  border-collapse: collapse;
+}
+
 .gcharttable {
   border: #efefef 1px solid;
 }

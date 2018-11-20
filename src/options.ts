@@ -4,9 +4,7 @@ export const includeGetSet = function () {
 
   this.setOptions = function(options){
     const keys = Object.keys(options);
-    console.log(this)
     for(let i=0; i< keys.length; i++){
-      console.log(this)
       const key = keys[i];
       const val = options[key];
       let ev;
