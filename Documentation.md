@@ -35,11 +35,34 @@ Method definition: **GanttChart(_pDiv_, _pFormat_)**
 see [Configuration Options](Documentation#user-content-options) below
 
 ## Add Tasks ##
-### a) Using AddTaskItem() ###
+
+### a) Using Method() ###
+
 ```javascript
+
+// passing object
+g.AddTaskItemObject({
+  "pID": 1,
+  "pName": "Define Chart API",
+  "pStart": "",
+  "pEnd": "",
+  "pClass": "ggroupblack",
+  "pLink": "",
+  "pMile": 0,
+  "pRes": "Brian",
+  "pComp": 0,
+  "pGroup": 1,
+  "pParent": 0,
+  "pOpen": 1,
+  "pDepend": "",
+  "pCaption": "",
+  "pNotes": "Some Notes text"
+});
+
+// or passing parameters
 g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',          'ggroupblack','', 0, 'Brian', 0,  1,0,1,'','','Some Notes text',g));
-g.AddTaskItem(new JSGantt.TaskItem(11,'Chart Object',    '2014-02-20','2014-02-20','gmilestone', '', 1, 'Shlomy',100,0,1,1,'','','',g));
 ```
+
 
 Method definition:
 **TaskItem(_pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt_)**
@@ -65,7 +88,37 @@ Method definition:
 
 <sup>*</sup> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.
 
-### b) using parseXML() with an external XML file ###
+
+
+### b) using parseJSON() with an external JSON file or API ###
+```javascript
+JSGantt.parseJSON('./fixes/data.json', g);
+```
+
+
+The structure of the JSON file:
+```json
+{
+  "pID": 1,
+  "pName": "Define Chart API",
+  "pStart": "",
+  "pEnd": "",
+  "pClass": "ggroupblack",
+  "pLink": "",
+  "pMile": 0,
+  "pRes": "Brian",
+  "pComp": 0,
+  "pGroup": 1,
+  "pParent": 0,
+  "pOpen": 1,
+  "pDepend": "",
+  "pCaption": "",
+  "pNotes": "Some Notes text"
+}
+```
+
+
+### c) using parseXML() with an external XML file ###
 ```javascript
 JSGantt.parseXML("project.xml",g);
 ```
@@ -79,7 +132,7 @@ Method definition:
 |_pGanttObj:_|(required) a GanttChart object returned by a call to JSGantt.GanttChart()|
 
 The structure of the native XML file:
-```
+```xml
 <project>
 <task>
 	<pID>25</pID>
@@ -128,11 +181,6 @@ The XML provided will be parsed in exactly the same way as the contents of an ex
 g.Draw();
 ```
 
-## Close the `<script>` block ##
-```javascript
-</script>
-```
-
 ## Updating an existing Gantt Chart ##
 
 It is also possible to delete tasks using RemoveTaskItem() method.
@@ -152,6 +200,18 @@ If the task removed is a group item, all child tasks will also be removed.
 After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.
 
 # Options #
+
+You can set Options as an object, following the example:
+
+```javascript
+
+g.setOptions({
+  vCaptionType: 'Complete',       
+  vQuarterColWidth: 36
+});
+
+```
+
 ## Switches ##
 Many of the features of jsGanttImproved can be customised through the use of setter methods available on the GanttChart object returned by a call to JSGantt.GanttChart()
 The following options take a single numeric parameter; a value of 1 will enable the describe functionality, 0 will disable it
@@ -297,19 +357,24 @@ would create a language called 'en2' where the text in the format selector was "
 Once a translation has been added a call must be made to setLang() with the appropriate language identifier before calling Draw().
 
 ## Example Options ##
+
 The configuration options used in the example index file provided are:
 
 ```javascript
-g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
-g.setQuarterColWidth(36);
-g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
-g.setDayMajorDateDisplayFormat('mon yyyy - Week ww'); // Set format to display dates in the "Major" header of the "Day" view
-g.setWeekMinorDateDisplayFormat('dd mon'); // Set format to display dates in the "Minor" header of the "Week" view
-g.setShowTaskInfoLink(1); //Show link in tool tip (0/1)
-g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
-g.setUseSingleCell(1); // Use one cell per table row.  Helps with rendering performance for large charts.
-g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
-g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+
+g.setOptions({
+  vCaptionType: 'Complete',  // Set to Show Caption : None,Caption,Resource,Duration,Complete,     
+  vQuarterColWidth: 36,
+  vDateTaskDisplayFormat: 'day dd month yyyy', // Shown in tool tip box
+  vDayMajorDateDisplayFormat: 'mon yyyy - Week ww',// Set format to display dates in the "Major" header of the "Day" view
+  vWeekMinorDateDisplayFormat: 'dd mon', // Set format to display dates in the "Minor" header of the "Week" view
+  vLang: lang,
+  vShowTaskInfoLink: 1, // Show link in tool tip (0/1)
+  vShowEndWeekDate: 0,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
+  vUseSingleCell: 10000, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
+  vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+});
+
 ```
 
 
@@ -325,44 +390,42 @@ Putting all this information together the final code to produce the chart includ
 
 var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
 
-if( g.getDivId() != null ) {
-g.setCaptionType('Complete');
-g.setQuarterColWidth(36);
-g.setDateTaskDisplayFormat('day dd month yyyy');
-g.setDayMajorDateDisplayFormat('mon yyyy - Week ww');
-g.setWeekMinorDateDisplayFormat('dd mon');
-g.setShowTaskInfoLink(1);
-g.setShowEndWeekDate(0);
-g.setUseSingleCell(10000);
-g.setFormatArr('Day', 'Week', 'Month', 'Quarter');
+g.setOptions({
+  vCaptionType: 'Complete',  // Set to Show Caption : None,Caption,Resource,Duration,Complete,     
+  vQuarterColWidth: 36,
+  vDateTaskDisplayFormat: 'day dd month yyyy', // Shown in tool tip box
+  vDayMajorDateDisplayFormat: 'mon yyyy - Week ww',// Set format to display dates in the "Major" header of the "Day" view
+  vWeekMinorDateDisplayFormat: 'dd mon', // Set format to display dates in the "Minor" header of the "Week" view
+  vLang: lang,
+  vShowTaskInfoLink: 1, // Show link in tool tip (0/1)
+  vShowEndWeekDate: 0,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
+  vUseSingleCell: 10000, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
+  vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+});
 
-g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',       0, 'Brian',    0,   1, 0,  1,     '',      '',      'Some Notes text', g));
-g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2014-02-20','2014-02-20', 'gmilestone',   '',       1, 'Shlomy',   100, 0, 1,  1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',       0, 'Shlomy',   40,  1, 1,  1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2014-02-21','2014-03-09', 'gtaskblue',    '',       0, 'Brian T.', 60,  0, 12, 1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2014-03-06','2014-03-11', 'gtaskred',     '',       0, 'Brian',    60,  0, 12, 1,     121,     '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2014-03-09','2014-03-14 12:00', 'gtaskyellow', '',  0, 'Ilan',     60,  0, 12, 1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2014-03-09','2014-03-29', 'gtaskred',     '',       0, 'Anyone',   60,  0, 12, 1,     '123SS', 'This is a caption', null, g));
-g.AddTaskItem(new JSGantt.TaskItem(2,   'Create HTML Shell',    '2014-03-24','2014-03-24', 'gtaskyellow',  '',       0, 'Brian',    20,  0, 0,  1,     122,     '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(3,   'Code Javascript',      '',           '',          'ggroupblack',  '',       0, 'Brian',    0,   1, 0,  1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(31,  'Define Variables',     '2014-02-25','2014-03-17', 'gtaskpurple',  '',       0, 'Brian',    30,  0, 3,  1,     '',      'Caption 1', '', g));
-g.AddTaskItem(new JSGantt.TaskItem(32,  'Calculate Chart Size', '2014-03-15','2014-03-24', 'gtaskgreen',   '',       0, 'Shlomy',   40,  0, 3,  1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(33,  'Draw Task Items',      '',           '',          'ggroupblack',  '',       0, 'Someone',  40,  2, 3,  1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(332, 'Task Label Table',     '2014-03-06','2014-03-09', 'gtaskblue',    '',       0, 'Brian',    60,  0, 33, 1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(333, 'Task Scrolling Grid',  '2014-03-11','2014-03-20', 'gtaskblue',    '',       0, 'Brian',    0,   0, 33, 1,     '332',   '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(34,  'Draw Task Bars',       '',           '',          'ggroupblack',  '',       0, 'Anybody',  60,  1, 3,  0,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(341, 'Loop each Task',       '2014-03-26','2014-04-11', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(342, 'Calculate Start/Stop', '2014-04-12','2014-05-18', 'gtaskpink',    '',       0, 'Brian',    60,  0, 34, 1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(343, 'Draw Task Div',        '2014-05-13','2014-05-17', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1,     '',      '',      '', g));
-g.AddTaskItem(new JSGantt.TaskItem(344, 'Draw Completion Div',  '2014-05-17','2014-06-04', 'gtaskred',     '',       0, 'Brian',    60,  0, 34, 1,     "342,343",'',     '', g));
-g.AddTaskItem(new JSGantt.TaskItem(35,  'Make Updates',         '2014-07-17','2015-09-04', 'gtaskpurple',  '',       0, 'Brian',    30,  0, 3,  1,     '333',   '',      '', g));
+// Load from a Json url
+JSGantt.parseJSON('./fixes/data.json', g);
+
+// Or Adding  Manually
+g.AddTaskItemObject({
+  "pID": 1,
+  "pName": "Define Chart API",
+  "pStart": "",
+  "pEnd": "",
+  "pClass": "ggroupblack",
+  "pLink": "",
+  "pMile": 0,
+  "pRes": "Brian",
+  "pComp": 0,
+  "pGroup": 1,
+  "pParent": 0,
+  "pOpen": 1,
+  "pDepend": "",
+  "pCaption": "",
+  "pNotes": "Some Notes text"
+});
 
 g.Draw();
-}
-else
-{
-alert("Error, unable to create Gantt Chart");
-}
 
 </script>
 ```

@@ -1,4 +1,4 @@
-import { parseDateStr, isIE, stripUnwanted, getOffset } from "./utils";
+import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr } from "./utils";
 
 declare var g: any;
 
@@ -331,3 +331,170 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setGroupSpan = function (pSpan) { if (typeof HTMLSpanElement !== 'function' || pSpan instanceof HTMLSpanElement) vGroupSpan = pSpan; };
 };
 
+
+export const createTaskInfo = function (pTask) {
+  var vTmpDiv;
+  var vTaskInfoBox = document.createDocumentFragment();
+  var vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
+  this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
+  if (this.vShowTaskInfoStartDate == 1) {
+    vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['startdate'] + ': ');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskText', formatDateStr(pTask.getStart(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
+  }
+  if (this.vShowTaskInfoEndDate == 1) {
+    vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['enddate'] + ': ');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskText', formatDateStr(pTask.getEnd(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
+  }
+  if (this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
+    vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['duration'] + ': ');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(this.vFormat, this.vLangs[this.vLang]));
+  }
+  if (this.vShowTaskInfoComp == 1) {
+    vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['completion'] + ': ');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
+  }
+  if (this.vShowTaskInfoRes == 1) {
+    vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['resource'] + ': ');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
+  }
+  if (this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
+    vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
+    var vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
+    vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', this.vLangs[this.vLang]['moreinfo']);
+    vTmpNode.setAttribute('href', pTask.getLink());
+  }
+  if (this.vShowTaskInfoNotes == 1) {
+    vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
+    this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['notes'] + ': ');
+    if (pTask.getNotes()) vTmpDiv.appendChild(pTask.getNotes());
+  }
+  return vTaskInfoBox;
+};
+
+
+
+export const AddTaskItem = function (value) {
+  var vExists = false;
+  for (var i = 0; i < this.vTaskList.length; i++) {
+    if (this.vTaskList[i].getID() == value.getID()) {
+      i = this.vTaskList.length;
+      vExists = true;
+    }
+  }
+  if (!vExists) {
+    this.vTaskList.push(value);
+    this.vProcessNeeded = true;
+  }
+};
+
+export const AddTaskItemObject = function (object) {
+  return this.AddTaskItem(TaskItemObject(object));
+}
+
+export const RemoveTaskItem = function (pID) {
+  // simply mark the task for removal at this point - actually remove it next time we re-draw the chart
+  for (var i = 0; i < this.vTaskList.length; i++) {
+    if (this.vTaskList[i].getID() == pID) this.vTaskList[i].setToDelete(true);
+    else if (this.vTaskList[i].getParent() == pID) this.RemoveTaskItem(this.vTaskList[i].getID());
+  }
+  this.vProcessNeeded = true;
+};
+
+
+
+// Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
+export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
+  var vMinDate = new Date();
+  var vMaxDate = new Date();
+  var vVisible = pOpen;
+  var vCurItem = null;
+  var vCompSum = 0;
+  var vMinSet = 0;
+  var vMaxSet = 0;
+  var vNumKid = 0;
+  var vWeight = 0;
+  var vLevel = pLevel;
+  var vList = pList;
+  var vComb = false;
+  var i = 0;
+
+  for (i = 0; i < pList.length; i++) {
+    if (pList[i].getToDelete()) {
+      pList.splice(i, 1);
+      i--;
+    }
+    if (i >= 0 && pList[i].getID() == pID) vCurItem = pList[i];
+  }
+
+  for (i = 0; i < pList.length; i++) {
+    if (pList[i].getParent() == pID) {
+      vVisible = pOpen;
+      pList[i].setParItem(vCurItem);
+      pList[i].setVisible(vVisible);
+      if (vVisible == 1 && pList[i].getOpen() == 0) vVisible = 0;
+
+      if (pList[i].getMile() && pList[i].getParItem() && pList[i].getParItem().getGroup() == 2) {//remove milestones owned by combined groups
+        pList.splice(i, 1);
+        i--;
+        continue;
+      }
+
+      pList[i].setLevel(vLevel);
+
+      if (pList[i].getGroup()) {
+        if (pList[i].getParItem() && pList[i].getParItem().getGroup() == 2) pList[i].setGroup(2);
+        processRows(vList, pList[i].getID(), i, vLevel + 1, vVisible, 0);
+      }
+
+      if (vMinSet == 0 || pList[i].getStart() < vMinDate) {
+        vMinDate = pList[i].getStart();
+        vMinSet = 1;
+      }
+
+      if (vMaxSet == 0 || pList[i].getEnd() > vMaxDate) {
+        vMaxDate = pList[i].getEnd();
+        vMaxSet = 1;
+      }
+
+      vNumKid++;
+      vWeight += pList[i].getEnd() - pList[i].getStart() + 1;
+      vCompSum += pList[i].getCompVal() * (pList[i].getEnd() - pList[i].getStart() + 1);
+      pList[i].setSortIdx(i * pList.length);
+    }
+  }
+
+  if (pRow >= 0) {
+    if (pList[pRow].getGroupMinStart() != null && pList[pRow].getGroupMinStart() < vMinDate) {
+      vMinDate = pList[pRow].getGroupMinStart();
+    }
+
+    if (pList[pRow].getGroupMinEnd() != null && pList[pRow].getGroupMinEnd() > vMaxDate) {
+      vMaxDate = pList[pRow].getGroupMinEnd();
+    }
+    pList[pRow].setStart(vMinDate);
+    pList[pRow].setEnd(vMaxDate);
+    pList[pRow].setNumKid(vNumKid);
+    pList[pRow].setWeight(vWeight);
+    pList[pRow].setCompVal(Math.ceil(vCompSum / vWeight));
+  }
+
+  if (pID == 0 && pUseSort == 1) {
+    sortTasks(pList, 0, 0);
+    pList.sort(function (a, b) { return a.getSortIdx() - b.getSortIdx(); });
+  }
+  if (pID == 0 && pUseSort != 1) // Need to sort combined tasks regardless
+  {
+    for (i = 0; i < pList.length; i++) {
+      if (pList[i].getGroup() == 2) {
+        vComb = true;
+        sortTasks(pList, pList[i].getID(), pList[i].getSortIdx() + 1);
+      }
+    }
+    if (vComb == true) pList.sort(function (a, b) { return a.getSortIdx() - b.getSortIdx(); });
+  }
+};

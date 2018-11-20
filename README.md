@@ -18,6 +18,59 @@ You can view a live example at
 
 https://mariohmol.github.io/jsgantt-improved/demo
 
+
+## Easy to Use
+
+```html
+<link href="jsgantt.css" rel="stylesheet" type="text/css"/>
+<script src="jsgantt.js" type="text/javascript"></script>
+
+<div style="position:relative" class="gantt" id="GanttChartDIV"></div>
+
+<script>
+
+var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
+
+g.setOptions({
+  vCaptionType: 'Complete',  // Set to Show Caption : None,Caption,Resource,Duration,Complete,     
+  vQuarterColWidth: 36,
+  vDateTaskDisplayFormat: 'day dd month yyyy', // Shown in tool tip box
+  vDayMajorDateDisplayFormat: 'mon yyyy - Week ww',// Set format to dates in the "Major" header of the "Day" view
+  vWeekMinorDateDisplayFormat: 'dd mon', // Set format to display dates in the "Minor" header of the "Week" view
+  vLang: 'en',
+  vShowTaskInfoLink: 1, // Show link in tool tip (0/1)
+  vShowEndWeekDate: 0,  // Show/Hide the date for the last day of the week in header for daily
+  vUseSingleCell: 10000, // Set the threshold cell per table row (Helps performance for large data.
+  vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+});
+
+// Load from a Json url
+JSGantt.parseJSON('./fixes/data.json', g);
+
+// Or Adding  Manually
+g.AddTaskItemObject({
+  "pID": 1,
+  "pName": "Define Chart API",
+  "pStart": "",
+  "pEnd": "",
+  "pClass": "ggroupblack",
+  "pLink": "",
+  "pMile": 0,
+  "pRes": "Brian",
+  "pComp": 0,
+  "pGroup": 1,
+  "pParent": 0,
+  "pOpen": 1,
+  "pDepend": "",
+  "pCaption": "",
+  "pNotes": "Some Notes text"
+});
+
+g.Draw();
+
+</script>
+```
+
 ## Features
 
   * Tasks & Collapsible Task Groups

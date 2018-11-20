@@ -1,4 +1,5 @@
 import { TaskItem } from "./task";
+import { formatDateStr, parseDateFormatStr } from "./utils";
 
 export const parseXML = function (pFile, pGanttVar) {
   if ((<any>window).XMLHttpRequest) {
@@ -249,4 +250,60 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
       }
     }
   }
+
+
+};
+
+
+export const getXMLProject = function () {
+  var vProject = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+  for (var i = 0; i < this.vTaskList.length; i++) {
+    vProject += this.getXMLTask(i, true);
+  }
+  vProject += '</project>';
+  return vProject;
+};
+
+export const getXMLTask = function (pID, pIdx) {
+  var i = 0;
+  var vIdx = -1;
+  var vTask = '';
+  var vOutFrmt = parseDateFormatStr(this.getDateInputFormat() + ' HH:MI');
+  if (pIdx === true) vIdx = pID;
+  else {
+    for (i = 0; i < this.vTaskList.length; i++) {
+      if (this.vTaskList[i].getID() == pID) { vIdx = i; break; }
+    }
+  }
+  if (vIdx >= 0 && vIdx < this.vTaskList.length) {
+    /* Simplest way to return case sensitive node names is to just build a string */
+    vTask = '<task>';
+    vTask += '<pID>' + this.vTaskList[vIdx].getID() + '</pID>';
+    vTask += '<pName>' + this.vTaskList[vIdx].getName() + '</pName>';
+    vTask += '<pStart>' + formatDateStr(this.vTaskList[vIdx].getStart(), vOutFrmt, this.vLangs[this.vLang]) + '</pStart>';
+    vTask += '<pEnd>' + formatDateStr(this.vTaskList[vIdx].getEnd(), vOutFrmt, this.vLangs[this.vLang]) + '</pEnd>';
+    vTask += '<pClass>' + this.vTaskList[vIdx].getClass() + '</pClass>';
+    vTask += '<pLink>' + this.vTaskList[vIdx].getLink() + '</pLink>';
+    vTask += '<pMile>' + this.vTaskList[vIdx].getMile() + '</pMile>';
+    if (this.vTaskList[vIdx].getResource() != '\u00A0') vTask += '<pRes>' + this.vTaskList[vIdx].getResource() + '</pRes>';
+    vTask += '<pComp>' + this.vTaskList[vIdx].getCompVal() + '</pComp>';
+    vTask += '<pCost>' + this.vTaskList[vIdx].getCost() + '</pCost>';
+    vTask += '<pGroup>' + this.vTaskList[vIdx].getGroup() + '</pGroup>';
+    vTask += '<pParent>' + this.vTaskList[vIdx].getParent() + '</pParent>';
+    vTask += '<pOpen>' + this.vTaskList[vIdx].getOpen() + '</pOpen>';
+    vTask += '<pDepend>';
+    var vDepList = this.vTaskList[vIdx].getDepend();
+    for (i = 0; i < vDepList.length; i++) {
+      if (i > 0) vTask += ',';
+      if (vDepList[i] > 0) vTask += vDepList[i] + this.vTaskList[vIdx].getDepType()[i];
+    }
+    vTask += '</pDepend>';
+    vTask += '<pCaption>' + this.vTaskList[vIdx].getCaption() + '</pCaption>';
+
+    var vTmpFrag = document.createDocumentFragment();
+    var vTmpDiv = this.newNode(vTmpFrag, 'div', null, null, this.vTaskList[vIdx].getNotes().innerHTML);
+    vTask += '<pNotes>' + vTmpDiv.innerHTML + '</pNotes>';
+    vTask += '</task>';
+  }
+  return vTask;
 };

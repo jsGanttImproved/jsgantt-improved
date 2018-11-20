@@ -33,8 +33,8 @@ import { getMinDate, getMaxDate, findObj, changeFormat, parseDateStr,
   formatDateStr, parseDateFormatStr, stripIds, stripUnwanted, delayedHide, getOffset, 
   getScrollPositions, isIE, benchMark, getIsoWeek, getZoomFactor, hideToolTip, fadeToolTip } from "./utils";
 import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } from './xml';
-import { folder, hide, show, taskLink, sortTasks, TaskItem } from "./task";
-import { processRows, GanttChart, updateFlyingObj } from "./draw";
+import { folder, hide, show, taskLink, sortTasks, TaskItem, processRows } from "./task";
+import { GanttChart, updateFlyingObj } from "./draw";
 import { parseJSON, parseJSONString, addJSONTask } from "./json";
 
 export let JSGantt; if (!JSGantt) JSGantt = {};
