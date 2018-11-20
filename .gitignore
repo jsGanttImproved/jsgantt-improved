@@ -1,5 +1,4 @@
 dist/
 node_modules/
-jsgantt.css
-jsgantt.js
 *.log
+/jsgantt.js
