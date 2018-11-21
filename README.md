@@ -59,8 +59,10 @@ JSGantt.parseJSON('./fixes/data.json', g);
 g.AddTaskItemObject({
   "pID": 1,
   "pName": "Define Chart API",
-  "pStart": "",
-  "pEnd": "",
+  "pStart": "2017-02-25",
+  "pEnd": "2017-03-17",
+  "pPlanStart": "2017-04-01",
+  "pPlanEnd": "2017-04-15 12:00",
   "pClass": "ggroupblack",
   "pLink": "",
   "pMile": 0,
@@ -71,6 +73,7 @@ g.AddTaskItemObject({
   "pOpen": 1,
   "pDepend": "",
   "pCaption": "",
+  "pCost": 1000,
   "pNotes": "Some Notes text"
 });
 
@@ -87,12 +90,15 @@ g.Draw();
   * Task Styling
   * Milestones
   * Resources
+  * Costs
+  * Plan Start and End Dates
+  * Gantt with Planned vs Executed
   * Dynamic Loading of Tasks
   * Dynamic change of format: Hour, Day, Week, Month, Quarter
   * Load Gantt from XML and JSON
     * From external files (including experimental support for MS Project XML files)
     * From JavaScript Strings
-  * Support for Internationalization (all hard coded strings can be overridden)
+  * Support for Internationalization 
 
 ## Documentation
 

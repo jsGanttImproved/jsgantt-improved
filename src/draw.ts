@@ -692,8 +692,9 @@ export const GanttChart = function (pDiv, pFormat) {
             /**
              * DRAW THE BOXES FOR GANTT
              */
+            let vTmpDivCell;
             if (vComb) {
-              vTmpDiv = this.vTaskList[i].getParItem().getCellDiv();
+              vTmpDivCell = vTmpDiv = this.vTaskList[i].getParItem().getCellDiv();
             }
             else {
               // Draw Task Bar which has colored bar div
@@ -701,7 +702,7 @@ export const GanttChart = function (pDiv, pFormat) {
               this.vTaskList[i].setChildRow(vTmpRow);
               addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
               vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
-              vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
+              vTmpDivCell = vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
             }
 
             // draw the lines for dependecies
@@ -712,7 +713,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
             // PLANNED
             if (vTaskPlanLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
-              const vTmpPlanDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx - 100);
+              const vTmpPlanDiv = this.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
               const vTmpDiv3 = this.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
             }
 

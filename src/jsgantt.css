@@ -90,8 +90,8 @@ td.gspanning {
 }
 
 .gtaskbarcontainer.gplan {
-  position: relative !important;
-  top: -14px;
+  position: absolute !important;
+  top: 0px;
   opacity: 0.3;
   background: white;
   z-index: 10000;

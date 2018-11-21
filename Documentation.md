@@ -44,8 +44,10 @@ see [Configuration Options](Documentation#user-content-options) below
 g.AddTaskItemObject({
   "pID": 1,
   "pName": "Define Chart API",
-  "pStart": "",
-  "pEnd": "",
+  "pStart": "2017-02-25",
+  "pEnd": "2017-03-17",
+  "pPlanStart": "2017-04-01",
+  "pPlanEnd": "2017-04-15 12:00",
   "pClass": "ggroupblack",
   "pLink": "",
   "pMile": 0,
@@ -56,6 +58,7 @@ g.AddTaskItemObject({
   "pOpen": 1,
   "pDepend": "",
   "pCaption": "",
+  "pCost": 1000,
   "pNotes": "Some Notes text"
 });
 
@@ -73,6 +76,8 @@ Method definition:
 |_pName:_|(required) the task Label                               |
 |_pStart:_|(required) the task start date, can enter empty date ('') for groups. You can also enter specific time (e.g. 2013-02-20 09:00) for additional precision or half days|
 |_pEnd:_|(required) the task end date, can enter empty date ('') for groups|
+|_pPlanStart:_|(required) the planed task start date, can enter empty date ('') for groups. You can also enter specific time (e.g. 2013-02-20 09:00) for additional precision or half days|
+|_pPlanEnd:_|(required) the task end date planned, can enter empty date ('') for groups|
 |_pClass:_|(required) the css class for this task                  |
 |_pLink:_|(optional) any http link to be displayed in tool tip as the "More information" link.|
 |_pMile:_|(optional) indicates whether this is a milestone task - Numeric; 1 = milestone, 0 = not milestone|
@@ -85,6 +90,7 @@ Method definition:
 |_pCaption:_|(optional) caption that will be added after task bar if CaptionType set to "Caption"|
 |_pNotes:_|(optional) Detailed task information that will be displayed in tool tip for this task|
 |_pGantt:_|(required) javascript JSGantt.GanttChart object from which to take settings.  Defaults to "g" for backwards compatibility|
+|_pCost:_|(required) cost of that task, numeric        
 
 <sup>*</sup> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.
 
@@ -103,6 +109,8 @@ The structure of the JSON file:
   "pName": "Define Chart API",
   "pStart": "",
   "pEnd": "",
+  "pPlanStart": "",
+  "pPlanEnd": "",
   "pClass": "ggroupblack",
   "pLink": "",
   "pMile": 0,
@@ -113,6 +121,7 @@ The structure of the JSON file:
   "pOpen": 1,
   "pDepend": "",
   "pCaption": "",
+  "pCost":  "",
   "pNotes": "Some Notes text"
 }
 ```
@@ -139,6 +148,8 @@ The structure of the native XML file:
 	<pName>WCF Changes</pName>
 	<pStart></pStart>
 	<pEnd></pEnd>
+  <pPlanStart></pPlanStart>
+	<pPlanEnd></PlanEnd>
 	<pClass>gtaskred</pClass>
 	<pLink></pLink>
 	<pMile>0</pMile>
@@ -147,6 +158,7 @@ The structure of the native XML file:
 	<pGroup>1</pGroup>
 	<pParent>2</pParent>
 	<pOpen>1</pOpen>
+  <pCost></pCost>
 	<pDepend>2,24</pDepend>
 	<pCaption>A caption</pCaption>
 	<pNotes>Text - can include limited HTML</pNotes>
@@ -228,6 +240,9 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setShowComp():_  |Controls whether the Percentage Complete column is displayed in the task list, defaults to 1 (show column)|
 |_setShowStartDate():_|Controls whether the Task Start Date column is displayed in the task list, defaults to 1 (show column)|
 |_setShowEndDate():_|Controls whether the Task End Date column is displayed in the task list, defaults to 1 (show column)|
+|_setShowPlanStartDate():_|Controls whether the Plan Task Start Date column is displayed in the task list, defaults to 1 (show column)|
+|_setShowPlanEndDate():_|Controls whether the Task Plan End Date column is displayed in the task list, defaults to 1 (show column)|
+|_setShowCost():_|Controls whether the Cost column is displayed in the task list, defaults to 1 (show column)|
 |_setShowTaskInfoRes():_|Controls whether the Resource information is displayed in the task tool tip, defaults to 1 (show information)|
 |_setShowTaskInfoDur():_|Controls whether the Task Duration information is displayed in the task tool tip, defaults to 1 (show information)|
 |_setShowTaskInfoComp():_|Controls whether the Percentage Complete information is displayed in the task tool tip, defaults to 1 (show information)|
@@ -410,8 +425,10 @@ JSGantt.parseJSON('./fixes/data.json', g);
 g.AddTaskItemObject({
   "pID": 1,
   "pName": "Define Chart API",
-  "pStart": "",
-  "pEnd": "",
+  "pStart": "2017-02-25",
+  "pEnd": "2017-03-17",
+  "pPlanStart": "2017-04-01",
+  "pPlanEnd": "2017-04-15 12:00",
   "pClass": "ggroupblack",
   "pLink": "",
   "pMile": 0,
@@ -420,6 +437,7 @@ g.AddTaskItemObject({
   "pGroup": 1,
   "pParent": 0,
   "pOpen": 1,
+  "pCost": 100,
   "pDepend": "",
   "pCaption": "",
   "pNotes": "Some Notes text"

@@ -678,8 +678,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                         /**
                          * DRAW THE BOXES FOR GANTT
                          */
+                        var vTmpDivCell = void 0;
                         if (vComb) {
-                            vTmpDiv = this.vTaskList[i].getParItem().getCellDiv();
+                            vTmpDivCell = vTmpDiv = this.vTaskList[i].getParItem().getCellDiv();
                         }
                         else {
                             // Draw Task Bar which has colored bar div
@@ -687,7 +688,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                             this.vTaskList[i].setChildRow(vTmpRow);
                             events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
                             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
-                            vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
+                            vTmpDivCell = vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                         }
                         // draw the lines for dependecies
                         vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
@@ -696,7 +697,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         this.vTaskList[i].setTaskDiv(vTmpDiv2);
                         // PLANNED
                         if (vTaskPlanLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
-                            var vTmpPlanDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx - 100);
+                            var vTmpPlanDiv = this.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
                             var vTmpDiv3 = this.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
                         }
                         // and opaque completion div
@@ -2702,8 +2703,8 @@ exports.getScrollPositions = function () {
     return { x: vScrollLeft, y: vScrollTop };
 };
 exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
-    var DAY_CELL_MARGIN_WIDTH = 1; // Cell margin for 'day' format
-    var WEEK_CELL_MARGIN_WIDTH = 1; // Cell margin for 'week' format
+    var DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
+    var WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
     var MONTH_CELL_MARGIN_WIDTH = 1; // Cell margin for 'month' format
     var QUARTER_CELL_MARGIN_WIDTH = 1; // Cell margin for 'quarter' format
     var HOUR_CELL_MARGIN_WIDTH = 3; // Cell margin for 'hour' format
