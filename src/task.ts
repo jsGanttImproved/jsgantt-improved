@@ -147,16 +147,16 @@ export const TaskItemObject = function (object) {
     object.pCost,
     object.pPlanStartDate,
     object.pPlanEndDate
-    );
+  );
 }
 
-export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, 
+export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null) {
   let vBenchTime = new Date().getTime();
   let vID = parseInt(document.createTextNode(pID).data);
   let vName = document.createTextNode(pName).data;
-  let vStart = new Date(0);
-  let vEnd = new Date(0);
+  let vStart = null;
+  let vEnd = null;
   let vPlanStart = null;
   let vPlanEnd = null;
   let vGroupMinStart = null;
@@ -250,10 +250,10 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
 
   this.getID = function () { return vID; };
   this.getName = function () { return vName; };
-  this.getStart = function () { return vStart; };
-  this.getEnd = function () { return vEnd; };
-  this.getPlanStart = function () { return vPlanStart; };
-  this.getPlanEnd = function () { return vPlanEnd; };
+  this.getStart = function () { return vStart ? vStart : vPlanStart; };
+  this.getEnd = function () { return vEnd ? vEnd : vPlanEnd; };
+  this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
+  this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
   this.getCost = function () { return vCost; };
   this.getGroupMinStart = function () { return vGroupMinStart; };
   this.getGroupMinEnd = function () { return vGroupMinEnd; };

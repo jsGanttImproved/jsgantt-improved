@@ -586,8 +586,8 @@ exports.GanttChart = function (pDiv, pFormat) {
             var i = 0;
             var j = 0;
             for (i = 0; i < this.vTaskList.length; i++) {
-                var curTaskStart = this.vTaskList[i].getStart();
-                var curTaskEnd = this.vTaskList[i].getEnd();
+                var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
+                var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
                 if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0)
                     curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
                 vTaskLeftPx = utils_1.getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat);
@@ -696,7 +696,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
                         this.vTaskList[i].setTaskDiv(vTmpDiv2);
                         // PLANNED
-                        if (vTaskPlanLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
+                        if (vTaskPlanLeftPx && vTaskPlanLeftPx != vTaskLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
                             var vTmpPlanDiv = this.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
                             var vTmpDiv3 = this.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
                         }
@@ -1982,8 +1982,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vBenchTime = new Date().getTime();
     var vID = parseInt(document.createTextNode(pID).data);
     var vName = document.createTextNode(pName).data;
-    var vStart = new Date(0);
-    var vEnd = new Date(0);
+    var vStart = null;
+    var vEnd = null;
     var vPlanStart = null;
     var vPlanEnd = null;
     var vGroupMinStart = null;
@@ -2068,10 +2068,10 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     }
     this.getID = function () { return vID; };
     this.getName = function () { return vName; };
-    this.getStart = function () { return vStart; };
-    this.getEnd = function () { return vEnd; };
-    this.getPlanStart = function () { return vPlanStart; };
-    this.getPlanEnd = function () { return vPlanEnd; };
+    this.getStart = function () { return vStart ? vStart : vPlanStart; };
+    this.getEnd = function () { return vEnd ? vEnd : vPlanEnd; };
+    this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
+    this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
     this.getCost = function () { return vCost; };
     this.getGroupMinStart = function () { return vGroupMinStart; };
     this.getGroupMinEnd = function () { return vGroupMinEnd; };

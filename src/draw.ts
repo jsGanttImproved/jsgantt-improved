@@ -587,8 +587,8 @@ export const GanttChart = function (pDiv, pFormat) {
       var i = 0;
       var j = 0;
       for (i = 0; i < this.vTaskList.length; i++) {
-        var curTaskStart = this.vTaskList[i].getStart();
-        var curTaskEnd = this.vTaskList[i].getEnd();
+        var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
+        var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
         if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
 
 
@@ -606,7 +606,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
           vTaskPlanLeftPx = getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat);
           vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat);
-        }else {
+        } else {
           vTaskPlanLeftPx = vTaskPlanRightPx = 0;
         }
 
@@ -712,7 +712,7 @@ export const GanttChart = function (pDiv, pFormat) {
             this.vTaskList[i].setTaskDiv(vTmpDiv2);
 
             // PLANNED
-            if (vTaskPlanLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
+            if (vTaskPlanLeftPx && vTaskPlanLeftPx != vTaskLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
               const vTmpPlanDiv = this.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
               const vTmpDiv3 = this.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
             }

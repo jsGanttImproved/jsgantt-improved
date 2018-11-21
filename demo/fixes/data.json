@@ -91,8 +91,8 @@
   {
     "pID": 123,
     "pName": "Task by Minute/Hour",
-    "pStart": "2017-03-09",
-    "pEnd": "2017-03-14 12:00",
+    "pStart": "",
+    "pEnd": "",
     "pPlanStart": "2017-03-01",
     "pPlanEnd": "2017-03-15 12:00",
     "pClass": "gtaskyellow",
