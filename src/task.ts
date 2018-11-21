@@ -149,46 +149,44 @@ export const TaskItemObject = function (object) {
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, 
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null) {
-  var vBenchTime = new Date().getTime();
-  var vID = parseInt(document.createTextNode(pID).data);
-  var vName = document.createTextNode(pName).data;
-  var vStart = new Date(0);
-  var vEnd = new Date(0);
-  var vPlanStart = null;
-  var vPlanEnd = null;
-  var vGroupMinStart = null;
-  var vGroupMinEnd = null;
-  var vClass = document.createTextNode(pClass).data;
-  var vLink = document.createTextNode(pLink).data;
-  var vMile = parseInt(document.createTextNode(pMile).data);
-  var vRes = document.createTextNode(pRes).data;
-  var vComp = parseFloat(document.createTextNode(pComp).data);
-  var vCost = parseInt(document.createTextNode(pCost).data)
-  var vGroup = parseInt(document.createTextNode(pGroup).data);
-  var vParent = document.createTextNode(pParent).data;
-  var vOpen = (vGroup == 2) ? 1 : parseInt(document.createTextNode(pOpen).data);
-  var vDepend = new Array();
-  var vDependType = new Array();
-  var vCaption = document.createTextNode(pCaption).data;
-  var vDuration = '';
-  var vLevel = 0;
-  var vNumKid = 0;
-  var vWeight = 0;
-  var vVisible = 1;
-  var vSortIdx = 0;
-  var vToDelete = false;
-  var x1, y1, x2, y2;
-  var vNotes;
-  var vParItem = null;
-  var vCellDiv = null;
-  var vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
-  var vBarDiv = null;
-  var vTaskDiv = null;
-  var vListChildRow = null;
-  var vChildRow = null;
-  var vGroupSpan = null;
-  var pPlanStart = pPlanStart
-  pPlanStart = null, pPlanEnd
+  let vBenchTime = new Date().getTime();
+  let vID = parseInt(document.createTextNode(pID).data);
+  let vName = document.createTextNode(pName).data;
+  let vStart = new Date(0);
+  let vEnd = new Date(0);
+  let vPlanStart = null;
+  let vPlanEnd = null;
+  let vGroupMinStart = null;
+  let vGroupMinEnd = null;
+  let vClass = document.createTextNode(pClass).data;
+  let vLink = document.createTextNode(pLink).data;
+  let vMile = parseInt(document.createTextNode(pMile).data);
+  let vRes = document.createTextNode(pRes).data;
+  let vComp = parseFloat(document.createTextNode(pComp).data);
+  let vCost = parseInt(document.createTextNode(pCost).data)
+  let vGroup = parseInt(document.createTextNode(pGroup).data);
+  let vParent = document.createTextNode(pParent).data;
+  let vOpen = (vGroup == 2) ? 1 : parseInt(document.createTextNode(pOpen).data);
+  let vDepend = new Array();
+  let vDependType = new Array();
+  let vCaption = document.createTextNode(pCaption).data;
+  let vDuration = '';
+  let vLevel = 0;
+  let vNumKid = 0;
+  let vWeight = 0;
+  let vVisible = 1;
+  let vSortIdx = 0;
+  let vToDelete = false;
+  let x1, y1, x2, y2;
+  let vNotes;
+  let vParItem = null;
+  let vCellDiv = null;
+  let vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
+  let vBarDiv = null;
+  let vTaskDiv = null;
+  let vListChildRow = null;
+  let vChildRow = null;
+  let vGroupSpan = null;
 
 
   vNotes = document.createElement('span');
