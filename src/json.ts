@@ -6,15 +6,16 @@ import { TaskItem } from "./task";
  * @param pGanttVar 
  */
 export const parseJSON = function (pFile, pGanttVar) {
+  let xhttp;
   if ((<any>window).XMLHttpRequest) {
-    var xhttp = new XMLHttpRequest();
+    xhttp = new XMLHttpRequest();
   } else {	// IE 5/6
     xhttp = new (<any>window).ActiveXObject('Microsoft.XMLHTTP');
   }
 
   xhttp.open('GET', pFile, false);
   xhttp.send(null);
-  var jsonObj = eval('(' + xhttp.response + ')');
+  let jsonObj = eval('(' + xhttp.response + ')');
 
   addJSONTask(pGanttVar, jsonObj);
 };
@@ -25,29 +26,29 @@ export const parseJSONString = function (pStr, pGanttVar) {
 
 export const addJSONTask = function (pGanttVar, pJsonObj) {
   if ({}.toString.call(pJsonObj) === '[object Array]') {
-    for (var index = 0; index < pJsonObj.length; index++) {
-      var id;
-      var name;
-      var start;
-      var end;
-      var planstart;
-      var planend;
-      var itemClass;
-      var link = '';
-      var milestone = 0;
-      var resourceName = '';
-      var completion;
-      var group = 0;
-      var parent;
-      var open;
-      var dependsOn = '';
-      var caption = '';
-      var notes = '';
-      var cost;
+    for (let index = 0; index < pJsonObj.length; index++) {
+      let id;
+      let name;
+      let start;
+      let end;
+      let planstart;
+      let planend;
+      let itemClass;
+      let link = '';
+      let milestone = 0;
+      let resourceName = '';
+      let completion;
+      let group = 0;
+      let parent;
+      let open;
+      let dependsOn = '';
+      let caption = '';
+      let notes = '';
+      let cost;
 
-      for (var prop in pJsonObj[index]) {
-        var property = prop;
-        var value = pJsonObj[index][property];
+      for (let prop in pJsonObj[index]) {
+        let property = prop;
+        let value = pJsonObj[index][property];
         switch (property.toLowerCase()) {
           case 'pid':
           case 'id':

@@ -216,13 +216,29 @@ const de = {
 }
 
 const pt = {
+  'hours': 'Horas',
+  'days': 'Dias',
+  'weeks': 'Weeks',
+  'months': 'Months',
+  'quarters': 'Quarters',
   'format': 'Formato',
   'hour': 'Hora',
   'day': 'Dia',
   'week': 'Semana',
   'month': 'Mês',
   'quarter': 'Trimestre',
-  'completion': '% Completo',
+  'hr': 'hr',
+  'dy': 'dia',
+  'wk': 'sem.',
+  'mth': 'mês',
+  'qtr': 'qtr',
+  'hrs': 'hrs',
+  'dys': 'dias',
+  'wks': 'sem.',
+  'mths': 'meses',
+  'qtrs': 'qtrs',
+  'completion': 'Terminado',
+  'comp': '% Completado',
   'moreinfo': 'Mais informações',
   'notes': 'Notas',
   'resource': 'Responsável',
@@ -232,9 +248,6 @@ const pt = {
   'enddate': 'Data final',
   'planenddate': 'Plan Data final',
   'cost': 'Cost',
-  'dys': 'dias',
-  'wks': 'sem.',
-  'mths': 'mes.',
   'jan': 'Jan',
   'feb': 'Fev',
   'mar': 'Mar',
@@ -258,7 +271,14 @@ const pt = {
   'september': 'Setembro',
   'october': 'Outubro',
   'november': 'Novembro',
-  'december': 'Dezembro'
+  'december': 'Dezembro',
+  'sun': 'Dom',
+  'mon': 'Seg',
+  'tue': 'Ter',
+  'wed': 'Qua',
+  'thu': 'Qui',
+  'fri': 'Sex',
+  'sat': 'Sab'
 }
 
 const ru = {

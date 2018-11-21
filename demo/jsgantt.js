@@ -1092,8 +1092,9 @@ var task_1 = require("./task");
  * @param pGanttVar
  */
 exports.parseJSON = function (pFile, pGanttVar) {
+    var xhttp;
     if (window.XMLHttpRequest) {
-        var xhttp = new XMLHttpRequest();
+        xhttp = new XMLHttpRequest();
     }
     else { // IE 5/6
         xhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
@@ -1109,24 +1110,24 @@ exports.parseJSONString = function (pStr, pGanttVar) {
 exports.addJSONTask = function (pGanttVar, pJsonObj) {
     if ({}.toString.call(pJsonObj) === '[object Array]') {
         for (var index = 0; index < pJsonObj.length; index++) {
-            var id;
-            var name;
-            var start;
-            var end;
-            var planstart;
-            var planend;
-            var itemClass;
+            var id = void 0;
+            var name_1 = void 0;
+            var start = void 0;
+            var end = void 0;
+            var planstart = void 0;
+            var planend = void 0;
+            var itemClass = void 0;
             var link = '';
             var milestone = 0;
             var resourceName = '';
-            var completion;
+            var completion = void 0;
             var group = 0;
-            var parent;
-            var open;
+            var parent_1 = void 0;
+            var open_1 = void 0;
             var dependsOn = '';
             var caption = '';
             var notes = '';
-            var cost;
+            var cost = void 0;
             for (var prop in pJsonObj[index]) {
                 var property = prop;
                 var value = pJsonObj[index][property];
@@ -1137,7 +1138,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                         break;
                     case 'pname':
                     case 'name':
-                        name = value;
+                        name_1 = value;
                         break;
                     case 'pstart':
                     case 'start':
@@ -1181,11 +1182,11 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                         break;
                     case 'pparent':
                     case 'parent':
-                        parent = value;
+                        parent_1 = value;
                         break;
                     case 'popen':
                     case 'open':
-                        open = value;
+                        open_1 = value;
                         break;
                     case 'pdepend':
                     case 'depend':
@@ -1206,7 +1207,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                 }
             }
             //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar, cost, planstart, planend));
+            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend));
             //}
         }
     }
@@ -1391,6 +1392,7 @@ var de = {
     'planstartdate': 'Erste Buchu Plan',
     'enddate': 'Letzte Buchung',
     'planenddate': 'Plan Letzte Buchung',
+    'cost': 'Cost',
     'moreinfo': 'Weitere Infos',
     'notes': 'Anmerkung',
     'january': 'Jänner',
@@ -1429,13 +1431,29 @@ var de = {
 };
 exports.de = de;
 var pt = {
+    'hours': 'Horas',
+    'days': 'Dias',
+    'weeks': 'Weeks',
+    'months': 'Months',
+    'quarters': 'Quarters',
     'format': 'Formato',
     'hour': 'Hora',
     'day': 'Dia',
     'week': 'Semana',
     'month': 'Mês',
     'quarter': 'Trimestre',
-    'completion': '% Completo',
+    'hr': 'hr',
+    'dy': 'dia',
+    'wk': 'sem.',
+    'mth': 'mês',
+    'qtr': 'qtr',
+    'hrs': 'hrs',
+    'dys': 'dias',
+    'wks': 'sem.',
+    'mths': 'meses',
+    'qtrs': 'qtrs',
+    'completion': 'Terminado',
+    'comp': '% Completado',
     'moreinfo': 'Mais informações',
     'notes': 'Notas',
     'resource': 'Responsável',
@@ -1444,9 +1462,7 @@ var pt = {
     'planstartdate': 'Plan Data inicial',
     'enddate': 'Data final',
     'planenddate': 'Plan Data final',
-    'dys': 'dias',
-    'wks': 'sem.',
-    'mths': 'mes.',
+    'cost': 'Cost',
     'jan': 'Jan',
     'feb': 'Fev',
     'mar': 'Mar',
@@ -1470,7 +1486,14 @@ var pt = {
     'september': 'Setembro',
     'october': 'Outubro',
     'november': 'Novembro',
-    'december': 'Dezembro'
+    'december': 'Dezembro',
+    'sun': 'Dom',
+    'mon': 'Seg',
+    'tue': 'Ter',
+    'wed': 'Qua',
+    'thu': 'Qui',
+    'fri': 'Sex',
+    'sat': 'Sab'
 };
 exports.pt = pt;
 var ru = {
@@ -1519,6 +1542,7 @@ var ru = {
     'planstartdate': 'Plan Нач. дата',
     'enddate': 'Кон. дата',
     'planenddate': 'Plan Кон. дата',
+    'cost': 'Cost',
     'moreinfo': 'Детали',
     'notes': 'Заметки',
     'format': 'Формат',
@@ -1593,6 +1617,7 @@ var fr = {
     'planstartdate': 'Plan Début',
     'enddate': 'Fin',
     'planenddate': 'Plan Fin',
+    'cost': 'Cost',
     'moreinfo': "Plus d'informations",
     'notes': 'Notes',
     'format': 'Format',

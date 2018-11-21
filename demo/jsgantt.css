@@ -124,13 +124,16 @@ td.gspanning {
 
 .gtaskname div,
 /* needed for IE8 */
-
 .gtaskname {
   min-width: 170px;
   max-width: 170px;
   width: 170px;
   font-size: 9px;
   border-left: none;
+}
+
+.gtaskheading,
+.gtaskname {
   text-overflow: ellipsis;
   overflow: hidden;
 }
