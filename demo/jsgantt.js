@@ -1973,7 +1973,7 @@ exports.sortTasks = function (pList, pID, pIdx) {
     return sortIdx;
 };
 exports.TaskItemObject = function (object) {
-    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStartDate, object.pPlanEndDate);
+    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd);
 };
 exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd) {
     if (pCost === void 0) { pCost = null; }
@@ -2068,8 +2068,22 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     }
     this.getID = function () { return vID; };
     this.getName = function () { return vName; };
-    this.getStart = function () { return vStart ? vStart : vPlanStart; };
-    this.getEnd = function () { return vEnd ? vEnd : vPlanEnd; };
+    this.getStart = function () {
+        if (vStart)
+            return vStart;
+        else if (vPlanStart)
+            return vPlanStart;
+        else
+            return new Date();
+    };
+    this.getEnd = function () {
+        if (vEnd)
+            return vEnd;
+        else if (vPlanEnd)
+            return vPlanEnd;
+        else
+            return new Date();
+    };
     this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
     this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
     this.getCost = function () { return vCost; };

@@ -145,8 +145,8 @@ export const TaskItemObject = function (object) {
     object.pNotes,
     object.pGantt,
     object.pCost,
-    object.pPlanStartDate,
-    object.pPlanEndDate
+    object.pPlanStart,
+    object.pPlanEnd
   );
 }
 
@@ -250,8 +250,16 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
 
   this.getID = function () { return vID; };
   this.getName = function () { return vName; };
-  this.getStart = function () { return vStart ? vStart : vPlanStart; };
-  this.getEnd = function () { return vEnd ? vEnd : vPlanEnd; };
+  this.getStart = function () {
+    if (vStart) return vStart;
+    else if (vPlanStart) return vPlanStart;
+    else return new Date();
+  };
+  this.getEnd = function () {
+    if (vEnd) return vEnd;
+    else if (vPlanEnd) return vPlanEnd;
+    else return new Date();
+  };
   this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
   this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
   this.getCost = function () { return vCost; };
@@ -273,7 +281,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getNotes = function () { return vNotes; };
   this.getSortIdx = function () { return vSortIdx; };
   this.getToDelete = function () { return vToDelete; };
-
   this.getDuration = function (pFormat, pLang) {
     if (vMile) {
       vDuration = '-';
