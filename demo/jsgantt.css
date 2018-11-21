@@ -89,6 +89,15 @@ td.gspanning {
   border: #efefef 1px solid;
 }
 
+.gtaskbarcontainer.gplan {
+  position: relative !important;
+  top: -14px;
+  opacity: 0.3;
+  background: white;
+  z-index: 10000;
+  border: 1px solid black;
+}
+
 /* Additional values for some task list elements */
 
 .gresource,
@@ -107,6 +116,7 @@ td.gspanning {
 
 .genddate div,
 /* needed for IE8 */
+
 .gcost,
 .gplanstartdate,
 .gplanenddate,
@@ -124,6 +134,7 @@ td.gspanning {
 
 .gtaskname div,
 /* needed for IE8 */
+
 .gtaskname {
   min-width: 170px;
   max-width: 170px;
@@ -177,8 +188,8 @@ span.gfoldercollapse {
 
 .gcharttableh,
 .gtasktableh,
-.gtasktable ,
-.gcharttable{
+.gtasktable,
+.gcharttable {
   border-collapse: collapse;
 }
 

@@ -272,6 +272,11 @@ export const GanttChart = function (pDiv, pFormat) {
     var vTaskLeftPx = 0;
     var vTaskRightPx = 0;
     var vTaskWidth = 1;
+
+    var vTaskPlanLeftPx = 0;
+    var vTaskPlanRightPx = 0;
+    var vTaskPlanWidth = 1;
+
     var vNumCols = 0;
     var vNumRows = 0;
     var vSingleCell = false;
@@ -561,6 +566,7 @@ export const GanttChart = function (pDiv, pFormat) {
       vDateRow = vTmpRow;
 
       vTaskLeftPx = (vNumCols * (vColWidth + 1)) + 1;
+      vTaskPlanLeftPx = (vNumCols * (vColWidth + 1)) + 1;
 
       if (this.vUseSingleCell != 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
 
@@ -585,8 +591,25 @@ export const GanttChart = function (pDiv, pFormat) {
         var curTaskEnd = this.vTaskList[i].getEnd();
         if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
 
+
+
         vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat);
         vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat);
+
+        let curTaskPlanStart, curTaskPlanEnd;
+
+        curTaskPlanStart = this.vTaskList[i].getPlanStart();
+        curTaskPlanEnd = this.vTaskList[i].getPlanEnd();
+
+        if (curTaskPlanStart && curTaskPlanEnd) {
+          if ((curTaskPlanEnd.getTime() - (curTaskPlanEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskPlanEnd = new Date(curTaskPlanEnd.getFullYear(), curTaskPlanEnd.getMonth(), curTaskPlanEnd.getDate() + 1, curTaskPlanEnd.getHours(), curTaskPlanEnd.getMinutes(), curTaskPlanEnd.getSeconds()); // add 1 day here to simplify calculations below
+
+          vTaskPlanLeftPx = getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat);
+          vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat);
+        }else {
+          vTaskPlanLeftPx = vTaskPlanRightPx = 0;
+        }
+
 
         vID = this.vTaskList[i].getID();
         var vComb = (this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2);
@@ -665,26 +688,43 @@ export const GanttChart = function (pDiv, pFormat) {
           else {
             vTaskWidth = (vTaskWidth <= 0) ? 1 : vTaskWidth;
 
+
+            /**
+             * DRAW THE BOXES FOR GANTT
+             */
             if (vComb) {
               vTmpDiv = this.vTaskList[i].getParItem().getCellDiv();
             }
             else {
+              // Draw Task Bar which has colored bar div
               vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'glineitem gitem' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
               this.vTaskList[i].setChildRow(vTmpRow);
               addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
               vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
               vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
             }
-            // Draw Task Bar which has colored bar div, and opaque completion div
+
+            // draw the lines for dependecies
             vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
             this.vTaskList[i].setBarDiv(vTmpDiv);
             vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
             this.vTaskList[i].setTaskDiv(vTmpDiv2);
+
+            // PLANNED
+            if (vTaskPlanLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
+              const vTmpPlanDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx - 100);
+              const vTmpDiv3 = this.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+            }
+
+
+            // and opaque completion div
             this.newNode(vTmpDiv2, 'div', this.vDivId + 'complete_' + vID, this.vTaskList[i].getClass() + 'complete', null, this.vTaskList[i].getCompStr());
 
+            // caption
             if (vComb) vTmpItem = this.vTaskList[i].getParItem();
             if (!vComb || (vComb && this.vTaskList[i].getParItem().getEnd() == this.vTaskList[i].getEnd())) vCaptClass = 'gcaption';
 
+            // Background cells
             if (!vSingleCell && !vComb) {
               vCellFormat = '';
               for (j = 0; j < vNumCols - 1; j++) {
@@ -707,8 +747,8 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpDiv, 'div', null, vCaptClass, vCaptionStr, 120, (vCaptClass == 'gmilecaption') ? 12 : 0);
         }
 
+        // Add Task Info div for tooltip
         if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
-          // Add Task Info div for tooltip
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
           vTmpDiv2.appendChild(this.createTaskInfo(this.vTaskList[i]));
           addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);

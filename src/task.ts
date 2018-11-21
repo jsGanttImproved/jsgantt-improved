@@ -144,7 +144,10 @@ export const TaskItemObject = function (object) {
     object.pCaption,
     object.pNotes,
     object.pGantt,
-    object.pCost);
+    object.pCost,
+    object.pPlanStartDate,
+    object.pPlanEndDate
+    );
 }
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, 

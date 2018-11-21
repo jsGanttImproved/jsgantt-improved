@@ -12,7 +12,6 @@ export const parseJSON = function (pFile, pGanttVar) {
   } else {	// IE 5/6
     xhttp = new (<any>window).ActiveXObject('Microsoft.XMLHTTP');
   }
-
   xhttp.open('GET', pFile, false);
   xhttp.send(null);
   let jsonObj = eval('(' + xhttp.response + ')');
