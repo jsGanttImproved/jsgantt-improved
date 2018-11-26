@@ -30,6 +30,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowStartDate = 1;
   this.vShowEndDate = 1;
   this.vShowPlanStartDate = 0;
+  this.vShowPlanEndDate = 0;
   this.vShowCost = 0;
   this.vShowPlanEndDate = 0;
   this.vShowEndWeekDate = 1;
@@ -425,6 +426,8 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
+      if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
+
       // Add some white space so the vertical scroll distance should always be greater
       // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
       this.newNode(vTmpDiv2, 'br');

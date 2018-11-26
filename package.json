@@ -4,6 +4,8 @@
   "description": "jsgantt-improved",
   "main": "dist/index.js",
   "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "build": "tsc",
     "watch": "onchange 'src/**' '*.*' -- npm run build",
     "watch:dist": "onchange 'src/**' '*.ts' -- npm run dist",

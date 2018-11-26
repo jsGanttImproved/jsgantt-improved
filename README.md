@@ -114,6 +114,6 @@ Project based on https://code.google.com/p/jsgantt/.
 ## Want to Collaborate?
 
 Clone this repo, run `npm i` and `npm run demo-full`. This will start a `localhost:8080` with a live  example. 
-Do your change in `src` and restart this command refresh the changes.
+Use `npm run watch` or do your change in `src` and restart this command refresh the changes.
 
 For testing use `npm run test` with e2e tests.

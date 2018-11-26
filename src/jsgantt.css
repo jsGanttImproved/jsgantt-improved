@@ -603,7 +603,7 @@ div.gtaskbarcontainer {
 /* Add a max-height value here if wanted */
 
 .glistgrid {
-  min-width: 532px;
+  min-width: 132px;
   /* LC width */
   float: left;
   /* LC width */
@@ -616,7 +616,7 @@ div.gtaskbarcontainer {
 }
 
 .glistlbl {
-  min-width: 532px;
+  min-width: 132px;
   /* LC width */
   float: left;
   /* LC width */
