@@ -247,7 +247,7 @@ const pt = {
   'planstartdate': 'Plan Data inicial',
   'enddate': 'Data final',
   'planenddate': 'Plan Data final',
-  'cost': 'Cost',
+  'cost': 'Custo',
   'jan': 'Jan',
   'feb': 'Fev',
   'mar': 'Mar',

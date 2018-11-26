@@ -22,9 +22,13 @@ For **Angular** use the component [ng-gantt](https://github.com/mariohmol/ng-gan
 
 ## Example
 
-You can view a live example at 
+Take a look at this Landing Page with docs and live examples:
 
-https://mariohmol.github.io/jsgantt-improved/demo
+* https://jsganttimproved.github.io/jsgantt-improved/landing.html 
+
+You can view a Solo live example at:
+
+https://jsganttimproved.github.io/jsgantt-improved/demo
 
 
 ## Easy to Use
@@ -109,7 +113,7 @@ Project based on https://code.google.com/p/jsgantt/.
 
 ## Want to Collaborate?
 
-Clone this repo and run `npm run demo-full`, this will start a `localhost:8080` with a live  example. 
-Do your change in `src` and restart this command to test.
+Clone this repo, run `npm i` and `npm run demo-full`. This will start a `localhost:8080` with a live  example. 
+Do your change in `src` and restart this command refresh the changes.
 
 For testing use `npm run test` with e2e tests.
