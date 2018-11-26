@@ -4,10 +4,10 @@
 A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images. 
 
 
-![Demo Image](/demo/demo.png)
+![Demo Image](/docs/demo.png)
 
 
-Start using with including the files `jsgantt.js` and `jsgantt.css` that are inside `demo/` folder.
+Start using with including the files `jsgantt.js` and `jsgantt.css` that are inside `docs/` folder.
 
 Or install and use in JS 
 
@@ -24,11 +24,11 @@ For **Angular** use the component [ng-gantt](https://github.com/mariohmol/ng-gan
 
 Take a look at this Landing Page with docs and live examples:
 
-* https://jsganttimproved.github.io/jsgantt-improved
+* https://jsganttimproved.github.io/jsgantt-improved/docs
 
 You can view a Solo live example at:
 
-https://jsganttimproved.github.io/jsgantt-improved/demo.html
+https://jsganttimproved.github.io/jsgantt-improved/docs/demo.html
 
 
 ## Easy to Use
@@ -106,7 +106,7 @@ g.Draw();
 
 ## Documentation
 
-See the [Documentation](./Documentation.md) wiki page or the included ``demo/index.html`` file for instructions on use.
+See the [Documentation](./Documentation.md) wiki page or the included ``docs/index.html`` file for instructions on use.
 
 Project based on https://code.google.com/p/jsgantt/.
 
