@@ -8,7 +8,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
   - npm run dist
-  - cp jsgantt.js demo/ && cp src/jsgantt.css demo/ && cd demo && http-server &  # start a Web server
+  - cp jsgantt.js docs/ && cp src/jsgantt.css docs/ && cd docs && http-server &  # start a Web server
   - sleep 3 # give Web server some time to bind to sockets, etc
 
 before_install:

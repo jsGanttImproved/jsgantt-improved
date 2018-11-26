@@ -24,11 +24,11 @@ For **Angular** use the component [ng-gantt](https://github.com/mariohmol/ng-gan
 
 Take a look at this Landing Page with docs and live examples:
 
-* https://jsganttimproved.github.io/jsgantt-improved/landing.html 
+* https://jsganttimproved.github.io/jsgantt-improved
 
 You can view a Solo live example at:
 
-https://jsganttimproved.github.io/jsgantt-improved/demo
+https://jsganttimproved.github.io/jsgantt-improved/demo.html
 
 
 ## Easy to Use
