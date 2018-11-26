@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
     "build": "tsc",
     "watch": "onchange 'src/**' '*.*' -- npm run build",
     "watch:dist": "onchange 'src/**' '*.ts' -- npm run dist",
@@ -13,7 +12,7 @@
     "test": "node node_modules/.bin/protractor protractor.conf.js",
     "test-unit": "mocha -r ts-node/register test/**.ts",
     "browserify": "browserify dist/index.js --standalone JSGantt > jsgantt.js",
-    "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && cp jsgantt.js dist/ && cp jsgantt.js docs/ && cp src/jsgantt.css demo/ && echo 'DIST finished'",
+    "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && cp jsgantt.js dist/ && cp jsgantt.js docs/ && cp src/jsgantt.css docs/ && echo 'DIST finished'",
     "publish-npm": "npm run dist && npm publish",
     "demo": "nodemon server.js",
     "demo-full": "npm run dist && npm run demo",

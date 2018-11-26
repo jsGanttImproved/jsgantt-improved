@@ -33,6 +33,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vShowStartDate = 1;
     this.vShowEndDate = 1;
     this.vShowPlanStartDate = 0;
+    this.vShowPlanEndDate = 0;
     this.vShowCost = 0;
     this.vShowPlanEndDate = 0;
     this.vShowEndWeekDate = 1;
@@ -245,17 +246,22 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vNewNode.setAttribute(pAttribs[i], pAttribs[i + 1]);
             }
         }
-        // I wish I could do this with setAttribute but older IEs don't play nice
         if (pId)
-            vNewNode.id = pId;
+            vNewNode.id = pId; // I wish I could do this with setAttribute but older IEs don't play nice
         if (pClass)
             vNewNode.className = pClass;
         if (pWidth)
             vNewNode.style.width = (isNaN(pWidth * 1)) ? pWidth : pWidth + 'px';
         if (pLeft)
             vNewNode.style.left = (isNaN(pLeft * 1)) ? pLeft : pLeft + 'px';
-        if (pText)
-            vNewNode.appendChild(document.createTextNode(pText));
+        if (pText) {
+            if (pText.indexOf && pText.indexOf('<') === -1) {
+                vNewNode.appendChild(document.createTextNode(pText));
+            }
+            else {
+                vNewNode.insertAdjacentHTML('beforeend', pText);
+            }
+        }
         if (pDisplay)
             vNewNode.style.display = pDisplay;
         if (pColspan)
@@ -439,6 +445,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
             if (this.vShowPlanEndDate == 1)
                 this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
+            if (this.vShowCost == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
             // Add some white space so the vertical scroll distance should always be greater
             // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
             this.newNode(vTmpDiv2, 'br');
@@ -1491,7 +1499,7 @@ var pt = {
     'planstartdate': 'Plan Data inicial',
     'enddate': 'Data final',
     'planenddate': 'Plan Data final',
-    'cost': 'Cost',
+    'cost': 'Custo',
     'jan': 'Jan',
     'feb': 'Fev',
     'mar': 'Mar',
