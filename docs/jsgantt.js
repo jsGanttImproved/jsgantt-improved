@@ -1987,8 +1987,9 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     if (pCost === void 0) { pCost = null; }
     if (pPlanStart === void 0) { pPlanStart = null; }
     if (pPlanEnd === void 0) { pPlanEnd = null; }
-    var vBenchTime = new Date().getTime();
-    var vID = parseInt(document.createTextNode(pID).data);
+    var vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
+    var _id = document.createTextNode(pID).data;
+    var vID = utils_1.hashKey(document.createTextNode(pID).data);
     var vName = document.createTextNode(pName).data;
     var vStart = null;
     var vEnd = null;
@@ -2003,7 +2004,11 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vComp = parseFloat(document.createTextNode(pComp).data);
     var vCost = parseInt(document.createTextNode(pCost).data);
     var vGroup = parseInt(document.createTextNode(pGroup).data);
-    var vParent = document.createTextNode(pParent).data;
+    var parent = document.createTextNode(pParent).data;
+    if (parent && parent !== '0') {
+        parent = utils_1.hashKey(parent).toString();
+    }
+    var vParent = parent;
     var vOpen = (vGroup == 2) ? 1 : parseInt(document.createTextNode(pOpen).data);
     var vDepend = new Array();
     var vDependType = new Array();
@@ -2019,7 +2024,6 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vNotes;
     var vParItem = null;
     var vCellDiv = null;
-    var vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
     var vBarDiv = null;
     var vTaskDiv = null;
     var vListChildRow = null;
@@ -2051,6 +2055,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         var vDependStr = pDepend + '';
         var vDepList = vDependStr.split(',');
         var n = vDepList.length;
+        var vGantt_1 = pGantt ? pGantt : g;
         for (var k = 0; k < n; k++) {
             if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
                 vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
@@ -2072,9 +2077,13 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
                 vDepend[k] = vDepList[k];
                 vDependType[k] = 'FS';
             }
+            if (vDepend[k]) {
+                vDepend[k] = utils_1.hashKey(vDepend[k]).toString();
+            }
         }
     }
     this.getID = function () { return vID; };
+    this.getOriginalID = function () { return _id; };
     this.getName = function () { return vName; };
     this.getStart = function () {
         if (vStart)
@@ -2100,10 +2109,12 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getClass = function () { return vClass; };
     this.getLink = function () { return vLink; };
     this.getMile = function () { return vMile; };
-    this.getDepend = function () { if (vDepend)
-        return vDepend;
-    else
-        return null; };
+    this.getDepend = function () {
+        if (vDepend)
+            return vDepend;
+        else
+            return null;
+    };
     this.getDepType = function () { if (vDependType)
         return vDependType;
     else
@@ -2812,6 +2823,26 @@ exports.fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
             pTool.style.visibility = 'hidden';
         }
     }
+};
+exports.hashString = function (key) {
+    if (!key) {
+        key = 'default';
+    }
+    key += '';
+    var hash = 5381;
+    for (var i = 0; i < key.length; i++) {
+        if (key.charCodeAt) {
+            // tslint:disable-next-line:no-bitwise
+            hash = (hash << 5) + hash + key.charCodeAt(i);
+        }
+        // tslint:disable-next-line:no-bitwise
+        hash = hash & hash;
+    }
+    // tslint:disable-next-line:no-bitwise
+    return hash >>> 0;
+};
+exports.hashKey = function (key) {
+    return this.hashString(key) % 10000;
 };
 
 },{}],10:[function(require,module,exports){
