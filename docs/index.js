@@ -10,6 +10,9 @@ function start(e) {
     // SET LANG FROM INPUT
     lang = e && e.target ? e.target.value : 'pt';
     delay = document.getElementById('delay').value;
+    vUseSingleCell = document.getElementById('useSingleCell').value;
+
+    
     vShowRes = document.querySelector('#vShowRes:checked') ? 1 : 0;
     vShowCost = document.querySelector('#vShowCost:checked') ? 1 : 0;
     vShowComp = document.querySelector('#vShowComp:checked') ? 1 : 0;
@@ -29,6 +32,7 @@ function start(e) {
       vDayMajorDateDisplayFormat: 'mon yyyy - Week ww',// Set format to display dates in the "Major" header of the "Day" view
       vWeekMinorDateDisplayFormat: 'dd mon', // Set format to display dates in the "Minor" header of the "Week" view
       vLang: lang,
+      vUseSingleCell, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
       vShowRes,
       vShowCost,
       vShowComp,
@@ -39,7 +43,6 @@ function start(e) {
       vShowPlanStartDate,
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
-      vUseSingleCell: 10000, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
       vTooltipDelay: delay,
       vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
     });
