@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class NgPackagedPage {
   navigateTo() {
-    return browser.get('/');
+    return browser.get('/docs/demo.html');
   }
 
   getParagraphText() {

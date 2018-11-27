@@ -62,7 +62,7 @@ JSGantt.parseJSON('./fixes/data.json', g);
 // Or Adding  Manually
 g.AddTaskItemObject({
   "pID": 1,
-  "pName": "Define Chart API",
+  "pName": "Define Chart <strong>API</strong>",
   "pStart": "2017-02-25",
   "pEnd": "2017-03-17",
   "pPlanStart": "2017-04-01",
@@ -91,7 +91,7 @@ g.Draw();
   * Tasks & Collapsible Task Groups
   * Dependencies
   * Task Completion
-  * Task Styling
+  * Task Styling or as HTML tags
   * Milestones
   * Resources
   * Costs
