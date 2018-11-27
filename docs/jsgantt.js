@@ -616,7 +616,6 @@ exports.GanttChart = function (pDiv, pFormat) {
                 var vComb = (this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2);
                 var vCellFormat = '';
                 var vTmpItem = this.vTaskList[i];
-                var vCaptionStr = '';
                 var vCaptClass = null;
                 if (this.vTaskList[i].getMile() && !vComb) {
                     vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
@@ -624,7 +623,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
                     vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
                     vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
-                    vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx - 6);
+                    vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx + vTaskRightPx - 6);
                     this.vTaskList[i].setBarDiv(vTmpDiv);
                     vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, 12);
                     this.vTaskList[i].setTaskDiv(vTmpDiv2);
@@ -729,22 +728,22 @@ exports.GanttChart = function (pDiv, pFormat) {
                     }
                 }
                 if (this.getCaptionType() && vCaptClass !== null) {
-                    var vCaptionStr_1 = void 0;
+                    var vCaptionStr = void 0;
                     switch (this.getCaptionType()) {
                         case 'Caption':
-                            vCaptionStr_1 = vTmpItem.getCaption();
+                            vCaptionStr = vTmpItem.getCaption();
                             break;
                         case 'Resource':
-                            vCaptionStr_1 = vTmpItem.getResource();
+                            vCaptionStr = vTmpItem.getResource();
                             break;
                         case 'Duration':
-                            vCaptionStr_1 = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang]);
+                            vCaptionStr = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang]);
                             break;
                         case 'Complete':
-                            vCaptionStr_1 = vTmpItem.getCompStr();
+                            vCaptionStr = vTmpItem.getCompStr();
                             break;
                     }
-                    this.newNode(vTmpDiv, 'div', null, vCaptClass, vCaptionStr_1, 120, (vCaptClass == 'gmilecaption') ? 12 : 0);
+                    this.newNode(vTmpDiv, 'div', null, vCaptClass, vCaptionStr, 120, (vCaptClass == 'gmilecaption') ? 12 : 0);
                 }
                 // Add Task Info div for tooltip
                 if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {

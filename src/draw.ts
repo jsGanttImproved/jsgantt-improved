@@ -624,7 +624,6 @@ export const GanttChart = function (pDiv, pFormat) {
         var vCellFormat = '';
 
         var vTmpItem = this.vTaskList[i];
-        var vCaptionStr = '';
         var vCaptClass = null;
         if (this.vTaskList[i].getMile() && !vComb) {
           vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
@@ -632,7 +631,8 @@ export const GanttChart = function (pDiv, pFormat) {
           addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
           vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
-          vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx - 6);
+          
+          vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx + vTaskRightPx - 6);
           this.vTaskList[i].setBarDiv(vTmpDiv);
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, 12);
           this.vTaskList[i].setTaskDiv(vTmpDiv2);
