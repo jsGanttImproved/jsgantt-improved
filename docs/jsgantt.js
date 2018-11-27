@@ -2169,7 +2169,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
             }
             var tmpPer = (utils_1.getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
             if (Math.floor(tmpPer) != tmpPer)
-                tmpPer = Math.round(tmpPer * 10) / 10;
+                tmpPer = Math.round(tmpPer);
             switch (vUnits) {
                 case 'hour':
                     vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']);

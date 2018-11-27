@@ -314,7 +314,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
         vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       }
       var tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-      if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer * 10) / 10;
+      if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer);
       switch (vUnits) {
         case 'hour': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']); break;
         case 'day': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']); break;
