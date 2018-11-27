@@ -392,7 +392,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     var task_2 = this_1.vTaskList[i];
                     var vEventClickRow_1 = this_1.vEventClickRow;
                     events_1.addListener('click', function () {
-                        if (this.vEventClickRow && typeof this.vEventClickRow === "function") {
+                        if (vEventClickRow_1 && typeof vEventClickRow_1 === "function") {
                             vEventClickRow_1(task_2);
                         }
                     }, vTmpRow);
