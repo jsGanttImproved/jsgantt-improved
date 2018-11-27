@@ -164,7 +164,7 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
         vDateStr += vYear2Str;
         break;
       case 'qq':
-        vDateStr += 'Q'; // now fall through
+        vDateStr += pL['qtr']; // now fall through
       case 'q':
         vDateStr += Math.floor(pDate.getMonth() / 3) + 1;
         break;
