@@ -2,15 +2,21 @@ import { parseDateFormatStr } from "./utils";
 
 export const includeGetSet = function () {
 
-  this.setOptions = function(options){
+
+  /**
+   * SETTERS 
+   */
+
+
+  this.setOptions = function (options) {
     const keys = Object.keys(options);
-    for(let i=0; i< keys.length; i++){
+    for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const val = options[key];
       let ev;
-      if(val instanceof Array){
+      if (val instanceof Array) {
         ev = `this.set${key.substr(1)}(...val)`;
-      }else{
+      } else {
         ev = `this.set${key.substr(1)}(val)`;
 
       }
@@ -103,6 +109,13 @@ export const includeGetSet = function () {
       for (var vKey in this.vLangs['en']) this.vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : this.vLangs['en'][vKey];
     }
   };
+  this.setEvents = function (pEvents) { this.vEvents = pEvents; };
+  this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
+
+
+  /**
+   * GETTERS
+   */
 
   this.getDivId = function () { return this.vDivId; };
   this.getUseFade = function () { return this.vUseFade; };
@@ -160,4 +173,6 @@ export const includeGetSet = function () {
   this.getTimer = function () { return this.vTimer; };
   this.getTooltipDelay = function () { return this.vTooltipDelay; };
   this.getList = function () { return this.vTaskList; };
+  this.getEventsClickCell = function () { return this.vEvents; };
+  this.getEventClickRow = function () { return this.vEventClickRow; };
 }

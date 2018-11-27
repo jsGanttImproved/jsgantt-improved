@@ -41,6 +41,18 @@ function start(e) {
       vShowEndDate,
       vShowPlanStartDate,
       vShowPlanStartDate,
+      vEvents: {
+        taskname: console.log,
+        res: console.log,
+        dur: console.log,
+        comp: console.log,
+        startdate: console.log,
+        enddate: console.log,
+        planstartdate: console.log,
+        planenddate: console.log,
+        cost: console.log
+      },
+      vEventClickRow: console.log,
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vTooltipDelay: delay,

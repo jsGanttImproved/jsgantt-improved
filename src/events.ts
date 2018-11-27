@@ -147,3 +147,11 @@ export const addScrollListeners = function (pGanttChart) {
   addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
   addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
 };
+
+export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
+  addListener('click', function(){
+    if(vEvents[column] && typeof vEvents[column] === 'function'){
+      vEvents[column](task);
+    }
+  }, vTmpCell); 
+}
