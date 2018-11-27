@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<!-- Head -->
+
+<head>
+  <!-- Meta data -->
+  <meta charset="utf-8">
+  <title>jsGantt Improved</title>
+  <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
+  <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    .row [type=checkbox] {
+      margin-right: 10px
+    }
+
+    .row {
+      width: 100%
+    }
+  </style>
+  <!-- External resources -->
+  <!-- jQuery + Ajax [required by Bootstrap] -->
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <!-- Required by smooth scrolling -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!-- Bootstrap v4.0.0 Alpha -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+    crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
+  <!-- Font Awesome -->
+  <script src="https://use.fontawesome.com/78d1e57168.js"></script>
+  <!-- Google's Code Prettify -->
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
+
+  <!-- jsGanttImproved App -->
+  <link href="jsgantt.css" rel="stylesheet" type="text/css" />
+  <script src="jsgantt.js" type="text/javascript"></script>
+</head>
+
+<!-- Content -->
+
+<body data-spy="scroll" data-target="#my-navbar-nav" style="padding: 30px;">
+
+
+  <div class="row">
+    <h3 class="row">Hide and Show Properties</h3>
+
+    <div class="row">
+      <span>
+        <label for="vShowRes">Responsible</label>
+        <input type="checkbox" id="vShowRes" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowDur">Duration</label>
+        <input type="checkbox" id="vShowDur" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowCost">Cost</label>
+        <input type="checkbox" id="vShowCost" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowComp">Comp</label>
+        <input type="checkbox" id="vShowComp" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowTaskInfoLink">tooltip</label>
+        <input type="checkbox" id="vShowTaskInfoLink" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowEndWeekDate">date for the last day of the week</label>
+        <input type="checkbox" id="vShowEndWeekDate" onchange="start(event)" />
+      </span>
+
+
+
+    </div>
+
+    <span>
+      <label for="vShowStartDate">StartDate</label>
+      <input type="checkbox" id="vShowStartDate" checked onchange="start(event)" />
+    </span>
+
+    <span>
+      <label for="vShowEndDate">EndDate</label>
+      <input type="checkbox" id="vShowEndDate" checked onchange="start(event)" />
+    </span>
+
+    <span>
+      <label for="vShowPlanStartDate">Planned StartDate</label>
+      <input type="checkbox" id="vShowPlanStartDate" checked onchange="start(event)" />
+    </span>
+
+    <span>
+      <label for="vShowPlanEndDate">Planned EndDate</label>
+      <input type="checkbox" id="vShowPlanEndDate" checked onchange="start(event)" />
+    </span>
+  </div>
+
+
+  <br>
+
+  Choose a language:
+  <select id="lang" onchange="start(event)">
+    <option value='pt'>pt</option>
+    <option value='en'>en</option>
+    <option value='ru'>ru</option>
+    <option value='es'>es</option>
+    <option value='fr'>fr</option>
+    <option value='de'>de</option>
+  </select>
+
+  <br />
+  Data getting from a URL, <a href="fixes/data.json">JSON Data</a>
+
+  <br />
+
+  Delay for tooltip to hide (in ms): <input id="delay" onchange="start(event)" value="150" type="number">
+
+  <br />
+  <div id="embedded-Gantt">
+  </div>
+
+</body>
+<script type="text/javascript" src="index.js"></script>
+
+</html>

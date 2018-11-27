@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<!-- Head -->
+
+<head>
+  <!-- Meta data -->
+  <meta charset="utf-8">
+  <title>jsGantt Improved</title>
+  <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
+  <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- External resources -->
+  <!-- jQuery + Ajax [required by Bootstrap] -->
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <!-- Required by smooth scrolling -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!-- Bootstrap v4.0.0 Alpha -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+    crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
+  <!-- Font Awesome -->
+  <script src="https://use.fontawesome.com/78d1e57168.js"></script>
+  <!-- Google's Code Prettify -->
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
+
+  <!-- jsGanttImproved App -->
+  <link href="../jsgantt.css" rel="stylesheet" type="text/css" />
+  <script src="../jsgantt.js" type="text/javascript"></script>
+</head>
+
+<!-- Content -->
+
+<body data-spy="scroll" data-target="#my-navbar-nav" style="padding: 30px;">
+  Choose a language:
+  <select onchange="start(event)">
+    <option value='pt'>pt</option>
+    <option value='en'>en</option>
+    <option value='ru'>ru</option>
+    <option value='es'>es</option>
+    <option value='fr'>fr</option>
+    <option value='de'>de</option>
+  </select>
+
+  <br />
+  Data getting from a URL, <a href="data.json">JSON Data</a>
+
+  <br />
+
+  Delay for tooltip to hide (in ms): <input id="delay" onchange="start()" value="1500" type="number">
+
+  <br />
+  <div id="embedded-Gantt">
+    <script type="text/javascript">
+
+      function start(e) {
+
+
+        var g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
+        if (g.getDivId() != null) {
+          g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+          g.setQuarterColWidth(36);
+          g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
+          g.setDayMajorDateDisplayFormat('mon yyyy - Week ww') // Set format to display dates in the "Major" header of the "Day" view
+          g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
+          g.setShowTaskInfoLink(1); // Show link in tool tip (0/1)
+          g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
+          g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
+          g.setFormatArr('Day', 'Week', 'Month', 'Quarter'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+          // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
+
+          JSGantt.parseJSON('./data.json', g);
+
+
+          // SET LANG FROM INPUT
+          lang = e && e.target ? e.target.value : 'pt';
+          g.setLang(lang);
+
+          //DELAY FROM INPUT
+          delay = document.getElementById('delay').value;
+          g.setTooltipDelay(delay);
+
+          g.Draw();
+
+        } else {
+          alert("Error, unable to create Gantt Chart");
+        }
+      }
+
+      start('pt')
+    </script>
+  </div>
+
+</body>
+
+</html>

@@ -75,7 +75,7 @@
         <div class="row">
           <div class="col-lg-6 text-center">
             <h1 class="display-1 product-name" id="home-title">jsGanttImproved</h1>
-            <h2 class="display-2" id="home-subtitle">latest v1.7.5.4</h2>
+            <h2 class="display-2" id="home-subtitle">latest v2.0.2</h2>
             <a class="btn btn-danger my-2 my-sm-0 mx-1" href="https://api.github.com/repos/jsGanttImproved/jsgantt-improved/zipball">Download</a>
             <a class="btn btn-primary my-2 my-sm-0 mx-1" href="https://github.com/jsGanttImproved/jsgantt-improved" target="_blank">View on GitHub</a>
           </div>
@@ -137,7 +137,7 @@ if (g.getDivId() != null) {
   g.AddTaskItem(new JSGantt.TaskItem(1,   'Define Chart API',     '',           '',          'ggroupblack',  '',                 0, 'Brian',    0,     1,      0,       1,     '',      '',      'Some Notes text', g ));
   g.AddTaskItem(new JSGantt.TaskItem(11,  'Chart Object',         '2017-02-20','2017-02-20', 'gmilestone',   '',                 1, 'Shlomy',   100,   0,      1,       1,     '',      '',      '',      g));
   g.AddTaskItem(new JSGantt.TaskItem(12,  'Task Objects',         '',           '',          'ggroupblack',  '',                 0, 'Shlomy',   40,    1,      1,       1,     '',      '',      '',      g));
-  g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc',     '2017-02-21','2017-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1,     '',      '',      '',      g));
+  g.AddTaskItem(new JSGantt.TaskItem(121, 'Constructor Proc #1234 of February 2017',     '2017-02-21','2017-03-09', 'gtaskblue',    '',                 0, 'Brian T.', 60,    0,      12,      1,     '',      '',      '',      g));
   g.AddTaskItem(new JSGantt.TaskItem(122, 'Task Variables',       '2017-03-06','2017-03-11', 'gtaskred',     '',                 0, 'Brian',    60,    0,      12,      1,     121,     '',      '',      g));
   g.AddTaskItem(new JSGantt.TaskItem(123, 'Task by Minute/Hour',  '2017-03-09','2017-03-14 12:00', 'gtaskyellow', '',            0, 'Ilan',     60,    0,      12,      1,     '',      '',      '',      g));
   g.AddTaskItem(new JSGantt.TaskItem(124, 'Task Functions',       '2017-03-09','2017-03-29', 'gtaskred',     '',                 0, 'Anyone',   60,    0,      12,      1,     '123SS', 'This is a caption', null, g));
@@ -219,7 +219,16 @@ if (g.getDivId() != null) {
         </ul>
         <h2>Changelog:</h3>
         <p>Check the full list of changes on <a href="https://github.com/jsGanttImproved/jsgantt-improved/releases">GitHub releases page</a>.</p>
-        <h3>v1.7.5.4:</h3>
+        <h3>v2.0.2:</h3>
+        <ul>
+          <li>Change the source to use Typescript and organizing in small modules</li>
+          <li>Start/End Dates with Planned and Executed values</li>
+          <li>Now Tasks has Cost value as well, showed in a column</li>
+          <li>Gantt now shows two bars for each task, planned and executed, one is full background and other has transparency</li>
+          <li>Fixing small layout bugs</li>
+        </ul>
+        
+        <h3>v1.8.0:</h3>
         <ul>
           <li>Left part of the chart is now created first on JavaScript and establishes the left floating reference</li>
           <li>Minimum width updated to 632px so that the left part of the chart has a fixed width of 532px and the right part fills out the rest with a minimum of 100px</li>
@@ -1143,6 +1152,18 @@ alert("Error, unable to create Gantt Chart");
               </div>
             </div>
           </div>
+
+          <div class="card contact-card">
+            <img class="img-fluid" src="https://avatars.githubusercontent.com/mariohmol" alt="Mario Mol">
+            <div class="card-block">
+              <h4 class="card-title">Mario Mol</h4>
+              <p class="card-text">Developer</p>
+              <div class="text-right">
+                <a href="https://github.com/mariohmol" class="card-link contact-link"><i class="fa fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+
           <div class="card contact-card">
             <img class="img-fluid" src="https://avatars.githubusercontent.com/RickCardoso" alt="Ricardo Cardoso">
             <div class="card-block">
