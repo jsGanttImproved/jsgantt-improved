@@ -152,7 +152,7 @@ export const TaskItemObject = function (object) {
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null) {
-  
+
   let vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
@@ -368,7 +368,15 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setToDelete = function (pToDelete) { if (pToDelete) vToDelete = true; else vToDelete = false; };
   this.setParItem = function (pParItem) { if (pParItem) vParItem = pParItem; };
   this.setCellDiv = function (pCellDiv) { if (typeof HTMLDivElement !== 'function' || pCellDiv instanceof HTMLDivElement) vCellDiv = pCellDiv; }; //"typeof HTMLDivElement !== 'function'" to play nice with ie6 and 7
-  this.setGroup = function (pGroup) { vGroup = parseInt(document.createTextNode(pGroup).data); };
+  this.setGroup = function (pGroup) {
+    if (pGroup === true || pGroup === 'true') {
+      vGroup = 1;
+    } else if (pGroup === false || pGroup === 'false') {
+      vGroup = 0;
+    } else {
+      vGroup = parseInt(document.createTextNode(pGroup).data);
+    }
+  };
   this.setBarDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vBarDiv = pDiv; };
   this.setTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vTaskDiv = pDiv; };
   this.setChildRow = function (pRow) { if (typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement) vChildRow = pRow; };

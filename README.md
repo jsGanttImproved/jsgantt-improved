@@ -28,8 +28,11 @@ Take a look at this Landing Page with docs and live examples:
 
 You can view a Solo live example at:
 
-https://jsganttimproved.github.io/jsgantt-improved/docs/demo.html
+* https://jsganttimproved.github.io/jsgantt-improved/docs/demo.html
 
+Or use a live coding example at Codenpen:
+
+* https://codepen.io/mariomol/pen/mQzBPV
 
 ## Easy to Use
 
