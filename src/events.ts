@@ -149,9 +149,9 @@ export const addScrollListeners = function (pGanttChart) {
 };
 
 export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
-  addListener('click', function(){
+  addListener('click', function(e){
     if(vEvents[column] && typeof vEvents[column] === 'function'){
-      vEvents[column](task);
+      vEvents[column](task, e, vTmpCell);
     }
   }, vTmpCell); 
 }

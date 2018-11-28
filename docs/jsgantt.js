@@ -402,10 +402,12 @@ exports.GanttChart = function (pDiv, pFormat) {
                         this_1.vTaskList[i].setGroupSpan(vTmpSpan);
                         events_1.addFolderListeners(this_1, vTmpSpan, vID);
                         vTmpDiv.appendChild(document.createTextNode('\u00A0' + this_1.vTaskList[i].getName()));
+                        events_1.addListenerClickCell(vTmpDiv, this_1.vEvents, this_1.vTaskList[i], 'taskname');
                     }
                     else {
                         vCellContents += '\u00A0\u00A0\u00A0\u00A0';
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, vCellContents + this_1.vTaskList[i].getName());
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'taskname');
                     }
                     if (this_1.vShowRes == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gresource');
@@ -1058,9 +1060,9 @@ exports.addScrollListeners = function (pGanttChart) {
     exports.addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
 };
 exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
-    exports.addListener('click', function () {
+    exports.addListener('click', function (e) {
         if (vEvents[column] && typeof vEvents[column] === 'function') {
-            vEvents[column](task);
+            vEvents[column](task, e, vTmpCell);
         }
     }, vTmpCell);
 };
@@ -2290,7 +2292,17 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         vParItem = pParItem; };
     this.setCellDiv = function (pCellDiv) { if (typeof HTMLDivElement !== 'function' || pCellDiv instanceof HTMLDivElement)
         vCellDiv = pCellDiv; }; //"typeof HTMLDivElement !== 'function'" to play nice with ie6 and 7
-    this.setGroup = function (pGroup) { vGroup = parseInt(document.createTextNode(pGroup).data); };
+    this.setGroup = function (pGroup) {
+        if (pGroup === true || pGroup === 'true') {
+            vGroup = 1;
+        }
+        else if (pGroup === false || pGroup === 'false') {
+            vGroup = 0;
+        }
+        else {
+            vGroup = parseInt(document.createTextNode(pGroup).data);
+        }
+    };
     this.setBarDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)
         vBarDiv = pDiv; };
     this.setTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)

@@ -401,10 +401,12 @@ export const GanttChart = function (pDiv, pFormat) {
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
             vTmpDiv.appendChild(document.createTextNode('\u00A0' + this.vTaskList[i].getName()));
+            addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i], 'taskname');
           }
           else {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + this.vTaskList[i].getName());
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'taskname');
           }
 
           if (this.vShowRes == 1) {
