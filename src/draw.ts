@@ -1,5 +1,8 @@
 import * as lang from './lang';
-import { mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners, addFormatListeners, moveToolTip, addFolderListeners } from "./events";
+import {
+  mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners, addFormatListeners, moveToolTip,
+  addFolderListeners, addListenerClickCell, addListener
+} from "./events";
 import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
   getScrollPositions, getMaxDate, getMinDate
@@ -41,7 +44,18 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowTaskInfoEndDate = 1;
   this.vShowTaskInfoNotes = 1;
   this.vShowTaskInfoLink = 0;
-  this.vShowDeps = 1;
+  this.vEventClickRow = 1;
+  this.vEvents = {
+    taskname: null,
+    res: null,
+    dur: null,
+    comp: null,
+    startdate: null,
+    enddate: null,
+    planstartdate: null,
+    planenddate: null,
+    cost: null,
+  };
   this.vShowSelector = new Array('top');
   this.vDateInputFormat = 'yyyy-mm-dd';
   this.vDateTaskTableDisplayFormat = parseDateFormatStr('dd/mm/yyyy');
@@ -369,51 +383,69 @@ export const GanttChart = function (pDiv, pFormat) {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
           }
 
+          const task = this.vTaskList[i];
+          const vEventClickRow = this.vEventClickRow;
+          addListener('click', function () {
+            if (vEventClickRow && typeof vEventClickRow === "function") {
+              vEventClickRow(task);
+            }
+          }, vTmpRow);
+
           if (this.vTaskList[i].getGroup() == 1) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
             var vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
             vTmpDiv.appendChild(document.createTextNode('\u00A0' + this.vTaskList[i].getName()));
+            addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i], 'taskname');
           }
           else {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + this.vTaskList[i].getName());
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'taskname');
           }
 
           if (this.vShowRes == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gresource');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getResource());
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'res');
           }
           if (this.vShowDur == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getDuration(this.vFormat, this.vLangs[this.vLang]));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'dur');
           }
           if (this.vShowComp == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCompStr());
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'comp');
           }
           if (this.vShowStartDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, formatDateStr(this.vTaskList[i].getStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'startdate');
           }
           if (this.vShowEndDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, formatDateStr(this.vTaskList[i].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'enddate');
           }
           if (this.vShowPlanStartDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanstartdate');
             const v = this.vTaskList[i].getPlanStart() ? formatDateStr(this.vTaskList[i].getPlanStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planstartdate');
           }
           if (this.vShowPlanEndDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanenddate');
             const v = this.vTaskList[i].getPlanEnd() ? formatDateStr(this.vTaskList[i].getPlanEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planenddate');
           }
           if (this.vShowCost == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gcost');
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCost());
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'costdate');
           }
           vNumRows++;
         }
@@ -624,7 +656,6 @@ export const GanttChart = function (pDiv, pFormat) {
         var vCellFormat = '';
 
         var vTmpItem = this.vTaskList[i];
-        var vCaptionStr = '';
         var vCaptClass = null;
         if (this.vTaskList[i].getMile() && !vComb) {
           vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
@@ -632,7 +663,8 @@ export const GanttChart = function (pDiv, pFormat) {
           addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
           vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
-          vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx - 6);
+          vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx + vTaskRightPx - 6);
+
           this.vTaskList[i].setBarDiv(vTmpDiv);
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, 12);
           this.vTaskList[i].setTaskDiv(vTmpDiv2);

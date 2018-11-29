@@ -164,7 +164,7 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
         vDateStr += vYear2Str;
         break;
       case 'qq':
-        vDateStr += 'Q'; // now fall through
+        vDateStr += pL['qtr']; // now fall through
       case 'q':
         vDateStr += Math.floor(pDate.getMonth() / 3) + 1;
         break;
@@ -414,3 +414,26 @@ export const fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
     }
   }
 };
+
+
+export const hashString = function (key) {
+  if (!key) {
+    key = 'default';
+  }
+  key += '';
+  let hash = 5381;
+  for (let i = 0; i < key.length; i++) {
+    if (key.charCodeAt) {
+      // tslint:disable-next-line:no-bitwise
+      hash = (hash << 5) + hash + key.charCodeAt(i);
+    }
+    // tslint:disable-next-line:no-bitwise
+    hash = hash & hash;
+  }
+  // tslint:disable-next-line:no-bitwise
+  return hash >>> 0;
+}
+
+export const hashKey = function (key) {
+  return this.hashString(key) % 10000;
+}

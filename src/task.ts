@@ -1,4 +1,4 @@
-import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr } from "./utils";
+import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr, hashKey } from "./utils";
 
 declare var g: any;
 
@@ -152,8 +152,9 @@ export const TaskItemObject = function (object) {
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null) {
-  let vBenchTime = new Date().getTime();
-  let vID = parseInt(document.createTextNode(pID).data);
+  let vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
+  let _id = document.createTextNode(pID).data;
+  let vID = hashKey(document.createTextNode(pID).data);
   let vName = document.createTextNode(pName).data;
   let vStart = null;
   let vEnd = null;
@@ -168,7 +169,14 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vComp = parseFloat(document.createTextNode(pComp).data);
   let vCost = parseInt(document.createTextNode(pCost).data)
   let vGroup = parseInt(document.createTextNode(pGroup).data);
-  let vParent = document.createTextNode(pParent).data;
+
+  let parent = document.createTextNode(pParent).data;
+  if (parent && parent !== '0') {
+    parent = hashKey(parent).toString();
+  }
+
+  let vParent = parent;
+
   let vOpen = (vGroup == 2) ? 1 : parseInt(document.createTextNode(pOpen).data);
   let vDepend = new Array();
   let vDependType = new Array();
@@ -184,7 +192,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vNotes;
   let vParItem = null;
   let vCellDiv = null;
-  let vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
   let vBarDiv = null;
   let vTaskDiv = null;
   let vListChildRow = null;
@@ -224,6 +231,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     var vDepList = vDependStr.split(',');
     var n = vDepList.length;
 
+    let vGantt = pGantt ? pGantt : g;
+
     for (var k = 0; k < n; k++) {
       if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
         vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
@@ -245,10 +254,18 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
         vDepend[k] = vDepList[k];
         vDependType[k] = 'FS';
       }
+
+      if (vDepend[k]) {
+        vDepend[k] = hashKey(vDepend[k]).toString();
+      }
     }
   }
 
+
+
   this.getID = function () { return vID; };
+  this.getOriginalID = function () { return _id; };
+
   this.getName = function () { return vName; };
   this.getStart = function () {
     if (vStart) return vStart;
@@ -268,7 +285,9 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getClass = function () { return vClass; };
   this.getLink = function () { return vLink; };
   this.getMile = function () { return vMile; };
-  this.getDepend = function () { if (vDepend) return vDepend; else return null; };
+  this.getDepend = function () {
+    if (vDepend) return vDepend; else return null;
+  };
   this.getDepType = function () { if (vDependType) return vDependType; else return null; };
   this.getCaption = function () { if (vCaption) return vCaption; else return ''; };
   this.getResource = function () { if (vRes) return vRes; else return '\u00A0'; };
@@ -299,7 +318,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
         vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       }
       var tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-      if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer * 10) / 10;
+      if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer);
       switch (vUnits) {
         case 'hour': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']); break;
         case 'day': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']); break;
@@ -353,7 +372,15 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setToDelete = function (pToDelete) { if (pToDelete) vToDelete = true; else vToDelete = false; };
   this.setParItem = function (pParItem) { if (pParItem) vParItem = pParItem; };
   this.setCellDiv = function (pCellDiv) { if (typeof HTMLDivElement !== 'function' || pCellDiv instanceof HTMLDivElement) vCellDiv = pCellDiv; }; //"typeof HTMLDivElement !== 'function'" to play nice with ie6 and 7
-  this.setGroup = function (pGroup) { vGroup = parseInt(document.createTextNode(pGroup).data); };
+  this.setGroup = function (pGroup) {
+    if (pGroup === true || pGroup === 'true') {
+      vGroup = 1;
+    } else if (pGroup === false || pGroup === 'false') {
+      vGroup = 0;
+    } else {
+      vGroup = parseInt(document.createTextNode(pGroup).data);
+    }
+  };
   this.setBarDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vBarDiv = pDiv; };
   this.setTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vTaskDiv = pDiv; };
   this.setChildRow = function (pRow) { if (typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement) vChildRow = pRow; };
