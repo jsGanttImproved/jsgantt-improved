@@ -45,7 +45,6 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowTaskInfoNotes = 1;
   this.vShowTaskInfoLink = 0;
   this.vEventClickRow = 1;
-
   this.vEvents = {
     taskname: null,
     res: null,
@@ -57,7 +56,6 @@ export const GanttChart = function (pDiv, pFormat) {
     planenddate: null,
     cost: null,
   };
-
   this.vShowSelector = new Array('top');
   this.vDateInputFormat = 'yyyy-mm-dd';
   this.vDateTaskTableDisplayFormat = parseDateFormatStr('dd/mm/yyyy');
@@ -385,7 +383,6 @@ export const GanttChart = function (pDiv, pFormat) {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
           }
 
-
           const task = this.vTaskList[i];
           const vEventClickRow = this.vEventClickRow;
           addListener('click', function () {
@@ -393,7 +390,6 @@ export const GanttChart = function (pDiv, pFormat) {
               vEventClickRow(task);
             }
           }, vTmpRow);
-
 
           if (this.vTaskList[i].getGroup() == 1) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
@@ -667,8 +663,8 @@ export const GanttChart = function (pDiv, pFormat) {
           addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
           vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
-
           vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx + vTaskRightPx - 6);
+
           this.vTaskList[i].setBarDiv(vTmpDiv);
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, 12);
           this.vTaskList[i].setTaskDiv(vTmpDiv2);

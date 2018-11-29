@@ -152,7 +152,6 @@ export const TaskItemObject = function (object) {
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null) {
-
   let vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
@@ -177,6 +176,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   }
 
   let vParent = parent;
+
   let vOpen = (vGroup == 2) ? 1 : parseInt(document.createTextNode(pOpen).data);
   let vDepend = new Array();
   let vDependType = new Array();
@@ -230,7 +230,9 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     var vDependStr = pDepend + '';
     var vDepList = vDependStr.split(',');
     var n = vDepList.length;
+
     let vGantt = pGantt ? pGantt : g;
+
     for (var k = 0; k < n; k++) {
       if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
         vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
@@ -252,6 +254,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
         vDepend[k] = vDepList[k];
         vDependType[k] = 'FS';
       }
+
       if (vDepend[k]) {
         vDepend[k] = hashKey(vDepend[k]).toString();
       }
@@ -262,6 +265,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
 
   this.getID = function () { return vID; };
   this.getOriginalID = function () { return _id; };
+
   this.getName = function () { return vName; };
   this.getStart = function () {
     if (vStart) return vStart;

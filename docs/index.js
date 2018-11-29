@@ -10,9 +10,8 @@ function start(e) {
     // SET LANG FROM INPUT
     lang = e && e.target ? e.target.value : 'pt';
     delay = document.getElementById('delay').value;
+ 
     vUseSingleCell = document.getElementById('useSingleCell').value;
-
-    
     vShowRes = document.querySelector('#vShowRes:checked') ? 1 : 0;
     vShowCost = document.querySelector('#vShowCost:checked') ? 1 : 0;
     vShowComp = document.querySelector('#vShowComp:checked') ? 1 : 0;

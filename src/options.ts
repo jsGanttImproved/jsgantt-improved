@@ -6,8 +6,6 @@ export const includeGetSet = function () {
   /**
    * SETTERS 
    */
-
-
   this.setOptions = function (options) {
     const keys = Object.keys(options);
     for (let i = 0; i < keys.length; i++) {
@@ -23,7 +21,6 @@ export const includeGetSet = function () {
       eval(ev);
     }
   }
-
   this.setUseFade = function (pVal) { this.vUseFade = pVal; };
   this.setUseMove = function (pVal) { this.vUseMove = pVal; };
   this.setUseRowHlt = function (pVal) { this.vUseRowHlt = pVal; };
@@ -116,7 +113,6 @@ export const includeGetSet = function () {
   /**
    * GETTERS
    */
-
   this.getDivId = function () { return this.vDivId; };
   this.getUseFade = function () { return this.vUseFade; };
   this.getUseMove = function () { return this.vUseMove; };
