@@ -19,6 +19,7 @@ before_install:
 
 install:
   - npm install
+  - ./node_modules/protractor/bin/webdriver-manager update --versions.chrome 2.35
   - webdriver-manager update
   - node node_modules/protractor/bin/webdriver-manager update
   - node_modules/protractor/bin/webdriver-manager update
