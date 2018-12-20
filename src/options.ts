@@ -108,7 +108,7 @@ export const includeGetSet = function () {
   };
   this.setEvents = function (pEvents) { this.vEvents = pEvents; };
   this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
-
+  this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
 
   /**
    * GETTERS
@@ -171,4 +171,5 @@ export const includeGetSet = function () {
   this.getList = function () { return this.vTaskList; };
   this.getEventsClickCell = function () { return this.vEvents; };
   this.getEventClickRow = function () { return this.vEventClickRow; };
+  this.getAdditionalHeaders = function () { return this.vAdditionalHeaders; };
 }

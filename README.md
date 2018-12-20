@@ -56,8 +56,17 @@ g.setOptions({
   vLang: 'en',
   vShowTaskInfoLink: 1, // Show link in tool tip (0/1)
   vShowEndWeekDate: 0,  // Show/Hide the date for the last day of the week in header for daily
+  vAdditionalHeaders: { // Add data columns to your table
+      category: {
+        title: 'Category'
+      },
+      sector: {
+        title: 'Sector'
+      }
+    },
   vUseSingleCell: 10000, // Set the threshold cell per table row (Helps performance for large data.
-  vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+  vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers,
+  
 });
 
 // Load from a Json url
@@ -65,24 +74,26 @@ JSGantt.parseJSON('./fixes/data.json', g);
 
 // Or Adding  Manually
 g.AddTaskItemObject({
-  "pID": 1,
-  "pName": "Define Chart <strong>API</strong>",
-  "pStart": "2017-02-25",
-  "pEnd": "2017-03-17",
-  "pPlanStart": "2017-04-01",
-  "pPlanEnd": "2017-04-15 12:00",
-  "pClass": "ggroupblack",
-  "pLink": "",
-  "pMile": 0,
-  "pRes": "Brian",
-  "pComp": 0,
-  "pGroup": 1,
-  "pParent": 0,
-  "pOpen": 1,
-  "pDepend": "",
-  "pCaption": "",
-  "pCost": 1000,
-  "pNotes": "Some Notes text"
+  pID: 1,
+  pName: "Define Chart <strong>API</strong>",
+  pStart: "2017-02-25",
+  pEnd: "2017-03-17",
+  pPlanStart: "2017-04-01",
+  pPlanEnd: "2017-04-15 12:00",
+  pClass: "ggroupblack",
+  pLink: "",
+  pMile: 0,
+  pRes: "Brian",
+  pComp: 0,
+  pGroup: 1,
+  pParent: 0,
+  pOpen: 1,
+  pDepend: "",
+  pCaption: "",
+  pCost: 1000,
+  pNotes: "Some Notes text",
+  category: "My Category",
+  sector: "Finance"
 });
 
 g.Draw();
@@ -95,6 +106,7 @@ g.Draw();
   * Tasks & Collapsible Task Groups
   * Dependencies
   * Task Completion
+  * Table with Additional Columns
   * Task Styling or as HTML tags
   * Milestones
   * Resources
@@ -103,7 +115,7 @@ g.Draw();
   * Gantt with Planned vs Executed
   * Dynamic Loading of Tasks
   * Dynamic change of format: Hour, Day, Week, Month, Quarter
-  * Load Gantt from XML and JSON
+  * Load Gantt from JSON and XML
     * From external files (including experimental support for MS Project XML files)
     * From JavaScript Strings
   * Support for Internationalization 

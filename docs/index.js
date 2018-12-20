@@ -23,6 +23,14 @@ function start(e) {
     vShowTaskInfoLink = document.querySelector('#vShowTaskInfoLink:checked') ? 1 : 0;
     vShowEndWeekDate = document.querySelector('#vShowEndWeekDate:checked') ? 1 : 0;
 
+    vAdditionalHeaders = {
+      category: {
+        title: 'Category'
+      },
+      sector: {
+        title: 'Sector'
+      }
+    }
 
     g.setOptions({
       vCaptionType: 'Complete',  // Set to Show Caption : None,Caption,Resource,Duration,Complete,            
@@ -40,6 +48,7 @@ function start(e) {
       vShowEndDate,
       vShowPlanStartDate,
       vShowPlanStartDate,
+      vAdditionalHeaders,
       vEvents: {
         taskname: console.log,
         res: console.log,

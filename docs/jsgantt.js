@@ -56,6 +56,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         planenddate: null,
         cost: null,
     };
+    this.vAdditionalHeaders = {};
     this.vShowSelector = new Array('top');
     this.vDateInputFormat = 'yyyy-mm-dd';
     this.vDateTaskTableDisplayFormat = utils_1.parseDateFormatStr('dd/mm/yyyy');
@@ -347,6 +348,13 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
             if (this.vShowCost == 1)
                 this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
+            if (this.vAdditionalHeaders) {
+                for (var key in this.vAdditionalHeaders) {
+                    var header = this.vAdditionalHeaders[key];
+                    var css = header.class ? header.class : "gadditional-" + key;
+                    this.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
+                }
+            }
             vTmpRow = this.newNode(vTmpTBody, 'tr');
             this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
             this.newNode(vTmpRow, 'td', null, 'gtaskname', '\u00A0');
@@ -366,6 +374,14 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', this.vLangs[this.vLang]['planenddate']);
             if (this.vShowCost == 1)
                 this.newNode(vTmpRow, 'td', null, 'gtaskheading gcost', this.vLangs[this.vLang]['cost']);
+            if (this.vAdditionalHeaders) {
+                for (var key in this.vAdditionalHeaders) {
+                    var header = this.vAdditionalHeaders[key];
+                    var text = header.translate ? this.vLangs[this.vLang][header.translate] : header.title;
+                    var css = header.class ? header.class : "gadditional-" + key;
+                    this.newNode(vTmpRow, 'td', null, "gtaskheading gadditional " + css, text);
+                }
+            }
             var vLeftTable = document.createDocumentFragment();
             var vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
             this.setListBody(vTmpDiv2);
@@ -451,6 +467,16 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, this_1.vTaskList[i].getCost());
                         events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'costdate');
                     }
+                    if (this_1.vAdditionalHeaders) {
+                        for (var key in this_1.vAdditionalHeaders) {
+                            var header = this_1.vAdditionalHeaders[key];
+                            var css = header.class ? header.class : "gadditional-" + key;
+                            var data = this_1.vTaskList[i].getDataObject();
+                            if (data)
+                                vTmpCell = this_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
+                            vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
+                        }
+                    }
                     vNumRows++;
                 }
             };
@@ -479,6 +505,13 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
             if (this.vShowCost == 1)
                 this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
+            if (this.vAdditionalHeaders) {
+                for (var key in this.vAdditionalHeaders) {
+                    var header = this.vAdditionalHeaders[key];
+                    var css = header.class ? header.class : "gadditional-" + key;
+                    this.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
+                }
+            }
             // Add some white space so the vertical scroll distance should always be greater
             // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
             this.newNode(vTmpDiv2, 'br');
@@ -1203,6 +1236,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
             var caption = '';
             var notes = '';
             var cost = void 0;
+            var additionalObject = {};
             for (var prop in pJsonObj[index]) {
                 var property = prop;
                 var value = pJsonObj[index][property];
@@ -1279,10 +1313,12 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                     case 'cost':
                         cost = value;
                         break;
+                    default:
+                        additionalObject[property.toLowerCase()] = value;
                 }
             }
             //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend));
+            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, additionalObject));
             //}
         }
     }
@@ -1909,6 +1945,7 @@ exports.includeGetSet = function () {
     };
     this.setEvents = function (pEvents) { this.vEvents = pEvents; };
     this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
+    this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
     /**
      * GETTERS
      */
@@ -1970,6 +2007,7 @@ exports.includeGetSet = function () {
     this.getList = function () { return this.vTaskList; };
     this.getEventsClickCell = function () { return this.vEvents; };
     this.getEventClickRow = function () { return this.vEventClickRow; };
+    this.getAdditionalHeaders = function () { return this.vAdditionalHeaders; };
 };
 
 },{"./utils":9}],8:[function(require,module,exports){
@@ -2104,10 +2142,11 @@ exports.sortTasks = function (pList, pID, pIdx) {
 exports.TaskItemObject = function (object) {
     return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd);
 };
-exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd) {
+exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDataObject) {
     if (pCost === void 0) { pCost = null; }
     if (pPlanStart === void 0) { pPlanStart = null; }
     if (pPlanEnd === void 0) { pPlanEnd = null; }
+    if (pDataObject === void 0) { pDataObject = null; }
     var vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
     var _id = document.createTextNode(pID).data;
     var vID = utils_1.hashKey(document.createTextNode(pID).data);
@@ -2125,6 +2164,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vComp = parseFloat(document.createTextNode(pComp).data);
     var vCost = parseInt(document.createTextNode(pCost).data);
     var vGroup = parseInt(document.createTextNode(pGroup).data);
+    var vDataObject = pDataObject;
     var parent = document.createTextNode(pParent).data;
     if (parent && parent !== '0') {
         parent = utils_1.hashKey(parent).toString();
@@ -2236,6 +2276,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         else
             return null;
     };
+    this.getDataObject = function () { return vDataObject; };
     this.getDepType = function () { if (vDependType)
         return vDependType;
     else
@@ -2248,12 +2289,6 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         return vRes;
     else
         return '\u00A0'; };
-    this.getCost = function () {
-        if (vCost)
-            return vCost;
-        else
-            return 0;
-    };
     this.getCompVal = function () { if (vComp)
         return vComp;
     else
@@ -2331,6 +2366,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getListChildRow = function () { return vListChildRow; };
     this.getGroupSpan = function () { return vGroupSpan; };
     this.setCost = function (pCost) { vCost = pCost; };
+    this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
     this.setStart = function (pStart) { if (pStart instanceof Date)
         vStart = pStart; };
     this.setEnd = function (pEnd) { if (pEnd instanceof Date)
