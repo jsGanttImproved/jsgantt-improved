@@ -1,83 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="no-js">
+
+<!-- Head -->
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>JS Brasil</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="../js-brasil.js"></script>
-  <!-- <script src="https://rawgit.com/mariohmol/js-brasil/master/js-brasil.js"></script> -->
-  <script>
-    window.onload = () => {
-      /*
-      MASK
-      */
-      document.querySelector('#maskcep').innerHTML = jsbrasil.maskBr.cep('30380740');
-      document.querySelector('#masktelefone9').innerHTML = jsbrasil.maskBr.telefone('31988886565');
-      document.querySelector('#masktelefone').innerHTML = jsbrasil.maskBr.telefone('3135003500');
-
-      /*
-     VALIDATE
-     */
-      document.querySelector('#validatecep').innerHTML = jsbrasil.validateBr.cep('30.380-740');
-
-      /*
-     FAKER
-     */
-      document.querySelector('#fakercep').innerHTML = jsbrasil.fakerBr.cep();
-      document.querySelector('#fakercep').innerHTML = jsbrasil.fakerBr.cep();
-
-
-      document.querySelector('#fakercep').innerHTML = jsbrasil.fakerBr.cep();
-      document.querySelector('#fakercnpj').innerHTML = jsbrasil.fakerBr.cnpj();
-      document.querySelector('#fakercpf').innerHTML = jsbrasil.fakerBr.cpf();
-      // document.querySelector('#fakercurrency').innerHTML = jsbrasil.fakerBr.currency();
-      document.querySelector('#fakerinscricaoestadual').innerHTML = jsbrasil.fakerBr.inscricaoestadual();
-      document.querySelector('#fakerpercentage').innerHTML = jsbrasil.fakerBr.percentage();
-      document.querySelector('#fakerrg').innerHTML = jsbrasil.fakerBr.rg();
-      document.querySelector('#fakerplaca').innerHTML = jsbrasil.fakerBr.placa();
-      document.querySelector('#fakertelefone').innerHTML = jsbrasil.fakerBr.telefone();
-      document.querySelector('#fakertime').innerHTML = jsbrasil.fakerBr.time();
-      document.querySelector('#fakertitulo').innerHTML = jsbrasil.fakerBr.titulo();
-
-
+  <!-- Meta data -->
+  <meta charset="utf-8">
+  <title>jsGantt Improved</title>
+  <meta name="description" content="FREE javascript gantt - jsGantt Improved HTML, CSS and AJAX only">
+  <meta name="keywords" content="jsgantt-improved free javascript gantt-chart html css ajax">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    .row [type=checkbox] {
+      margin-right: 10px
     }
 
-  </script>
+    .row {
+      width: 100%
+    }
+  </style>
+  <!-- External resources -->
+  <!-- jQuery + Ajax [required by Bootstrap] -->
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <!-- Required by smooth scrolling -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!-- Bootstrap v4.0.0 Alpha -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+    crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
+  <!-- Font Awesome -->
+  <script src="https://use.fontawesome.com/78d1e57168.js"></script>
+  <!-- Google's Code Prettify -->
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
+
+  <!-- jsGanttImproved App -->
+  <link href="jsgantt.css" rel="stylesheet" type="text/css" />
+  <script src="jsgantt.js" type="text/javascript"></script>
 </head>
 
-<body>
+<!-- Content -->
 
-  <h1>JS Brasil</h1>
-
-  <h2>Mask</h2>
-
-  <p>CEP: <span id="maskcep"></span></p>
-  <p>TELEFONE: <span id="masktelefone"></span></p>
-  <p>TELEFONE 9 Digito: <span id="masktelefone9"></span></p>
+<body data-spy="scroll" data-target="#my-navbar-nav" style="padding: 30px;">
 
 
-  <h2>Validation</h2>
+  <div class="row">
+    <h3 class="row">Hide and Show Properties</h3>
 
-  <p>CEP: <span id="validatecep"></span></p>
+    <div class="row">
+      <span>
+        <label for="vShowRes">Responsible</label>
+        <input type="checkbox" id="vShowRes" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowDur">Duration</label>
+        <input type="checkbox" id="vShowDur" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowCost">Cost</label>
+        <input type="checkbox" id="vShowCost" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowComp">Comp</label>
+        <input type="checkbox" id="vShowComp" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowTaskInfoLink">tooltip</label>
+        <input type="checkbox" id="vShowTaskInfoLink" checked onchange="start(event)" />
+      </span>
+
+      <span>
+        <label for="vShowEndWeekDate">date for the last day of the week</label>
+        <input type="checkbox" id="vShowEndWeekDate" onchange="start(event)" />
+      </span>
 
 
-  <h2>Faker</h2>
 
-  <p>CEP: <span id="fakercep"></span></p>
-  <p>cnpj: <span id="fakercnpj"></span></p>
-  <p>cpf: <span id="fakercpf"></span></p>
-  <p>rg: <span id="fakerrg"></span></p>
-  <p>currency: <span id="fakercurrency"></span></p>
-  <p>percentage: <span id="fakerpercentage"></span></p>
-  <p>placa: <span id="fakerplaca"></span></p>
-  <p>titulo: <span id="fakertitulo"></span></p>
-  <p>time: <span id="fakertime"></span></p>
-  <p>telefone: <span id="fakertelefone"></span></p>
-  <p>inscricaoestadual: <span id="fakerinscricaoestadual"></span></p>
-  <p>CEP: <span id="fakercep"></span></p>
+    </div>
+
+    <span>
+      <label for="vShowStartDate">StartDate</label>
+      <input type="checkbox" id="vShowStartDate" checked onchange="start(event)" />
+    </span>
+
+    <span>
+      <label for="vShowEndDate">EndDate</label>
+      <input type="checkbox" id="vShowEndDate" checked onchange="start(event)" />
+    </span>
+
+    <span>
+      <label for="vShowPlanStartDate">Planned StartDate</label>
+      <input type="checkbox" id="vShowPlanStartDate" checked onchange="start(event)" />
+    </span>
+
+    <span>
+      <label for="vShowPlanEndDate">Planned EndDate</label>
+      <input type="checkbox" id="vShowPlanEndDate" checked onchange="start(event)" />
+    </span>
+  </div>
+
+
+  <br>
+
+  Choose a language:
+  <select id="lang" onchange="start(event)">
+    <option value='pt'>pt</option>
+    <option value='en'>en</option>
+    <option value='ru'>ru</option>
+    <option value='es'>es</option>
+    <option value='fr'>fr</option>
+    <option value='de'>de</option>
+  </select>
+
+  <br />
+  Data getting from a URL, <a href="fixes/data.json">JSON Data</a>
+
+  <br />
+
+  Delay for tooltip to hide (in ms): <input id="delay" onchange="start(event)" value="150" type="number">
+
+  UseSingleCell: <input id="useSingleCell" onchange="start(event)" value="1000" type="number">
+
+  <br />
+  * Click events in table are binded to console.log for testing
+
+  <br />
+  <div id="embedded-Gantt">
+  </div>
 
 </body>
+<script type="text/javascript" src="index.js"></script>
 
 </html>
