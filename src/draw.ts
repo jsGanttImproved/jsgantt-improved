@@ -55,6 +55,7 @@ export const GanttChart = function (pDiv, pFormat) {
     planenddate: null,
     cost: null,
   };
+  this.vAdditionalHeaders = {};
   this.vShowSelector = new Array('top');
   this.vDateInputFormat = 'yyyy-mm-dd';
   this.vDateTaskTableDisplayFormat = parseDateFormatStr('dd/mm/yyyy');
@@ -345,6 +346,13 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
+      if(this.vAdditionalHeaders){
+        for(const key in this.vAdditionalHeaders){
+          const header = this.vAdditionalHeaders[key];
+          const css = header.class ? header.class : `gadditional-${key}`;
+          this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
+        }
+      }
 
       vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -357,6 +365,14 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanstartdate', this.vLangs[this.vLang]['planstartdate']);
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', this.vLangs[this.vLang]['planenddate']);
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gcost', this.vLangs[this.vLang]['cost']);
+      if(this.vAdditionalHeaders){
+        for(const key in this.vAdditionalHeaders){
+          const header = this.vAdditionalHeaders[key];
+          const text = header.translate ? this.vLangs[this.vLang][header.translate] : header.title; 
+          const css = header.class ? header.class : `gadditional-${key}`;
+          this.newNode(vTmpRow, 'td', null, `gtaskheading gadditional ${css}`, text);
+        }
+      }
 
       var vLeftTable = document.createDocumentFragment();
       var vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
@@ -446,6 +462,16 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCost());
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'costdate');
           }
+          if(this.vAdditionalHeaders){
+            for(const key in this.vAdditionalHeaders){
+              const header = this.vAdditionalHeaders[key];
+              const css = header.class ? header.class : `gadditional-${key}`;
+              const data = this.vTaskList[i].getDataObject();
+              if(data)
+              vTmpCell = this.newNode(vTmpRow, 'td', null,`gadditional ${css}`);
+              vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key]: '' );
+            }
+          }
           vNumRows++;
         }
       }
@@ -463,6 +489,13 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
+      if(this.vAdditionalHeaders){
+        for(const key in this.vAdditionalHeaders){
+          const header = this.vAdditionalHeaders[key];
+          const css = header.class ? header.class : `gadditional-${key}`;
+          this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
+        }
+      }
 
       // Add some white space so the vertical scroll distance should always be greater
       // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)

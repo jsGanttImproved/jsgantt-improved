@@ -151,7 +151,7 @@ export const TaskItemObject = function (object) {
 }
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
-  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null) {
+  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDataObject = null) {
   let vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
@@ -169,6 +169,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vComp = parseFloat(document.createTextNode(pComp).data);
   let vCost = parseInt(document.createTextNode(pCost).data)
   let vGroup = parseInt(document.createTextNode(pGroup).data);
+  let vDataObject = pDataObject;
 
   let parent = document.createTextNode(pParent).data;
   if (parent && parent !== '0') {
@@ -197,7 +198,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vListChildRow = null;
   let vChildRow = null;
   let vGroupSpan = null;
-
 
   vNotes = document.createElement('span');
   vNotes.className = 'gTaskNotes';
@@ -288,13 +288,11 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getDepend = function () {
     if (vDepend) return vDepend; else return null;
   };
+  this.getDataObject = function () { return vDataObject; };
+
   this.getDepType = function () { if (vDependType) return vDependType; else return null; };
   this.getCaption = function () { if (vCaption) return vCaption; else return ''; };
   this.getResource = function () { if (vRes) return vRes; else return '\u00A0'; };
-  this.getCost = function () {
-    if (vCost) return vCost;
-    else return 0;
-  };
   this.getCompVal = function () { if (vComp) return vComp; else return 0; };
   this.getCompStr = function () { if (vComp) return vComp + '%'; else return ''; };
   this.getNotes = function () { return vNotes; };
@@ -349,6 +347,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getListChildRow = function () { return vListChildRow; };
   this.getGroupSpan = function () { return vGroupSpan; };
   this.setCost = function (pCost) { vCost = pCost; };
+  this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
   this.setStart = function (pStart) { if (pStart instanceof Date) vStart = pStart; };
   this.setEnd = function (pEnd) { if (pEnd instanceof Date) vEnd = pEnd; };
   this.setPlanStart = function (pPlanStart) { if (pPlanStart instanceof Date) vPlanStart = pPlanStart; };

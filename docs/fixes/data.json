@@ -16,7 +16,9 @@
     "pOpen": 1,
     "pDepend": "",
     "pCaption": "",
-    "pNotes": "Some Notes text"
+    "pNotes": "Some Notes text",
+    "category": "Planning",
+    "sector": "CMO"
   },
   {
     "pID": 11,
@@ -33,7 +35,9 @@
     "pOpen": 1,
     "pDepend": "",
     "pCaption": "",
-    "pNotes": ""
+    "pNotes": "",
+    "category": "Executive",
+    "sector": "CEO"
   },
   {
     "pID": 12,
