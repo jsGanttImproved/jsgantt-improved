@@ -109,7 +109,7 @@ export const includeGetSet = function () {
   this.setEvents = function (pEvents) { this.vEvents = pEvents; };
   this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
   this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
-
+  this.setDebug = function(debug) {this.vDebug = debug;}
   /**
    * GETTERS
    */

@@ -5,7 +5,7 @@ import { TaskItem } from "./task";
  * @param pFile 
  * @param pGanttVar 
  */
-export const parseJSON = function (pFile, pGanttVar) {
+export const parseJSON = function (pFile, pGanttVar, vDebug = false) {
   let xhttp;
   if ((<any>window).XMLHttpRequest) {
     xhttp = new XMLHttpRequest();
@@ -14,9 +14,25 @@ export const parseJSON = function (pFile, pGanttVar) {
   }
   xhttp.open('GET', pFile, false);
   xhttp.send(null);
-  let jsonObj = eval('(' + xhttp.response + ')');
+  
+
+  let bd;
+  if (vDebug) {
+    bd = new Date();
+    console.log('before jsonparse', bd);
+  }
+  let jsonObj = JSON.parse(xhttp.response);
+  if (vDebug) {
+    const ad = new Date();
+    console.log('after jsonparse', ad, (ad.getTime() - bd.getTime()));
+    bd = new Date();
+  }
 
   addJSONTask(pGanttVar, jsonObj);
+  if (this.vDebug) {
+    const ad = new Date();
+    console.log('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
+  }
 };
 
 export const parseJSONString = function (pStr, pGanttVar) {

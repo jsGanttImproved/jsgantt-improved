@@ -57,6 +57,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         cost: null,
     };
     this.vAdditionalHeaders = {};
+    this.vDebug = false;
     this.vShowSelector = new Array('top');
     this.vDateInputFormat = 'yyyy-mm-dd';
     this.vDateTaskTableDisplayFormat = utils_1.parseDateFormatStr('dd/mm/yyyy');
@@ -210,7 +211,8 @@ exports.GanttChart = function (pDiv, pFormat) {
         vTmpDiv.style.width = '0px';
         vTmpDiv.style.height = '0px';
     };
-    this.DrawDependencies = function () {
+    this.DrawDependencies = function (vDebug) {
+        if (vDebug === void 0) { vDebug = false; }
         if (this.getShowDeps() == 1) {
             //First recalculate the x,y
             this.CalcTaskXY();
@@ -225,6 +227,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                         var vTask = this.getArrayLocationByID(vDepend[k]);
                         if (vTask >= 0 && vList[vTask].getGroup() != 2) {
                             if (vList[vTask].getVisible() == 1) {
+                                if (vDebug)
+                                    console.log("init drawDependency", new Date());
                                 if (vDependType[k] == 'SS')
                                     this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', 'gDepSS');
                                 else if (vDependType[k] == 'FF')
@@ -304,10 +308,15 @@ exports.GanttChart = function (pDiv, pFormat) {
         // var vGroup;
         // var vTaskDiv;
         // var vParDiv;
+        var bd;
+        if (this.vDebug) {
+            bd = new Date();
+            console.log('before draw', bd);
+        }
         if (this.vTaskList.length > 0) {
             // Process all tasks, reset parent date and completion % if task list has altered
             if (this.vProcessNeeded)
-                task_1.processRows(this.vTaskList, 0, -1, 1, 1, this.getUseSort());
+                task_1.processRows(this.vTaskList, 0, -1, 1, 1, this.getUseSort(), this.vDebug);
             this.vProcessNeeded = false;
             // get overall min/max dates plus padding
             vMinDate = utils_1.getMinDate(this.vTaskList, this.vFormat);
@@ -658,6 +667,11 @@ exports.GanttChart = function (pDiv, pFormat) {
             // Draw each row
             var i = 0;
             var j = 0;
+            var bd_1;
+            if (this.vDebug) {
+                bd_1 = new Date();
+                console.log('before tasks loop', bd_1);
+            }
             for (i = 0; i < this.vTaskList.length; i++) {
                 var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
                 var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
@@ -817,6 +831,10 @@ exports.GanttChart = function (pDiv, pFormat) {
                     events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);
                 }
             }
+            if (this.vDebug) {
+                var ad = new Date();
+                console.log('after tasks loop', ad, (ad.getTime() - bd_1.getTime()));
+            }
             if (!vSingleCell)
                 vTmpTBody.appendChild(vDateRow.cloneNode(true));
             while (this.vDiv.hasChildNodes())
@@ -858,7 +876,20 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.vTodayPx = utils_1.getOffset(vMinDate, new Date(), vColWidth, this.vFormat);
             else
                 this.vTodayPx = -1;
+            var bdd = void 0;
+            if (this.vDebug) {
+                bdd = new Date();
+                console.log('before DrawDependencies', bdd);
+            }
             this.DrawDependencies();
+            if (this.vDebug) {
+                var ad = new Date();
+                console.log('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
+            }
+        }
+        if (this.vDebug) {
+            var ad = new Date();
+            console.log('after draw', ad, (ad.getTime() - bd.getTime()));
         }
     }; //this.draw
     this.drawSelector = function (pPos) {
@@ -1199,7 +1230,8 @@ var task_1 = require("./task");
  * @param pFile
  * @param pGanttVar
  */
-exports.parseJSON = function (pFile, pGanttVar) {
+exports.parseJSON = function (pFile, pGanttVar, vDebug) {
+    if (vDebug === void 0) { vDebug = false; }
     var xhttp;
     if (window.XMLHttpRequest) {
         xhttp = new XMLHttpRequest();
@@ -1209,8 +1241,22 @@ exports.parseJSON = function (pFile, pGanttVar) {
     }
     xhttp.open('GET', pFile, false);
     xhttp.send(null);
-    var jsonObj = eval('(' + xhttp.response + ')');
+    var bd;
+    if (vDebug) {
+        bd = new Date();
+        console.log('before jsonparse', bd);
+    }
+    var jsonObj = JSON.parse(xhttp.response);
+    if (vDebug) {
+        var ad = new Date();
+        console.log('after jsonparse', ad, (ad.getTime() - bd.getTime()));
+        bd = new Date();
+    }
     exports.addJSONTask(pGanttVar, jsonObj);
+    if (this.vDebug) {
+        var ad = new Date();
+        console.log('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
+    }
 };
 exports.parseJSONString = function (pStr, pGanttVar) {
     exports.addJSONTask(pGanttVar, eval('(' + pStr + ')'));
@@ -1946,6 +1992,7 @@ exports.includeGetSet = function () {
     this.setEvents = function (pEvents) { this.vEvents = pEvents; };
     this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
     this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
+    this.setDebug = function (debug) { this.vDebug = debug; };
     /**
      * GETTERS
      */
@@ -2039,7 +2086,16 @@ exports.folder = function (pID, ganttObj) {
             }
         }
     }
-    ganttObj.DrawDependencies();
+    var bd;
+    if (this.vDebug) {
+        bd = new Date();
+        console.log('after drawDependency', bd);
+    }
+    ganttObj.DrawDependencies(this.vDebug);
+    if (this.vDebug) {
+        var ad = new Date();
+        console.log('after drawDependency', ad, (ad.getTime() - bd.getTime()));
+    }
 };
 exports.hide = function (pID, ganttObj) {
     var vList = ganttObj.getList();
@@ -2245,6 +2301,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     }
     this.getID = function () { return vID; };
     this.getOriginalID = function () { return _id; };
+    this.getGantt = function () { return vGantt; };
     this.getName = function () { return vName; };
     this.getStart = function () {
         if (vStart)
@@ -2494,7 +2551,8 @@ exports.RemoveTaskItem = function (pID) {
     this.vProcessNeeded = true;
 };
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
-exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
+exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebug) {
+    if (vDebug === void 0) { vDebug = false; }
     var vMinDate = new Date();
     var vMaxDate = new Date();
     var vVisible = pOpen;
@@ -2562,7 +2620,16 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
         pList[pRow].setCompVal(Math.ceil(vCompSum / vWeight));
     }
     if (pID == 0 && pUseSort == 1) {
+        var bd = void 0;
+        if (vDebug) {
+            bd = new Date();
+            console.log('before afterTasks', bd);
+        }
         exports.sortTasks(pList, 0, 0);
+        if (vDebug) {
+            var ad = new Date();
+            console.log('after afterTasks', ad, (ad.getTime() - bd.getTime()));
+        }
         pList.sort(function (a, b) { return a.getSortIdx() - b.getSortIdx(); });
     }
     if (pID == 0 && pUseSort != 1) // Need to sort combined tasks regardless
@@ -2570,7 +2637,16 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
         for (i = 0; i < pList.length; i++) {
             if (pList[i].getGroup() == 2) {
                 vComb = true;
+                var bd = void 0;
+                if (vDebug) {
+                    bd = new Date();
+                    console.log('before sortTasks', bd);
+                }
                 exports.sortTasks(pList, pList[i].getID(), pList[i].getSortIdx() + 1);
+                if (vDebug) {
+                    var ad = new Date();
+                    console.log('after sortTasks', ad, (ad.getTime() - bd.getTime()));
+                }
             }
         }
         if (vComb == true)

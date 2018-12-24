@@ -31,7 +31,16 @@ export const folder = function (pID, ganttObj) {
       }
     }
   }
-  ganttObj.DrawDependencies();
+  let bd;
+  if (this.vDebug) {
+    bd = new Date();
+    console.log('after drawDependency', bd);
+  }
+  ganttObj.DrawDependencies(this.vDebug);
+  if (this.vDebug) {
+    const ad = new Date();
+    console.log('after drawDependency', ad, (ad.getTime() - bd.getTime()));
+  }
 };
 
 export const hide = function (pID, ganttObj) {
@@ -265,7 +274,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
 
   this.getID = function () { return vID; };
   this.getOriginalID = function () { return _id; };
-
+  this.getGantt = function () { return vGantt; }
   this.getName = function () { return vName; };
   this.getStart = function () {
     if (vStart) return vStart;
@@ -464,7 +473,7 @@ export const RemoveTaskItem = function (pID) {
 
 
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
-export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) {
+export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebug = false) {
   var vMinDate = new Date();
   var vMaxDate = new Date();
   var vVisible = pOpen;
@@ -540,7 +549,16 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) 
   }
 
   if (pID == 0 && pUseSort == 1) {
+    let bd;
+    if (vDebug) {
+      bd = new Date();
+      console.log('before afterTasks', bd);
+    }
     sortTasks(pList, 0, 0);
+    if (vDebug) {
+      const ad = new Date();
+      console.log('after afterTasks', ad, (ad.getTime() - bd.getTime()));
+    }
     pList.sort(function (a, b) { return a.getSortIdx() - b.getSortIdx(); });
   }
   if (pID == 0 && pUseSort != 1) // Need to sort combined tasks regardless
@@ -548,7 +566,16 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort) 
     for (i = 0; i < pList.length; i++) {
       if (pList[i].getGroup() == 2) {
         vComb = true;
+        let bd;
+        if (vDebug) {
+          bd = new Date();
+          console.log('before sortTasks', bd);
+        }
         sortTasks(pList, pList[i].getID(), pList[i].getSortIdx() + 1);
+        if (vDebug) {
+          const ad = new Date();
+          console.log('after sortTasks', ad, (ad.getTime() - bd.getTime()));
+        }
       }
     }
     if (vComb == true) pList.sort(function (a, b) { return a.getSortIdx() - b.getSortIdx(); });
