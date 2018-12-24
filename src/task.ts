@@ -1,15 +1,15 @@
 import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr, hashKey } from "./utils";
 
-declare var g: any;
+declare let g: any;
 
 // Function to open/close and hide/show children of specified task
 export const folder = function (pID, ganttObj) {
-  var vList = ganttObj.getList();
-  var vDivId = ganttObj.getDivId();
+  let vList = ganttObj.getList();
+  let vDivId = ganttObj.getDivId();
 
   ganttObj.clearDependencies(); // clear these first so slow rendering doesn't look odd
 
-  for (var i = 0; i < vList.length; i++) {
+  for (let i = 0; i < vList.length; i++) {
     if (vList[i].getID() == pID) {
       if (vList[i].getOpen() == 1) {
         vList[i].setOpen(0);
@@ -44,11 +44,11 @@ export const folder = function (pID, ganttObj) {
 };
 
 export const hide = function (pID, ganttObj) {
-  var vList = ganttObj.getList();
-  var vID = 0;
-  var vDivId = ganttObj.getDivId();
+  let vList = ganttObj.getList();
+  let vID = 0;
+  let vDivId = ganttObj.getDivId();
 
-  for (var i = 0; i < vList.length; i++) {
+  for (let i = 0; i < vList.length; i++) {
     if (vList[i].getParent() == pID) {
       vID = vList[i].getID();
       // it's unlikely but if the task list has been updated since
@@ -63,12 +63,12 @@ export const hide = function (pID, ganttObj) {
 
 // Function to show children of specified task
 export const show = function (pID, pTop, ganttObj) {
-  var vList = ganttObj.getList();
-  var vID = 0;
-  var vDivId = ganttObj.getDivId();
-  var vState = '';
+  let vList = ganttObj.getList();
+  let vID = 0;
+  let vDivId = ganttObj.getDivId();
+  let vState = '';
 
-  for (var i = 0; i < vList.length; i++) {
+  for (let i = 0; i < vList.length; i++) {
     if (vList[i].getParent() == pID) {
       if (vList[i].getParItem().getGroupSpan()) {
         if (isIE()) vState = vList[i].getParItem().getGroupSpan().innerText;
@@ -78,9 +78,9 @@ export const show = function (pID, pTop, ganttObj) {
     }
   }
 
-  for (i = 0; i < vList.length; i++) {
+  for (let i = 0; i < vList.length; i++) {
     if (vList[i].getParent() == pID) {
-      var vChgState = false;
+      let vChgState = false;
       vID = vList[i].getID();
 
       if (pTop == 1 && vState == '+') vChgState = true;
@@ -99,33 +99,33 @@ export const show = function (pID, pTop, ganttObj) {
 
 // function to open window to display task link
 export const taskLink = function (pRef, pWidth, pHeight) {
+  let vWidth, vHeight;
+  if (pWidth) vWidth = pWidth; else vWidth = 400;
+  if (pHeight) vHeight = pHeight; else vHeight = 400;
 
-  if (pWidth) var vWidth = pWidth; else vWidth = 400;
-  if (pHeight) var vHeight = pHeight; else vHeight = 400;
-
-  var OpenWindow = window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth);
+  let OpenWindow = window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth);
 };
 
 
 export const sortTasks = function (pList, pID, pIdx) {
-  var sortIdx = pIdx;
-  var sortArr = new Array();
+  let sortIdx = pIdx;
+  let sortArr = new Array();
 
-  for (var i = 0; i < pList.length; i++) {
+  for (let i = 0; i < pList.length; i++) {
     if (pList[i].getParent() == pID) sortArr.push(pList[i]);
   }
 
   if (sortArr.length > 0) {
     sortArr.sort(function (a, b) {
-      var i = a.getStart().getTime() - b.getStart().getTime();
+      let i = a.getStart().getTime() - b.getStart().getTime();
       if (i == 0) i = a.getEnd().getTime() - b.getEnd().getTime();
       if (i == 0) return a.getID() - b.getID();
       else return i;
     });
   }
 
-  for (var j = 0; j < sortArr.length; j++) {
-    for (i = 0; i < pList.length; i++) {
+  for (let j = 0; j < sortArr.length; j++) {
+    for (let i = 0; i < pList.length; i++) {
       if (pList[i].getID() == sortArr[j].getID()) {
         pList[i].setSortIdx(sortIdx++);
         sortIdx = sortTasks(pList, pList[i].getID(), sortIdx);
@@ -236,13 +236,13 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   }
 
   if (pDepend != null) {
-    var vDependStr = pDepend + '';
-    var vDepList = vDependStr.split(',');
-    var n = vDepList.length;
+    let vDependStr = pDepend + '';
+    let vDepList = vDependStr.split(',');
+    let n = vDepList.length;
 
     let vGantt = pGantt ? pGantt : g;
 
-    for (var k = 0; k < n; k++) {
+    for (let k = 0; k < n; k++) {
       if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
         vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
         vDependType[k] = 'SS';
@@ -312,8 +312,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       vDuration = '-';
     }
     else {
-      var vTaskEnd = new Date(this.getEnd().getTime());
-      var vUnits = null;
+      let vTaskEnd = new Date(this.getEnd().getTime());
+      let vUnits = null;
       switch (pFormat) {
         case 'week': vUnits = 'day'; break;
         case 'month': vUnits = 'week'; break;
@@ -324,7 +324,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
         vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       }
-      var tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
+      let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
       if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer);
       switch (vUnits) {
         case 'hour': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']); break;
@@ -413,9 +413,9 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
 
 
 export const createTaskInfo = function (pTask) {
-  var vTmpDiv;
-  var vTaskInfoBox = document.createDocumentFragment();
-  var vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
+  let vTmpDiv;
+  let vTaskInfoBox = document.createDocumentFragment();
+  let vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
   this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
   if (this.vShowTaskInfoStartDate == 1) {
     vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
@@ -444,7 +444,7 @@ export const createTaskInfo = function (pTask) {
   }
   if (this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
     vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
-    var vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
+    let vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
     vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', this.vLangs[this.vLang]['moreinfo']);
     vTmpNode.setAttribute('href', pTask.getLink());
   }
@@ -459,8 +459,8 @@ export const createTaskInfo = function (pTask) {
 
 
 export const AddTaskItem = function (value) {
-  var vExists = false;
-  for (var i = 0; i < this.vTaskList.length; i++) {
+  let vExists = false;
+  for (let i = 0; i < this.vTaskList.length; i++) {
     if (this.vTaskList[i].getID() == value.getID()) {
       i = this.vTaskList.length;
       vExists = true;
@@ -478,7 +478,7 @@ export const AddTaskItemObject = function (object) {
 
 export const RemoveTaskItem = function (pID) {
   // simply mark the task for removal at this point - actually remove it next time we re-draw the chart
-  for (var i = 0; i < this.vTaskList.length; i++) {
+  for (let i = 0; i < this.vTaskList.length; i++) {
     if (this.vTaskList[i].getID() == pID) this.vTaskList[i].setToDelete(true);
     else if (this.vTaskList[i].getParent() == pID) this.RemoveTaskItem(this.vTaskList[i].getID());
   }
@@ -489,19 +489,19 @@ export const RemoveTaskItem = function (pID) {
 
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
 export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebug = false) {
-  var vMinDate = new Date();
-  var vMaxDate = new Date();
-  var vVisible = pOpen;
-  var vCurItem = null;
-  var vCompSum = 0;
-  var vMinSet = 0;
-  var vMaxSet = 0;
-  var vNumKid = 0;
-  var vWeight = 0;
-  var vLevel = pLevel;
-  var vList = pList;
-  var vComb = false;
-  var i = 0;
+  let vMinDate = new Date();
+  let vMaxDate = new Date();
+  let vVisible = pOpen;
+  let vCurItem = null;
+  let vCompSum = 0;
+  let vMinSet = 0;
+  let vMaxSet = 0;
+  let vNumKid = 0;
+  let vWeight = 0;
+  let vLevel = pLevel;
+  let vList = pList;
+  let vComb = false;
+  let i = 0;
 
   for (i = 0; i < pList.length; i++) {
     if (pList[i].getToDelete()) {

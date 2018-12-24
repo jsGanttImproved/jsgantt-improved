@@ -306,21 +306,12 @@ exports.GanttChart = function (pDiv, pFormat) {
         var vTaskWidth = 1;
         var vTaskPlanLeftPx = 0;
         var vTaskPlanRightPx = 0;
-        var vTaskPlanWidth = 1;
         var vNumCols = 0;
         var vNumRows = 0;
         var vSingleCell = false;
         var vID = 0;
-        // var vMainTable = '';
         var vDateRow = null;
-        // var vFirstCellItemRowStr = '';
-        // var vItemRowStr = '';
         var vColWidth = 0;
-        // var vColUnit = 0;
-        // var vChild;
-        // var vGroup;
-        // var vTaskDiv;
-        // var vParDiv;
         var bd;
         if (this.vDebug) {
             bd = new Date();
@@ -409,124 +400,125 @@ exports.GanttChart = function (pDiv, pFormat) {
             this.setListBody(vTmpDiv2);
             vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
             vTmpTBody = this.newNode(vTmpTab, 'tbody');
-            var _loop_1 = function () {
-                if (this_1.vTaskList[i].getGroup() == 1)
+            var _loop_1 = function (i_1) {
+                var vBGColor = void 0;
+                if (this_1.vTaskList[i_1].getGroup() == 1)
                     vBGColor = 'ggroupitem';
                 else
                     vBGColor = 'glineitem';
-                vID = this_1.vTaskList[i].getID();
-                if ((!(this_1.vTaskList[i].getParItem() && this_1.vTaskList[i].getParItem().getGroup() == 2)) || this_1.vTaskList[i].getGroup() == 2) {
-                    if (this_1.vTaskList[i].getVisible() == 0)
+                vID = this_1.vTaskList[i_1].getID();
+                if ((!(this_1.vTaskList[i_1].getParItem() && this_1.vTaskList[i_1].getParItem().getGroup() == 2)) || this_1.vTaskList[i_1].getGroup() == 2) {
+                    if (this_1.vTaskList[i_1].getVisible() == 0)
                         vTmpRow = this_1.newNode(vTmpTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
                     else
                         vTmpRow = this_1.newNode(vTmpTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor);
-                    this_1.vTaskList[i].setListChildRow(vTmpRow);
+                    this_1.vTaskList[i_1].setListChildRow(vTmpRow);
                     this_1.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
                     vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gtaskname');
-                    vCellContents = '';
-                    for (j = 1; j < this_1.vTaskList[i].getLevel(); j++) {
+                    var vCellContents = '';
+                    for (var j_1 = 1; j_1 < this_1.vTaskList[i_1].getLevel(); j_1++) {
                         vCellContents += '\u00A0\u00A0\u00A0\u00A0';
                     }
-                    var task_2 = this_1.vTaskList[i];
+                    var task_2 = this_1.vTaskList[i_1];
                     var vEventClickRow_1 = this_1.vEventClickRow;
                     events_1.addListener('click', function () {
                         if (vEventClickRow_1 && typeof vEventClickRow_1 === "function") {
                             vEventClickRow_1(task_2);
                         }
                     }, vTmpRow);
-                    if (this_1.vTaskList[i].getGroup() == 1) {
+                    if (this_1.vTaskList[i_1].getGroup() == 1) {
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, vCellContents);
-                        vTmpSpan = this_1.newNode(vTmpDiv, 'span', this_1.vDivId + 'group_' + vID, 'gfoldercollapse', (this_1.vTaskList[i].getOpen() == 1) ? '-' : '+');
-                        this_1.vTaskList[i].setGroupSpan(vTmpSpan);
+                        var vTmpSpan = this_1.newNode(vTmpDiv, 'span', this_1.vDivId + 'group_' + vID, 'gfoldercollapse', (this_1.vTaskList[i_1].getOpen() == 1) ? '-' : '+');
+                        this_1.vTaskList[i_1].setGroupSpan(vTmpSpan);
                         events_1.addFolderListeners(this_1, vTmpSpan, vID);
-                        vTmpDiv.appendChild(document.createTextNode('\u00A0' + this_1.vTaskList[i].getName()));
+                        vTmpDiv.appendChild(document.createTextNode('\u00A0' + this_1.vTaskList[i_1].getName()));
                         // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
                         // vTmpDiv.appendChild(document.createNode(text));
                         var callback = function (task, e) { return task.setName(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'taskname', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpDiv, this_1.vEvents, this_1.vTaskList[i], 'taskname');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'taskname', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpDiv, this_1.vEvents, this_1.vTaskList[i_1], 'taskname');
                     }
                     else {
                         vCellContents += '\u00A0\u00A0\u00A0\u00A0';
-                        var text = makeInput(this_1.vTaskList[i].getName(), this_1.vEditable, 'text');
+                        var text = makeInput(this_1.vTaskList[i_1].getName(), this_1.vEditable, 'text');
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, vCellContents + text);
                         var callback = function (task, e) { return task.setName(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'taskname', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'taskname');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'taskname', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'taskname');
                     }
                     if (this_1.vShowRes == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gresource');
-                        var text = makeInput(this_1.vTaskList[i].getResource(), this_1.vEditable, 'resource', this_1.vTaskList[i].getResource(), this_1.vResources);
+                        var text = makeInput(this_1.vTaskList[i_1].getResource(), this_1.vEditable, 'resource', this_1.vTaskList[i_1].getResource(), this_1.vResources);
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setResource(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'res', this_1.Draw.bind(this_1), 'change');
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'res');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'res', this_1.Draw.bind(this_1), 'change');
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'res');
                     }
                     if (this_1.vShowDur == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gduration');
-                        var text = makeInput(this_1.vTaskList[i].getDuration(this_1.vFormat, this_1.vLangs[this_1.vLang]), this_1.vEditable, 'text', this_1.vTaskList[i].getDuration());
+                        var text = makeInput(this_1.vTaskList[i_1].getDuration(this_1.vFormat, this_1.vLangs[this_1.vLang]), this_1.vEditable, 'text', this_1.vTaskList[i_1].getDuration());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setDur(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'dur', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'dur');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'dur', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'dur');
                     }
                     if (this_1.vShowComp == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gpccomplete');
-                        var text = makeInput(this_1.vTaskList[i].getCompStr(), this_1.vEditable, 'percentage', this_1.vTaskList[i].getCompVal());
+                        var text = makeInput(this_1.vTaskList[i_1].getCompStr(), this_1.vEditable, 'percentage', this_1.vTaskList[i_1].getCompVal());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setCompVal(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'comp', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'comp');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'comp', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'comp');
                     }
                     if (this_1.vShowStartDate == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gstartdate');
-                        var v = utils_1.formatDateStr(this_1.vTaskList[i].getStart(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]);
-                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i].getStart());
+                        var v = utils_1.formatDateStr(this_1.vTaskList[i_1].getStart(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]);
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getStart());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setStart(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'start', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'start');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'start', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'start');
                     }
                     if (this_1.vShowEndDate == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'genddate');
-                        var v = utils_1.formatDateStr(this_1.vTaskList[i].getEnd(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]);
-                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i].getEnd());
+                        var v = utils_1.formatDateStr(this_1.vTaskList[i_1].getEnd(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]);
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getEnd());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setEnd(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'end', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'end');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'end', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'end');
                     }
                     if (this_1.vShowPlanStartDate == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gplanstartdate');
-                        var v = this_1.vTaskList[i].getPlanStart() ? utils_1.formatDateStr(this_1.vTaskList[i].getPlanStart(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]) : '';
-                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i].getPlanStart());
+                        var v = this_1.vTaskList[i_1].getPlanStart() ? utils_1.formatDateStr(this_1.vTaskList[i_1].getPlanStart(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]) : '';
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getPlanStart());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setPlanStart(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'planstart', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'planstart');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'planstart', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'planstart');
                     }
                     if (this_1.vShowPlanEndDate == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gplanenddate');
-                        var v = this_1.vTaskList[i].getPlanEnd() ? utils_1.formatDateStr(this_1.vTaskList[i].getPlanEnd(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]) : '';
-                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i].getPlanEnd());
+                        var v = this_1.vTaskList[i_1].getPlanEnd() ? utils_1.formatDateStr(this_1.vTaskList[i_1].getPlanEnd(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]) : '';
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getPlanEnd());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setPlanEnd(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'planend', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'planend');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'planend', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'planend');
                     }
                     if (this_1.vShowCost == 1) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gcost');
-                        var text = makeInput(this_1.vTaskList[i].getCost(), this_1.vEditable, 'cost');
+                        var text = makeInput(this_1.vTaskList[i_1].getCost(), this_1.vEditable, 'cost');
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setCost(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i], 'cost', this_1.Draw.bind(this_1));
-                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i], 'cost');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'cost', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'cost');
                     }
                     if (this_1.vAdditionalHeaders) {
                         for (var key in this_1.vAdditionalHeaders) {
                             var header = this_1.vAdditionalHeaders[key];
                             var css = header.class ? header.class : "gadditional-" + key;
-                            var data = this_1.vTaskList[i].getDataObject();
+                            var data = this_1.vTaskList[i_1].getDataObject();
                             if (data) {
                                 vTmpCell = this_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
                             }
@@ -538,9 +530,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                     vNumRows++;
                 }
             };
-            var this_1 = this, vBGColor, vCellContents, vTmpSpan;
-            for (i = 0; i < this.vTaskList.length; i++) {
-                _loop_1();
+            var this_1 = this;
+            for (var i_1 = 0; i_1 < this.vTaskList.length; i_1++) {
+                _loop_1(i_1);
             }
             // DRAW the date format selector at bottom left.
             vTmpRow = this.newNode(vTmpTBody, 'tr');
@@ -593,7 +585,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             // Major Date Header
             while (vTmpDate.getTime() <= vMaxDate.getTime()) {
                 var vHeaderCellClass = 'gmajorheading';
-                vCellContents = '';
+                var vCellContents = '';
                 if (this.vFormat == 'day') {
                     vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, 7);
                     vCellContents += utils_1.formatDateStr(vTmpDate, this.vDayMajorDateDisplayFormat, this.vLangs[this.vLang]);
@@ -643,7 +635,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vTmpDate.setHours(vMinDate.getHours());
             vNumCols = 0;
             while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-                vHeaderCellClass = 'gminorheading';
+                var vHeaderCellClass = 'gminorheading';
                 var vCellClass = 'gtaskcell';
                 if (this.vFormat == 'day') {
                     if (vTmpDate.getDay() % 6 == 0) {
@@ -687,8 +679,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpDate.setDate(vTmpDate.getDate() + 1);
                 }
                 else if (this.vFormat == 'hour') {
-                    for (i = vTmpDate.getHours(); i < 24; i++) {
-                        vTmpDate.setHours(i); //works around daylight savings but may look a little odd on days where the clock goes forward
+                    for (var i_2 = vTmpDate.getHours(); i_2 < 24; i_2++) {
+                        vTmpDate.setHours(i_2); //works around daylight savings but may look a little odd on days where the clock goes forward
                         if (vTmpDate <= vMaxDate) {
                             vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
                             this.newNode(vTmpCell, 'div', null, null, utils_1.formatDateStr(vTmpDate, this.vHourMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
@@ -898,7 +890,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             vTmpDiv2.style.visibility = 'hidden';
             this.setLines(vTmpDiv2);
             /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
-                  var tmpGenSrc=document.createElement('textarea');
+                  let tmpGenSrc=document.createElement('textarea');
                   tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
                   vDiv.appendChild(tmpGenSrc);
             //*/
@@ -1356,7 +1348,7 @@ var task_1 = require("./task");
 /**
  *
  * @param pFile
- * @param pGanttVar
+ * @param pGanttlet
  */
 exports.parseJSON = function (pFile, pGanttVar, vDebug) {
     if (vDebug === void 0) { vDebug = false; }
@@ -2270,7 +2262,7 @@ exports.show = function (pID, pTop, ganttObj) {
             i = vList.length;
         }
     }
-    for (i = 0; i < vList.length; i++) {
+    for (var i = 0; i < vList.length; i++) {
         if (vList[i].getParent() == pID) {
             var vChgState = false;
             vID = vList[i].getID();
@@ -2294,12 +2286,13 @@ exports.show = function (pID, pTop, ganttObj) {
 };
 // function to open window to display task link
 exports.taskLink = function (pRef, pWidth, pHeight) {
+    var vWidth, vHeight;
     if (pWidth)
-        var vWidth = pWidth;
+        vWidth = pWidth;
     else
         vWidth = 400;
     if (pHeight)
-        var vHeight = pHeight;
+        vHeight = pHeight;
     else
         vHeight = 400;
     var OpenWindow = window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth);
@@ -2323,7 +2316,7 @@ exports.sortTasks = function (pList, pID, pIdx) {
         });
     }
     for (var j = 0; j < sortArr.length; j++) {
-        for (i = 0; i < pList.length; i++) {
+        for (var i = 0; i < pList.length; i++) {
             if (pList[i].getID() == sortArr[j].getID()) {
                 pList[i].setSortIdx(sortIdx++);
                 sortIdx = exports.sortTasks(pList, pList[i].getID(), sortIdx);
@@ -3147,6 +3140,7 @@ exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
     var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
     var vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
+    var vPosTmpDate;
     if (pFormat == 'day') {
         vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + DAY_CELL_MARGIN_WIDTH) - 1);
     }
@@ -3155,16 +3149,16 @@ exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     }
     else if (pFormat == 'month') {
         var vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
-        var vPosTmpDate = new Date(curTaskEnd.getTime());
+        vPosTmpDate = new Date(curTaskEnd.getTime());
         vPosTmpDate.setDate(curTaskStart.getDate());
         var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
         vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + MONTH_CELL_MARGIN_WIDTH)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
     }
     else if (pFormat == 'quarter') {
-        vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
+        var vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
         vPosTmpDate = new Date(curTaskEnd.getTime());
         vPosTmpDate.setDate(curTaskStart.getDate());
-        vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
+        var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
         vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + QUARTER_CELL_MARGIN_WIDTH) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
     }
     else if (pFormat == 'hour') {
@@ -3250,8 +3244,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var task_1 = require("./task");
 var utils_1 = require("./utils");
 exports.parseXML = function (pFile, pGanttVar) {
+    var xhttp;
     if (window.XMLHttpRequest) {
-        var xhttp = new window.XMLHttpRequest();
+        xhttp = new window.XMLHttpRequest();
     }
     else { // IE 5/6
         xhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
@@ -3262,8 +3257,9 @@ exports.parseXML = function (pFile, pGanttVar) {
     exports.AddXMLTask(pGanttVar, xmlDoc);
 };
 exports.parseXMLString = function (pStr, pGanttVar) {
+    var xmlDoc;
     if (typeof window.DOMParser != 'undefined') {
-        var xmlDoc = (new window.DOMParser()).parseFromString(pStr, 'text/xml');
+        xmlDoc = (new window.DOMParser()).parseFromString(pStr, 'text/xml');
     }
     else if (typeof window.ActiveXObject != 'undefined' &&
         new window.ActiveXObject('Microsoft.XMLDOM')) {
@@ -3345,6 +3341,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
         else
             j = assignments.length;
         for (i = 0; i < j; i++) {
+            var uid = void 0;
             var resUID = exports.getXMLNodeValue(assignments[i], 'ResourceUID', 1, -1);
             uid = exports.getXMLNodeValue(assignments[i], 'TaskUID', 1, -1);
             if (uid > 0) {
@@ -3355,9 +3352,11 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
         }
         // Store information about parent UIDs in an easily searchable form
         for (i = 0; i < n; i++) {
+            var uid = void 0;
             uid = exports.getXMLNodeValue(Task[i], 'UID', 1, 0);
+            var vOutlineNumber = void 0;
             if (uid != 0)
-                var vOutlineNumber = exports.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
+                vOutlineNumber = exports.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
             if (uid > 0)
                 pars[vOutlineNumber] = uid;
             if (uid > maxPID)
@@ -3378,18 +3377,21 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var pGroup = exports.getXMLNodeValue(Task[i], 'Summary', 1, 0);
                 var pParent = 0;
                 var vOutlineLevel = exports.getXMLNodeValue(Task[i], 'OutlineLevel', 1, 0);
+                var vOutlineNumber = void 0;
                 if (vOutlineLevel > 1) {
                     vOutlineNumber = exports.getXMLNodeValue(Task[i], 'OutlineNumber', 2, '0');
                     pParent = pars[vOutlineNumber.substr(0, vOutlineNumber.lastIndexOf('.'))];
                 }
+                var pNotes = void 0;
                 try {
-                    var pNotes = Task[i].getElementsByTagName('Notes')[0].childNodes[1].nodeValue; //this should be a CDATA node
+                    pNotes = Task[i].getElementsByTagName('Notes')[0].childNodes[1].nodeValue; //this should be a CDATA node
                 }
                 catch (error) {
                     pNotes = '';
                 }
+                var pRes = void 0;
                 if (typeof assRes[pID] != 'undefined')
-                    var pRes = assRes[pID];
+                    pRes = assRes[pID];
                 else
                     pRes = '';
                 var predecessors = exports.findXMLNode(Task[i], 'PredecessorLink');
@@ -3425,8 +3427,9 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 }
                 var pOpen = 1;
                 var pCaption = '';
+                var pClass = void 0;
                 if (pGroup > 0)
-                    var pClass = 'ggroupblack';
+                    pClass = 'ggroupblack';
                 else if (pMile > 0)
                     pClass = 'gmilestone';
                 else
@@ -3478,23 +3481,23 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
         for (i = 0; i < n; i++) {
             // optional parameters may not have an entry
             // Task ID must NOT be zero otherwise it will be skipped
-            pID = exports.getXMLNodeValue(Task[i], 'pID', 1, 0);
+            var pID = exports.getXMLNodeValue(Task[i], 'pID', 1, 0);
             if (pID != 0) {
-                pName = exports.getXMLNodeValue(Task[i], 'pName', 2, 'No Task Name');
-                pStart = exports.getXMLNodeValue(Task[i], 'pStart', 2, '');
-                pEnd = exports.getXMLNodeValue(Task[i], 'pEnd', 2, '');
-                pLink = exports.getXMLNodeValue(Task[i], 'pLink', 2, '');
-                pMile = exports.getXMLNodeValue(Task[i], 'pMile', 1, 0);
-                pComp = exports.getXMLNodeValue(Task[i], 'pComp', 1, 0);
-                pCost = exports.getXMLNodeValue(Task[i], 'pCost', 2, 0);
-                pGroup = exports.getXMLNodeValue(Task[i], 'pGroup', 1, 0);
-                pParent = exports.getXMLNodeValue(Task[i], 'pParent', 1, 0);
-                pRes = exports.getXMLNodeValue(Task[i], 'pRes', 2, '');
-                pOpen = exports.getXMLNodeValue(Task[i], 'pOpen', 1, 1);
-                pDepend = exports.getXMLNodeValue(Task[i], 'pDepend', 2, '');
-                pCaption = exports.getXMLNodeValue(Task[i], 'pCaption', 2, '');
-                pNotes = exports.getXMLNodeValue(Task[i], 'pNotes', 2, '');
-                pClass = exports.getXMLNodeValue(Task[i], 'pClass', 2, '');
+                var pName = exports.getXMLNodeValue(Task[i], 'pName', 2, 'No Task Name');
+                var pStart = exports.getXMLNodeValue(Task[i], 'pStart', 2, '');
+                var pEnd = exports.getXMLNodeValue(Task[i], 'pEnd', 2, '');
+                var pLink = exports.getXMLNodeValue(Task[i], 'pLink', 2, '');
+                var pMile = exports.getXMLNodeValue(Task[i], 'pMile', 1, 0);
+                var pComp = exports.getXMLNodeValue(Task[i], 'pComp', 1, 0);
+                var pCost = exports.getXMLNodeValue(Task[i], 'pCost', 2, 0);
+                var pGroup = exports.getXMLNodeValue(Task[i], 'pGroup', 1, 0);
+                var pParent = exports.getXMLNodeValue(Task[i], 'pParent', 1, 0);
+                var pRes = exports.getXMLNodeValue(Task[i], 'pRes', 2, '');
+                var pOpen = exports.getXMLNodeValue(Task[i], 'pOpen', 1, 1);
+                var pDepend = exports.getXMLNodeValue(Task[i], 'pDepend', 2, '');
+                var pCaption = exports.getXMLNodeValue(Task[i], 'pCaption', 2, '');
+                var pNotes = exports.getXMLNodeValue(Task[i], 'pNotes', 2, '');
+                var pClass = exports.getXMLNodeValue(Task[i], 'pClass', 2, '');
                 if (typeof pClass == 'undefined') {
                     if (pGroup > 0)
                         pClass = 'ggroupblack';

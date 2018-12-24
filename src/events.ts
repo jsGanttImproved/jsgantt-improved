@@ -17,10 +17,10 @@ export const mouseOut = function (pObj1, pObj2) {
 };
 
 export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
-  var vTtDivId = pGanttChartObj.getDivId() + 'JSGanttToolTip';
-  var vMaxW = 500;
-  var vMaxAlpha = 100;
-  var vShowing = pContents.id;
+  let vTtDivId = pGanttChartObj.getDivId() + 'JSGanttToolTip';
+  let vMaxW = 500;
+  let vMaxAlpha = 100;
+  let vShowing = pContents.id;
 
   if (pGanttChartObj.getUseToolTip()) {
     if (pGanttChartObj.vTool == null) {
@@ -78,9 +78,9 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
 
 
 export const moveToolTip = function (pNewX, pNewY, pTool, timer) {
-  var vSpeed = parseInt(pTool.getAttribute('moveSpeed'));
-  var vOldX = parseInt(pTool.style.left);
-  var vOldY = parseInt(pTool.style.top);
+  let vSpeed = parseInt(pTool.getAttribute('moveSpeed'));
+  let vOldX = parseInt(pTool.style.left);
+  let vOldY = parseInt(pTool.style.top);
 
   if (pTool.style.visibility != 'visible') {
     pTool.style.left = pNewX + 'px';

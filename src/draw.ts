@@ -124,15 +124,15 @@ export const GanttChart = function (pDiv, pFormat) {
   this.getXMLTask = getXMLTask;
 
   this.CalcTaskXY = function () {
-    var vID;
-    var vList = this.getList();
-    var vBarDiv;
-    var vTaskDiv;
-    var vParDiv;
-    var vLeft, vTop, vWidth;
-    var vHeight = Math.floor((this.getRowHeight() / 2));
+    let vID;
+    let vList = this.getList();
+    let vBarDiv;
+    let vTaskDiv;
+    let vParDiv;
+    let vLeft, vTop, vWidth;
+    let vHeight = Math.floor((this.getRowHeight() / 2));
 
-    for (var i = 0; i < vList.length; i++) {
+    for (let i = 0; i < vList.length; i++) {
       vID = vList[i].getID();
       vBarDiv = vList[i].getBarDiv();
       vTaskDiv = vList[i].getTaskDiv();
@@ -155,7 +155,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
 
   this.clearDependencies = function () {
-    var parent = this.getLines();
+    let parent = this.getLines();
     while (parent.hasChildNodes()) parent.removeChild(parent.firstChild);
     this.vDepId = 1;
   };
@@ -163,12 +163,12 @@ export const GanttChart = function (pDiv, pFormat) {
 
   // sLine: Draw a straight line (colored one-pixel wide div)
   this.sLine = function (x1, y1, x2, y2, pClass) {
-    var vLeft = Math.min(x1, x2);
-    var vTop = Math.min(y1, y2);
-    var vWid = Math.abs(x2 - x1) + 1;
-    var vHgt = Math.abs(y2 - y1) + 1;
+    let vLeft = Math.min(x1, x2);
+    let vTop = Math.min(y1, y2);
+    let vWid = Math.abs(x2 - x1) + 1;
+    let vHgt = Math.abs(y2 - y1) + 1;
 
-    var vTmpDiv = document.createElement('div');
+    let vTmpDiv = document.createElement('div');
     vTmpDiv.id = this.vDivId + 'line' + this.vDepId++;
     vTmpDiv.style.position = 'absolute';
     vTmpDiv.style.overflow = 'hidden';
@@ -191,10 +191,10 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.drawDependency = function (x1, y1, x2, y2, pType, pClass) {
-    var vDir = 1;
-    var vBend = false;
-    var vShort = 4;
-    var vRow = Math.floor(this.getRowHeight() / 2);
+    let vDir = 1;
+    let vBend = false;
+    let vShort = 4;
+    let vRow = Math.floor(this.getRowHeight() / 2);
 
     if (y2 < y1) vRow *= -1;
 
@@ -231,7 +231,7 @@ export const GanttChart = function (pDiv, pFormat) {
     }
     else this.sLine(x1, y1, x2 - (1 * vDir), y2, pClass);
 
-    var vTmpDiv = this.sLine(x2, y2, x2 - 3 - ((vDir < 0) ? 1 : 0), y2 - 3 - ((vDir < 0) ? 1 : 0), pClass + "Arw");
+    let vTmpDiv = this.sLine(x2, y2, x2 - 3 - ((vDir < 0) ? 1 : 0), y2 - 3 - ((vDir < 0) ? 1 : 0), pClass + "Arw");
     vTmpDiv.style.width = '0px';
     vTmpDiv.style.height = '0px';
   };
@@ -242,15 +242,15 @@ export const GanttChart = function (pDiv, pFormat) {
       this.CalcTaskXY();
       this.clearDependencies();
 
-      var vList = this.getList();
-      for (var i = 0; i < vList.length; i++) {
-        var vDepend = vList[i].getDepend();
-        var vDependType = vList[i].getDepType();
-        var n = vDepend.length;
+      let vList = this.getList();
+      for (let i = 0; i < vList.length; i++) {
+        let vDepend = vList[i].getDepend();
+        let vDependType = vList[i].getDepType();
+        let n = vDepend.length;
 
         if (n > 0 && vList[i].getVisible() == 1) {
-          for (var k = 0; k < n; k++) {
-            var vTask = this.getArrayLocationByID(vDepend[k]);
+          for (let k = 0; k < n; k++) {
+            let vTask = this.getArrayLocationByID(vDepend[k]);
             if (vTask >= 0 && vList[vTask].getGroup() != 2) {
               if (vList[vTask].getVisible() == 1) {
                 if (vDebug) console.log(`init drawDependency`, new Date());
@@ -269,8 +269,8 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.getArrayLocationByID = function (pId) {
-    var vList = this.getList();
-    for (var i = 0; i < vList.length; i++) {
+    let vList = this.getList();
+    for (let i = 0; i < vList.length; i++) {
       if (vList[i].getID() == pId)
         return i;
     }
@@ -278,9 +278,9 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.newNode = function (pParent, pNodeType, pId, pClass, pText, pWidth, pLeft, pDisplay, pColspan, pAttribs) {
-    var vNewNode = pParent.appendChild(document.createElement(pNodeType));
+    let vNewNode = pParent.appendChild(document.createElement(pNodeType));
     if (pAttribs) {
-      for (var i = 0; i + 1 < pAttribs.length; i += 2) {
+      for (let i = 0; i + 1 < pAttribs.length; i += 2) {
         vNewNode.setAttribute(pAttribs[i], pAttribs[i + 1]);
       }
     }
@@ -301,31 +301,22 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.Draw = function () {
-    var vMaxDate = new Date();
-    var vMinDate = new Date();
-    var vTmpDate = new Date();
-    var vTaskLeftPx = 0;
-    var vTaskRightPx = 0;
-    var vTaskWidth = 1;
+    let vMaxDate = new Date();
+    let vMinDate = new Date();
+    let vTmpDate = new Date();
+    let vTaskLeftPx = 0;
+    let vTaskRightPx = 0;
+    let vTaskWidth = 1;
 
-    var vTaskPlanLeftPx = 0;
-    var vTaskPlanRightPx = 0;
-    var vTaskPlanWidth = 1;
+    let vTaskPlanLeftPx = 0;
+    let vTaskPlanRightPx = 0;
 
-    var vNumCols = 0;
-    var vNumRows = 0;
-    var vSingleCell = false;
-    var vID = 0;
-    // var vMainTable = '';
-    var vDateRow = null;
-    // var vFirstCellItemRowStr = '';
-    // var vItemRowStr = '';
-    var vColWidth = 0;
-    // var vColUnit = 0;
-    // var vChild;
-    // var vGroup;
-    // var vTaskDiv;
-    // var vParDiv;
+    let vNumCols = 0;
+    let vNumRows = 0;
+    let vSingleCell = false;
+    let vID = 0;
+    let vDateRow = null;
+    let vColWidth = 0;
     let bd;
     if (this.vDebug) {
       bd = new Date();
@@ -348,14 +339,14 @@ export const GanttChart = function (pDiv, pFormat) {
       else if (this.vFormat == 'hour') vColWidth = this.vHourColWidth;
 
       // DRAW the Left-side of the chart (names, resources, comp%)
-      var vLeftHeader = document.createDocumentFragment();
+      let vLeftHeader = document.createDocumentFragment();
 
-      var vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
-      var vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
-      var vTmpTBody = this.newNode(vTmpTab, 'tbody');
-      var vTmpRow = this.newNode(vTmpTBody, 'tr');
+      let vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
+      let vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
+      let vTmpTBody = this.newNode(vTmpTab, 'tbody');
+      let vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-      var vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
+      let vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
       vTmpCell.appendChild(this.drawSelector('top'));
       if (this.vShowRes == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
       if (this.vShowDur == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
@@ -393,14 +384,15 @@ export const GanttChart = function (pDiv, pFormat) {
         }
       }
 
-      var vLeftTable = document.createDocumentFragment();
-      var vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
+      let vLeftTable = document.createDocumentFragment();
+      let vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
       this.setListBody(vTmpDiv2);
       vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
       vTmpTBody = this.newNode(vTmpTab, 'tbody');
 
-      for (i = 0; i < this.vTaskList.length; i++) {
-        if (this.vTaskList[i].getGroup() == 1) var vBGColor = 'ggroupitem';
+      for (let i = 0; i < this.vTaskList.length; i++) {
+        let vBGColor;
+        if (this.vTaskList[i].getGroup() == 1) vBGColor = 'ggroupitem';
         else vBGColor = 'glineitem';
 
         vID = this.vTaskList[i].getID();
@@ -412,8 +404,8 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskname');
 
-          var vCellContents = '';
-          for (j = 1; j < this.vTaskList[i].getLevel(); j++) {
+          let vCellContents = '';
+          for (let j = 1; j < this.vTaskList[i].getLevel(); j++) {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
           }
 
@@ -427,7 +419,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
           if (this.vTaskList[i].getGroup() == 1) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
-            var vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
+            let vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
 
@@ -559,7 +551,7 @@ export const GanttChart = function (pDiv, pFormat) {
       this.newNode(vTmpDiv2, 'br');
 
       // Draw the Chart Rows
-      var vRightHeader = document.createDocumentFragment();
+      let vRightHeader = document.createDocumentFragment();
       vTmpDiv = this.newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
       this.setChartHead(vTmpDiv);
       vTmpTab = this.newNode(vTmpDiv, 'table', this.vDivId + 'chartTableh', 'gcharttableh');
@@ -573,11 +565,11 @@ export const GanttChart = function (pDiv, pFormat) {
       vTmpDate.setSeconds(0);
       vTmpDate.setMilliseconds(0);
 
-      var vColSpan = 1;
+      let vColSpan = 1;
       // Major Date Header
       while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-        var vHeaderCellClass = 'gmajorheading';
-        vCellContents = '';
+        let vHeaderCellClass = 'gmajorheading';
+        let vCellContents = '';
 
         if (this.vFormat == 'day') {
           vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, 7);
@@ -628,8 +620,8 @@ export const GanttChart = function (pDiv, pFormat) {
       vNumCols = 0;
 
       while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-        vHeaderCellClass = 'gminorheading';
-        var vCellClass = 'gtaskcell';
+        let vHeaderCellClass = 'gminorheading';
+        let vCellClass = 'gtaskcell';
 
         if (this.vFormat == 'day') {
           if (vTmpDate.getDay() % 6 == 0) {
@@ -679,7 +671,7 @@ export const GanttChart = function (pDiv, pFormat) {
           while (vTmpDate.getDate() > 1) vTmpDate.setDate(vTmpDate.getDate() + 1);
         }
         else if (this.vFormat == 'hour') {
-          for (i = vTmpDate.getHours(); i < 24; i++) {
+          for (let i = vTmpDate.getHours(); i < 24; i++) {
             vTmpDate.setHours(i);//works around daylight savings but may look a little odd on days where the clock goes forward
             if (vTmpDate <= vMaxDate) {
               vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
@@ -702,7 +694,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
       vTmpDiv = this.newNode(vRightHeader, 'div', null, 'glabelfooter');
 
-      var vRightTable = document.createDocumentFragment();
+      let vRightTable = document.createDocumentFragment();
       vTmpDiv = this.newNode(vRightTable, 'div', this.vDivId + 'gchartbody', 'gchartgrid gcontainercol');
       this.setChartBody(vTmpDiv);
       vTmpTab = this.newNode(vTmpDiv, 'table', this.vDivId + 'chartTable', 'gcharttable', null, vTaskLeftPx);
@@ -712,19 +704,17 @@ export const GanttChart = function (pDiv, pFormat) {
 
       // Draw each row
 
-      var i = 0;
-      var j = 0;
+      let i = 0;
+      let j = 0;
       let bd;
       if (this.vDebug) {
         bd = new Date();
         console.log('before tasks loop', bd);
       }
       for (i = 0; i < this.vTaskList.length; i++) {
-        var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
-        var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
+        let curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
+        let curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
         if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
-
-
 
         vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat);
         vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat);
@@ -745,11 +735,11 @@ export const GanttChart = function (pDiv, pFormat) {
 
 
         vID = this.vTaskList[i].getID();
-        var vComb = (this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2);
-        var vCellFormat = '';
+        let vComb = (this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2);
+        let vCellFormat = '';
 
-        var vTmpItem = this.vTaskList[i];
-        var vCaptClass = null;
+        let vTmpItem = this.vTaskList[i];
+        let vCaptClass = null;
         if (this.vTaskList[i].getMile() && !vComb) {
           vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
           this.vTaskList[i].setChildRow(vTmpRow);
@@ -905,7 +895,7 @@ export const GanttChart = function (pDiv, pFormat) {
       this.setLines(vTmpDiv2);
 
       /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
-            var tmpGenSrc=document.createElement('textarea');
+            let tmpGenSrc=document.createElement('textarea');
             tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
             vDiv.appendChild(tmpGenSrc);
       //*/
@@ -914,8 +904,8 @@ export const GanttChart = function (pDiv, pFormat) {
 
       // now check if we are actually scrolling the pane
       if (this.vScrollTo != '') {
-        var vScrollDate = new Date(vMinDate.getTime());
-        var vScrollPx = 0;
+        let vScrollDate = new Date(vMinDate.getTime());
+        let vScrollPx = 0;
 
         if (this.vScrollTo.substr(0, 2) == 'px') {
           vScrollPx = parseInt(this.vScrollTo.substr(2));
@@ -951,15 +941,15 @@ export const GanttChart = function (pDiv, pFormat) {
 
 
   this.drawSelector = function (pPos) {
-    var vOutput = document.createDocumentFragment();
-    var vDisplay = false;
+    let vOutput = document.createDocumentFragment();
+    let vDisplay = false;
 
-    for (var i = 0; i < this.vShowSelector.length && !vDisplay; i++) {
+    for (let i = 0; i < this.vShowSelector.length && !vDisplay; i++) {
       if (this.vShowSelector[i].toLowerCase() == pPos.toLowerCase()) vDisplay = true;
     }
 
     if (vDisplay) {
-      var vTmpDiv = this.newNode(vOutput, 'div', null, 'gselector', this.vLangs[this.vLang]['format'] + ':');
+      let vTmpDiv = this.newNode(vOutput, 'div', null, 'gselector', this.vLangs[this.vLang]['format'] + ':');
 
       if (this.vFormatArr.join().toLowerCase().indexOf('hour') != -1)
         addFormatListeners(this, 'hour', this.newNode(vTmpDiv, 'span', this.vDivId + 'formathour' + pPos, 'gformlabel' + ((this.vFormat == 'hour') ? ' gselected' : ''), this.vLangs[this.vLang]['hour']));
@@ -1018,30 +1008,30 @@ const makeInput = function (formattedValue, editable, type = 'text', value = nul
 }
 
 export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
-  var vCurTopBuf = 3;
-  var vCurLeftBuf = 5;
-  var vCurBotBuf = 3;
-  var vCurRightBuf = 15;
-  var vMouseX = (e) ? e.clientX : (<MouseEvent>window.event).clientX;
-  var vMouseY = (e) ? e.clientY : (<MouseEvent>window.event).clientY;
-  var vViewportX = document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-  var vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
-  var vNewX = vMouseX;
-  var vNewY = vMouseY;
+  let vCurTopBuf = 3;
+  let vCurLeftBuf = 5;
+  let vCurBotBuf = 3;
+  let vCurRightBuf = 15;
+  let vMouseX = (e) ? e.clientX : (<MouseEvent>window.event).clientX;
+  let vMouseY = (e) ? e.clientY : (<MouseEvent>window.event).clientY;
+  let vViewportX = document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+  let vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+  let vNewX = vMouseX;
+  let vNewY = vMouseY;
 
   if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
     // the clientX and clientY properties include the left and top borders of the client area
     vMouseX -= document.documentElement.clientLeft;
     vMouseY -= document.documentElement.clientTop;
 
-    var vZoomFactor = getZoomFactor();
+    let vZoomFactor = getZoomFactor();
     if (vZoomFactor != 1) {// IE 7 at non-default zoom level
       vMouseX = Math.round(vMouseX / vZoomFactor);
       vMouseY = Math.round(vMouseY / vZoomFactor);
     }
   }
 
-  var vScrollPos = getScrollPositions();
+  let vScrollPos = getScrollPositions();
 
   /* Code for positioned right of the mouse by default*/
 	/*

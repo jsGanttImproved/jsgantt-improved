@@ -1,10 +1,10 @@
 
 export const getMinDate = function (pList, pFormat) {
-  var vDate = new Date();
+  let vDate = new Date();
   vDate.setTime(pList[0].getStart().getTime());
 
   // Parse all Task End dates to find min
-  for (var i = 0; i < pList.length; i++) {
+  for (let i = 0; i < pList.length; i++) {
     if (pList[i].getStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getStart().getTime());
   }
 
@@ -43,12 +43,12 @@ export const getMinDate = function (pList, pFormat) {
 };
 
 export const getMaxDate = function (pList, pFormat) {
-  var vDate = new Date();
+  let vDate = new Date();
 
   vDate.setTime(pList[0].getEnd().getTime());
 
   // Parse all Task End dates to find max
-  for (var i = 0; i < pList.length; i++) {
+  for (let i = 0; i < pList.length; i++) {
     if (pList[i].getEnd().getTime() > vDate.getTime()) vDate.setTime(pList[i].getEnd().getTime());
   }
 
@@ -91,7 +91,7 @@ export const getMaxDate = function (pList, pFormat) {
 
 
 export const findObj = function (theObj, theDoc = null) {
-  var p, i, foundObj;
+  let p, i, foundObj;
   if (!theDoc) theDoc = document;
   if (document.getElementById) foundObj = document.getElementById(theObj);
   return foundObj;
@@ -103,8 +103,8 @@ export const changeFormat = function (pFormat, ganttObj) {
 };
 
 export const parseDateStr = function (pDateStr, pFormatStr) {
-  var vDate = new Date();
-  var vDateParts = pDateStr.split(/[^0-9]/);
+  let vDate = new Date();
+  let vDateParts = pDateStr.split(/[^0-9]/);
   if (pDateStr.length >= 10 && vDateParts.length >= 3) {
     while (vDateParts.length < 5) vDateParts.push(0);
 
@@ -124,16 +124,16 @@ export const parseDateStr = function (pDateStr, pFormatStr) {
 };
 
 export const formatDateStr = function (pDate, pDateFormatArr, pL) {
-  var vDateStr = '';
+  let vDateStr = '';
 
-  var vYear2Str = pDate.getFullYear().toString().substring(2, 4);
-  var vMonthStr = (pDate.getMonth() + 1) + '';
-  var vMonthArr = new Array(pL['january'], pL['february'], pL['march'], pL['april'], pL['maylong'], pL['june'], pL['july'], pL['august'], pL['september'], pL['october'], pL['november'], pL['december']);
-  var vDayArr = new Array(pL['sunday'], pL['monday'], pL['tuesday'], pL['wednesday'], pL['thursday'], pL['friday'], pL['saturday']);
-  var vMthArr = new Array(pL['jan'], pL['feb'], pL['mar'], pL['apr'], pL['may'], pL['jun'], pL['jul'], pL['aug'], pL['sep'], pL['oct'], pL['nov'], pL['dec']);
-  var vDyArr = new Array(pL['sun'], pL['mon'], pL['tue'], pL['wed'], pL['thu'], pL['fri'], pL['sat']);
+  let vYear2Str = pDate.getFullYear().toString().substring(2, 4);
+  let vMonthStr = (pDate.getMonth() + 1) + '';
+  let vMonthArr = new Array(pL['january'], pL['february'], pL['march'], pL['april'], pL['maylong'], pL['june'], pL['july'], pL['august'], pL['september'], pL['october'], pL['november'], pL['december']);
+  let vDayArr = new Array(pL['sunday'], pL['monday'], pL['tuesday'], pL['wednesday'], pL['thursday'], pL['friday'], pL['saturday']);
+  let vMthArr = new Array(pL['jan'], pL['feb'], pL['mar'], pL['apr'], pL['may'], pL['jun'], pL['jul'], pL['aug'], pL['sep'], pL['oct'], pL['nov'], pL['dec']);
+  let vDyArr = new Array(pL['sun'], pL['mon'], pL['tue'], pL['wed'], pL['thu'], pL['fri'], pL['sat']);
 
-  for (var i = 0; i < pDateFormatArr.length; i++) {
+  for (let i = 0; i < pDateFormatArr.length; i++) {
     switch (pDateFormatArr[i]) {
       case 'dd':
         if (pDate.getDate() < 10) vDateStr += '0'; // now fall through
@@ -195,9 +195,9 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
         vDateStr += getIsoWeek(pDate);
         break;
       case 'week':
-        var vWeekNum = getIsoWeek(pDate);
-        var vYear = pDate.getFullYear();
-        var vDayOfWeek = (pDate.getDay() == 0) ? 7 : pDate.getDay();
+        let vWeekNum = getIsoWeek(pDate);
+        let vYear = pDate.getFullYear();
+        let vDayOfWeek = (pDate.getDay() == 0) ? 7 : pDate.getDay();
         if (vWeekNum >= 52 && parseInt(vMonthStr, 10) === 1) vYear--;
         if (vWeekNum == 1 && parseInt(vMonthStr, 10) === 12) vYear++;
         if (vWeekNum < 10) vWeekNum = parseInt('0' + vWeekNum, 10);
@@ -214,13 +214,13 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
 };
 
 export const parseDateFormatStr = function (pFormatStr) {
-  var vDateStr = '';
-  var vComponantStr = '';
-  var vCurrChar = '';
-  var vSeparators = new RegExp('[\/\\ -.,\'":]');
-  var vDateFormatArray = new Array();
+  let vDateStr = '';
+  let vComponantStr = '';
+  let vCurrChar = '';
+  let vSeparators = new RegExp('[\/\\ -.,\'":]');
+  let vDateFormatArray = new Array();
 
-  for (var i = 0; i < pFormatStr.length; i++) {
+  for (let i = 0; i < pFormatStr.length; i++) {
     vCurrChar = pFormatStr.charAt(i);
     if ((vCurrChar.match(vSeparators)) || (i + 1 == pFormatStr.length)) // separator or end of string
     {
@@ -242,15 +242,15 @@ export const parseDateFormatStr = function (pFormatStr) {
 
 
 export const stripIds = function (pNode) {
-  for (var i = 0; i < pNode.childNodes.length; i++) {
+  for (let i = 0; i < pNode.childNodes.length; i++) {
     if ('removeAttribute' in pNode.childNodes[i]) pNode.childNodes[i].removeAttribute('id');
     if (pNode.childNodes[i].hasChildNodes()) stripIds(pNode.childNodes[i]);
   }
 };
 
 export const stripUnwanted = function (pNode) {
-  var vAllowedTags = new Array('#text', 'p', 'br', 'ul', 'ol', 'li', 'div', 'span', 'img');
-  for (var i = 0; i < pNode.childNodes.length; i++) {
+  let vAllowedTags = new Array('#text', 'p', 'br', 'ul', 'ol', 'li', 'div', 'span', 'img');
+  for (let i = 0; i < pNode.childNodes.length; i++) {
     /* versions of IE<9 don't support indexOf on arrays so add trailing comma to the joined array and lookup value to stop substring matches */
     if ((vAllowedTags.join().toLowerCase() + ',').indexOf(pNode.childNodes[i].nodeName.toLowerCase() + ',') == -1) {
       pNode.replaceChild(document.createTextNode(pNode.childNodes[i].outerHTML), pNode.childNodes[i]);
@@ -260,17 +260,17 @@ export const stripUnwanted = function (pNode) {
 };
 
 export const delayedHide = function (pGanttChartObj, pTool, pTimer) {
-  var vDelay = pGanttChartObj.getTooltipDelay() || 1500;
+  let vDelay = pGanttChartObj.getTooltipDelay() || 1500;
   if (pTool) pTool.delayTimeout = setTimeout(function () { hideToolTip(pGanttChartObj, pTool, pTimer); }, vDelay);
 };
 
 export const getZoomFactor = function () {
-  var vFactor = 1;
+  let vFactor = 1;
   if (document.body.getBoundingClientRect) {
     // rect is only in physical pixel size in IE before version 8
-    var vRect = document.body.getBoundingClientRect();
-    var vPhysicalW = vRect.right - vRect.left;
-    var vLogicalW = document.body.offsetWidth;
+    let vRect = document.body.getBoundingClientRect();
+    let vPhysicalW = vRect.right - vRect.left;
+    let vLogicalW = document.body.offsetWidth;
 
     // the zoom level is always an integer percent value
     vFactor = Math.round((vPhysicalW / vLogicalW) * 100) / 100;
@@ -280,7 +280,7 @@ export const getZoomFactor = function () {
 
 
 export const benchMark = function (pItem) {
-  var vEndTime = new Date().getTime();
+  let vEndTime = new Date().getTime();
   alert(pItem + ': Elapsed time: ' + ((vEndTime - this.vBenchTime) / 1000) + ' seconds.');
   this.vBenchTime = new Date().getTime();
 };
@@ -288,17 +288,17 @@ export const benchMark = function (pItem) {
 export const getIsoWeek = function (pDate) {
   // We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
   // 60*60*24*1000=86400000
-  var dayMiliseconds = 86400000;
-  var keyDay = new Date(pDate.getFullYear(), 0, 4, 0, 0, 0);
-  var keyDayOfWeek = (keyDay.getDay() == 0) ? 6 : keyDay.getDay() - 1; // define monday as 0
-  var firstMondayYearTime = keyDay.getTime() - (keyDayOfWeek * dayMiliseconds);
-  var thisDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate(), 0, 0, 0); // This at 00:00:00
-  var thisTime = thisDate.getTime();
-  var daysFromFirstMonday = Math.round(((thisTime - firstMondayYearTime) / dayMiliseconds));
-  var lastWeek = 99;
-  var thisWeek = 99;
+  let dayMiliseconds = 86400000;
+  let keyDay = new Date(pDate.getFullYear(), 0, 4, 0, 0, 0);
+  let keyDayOfWeek = (keyDay.getDay() == 0) ? 6 : keyDay.getDay() - 1; // define monday as 0
+  let firstMondayYearTime = keyDay.getTime() - (keyDayOfWeek * dayMiliseconds);
+  let thisDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate(), 0, 0, 0); // This at 00:00:00
+  let thisTime = thisDate.getTime();
+  let daysFromFirstMonday = Math.round(((thisTime - firstMondayYearTime) / dayMiliseconds));
+  let lastWeek = 99;
+  let thisWeek = 99;
 
-  var firstMondayYear = new Date(firstMondayYearTime);
+  let firstMondayYear = new Date(firstMondayYearTime);
 
   thisWeek = Math.ceil((daysFromFirstMonday + 1) / 7);
 
@@ -308,11 +308,11 @@ export const getIsoWeek = function (pDate) {
 };
 
 export const getScrollPositions = function () {
-  var vScrollLeft = window.pageXOffset;
-  var vScrollTop = window.pageYOffset;
+  let vScrollLeft = window.pageXOffset;
+  let vScrollTop = window.pageYOffset;
   if (!('pageXOffset' in window))	// Internet Explorer before version 9
   {
-    var vZoomFactor = getZoomFactor();
+    let vZoomFactor = getZoomFactor();
     vScrollLeft = Math.round(document.documentElement.scrollLeft / vZoomFactor);
     vScrollTop = Math.round(document.documentElement.scrollTop / vZoomFactor);
   }
@@ -326,15 +326,16 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
   const QUARTER_CELL_MARGIN_WIDTH = 1; // Cell margin for 'quarter' format
   const HOUR_CELL_MARGIN_WIDTH = 3; // Cell margin for 'hour' format
 
-  var vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-  var curTaskStart = new Date(pStartDate.getTime());
-  var curTaskEnd = new Date(pEndDate.getTime());
-  var vTaskRightPx = 0;
-  var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
-  var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
+  let vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+  let curTaskStart = new Date(pStartDate.getTime());
+  let curTaskEnd = new Date(pEndDate.getTime());
+  let vTaskRightPx = 0;
+  let tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
+  let tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
 
-  var vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
+  let vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
 
+  let vPosTmpDate;
   if (pFormat == 'day') {
     vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + DAY_CELL_MARGIN_WIDTH) - 1);
   }
@@ -342,18 +343,18 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     vTaskRightPx = Math.ceil((vTaskRight / (24 * 7)) * (pColWidth + WEEK_CELL_MARGIN_WIDTH) - 1);
   }
   else if (pFormat == 'month') {
-    var vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
-    var vPosTmpDate = new Date(curTaskEnd.getTime());
+    let vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
+    vPosTmpDate = new Date(curTaskEnd.getTime());
     vPosTmpDate.setDate(curTaskStart.getDate());
-    var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
+    let vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
 
     vTaskRightPx = Math.ceil((vMonthsDiff * (pColWidth + MONTH_CELL_MARGIN_WIDTH)) + (vDaysCrctn * (pColWidth / vMonthDaysArr[curTaskEnd.getMonth()])) - 1);
   }
   else if (pFormat == 'quarter') {
-    vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
+    let vMonthsDiff = (12 * (curTaskEnd.getFullYear() - curTaskStart.getFullYear())) + (curTaskEnd.getMonth() - curTaskStart.getMonth());
     vPosTmpDate = new Date(curTaskEnd.getTime());
     vPosTmpDate.setDate(curTaskStart.getDate());
-    vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
+    let vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
 
     vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + QUARTER_CELL_MARGIN_WIDTH) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
   }
@@ -361,7 +362,7 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     // can't just calculate sum because of daylight savings changes
     vPosTmpDate = new Date(curTaskEnd.getTime());
     vPosTmpDate.setMinutes(curTaskStart.getMinutes(), 0);
-    var vMinsCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (3600000);
+    let vMinsCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (3600000);
 
     vTaskRightPx = Math.ceil((vTaskRight * (pColWidth + HOUR_CELL_MARGIN_WIDTH)) + (vMinsCrctn * (pColWidth)));
   }
@@ -391,11 +392,11 @@ export const hideToolTip = function (pGanttChartObj, pTool, pTimer) {
 
 
 export const fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
-  var vIncrement = parseInt(pTool.getAttribute('fadeIncrement'));
-  var vAlpha = pTool.getAttribute('currentOpacity');
-  var vCurAlpha = parseInt(vAlpha);
+  let vIncrement = parseInt(pTool.getAttribute('fadeIncrement'));
+  let vAlpha = pTool.getAttribute('currentOpacity');
+  let vCurAlpha = parseInt(vAlpha);
   if ((vCurAlpha != pMaxAlpha && pDirection == 1) || (vCurAlpha != 0 && pDirection == -1)) {
-    var i = vIncrement;
+    let i = vIncrement;
     if (pMaxAlpha - vCurAlpha < vIncrement && pDirection == 1) {
       i = pMaxAlpha - vCurAlpha;
     } else if (vAlpha < vIncrement && pDirection == -1) {

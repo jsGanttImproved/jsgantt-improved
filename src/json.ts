@@ -3,7 +3,7 @@ import { TaskItem } from "./task";
 /**
  * 
  * @param pFile 
- * @param pGanttVar 
+ * @param pGanttlet 
  */
 export const parseJSON = function (pFile, pGanttVar, vDebug = false) {
   let xhttp;

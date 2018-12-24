@@ -30,12 +30,12 @@ export const includeGetSet = function () {
   this.setUseSort = function (pVal) { this.vUseSort = pVal; };
   this.setUseSingleCell = function (pVal) { this.vUseSingleCell = pVal * 1; };
   this.setFormatArr = function () {
-    var vValidFormats = 'hour day week month quarter';
+    let vValidFormats = 'hour day week month quarter';
     this.vFormatArr = new Array();
-    for (var i = 0, j = 0; i < arguments.length; i++) {
+    for (let i = 0, j = 0; i < arguments.length; i++) {
       if (vValidFormats.indexOf(arguments[i].toLowerCase()) != -1 && arguments[i].length > 1) {
         this.vFormatArr[j++] = arguments[i].toLowerCase();
-        var vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
+        let vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
         vValidFormats = vValidFormats.replace(vRegExp, '');
       }
     }
@@ -57,12 +57,12 @@ export const includeGetSet = function () {
   this.setShowTaskInfoLink = function (pVal) { this.vShowTaskInfoLink = pVal; };
   this.setShowEndWeekDate = function (pVal) { this.vShowEndWeekDate = pVal; };
   this.setShowSelector = function () {
-    var vValidSelectors = 'top bottom';
+    let vValidSelectors = 'top bottom';
     this.vShowSelector = new Array();
-    for (var i = 0, j = 0; i < arguments.length; i++) {
+    for (let i = 0, j = 0; i < arguments.length; i++) {
       if (vValidSelectors.indexOf(arguments[i].toLowerCase()) != -1 && arguments[i].length > 1) {
         this.vShowSelector[j++] = arguments[i].toLowerCase();
-        var vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
+        let vRegExp = new RegExp('(?:^|\s)' + arguments[i] + '(?!\S)', 'g');
         vValidSelectors = vValidSelectors.replace(vRegExp, '');
       }
     }
@@ -105,7 +105,7 @@ export const includeGetSet = function () {
   this.addLang = function (pLang, pVals) {
     if (!this.vLangs[pLang]) {
       this.vLangs[pLang] = new Object();
-      for (var vKey in this.vLangs['en']) this.vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : this.vLangs['en'][vKey];
+      for (let vKey in this.vLangs['en']) this.vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : this.vLangs['en'][vKey];
     }
   };
   this.setEvents = function (pEvents) { this.vEvents = pEvents; };
