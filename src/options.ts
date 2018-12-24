@@ -12,7 +12,9 @@ export const includeGetSet = function () {
       const key = keys[i];
       const val = options[key];
       let ev;
-      if (val instanceof Array) {
+      if (key === 'vResources') {
+        ev = `this.set${key.substr(1)}(val)`;
+      } else if (val instanceof Array) {
         ev = `this.set${key.substr(1)}(...val)`;
       } else {
         ev = `this.set${key.substr(1)}(val)`;
@@ -107,9 +109,12 @@ export const includeGetSet = function () {
     }
   };
   this.setEvents = function (pEvents) { this.vEvents = pEvents; };
+  this.setEventsChange = function (pEventsChange) { this.vEventsChange = pEventsChange; };
   this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
+  this.setResources = function (resources) { this.vResources = resources; };
   this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
-  this.setDebug = function(debug) {this.vDebug = debug;}
+  this.setEditable = function (editable) { this.vEditable = editable; }
+  this.setDebug = function (debug) { this.vDebug = debug; }
   /**
    * GETTERS
    */
@@ -170,6 +175,8 @@ export const includeGetSet = function () {
   this.getTooltipDelay = function () { return this.vTooltipDelay; };
   this.getList = function () { return this.vTaskList; };
   this.getEventsClickCell = function () { return this.vEvents; };
+  this.getEventsChange = function () { return this.vEventsChange; };
   this.getEventClickRow = function () { return this.vEventClickRow; };
+  this.getResources = function () { return this.vResources; };
   this.getAdditionalHeaders = function () { return this.vAdditionalHeaders; };
 }

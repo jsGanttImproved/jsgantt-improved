@@ -355,12 +355,27 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getChildRow = function () { return vChildRow; };
   this.getListChildRow = function () { return vListChildRow; };
   this.getGroupSpan = function () { return vGroupSpan; };
+  this.setName = function (pName) { vName = pName; };
   this.setCost = function (pCost) { vCost = pCost; };
+  this.setResource = function (pRes) { vRes = pRes; };
+  this.setDuration = function (pDuration) { vDuration = pDuration; };
   this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
-  this.setStart = function (pStart) { if (pStart instanceof Date) vStart = pStart; };
-  this.setEnd = function (pEnd) { if (pEnd instanceof Date) vEnd = pEnd; };
-  this.setPlanStart = function (pPlanStart) { if (pPlanStart instanceof Date) vPlanStart = pPlanStart; };
-  this.setPlanEnd = function (pPlanEnd) { if (pPlanEnd instanceof Date) vPlanEnd = pPlanEnd; };
+  this.setStart = function (pStart) {
+    if (pStart instanceof Date) vStart = pStart;
+    else vStart = new Date(pStart);
+  };
+  this.setEnd = function (pEnd) {
+    if (pEnd instanceof Date) vEnd = pEnd;
+    else vEnd = new Date(pEnd);
+  };
+  this.setPlanStart = function (pPlanStart) {
+    if (pPlanStart instanceof Date) vPlanStart = pPlanStart;
+    else vPlanStart = new Date(pPlanStart);
+  };
+  this.setPlanEnd = function (pPlanEnd) {
+    if (pPlanEnd instanceof Date) vPlanEnd = pPlanEnd;
+    else vPlanEnd = new Date(pPlanEnd);
+  };
   this.setGroupMinStart = function (pStart) { if (pStart instanceof Date) vGroupMinStart = pStart; };
   this.setGroupMinEnd = function (pEnd) { if (pEnd instanceof Date) vGroupMinEnd = pEnd; };
   this.setLevel = function (pLevel) { vLevel = parseInt(document.createTextNode(pLevel).data); };

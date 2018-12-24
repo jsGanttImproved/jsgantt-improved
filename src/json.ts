@@ -15,7 +15,6 @@ export const parseJSON = function (pFile, pGanttVar, vDebug = false) {
   xhttp.open('GET', pFile, false);
   xhttp.send(null);
   
-
   let bd;
   if (vDebug) {
     bd = new Date();
@@ -33,6 +32,7 @@ export const parseJSON = function (pFile, pGanttVar, vDebug = false) {
     const ad = new Date();
     console.log('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
   }
+  return jsonObj;
 };
 
 export const parseJSONString = function (pStr, pGanttVar) {

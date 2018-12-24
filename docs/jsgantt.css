@@ -100,32 +100,17 @@ td.gspanning {
 
 /* Additional values for some task list elements */
 
-.gresource,
-.gduration,
-.gpccomplete,
+/* needed for IE8 */
+
 .gstartdate div,
-/* needed for IE8 */
-
-.gstartdate {
-  text-align: center;
-  min-width: 70px;
-  max-width: 70px;
-  width: 70px;
-  font-size: 10px;
-}
-
-.genddate div,
-/* needed for IE8 */
-
-.gadditional,
-.gcost,
 .gplanstartdate,
 .gplanenddate,
+.gstartdate,
 .genddate {
   text-align: center;
   min-width: 70px;
-  max-width: 70px;
-  width: 70px;
+  width: 105px;
+  max-width: 105px;
   font-size: 10px;
 }
 
@@ -768,6 +753,33 @@ td.gspanning div {
   position: absolute;
   top: 0px;
   left: 0px;
+}
+
+.gantt-inputtable {
+  width: 100%;
+  max-height: 16px;
+}
+
+.gadditional,
+.gresource,
+.gduration,
+.gpccomplete,
+.gcost {
+  text-align: center;
+  width: 70px;
+  max-width: 70px;
+  font-size: 10px;
+}
+
+@media print {
+  /* All your print styles go here */
+  html,
+  .gchartgrid {
+    overflow: unset !important;
+  }
+  .glistgrid{
+    float: none !important;
+  }
 }
 
 /* if using setUseSingleCell(1) the following is a suggested set of CSS3 styles to recreate the table grid - won't work on old browsers

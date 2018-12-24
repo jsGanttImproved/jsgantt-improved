@@ -149,9 +149,50 @@ export const addScrollListeners = function (pGanttChart) {
 };
 
 export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
-  addListener('click', function(e){
-    if(vEvents[column] && typeof vEvents[column] === 'function'){
+  addListener('click', function (e) {
+    if (vEvents[column] && typeof vEvents[column] === 'function') {
       vEvents[column](task, e, vTmpCell);
     }
-  }, vTmpCell); 
+  }, vTmpCell);
+}
+
+export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw = null, event = 'blur') {
+  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
+    addListener(event, function (e) {
+      if (callback) {
+        callback(task, e);
+      }
+      if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
+        const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
+        if (q && q.then) {
+          q.then(e => draw());
+        } else {
+          draw();
+        }
+      } else {
+        draw();
+      }
+    }, vTmpCell.children[0].children[0]);
+  }
+}
+
+// "pID": 122
+const vColumnsNames = {
+  taskname: 'pName',
+  res: 'pRes',
+  dur: '',
+  comp: 'pComp',
+  start: 'pStart',
+  end: 'pEnd',
+  planstart: 'pPlanStart',
+  planend: 'pPlanEnd',
+  link: 'pLink',
+  cost: 'pCost',
+  mile: 'pMile',
+  group: 'pGroup',
+  parent: 'pParent',
+  open: 'pOpen',
+  depend: 'pDepend',
+  caption: 'pCaption',
+  note: 'pNotes'
 }

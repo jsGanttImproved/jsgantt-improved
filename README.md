@@ -4,7 +4,7 @@
 A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images. 
 
 
-![Demo Image](/docs/demo.png)
+![Demo Image](/docs/demo.gif)
 
 
 Start using with including the files `jsgantt.js` and `jsgantt.css` that are inside `docs/` folder.

@@ -1,7 +1,7 @@
 import * as lang from './lang';
 import {
   mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners, addFormatListeners, moveToolTip,
-  addFolderListeners, addListenerClickCell, addListener
+  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell
 } from "./events";
 import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
@@ -55,7 +55,20 @@ export const GanttChart = function (pDiv, pFormat) {
     planenddate: null,
     cost: null,
   };
+  this.vEventsChange = {
+    taskname: null,
+    res: null,
+    dur: null,
+    comp: null,
+    startdate: null,
+    enddate: null,
+    planstartdate: null,
+    planenddate: null,
+    cost: null,
+  };
+  this.vResources = null;
   this.vAdditionalHeaders = {};
+  this.vEditable = false;
   this.vDebug = false;
   this.vShowSelector = new Array('top');
   this.vDateInputFormat = 'yyyy-mm-dd';
@@ -417,64 +430,101 @@ export const GanttChart = function (pDiv, pFormat) {
             var vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
+
             vTmpDiv.appendChild(document.createTextNode('\u00A0' + this.vTaskList[i].getName()));
+            // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
+            // vTmpDiv.appendChild(document.createNode(text));
+            const callback = (task, e) => task.setName(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'taskname', this.Draw.bind(this));
             addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i], 'taskname');
           }
           else {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + this.vTaskList[i].getName());
+            const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + text);
+            const callback = (task, e) => task.setName(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'taskname', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'taskname');
           }
 
           if (this.vShowRes == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gresource');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getResource());
+            const text = makeInput(this.vTaskList[i].getResource(), this.vEditable, 'resource', this.vTaskList[i].getResource(), this.vResources);
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setResource(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'res', this.Draw.bind(this), 'change');
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'res');
           }
           if (this.vShowDur == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getDuration(this.vFormat, this.vLangs[this.vLang]));
+            const text = makeInput(this.vTaskList[i].getDuration(this.vFormat, this.vLangs[this.vLang]), this.vEditable, 'text', this.vTaskList[i].getDuration());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setDur(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'dur', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'dur');
           }
           if (this.vShowComp == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCompStr());
+            const text = makeInput(this.vTaskList[i].getCompStr(), this.vEditable, 'percentage', this.vTaskList[i].getCompVal());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setCompVal(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'comp', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'comp');
           }
           if (this.vShowStartDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, formatDateStr(this.vTaskList[i].getStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'startdate');
+            const v = formatDateStr(this.vTaskList[i].getStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]);
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getStart());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setStart(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'start', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'start');
           }
           if (this.vShowEndDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, formatDateStr(this.vTaskList[i].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'enddate');
+            const v = formatDateStr(this.vTaskList[i].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]);
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getEnd());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setEnd(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'end', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'end');
           }
           if (this.vShowPlanStartDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanstartdate');
             const v = this.vTaskList[i].getPlanStart() ? formatDateStr(this.vTaskList[i].getPlanStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planstartdate');
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getPlanStart());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setPlanStart(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'planstart', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planstart');
           }
           if (this.vShowPlanEndDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanenddate');
             const v = this.vTaskList[i].getPlanEnd() ? formatDateStr(this.vTaskList[i].getPlanEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planenddate');
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getPlanEnd());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setPlanEnd(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'planend', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planend');
           }
           if (this.vShowCost == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gcost');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCost());
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'costdate');
+            const text = makeInput(this.vTaskList[i].getCost(), this.vEditable, 'cost');
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setCost(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'cost', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'cost');
           }
           if (this.vAdditionalHeaders) {
             for (const key in this.vAdditionalHeaders) {
               const header = this.vAdditionalHeaders[key];
               const css = header.class ? header.class : `gadditional-${key}`;
               const data = this.vTaskList[i].getDataObject();
-              if (data)
+              if (data) {
                 vTmpCell = this.newNode(vTmpRow, 'td', null, `gadditional ${css}`);
+              }
+              // const callback = (task, e) => task.setCost(e.target.value);
+              // addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'costdate');
               vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
             }
           }
@@ -665,10 +715,10 @@ export const GanttChart = function (pDiv, pFormat) {
       var i = 0;
       var j = 0;
       let bd;
-        if (this.vDebug) {
-          bd = new Date();
-          console.log('before tasks loop', bd);
-        }
+      if (this.vDebug) {
+        bd = new Date();
+        console.log('before tasks loop', bd);
+      }
       for (i = 0; i < this.vTaskList.length; i++) {
         var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
         var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
@@ -936,6 +986,36 @@ export const GanttChart = function (pDiv, pFormat) {
   if (this.vDiv && this.vDiv.nodeName.toLowerCase() == 'div') this.vDivId = this.vDiv.id;
 }; //GanttChart
 
+const makeInput = function (formattedValue, editable, type = 'text', value = null, choices = null) {
+  if (!value) {
+    value = formattedValue;
+  }
+  if (editable) {
+    switch (type) {
+      case 'date':
+        value = value ? value.toISOString().split('T')[0] : ''
+        return `<input class="gantt-inputtable" type="date" value="${value}">`;
+      case 'resource':
+        if (choices) {
+          const found = choices.find(c => c.id == value || c.name == value);
+          if (found) {
+            value = found.id;
+          } else {
+            choices.push({ id: value, name: value });
+          }
+          return `<select>` + choices.map(c => `<option value="${c.id}" ${value == c.id ? 'selected' : ''} >${c.name}</option>`).join('') + `</select>`;
+        } else {
+          return `<input class="gantt-inputtable" type="text" value="${value ? value : ''}">`;
+        }
+      case 'cost':
+        return `<input class="gantt-inputtable" type="number" max="100" min="0" value="${value ? value : ''}">`;
+      default:
+        return `<input class="gantt-inputtable" value="${value ? value : ''}">`;
+    }
+  } else {
+    return formattedValue;
+  }
+}
 
 export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
   var vCurTopBuf = 3;

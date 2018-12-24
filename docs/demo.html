@@ -135,8 +135,25 @@
   * Click events in table are binded to console.log for testing
 
   <br />
-  Configure debug, set with true/false to see in console: <input id="debug" onchange="start(event)" value="true" type="text">
 
+  <span>
+    <label>Configure debug and see in console:</label>
+    <input type="checkbox" id="debug" checked onchange="start(event)" />
+  </span>
+
+  <br />
+
+  <span>
+    <label>Configure editable:</label>
+    <input type="checkbox" id="editable" checked onchange="start(event)" />
+  </span>
+
+  <br />
+
+  <span>
+    <label>Configure sortTasks:</label>
+    <input type="checkbox" id="sort" checked onchange="start(event)" />
+  </span>
 
   <br />
   <div id="embedded-Gantt">
