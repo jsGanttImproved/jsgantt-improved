@@ -56,6 +56,7 @@ export const GanttChart = function (pDiv, pFormat) {
     cost: null,
   };
   this.vAdditionalHeaders = {};
+  this.vDebug = false;
   this.vShowSelector = new Array('top');
   this.vDateInputFormat = 'yyyy-mm-dd';
   this.vDateTaskTableDisplayFormat = parseDateFormatStr('dd/mm/yyyy');
@@ -222,7 +223,7 @@ export const GanttChart = function (pDiv, pFormat) {
     vTmpDiv.style.height = '0px';
   };
 
-  this.DrawDependencies = function () {
+  this.DrawDependencies = function (vDebug = false) {
     if (this.getShowDeps() == 1) {
       //First recalculate the x,y
       this.CalcTaskXY();
@@ -239,6 +240,7 @@ export const GanttChart = function (pDiv, pFormat) {
             var vTask = this.getArrayLocationByID(vDepend[k]);
             if (vTask >= 0 && vList[vTask].getGroup() != 2) {
               if (vList[vTask].getVisible() == 1) {
+                if (vDebug) console.log(`init drawDependency`, new Date());
                 if (vDependType[k] == 'SS') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', 'gDepSS');
                 else if (vDependType[k] == 'FF') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', 'gDepFF');
                 else if (vDependType[k] == 'SF') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', 'gDepSF');
@@ -311,10 +313,14 @@ export const GanttChart = function (pDiv, pFormat) {
     // var vGroup;
     // var vTaskDiv;
     // var vParDiv;
-
+    let bd;
+    if (this.vDebug) {
+      bd = new Date();
+      console.log('before draw', bd);
+    }
     if (this.vTaskList.length > 0) {
       // Process all tasks, reset parent date and completion % if task list has altered
-      if (this.vProcessNeeded) processRows(this.vTaskList, 0, -1, 1, 1, this.getUseSort());
+      if (this.vProcessNeeded) processRows(this.vTaskList, 0, -1, 1, 1, this.getUseSort(), this.vDebug);
       this.vProcessNeeded = false;
 
       // get overall min/max dates plus padding
@@ -346,8 +352,8 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
-      if(this.vAdditionalHeaders){
-        for(const key in this.vAdditionalHeaders){
+      if (this.vAdditionalHeaders) {
+        for (const key in this.vAdditionalHeaders) {
           const header = this.vAdditionalHeaders[key];
           const css = header.class ? header.class : `gadditional-${key}`;
           this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
@@ -365,10 +371,10 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanstartdate', this.vLangs[this.vLang]['planstartdate']);
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', this.vLangs[this.vLang]['planenddate']);
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gcost', this.vLangs[this.vLang]['cost']);
-      if(this.vAdditionalHeaders){
-        for(const key in this.vAdditionalHeaders){
+      if (this.vAdditionalHeaders) {
+        for (const key in this.vAdditionalHeaders) {
           const header = this.vAdditionalHeaders[key];
-          const text = header.translate ? this.vLangs[this.vLang][header.translate] : header.title; 
+          const text = header.translate ? this.vLangs[this.vLang][header.translate] : header.title;
           const css = header.class ? header.class : `gadditional-${key}`;
           this.newNode(vTmpRow, 'td', null, `gtaskheading gadditional ${css}`, text);
         }
@@ -462,14 +468,14 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCost());
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'costdate');
           }
-          if(this.vAdditionalHeaders){
-            for(const key in this.vAdditionalHeaders){
+          if (this.vAdditionalHeaders) {
+            for (const key in this.vAdditionalHeaders) {
               const header = this.vAdditionalHeaders[key];
               const css = header.class ? header.class : `gadditional-${key}`;
               const data = this.vTaskList[i].getDataObject();
-              if(data)
-              vTmpCell = this.newNode(vTmpRow, 'td', null,`gadditional ${css}`);
-              vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key]: '' );
+              if (data)
+                vTmpCell = this.newNode(vTmpRow, 'td', null, `gadditional ${css}`);
+              vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
             }
           }
           vNumRows++;
@@ -489,8 +495,8 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
-      if(this.vAdditionalHeaders){
-        for(const key in this.vAdditionalHeaders){
+      if (this.vAdditionalHeaders) {
+        for (const key in this.vAdditionalHeaders) {
           const header = this.vAdditionalHeaders[key];
           const css = header.class ? header.class : `gadditional-${key}`;
           this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
@@ -658,6 +664,11 @@ export const GanttChart = function (pDiv, pFormat) {
 
       var i = 0;
       var j = 0;
+      let bd;
+        if (this.vDebug) {
+          bd = new Date();
+          console.log('before tasks loop', bd);
+        }
       for (i = 0; i < this.vTaskList.length; i++) {
         var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
         var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
@@ -826,7 +837,10 @@ export const GanttChart = function (pDiv, pFormat) {
           addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);
         }
       }
-
+      if (this.vDebug) {
+        const ad = new Date();
+        console.log('after tasks loop', ad, (ad.getTime() - bd.getTime()));
+      }
       if (!vSingleCell) vTmpTBody.appendChild(vDateRow.cloneNode(true));
 
       while (this.vDiv.hasChildNodes()) this.vDiv.removeChild(this.vDiv.firstChild);
@@ -867,7 +881,20 @@ export const GanttChart = function (pDiv, pFormat) {
 
       if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat);
       else this.vTodayPx = -1;
+      let bdd
+      if (this.vDebug) {
+        bdd = new Date();
+        console.log('before DrawDependencies', bdd);
+      }
       this.DrawDependencies();
+      if (this.vDebug) {
+        const ad = new Date();
+        console.log('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
+      }
+    }
+    if (this.vDebug) {
+      const ad = new Date();
+      console.log('after draw', ad, (ad.getTime() - bd.getTime()));
     }
   }; //this.draw
 

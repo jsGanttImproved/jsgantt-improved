@@ -4,12 +4,15 @@ function start(e) {
   var g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
   if (g.getDivId() != null) {
 
+    const dataurl = document.getElementById('dataurl').value ? document.getElementById('dataurl').value : './fixes/data.json';
+    const vDebug = document.getElementById('debug').value === 'true' ? true : false;
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
-    JSGantt.parseJSON('./fixes/data.json', g);
+    JSGantt.parseJSON(dataurl, g, vDebug);
 
     // SET LANG FROM INPUT
     lang = e && e.target ? e.target.value : 'pt';
     delay = document.getElementById('delay').value;
+    
  
     vUseSingleCell = document.getElementById('useSingleCell').value;
     vShowRes = document.querySelector('#vShowRes:checked') ? 1 : 0;
@@ -64,12 +67,21 @@ function start(e) {
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vTooltipDelay: delay,
+      vDebug,
+      // vUseSort: false,
       vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
     });
     //DELAY FROM INPUT
 
-
+    if (vDebug) {
+      bd = new Date();
+      console.log('before reloading', bd);
+    }
     g.Draw();
+    if (vDebug) {
+      const ad = new Date();
+      console.log('after reloading: total time', ad, (ad.getTime() - bd.getTime()));
+    }
 
   } else {
     alert("Error, unable to create Gantt Chart");

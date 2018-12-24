@@ -123,8 +123,8 @@
   </select>
 
   <br />
-  Data getting from a URL, <a href="fixes/data.json">JSON Data</a>
-
+  Data getting from a URL, <a href="fixes/data.json">JSON Data</a>. Use `bigdata.json` to test with more data.
+  <input id="dataurl" onchange="start(event)" value="./fixes/data.json" type="text">
   <br />
 
   Delay for tooltip to hide (in ms): <input id="delay" onchange="start(event)" value="150" type="number">
@@ -133,6 +133,10 @@
 
   <br />
   * Click events in table are binded to console.log for testing
+
+  <br />
+  Configure debug, set with true/false to see in console: <input id="debug" onchange="start(event)" value="true" type="text">
+
 
   <br />
   <div id="embedded-Gantt">

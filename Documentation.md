@@ -93,7 +93,6 @@ Method definition:
 |_pNotes:_|(optional) Detailed task information that will be displayed in tool tip for this task|
 |_pGantt:_|(required) javascript JSGantt.GanttChart object from which to take settings.  Defaults to "g" for backwards compatibility|
 |_pCost:_| cost of that task, numeric        
-|_pAdditionalHeaders:_| object with headers values for additional columns . ex : { category: { title: 'Category' } } 
 
 <sup>*</sup> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.
 
@@ -260,6 +259,8 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setShowDeps():_  |Controls display of dependancy lines, defaults to 1 (show dependencies)|
 |_setEvents():_  |Controls events when a task is click in table data. You have to pass an object with the column and function. ex.: ` { taskname: console.log, res: console.log }`|
 |_setEventClickRow():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: `function(e){console.log(e)}`|
+|_pAdditionalHeaders:_| object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
+|_setDebug():_  |Set with true if you want to see debug in console| 
 
 
 ## Key Values ##
