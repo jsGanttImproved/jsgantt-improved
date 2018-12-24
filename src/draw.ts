@@ -44,6 +44,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowTaskInfoNotes = 1;
   this.vShowTaskInfoLink = 0;
   this.vEventClickRow = 1;
+  this.vShowDeps = 1;
   this.vEvents = {
     taskname: null,
     res: null,
