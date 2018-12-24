@@ -108,6 +108,7 @@ function start(e) {
       console.log('before reloading', bd);
     }
     g.Draw();
+    JSGantt.criticalPath(jsonObj)
     if (vDebug) {
       const ad = new Date();
       console.log('after reloading: total time', ad, (ad.getTime() - bd.getTime()));

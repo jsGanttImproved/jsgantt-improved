@@ -438,3 +438,53 @@ export const hashString = function (key) {
 export const hashKey = function (key) {
   return this.hashString(key) % 10000;
 }
+
+export const criticalPath = function (tasks) {
+  const path = {};
+  // calculate duration
+  tasks.forEach(task => {
+    task.duration = new Date(task.pEnd).getTime() - new Date(task.pStart).getTime();
+  });
+
+  tasks.forEach(task => {
+    if (!path[task.pID]) {
+      path[task.pID] = task;
+    }
+    if (!path[task.pParent]) {
+      path[task.pParent] = {
+        childrens: []
+      }
+    }
+    if (!path[task.pID].childrens) {
+      path[task.pID].childrens = [];
+    }
+    path[task.pParent].childrens.push(task);
+    let max = path[task.pParent].childrens[0].duration;
+    path[task.pParent].childrens.forEach(t => {
+      if (t.duration > max) {
+        max = t.duration;
+      }
+    });
+    path[task.pParent].duration = max;
+  });
+
+  const finalNodes = { 0: path[0] };
+  let node = path[0];
+  while (node) {
+    if (node.childrens.length > 0) {
+      let found = node.childrens[0];
+      let max = found.duration;
+      node.childrens.forEach(c => {
+        if (c.duration > max) {
+          found = c;
+          max = c.duration;
+        }
+      });
+      finalNodes[found.pID] = found;
+      node = found;
+    } else {
+      node = null;
+    }
+  }
+  console.log(path, finalNodes);
+}

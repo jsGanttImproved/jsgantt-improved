@@ -1340,6 +1340,7 @@ exports.JSGantt.addThisRowListeners = events_1.addThisRowListeners;
 exports.JSGantt.addFolderListeners = events_1.addFolderListeners;
 exports.JSGantt.addFormatListeners = events_1.addFormatListeners;
 exports.JSGantt.addScrollListeners = events_1.addScrollListeners;
+exports.JSGantt.criticalPath = utils_1.criticalPath;
 
 },{"./draw":2,"./events":3,"./json":5,"./task":8,"./utils":9,"./xml":10}],5:[function(require,module,exports){
 "use strict";
@@ -3236,6 +3237,57 @@ exports.hashString = function (key) {
 };
 exports.hashKey = function (key) {
     return this.hashString(key) % 10000;
+};
+exports.criticalPath = function (tasks) {
+    var path = {};
+    // calculate duration
+    tasks.forEach(function (task) {
+        task.duration = new Date(task.pEnd).getTime() - new Date(task.pStart).getTime();
+    });
+    tasks.forEach(function (task) {
+        if (!path[task.pID]) {
+            path[task.pID] = task;
+        }
+        if (!path[task.pParent]) {
+            path[task.pParent] = {
+                childrens: []
+            };
+        }
+        if (!path[task.pID].childrens) {
+            path[task.pID].childrens = [];
+        }
+        path[task.pParent].childrens.push(task);
+        var max = path[task.pParent].childrens[0].duration;
+        path[task.pParent].childrens.forEach(function (t) {
+            if (t.duration > max) {
+                max = t.duration;
+            }
+        });
+        path[task.pParent].duration = max;
+    });
+    var finalNodes = { 0: path[0] };
+    var node = path[0];
+    var _loop_1 = function () {
+        if (node.childrens.length > 0) {
+            var found_1 = node.childrens[0];
+            var max_1 = found_1.duration;
+            node.childrens.forEach(function (c) {
+                if (c.duration > max_1) {
+                    found_1 = c;
+                    max_1 = c.duration;
+                }
+            });
+            finalNodes[found_1.pID] = found_1;
+            node = found_1;
+        }
+        else {
+            node = null;
+        }
+    };
+    while (node) {
+        _loop_1();
+    }
+    console.log(path, finalNodes);
 };
 
 },{}],10:[function(require,module,exports){
