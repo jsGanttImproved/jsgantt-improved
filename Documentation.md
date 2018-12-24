@@ -258,6 +258,13 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setShowTaskInfoNotes():_|Controls whether the Additional Notes data is displayed in the task tool tip, defaults to 1 (show notes)|
 |_setShowEndWeekDate():_|Controls whether the major heading in "Day" view displays the week end-date in the appropriate format (see [below](Documentation#user-content-display-date-formats)), defaults to 1 (show date)|
 |_setShowDeps():_  |Controls display of dependancy lines, defaults to 1 (show dependencies)|
+|_setEvents():_  |Controls events when a task is click in table data. You have to pass an object with the column and function. ex.: |
+      {
+        taskname: console.log,
+        res: console.log 
+      }
+|_setEventClickRow():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: vEventClickRow|
+
 
 ## Key Values ##
 The following options enable functionality using a set of specific key values
@@ -430,6 +437,18 @@ g.setOptions({
   vShowEndWeekDate: 0,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
   vUseSingleCell: 10000, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
   vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+  vEvents: {
+        taskname: console.log,
+        res: console.log,
+        dur: console.log,
+        comp: console.log,
+        startdate: console.log,
+        enddate: console.log,
+        planstartdate: console.log,
+        planenddate: console.log,
+        cost: console.log
+      },
+  vEventClickRow: console.log
 });
 
 // Load from a Json url
