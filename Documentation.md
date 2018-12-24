@@ -258,12 +258,8 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setShowTaskInfoNotes():_|Controls whether the Additional Notes data is displayed in the task tool tip, defaults to 1 (show notes)|
 |_setShowEndWeekDate():_|Controls whether the major heading in "Day" view displays the week end-date in the appropriate format (see [below](Documentation#user-content-display-date-formats)), defaults to 1 (show date)|
 |_setShowDeps():_  |Controls display of dependancy lines, defaults to 1 (show dependencies)|
-|_setEvents():_  |Controls events when a task is click in table data. You have to pass an object with the column and function. ex.: |
-      {
-        taskname: console.log,
-        res: console.log 
-      }
-|_setEventClickRow():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: vEventClickRow|
+|_setEvents():_  |Controls events when a task is click in table data. You have to pass an object with the column and function. ex.: ` { taskname: console.log, res: console.log }`|
+|_setEventClickRow():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: `function(e){console.log(e)}`|
 
 
 ## Key Values ##
