@@ -46,6 +46,15 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vShowTaskInfoLink = 0;
     this.vEventClickRow = 1;
     this.vShowDeps = 1;
+    this.vWorkingDays = {
+        0: true,
+        1: true,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
+        6: true
+    };
     this.vEvents = {
         taskname: null,
         res: null,
@@ -241,16 +250,18 @@ exports.GanttChart = function (pDiv, pFormat) {
                         var vTask = this.getArrayLocationByID(vDepend[k]);
                         if (vTask >= 0 && vList[vTask].getGroup() != 2) {
                             if (vList[vTask].getVisible() == 1) {
-                                if (vDebug)
-                                    console.log("init drawDependency", new Date());
+                                if (vDebug) {
+                                    console.log("init drawDependency ", vList[vTask].getID(), new Date());
+                                }
+                                var cssClass = 'gDepId' + vList[vTask].getID();
                                 if (vDependType[k] == 'SS')
-                                    this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', 'gDepSS');
+                                    this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', cssClass + ' gDepSS');
                                 else if (vDependType[k] == 'FF')
-                                    this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', 'gDepFF');
+                                    this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', cssClass + ' gDepFF');
                                 else if (vDependType[k] == 'SF')
-                                    this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', 'gDepSF');
+                                    this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', cssClass + ' gDepSF');
                                 else if (vDependType[k] == 'FS')
-                                    this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'FS', 'gDepFS');
+                                    this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'FS', cssClass + ' gDepFS');
                             }
                         }
                     }
@@ -918,12 +929,14 @@ exports.GanttChart = function (pDiv, pFormat) {
                 this.vTodayPx = utils_1.getOffset(vMinDate, new Date(), vColWidth, this.vFormat);
             else
                 this.vTodayPx = -1;
+            // Dependencies
             var bdd = void 0;
             if (this.vDebug) {
                 bdd = new Date();
                 console.log('before DrawDependencies', bdd);
             }
-            this.DrawDependencies();
+            this.DrawDependencies(this.vDebug);
+            events_1.addListenerDependencies();
             if (this.vDebug) {
                 var ad = new Date();
                 console.log('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
@@ -1229,6 +1242,29 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
                 draw();
             }
         }, vTmpCell.children[0].children[0]);
+    }
+};
+exports.addListenerDependencies = function () {
+    document.querySelectorAll('.gtaskbarcontainer').forEach(function (taskDiv) {
+        taskDiv.addEventListener('mouseover', function (e) {
+            toggleDependencies(e);
+        });
+        taskDiv.addEventListener('mouseout', function (e) {
+            toggleDependencies(e);
+        });
+    });
+};
+var toggleDependencies = function (e) {
+    var target = e.currentTarget;
+    var ids = target.getAttribute('id').split('_');
+    var style = 'groove';
+    if (e.type === 'mouseout') {
+        style = '';
+    }
+    if (ids.length > 1) {
+        document.querySelectorAll(".gDepId" + ids[1]).forEach(function (c) {
+            c.style.borderStyle = style;
+        });
     }
 };
 // "pID": 122
@@ -2086,6 +2122,7 @@ exports.includeGetSet = function () {
         this.vFormat = pFormat;
         this.Draw();
     };
+    this.setWorkingDays = function (workingDays) { this.vWorkingDays = workingDays; };
     this.setMinGpLen = function (pMinGpLen) { this.vMinGpLen = pMinGpLen; };
     this.setScrollTo = function (pDate) { this.vScrollTo = pDate; };
     this.setHourColWidth = function (pWidth) { this.vHourColWidth = pWidth; };
@@ -2195,7 +2232,6 @@ var utils_1 = require("./utils");
 // Function to open/close and hide/show children of specified task
 exports.folder = function (pID, ganttObj) {
     var vList = ganttObj.getList();
-    var vDivId = ganttObj.getDivId();
     ganttObj.clearDependencies(); // clear these first so slow rendering doesn't look odd
     for (var i = 0; i < vList.length; i++) {
         if (vList[i].getID() == pID) {
@@ -2231,7 +2267,6 @@ exports.folder = function (pID, ganttObj) {
 exports.hide = function (pID, ganttObj) {
     var vList = ganttObj.getList();
     var vID = 0;
-    var vDivId = ganttObj.getDivId();
     for (var i = 0; i < vList.length; i++) {
         if (vList[i].getParent() == pID) {
             vID = vList[i].getID();
@@ -2251,7 +2286,6 @@ exports.hide = function (pID, ganttObj) {
 exports.show = function (pID, pTop, ganttObj) {
     var vList = ganttObj.getList();
     var vID = 0;
-    var vDivId = ganttObj.getDivId();
     var vState = '';
     for (var i = 0; i < vList.length; i++) {
         if (vList[i].getParent() == pID) {
@@ -2297,7 +2331,7 @@ exports.taskLink = function (pRef, pWidth, pHeight) {
         vHeight = pHeight;
     else
         vHeight = 400;
-    var OpenWindow = window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth);
+    window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth); // let OpenWindow = 
 };
 exports.sortTasks = function (pList, pID, pIdx) {
     var sortIdx = pIdx;
@@ -2335,7 +2369,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     if (pPlanStart === void 0) { pPlanStart = null; }
     if (pPlanEnd === void 0) { pPlanEnd = null; }
     if (pDataObject === void 0) { pDataObject = null; }
-    var vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
+    var vGantt = pGantt ? pGantt : g; // hack for backwards compatibility
     var _id = document.createTextNode(pID).data;
     var vID = utils_1.hashKey(document.createTextNode(pID).data);
     var vName = document.createTextNode(pName).data;
@@ -3288,7 +3322,6 @@ exports.criticalPath = function (tasks) {
     while (node) {
         _loop_1();
     }
-    console.log(path, finalNodes);
 };
 
 },{}],10:[function(require,module,exports){
