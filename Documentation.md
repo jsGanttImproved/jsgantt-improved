@@ -259,7 +259,10 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setShowDeps():_  |Controls display of dependancy lines, defaults to 1 (show dependencies)|
 |_setEvents():_  |Controls events when a task is click in table data. You have to pass an object with the column and function. ex.: ` { taskname: console.log, res: console.log }`|
 |_setEventClickRow():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: `function(e){console.log(e)}`|
-|_pAdditionalHeaders:_| object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
+|_setEventsChange():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: `{ taskname: function(task, event, cell, column){ console.log(task, event, cell, column); } }`|
+|_setAdditionalHeaders:_ |Set object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
+|_setResources():_  |Set the list of possible resources, must be an array of objects, ex: `[{ id: 1, name: 'Mario' } , { id: 2, name: 'Henrique' }]`| 
+|_setEditable():_  |Set with true if you want to edit values in the data table, will show inputs instead of texts| 
 |_setDebug():_  |Set with true if you want to see debug in console| 
 
 
