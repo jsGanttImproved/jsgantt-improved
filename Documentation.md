@@ -192,6 +192,24 @@ Method definition:
 The XML provided will be parsed in exactly the same way as the contents of an external XML file and hence must match the format as described for [parseXML](Documentation#user-content-b-using-parsexml-with-an-external-xml-file) above
 
 
+### XML Export ###
+
+The following methods can be used to extract details of tasks in the project in XML format
+
+Method definition: **getXMLProject()**
+
+Returns a string containing the entire project in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
+
+Method definition: **getXMLTask(_pID_, _pIdx_)**
+
+| Parameter | Description |
+|:--------|:------------------------------------------------|
+| _pID:_ | (required) the numeric ID that identifies the task to extract |
+| _pIdx:_ | (optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID |
+
+Returns a string containing the specified task item in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
+
+
 ## Call Draw() ##
 ```javascript
 g.Draw();
@@ -482,20 +500,3 @@ g.Draw();
 
 </script>
 ```
-
-# XML Export #
-
-The following methods can be used to extract details of tasks in the project in XML format
-
-Method definition: **getXMLProject()**
-
-Returns a string containing the entire project in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
-
-Method definition: **getXMLTask(_pID_, _pIdx_)**
-
-| Parameter | Description |
-|:--------|:------------------------------------------------|
-| _pID:_ | (required) the numeric ID that identifies the task to extract |
-| _pIdx:_ | (optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID |
-
-Returns a string containing the specified task item in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
