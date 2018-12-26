@@ -486,5 +486,4 @@ export const criticalPath = function (tasks) {
       node = null;
     }
   }
-  console.log(path, finalNodes);
 }

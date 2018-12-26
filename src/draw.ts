@@ -1,7 +1,7 @@
 import * as lang from './lang';
 import {
   mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners, addFormatListeners, moveToolTip,
-  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell
+  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies
 } from "./events";
 import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
@@ -45,6 +45,15 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowTaskInfoLink = 0;
   this.vEventClickRow = 1;
   this.vShowDeps = 1;
+  this.vWorkingDays = {
+    0: true, // sunday
+    1: true,
+    2: true,
+    3: true,
+    4: true,
+    5: true,
+    6: true
+  };
   this.vEvents = {
     taskname: null,
     res: null,
@@ -254,11 +263,14 @@ export const GanttChart = function (pDiv, pFormat) {
             let vTask = this.getArrayLocationByID(vDepend[k]);
             if (vTask >= 0 && vList[vTask].getGroup() != 2) {
               if (vList[vTask].getVisible() == 1) {
-                if (vDebug) console.log(`init drawDependency`, new Date());
-                if (vDependType[k] == 'SS') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', 'gDepSS');
-                else if (vDependType[k] == 'FF') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', 'gDepFF');
-                else if (vDependType[k] == 'SF') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', 'gDepSF');
-                else if (vDependType[k] == 'FS') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'FS', 'gDepFS');
+                if (vDebug) {
+                  console.log(`init drawDependency `, vList[vTask].getID(), new Date());
+                }
+                const cssClass = 'gDepId' + vList[vTask].getID();
+                if (vDependType[k] == 'SS') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', cssClass + ' gDepSS');
+                else if (vDependType[k] == 'FF') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', cssClass + ' gDepFF');
+                else if (vDependType[k] == 'SF') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', cssClass + ' gDepSF');
+                else if (vDependType[k] == 'FS') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'FS', cssClass + ' gDepFS');
               }
             }
           }
@@ -922,12 +934,15 @@ export const GanttChart = function (pDiv, pFormat) {
 
       if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat);
       else this.vTodayPx = -1;
-      let bdd
+      
+      // Dependencies
+      let bdd;
       if (this.vDebug) {
         bdd = new Date();
         console.log('before DrawDependencies', bdd);
       }
-      this.DrawDependencies();
+      this.DrawDependencies(this.vDebug);
+      addListenerDependencies();
       if (this.vDebug) {
         const ad = new Date();
         console.log('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));

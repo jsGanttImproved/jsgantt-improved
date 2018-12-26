@@ -86,6 +86,7 @@ export const includeGetSet = function () {
     this.vFormat = pFormat;
     this.Draw();
   };
+  this.setWorkingDays = function(workingDays) { this.vWorkingDays = workingDays; };
   this.setMinGpLen = function (pMinGpLen) { this.vMinGpLen = pMinGpLen; };
   this.setScrollTo = function (pDate) { this.vScrollTo = pDate; };
   this.setHourColWidth = function (pWidth) { this.vHourColWidth = pWidth; };

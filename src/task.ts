@@ -5,7 +5,6 @@ declare let g: any;
 // Function to open/close and hide/show children of specified task
 export const folder = function (pID, ganttObj) {
   let vList = ganttObj.getList();
-  let vDivId = ganttObj.getDivId();
 
   ganttObj.clearDependencies(); // clear these first so slow rendering doesn't look odd
 
@@ -46,7 +45,6 @@ export const folder = function (pID, ganttObj) {
 export const hide = function (pID, ganttObj) {
   let vList = ganttObj.getList();
   let vID = 0;
-  let vDivId = ganttObj.getDivId();
 
   for (let i = 0; i < vList.length; i++) {
     if (vList[i].getParent() == pID) {
@@ -65,7 +63,6 @@ export const hide = function (pID, ganttObj) {
 export const show = function (pID, pTop, ganttObj) {
   let vList = ganttObj.getList();
   let vID = 0;
-  let vDivId = ganttObj.getDivId();
   let vState = '';
 
   for (let i = 0; i < vList.length; i++) {
@@ -103,7 +100,7 @@ export const taskLink = function (pRef, pWidth, pHeight) {
   if (pWidth) vWidth = pWidth; else vWidth = 400;
   if (pHeight) vHeight = pHeight; else vHeight = 400;
 
-  let OpenWindow = window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth);
+  window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth); // let OpenWindow = 
 };
 
 
@@ -161,7 +158,7 @@ export const TaskItemObject = function (object) {
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDataObject = null) {
-  let vGantt = pGantt ? pGantt : g; //hack for backwards compatibility
+  let vGantt = pGantt ? pGantt : g; // hack for backwards compatibility
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
   let vName = document.createTextNode(pName).data;

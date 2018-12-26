@@ -176,6 +176,31 @@ export const addListenerInputCell = function (vTmpCell, vEventsChange, callback,
   }
 }
 
+export const addListenerDependencies = function () {
+  document.querySelectorAll('.gtaskbarcontainer').forEach(taskDiv => {
+    taskDiv.addEventListener('mouseover', e => {
+      toggleDependencies(e);
+    });
+    taskDiv.addEventListener('mouseout', e => {
+      toggleDependencies(e);
+    });
+  });
+}
+
+const toggleDependencies = function (e) {
+  const target: any = e.currentTarget;
+  const ids = target.getAttribute('id').split('_');
+  let style = 'groove';
+  if (e.type === 'mouseout') {
+    style = '';
+  }
+  if (ids.length > 1) {
+    document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+      c.style.borderStyle = style;
+    });
+  }
+}
+
 // "pID": 122
 const vColumnsNames = {
   taskname: 'pName',
