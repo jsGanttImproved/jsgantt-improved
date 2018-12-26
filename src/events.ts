@@ -17,10 +17,10 @@ export const mouseOut = function (pObj1, pObj2) {
 };
 
 export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
-  var vTtDivId = pGanttChartObj.getDivId() + 'JSGanttToolTip';
-  var vMaxW = 500;
-  var vMaxAlpha = 100;
-  var vShowing = pContents.id;
+  let vTtDivId = pGanttChartObj.getDivId() + 'JSGanttToolTip';
+  let vMaxW = 500;
+  let vMaxAlpha = 100;
+  let vShowing = pContents.id;
 
   if (pGanttChartObj.getUseToolTip()) {
     if (pGanttChartObj.vTool == null) {
@@ -78,9 +78,9 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
 
 
 export const moveToolTip = function (pNewX, pNewY, pTool, timer) {
-  var vSpeed = parseInt(pTool.getAttribute('moveSpeed'));
-  var vOldX = parseInt(pTool.style.left);
-  var vOldY = parseInt(pTool.style.top);
+  let vSpeed = parseInt(pTool.getAttribute('moveSpeed'));
+  let vOldX = parseInt(pTool.style.left);
+  let vOldY = parseInt(pTool.style.top);
 
   if (pTool.style.visibility != 'visible') {
     pTool.style.left = pNewX + 'px';
@@ -149,9 +149,75 @@ export const addScrollListeners = function (pGanttChart) {
 };
 
 export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
-  addListener('click', function(e){
-    if(vEvents[column] && typeof vEvents[column] === 'function'){
+  addListener('click', function (e) {
+    if (vEvents[column] && typeof vEvents[column] === 'function') {
       vEvents[column](task, e, vTmpCell);
     }
-  }, vTmpCell); 
+  }, vTmpCell);
+}
+
+export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw = null, event = 'blur') {
+  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
+    addListener(event, function (e) {
+      if (callback) {
+        callback(task, e);
+      }
+      if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
+        const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
+        if (q && q.then) {
+          q.then(e => draw());
+        } else {
+          draw();
+        }
+      } else {
+        draw();
+      }
+    }, vTmpCell.children[0].children[0]);
+  }
+}
+
+export const addListenerDependencies = function () {
+  document.querySelectorAll('.gtaskbarcontainer').forEach(taskDiv => {
+    taskDiv.addEventListener('mouseover', e => {
+      toggleDependencies(e);
+    });
+    taskDiv.addEventListener('mouseout', e => {
+      toggleDependencies(e);
+    });
+  });
+}
+
+const toggleDependencies = function (e) {
+  const target: any = e.currentTarget;
+  const ids = target.getAttribute('id').split('_');
+  let style = 'groove';
+  if (e.type === 'mouseout') {
+    style = '';
+  }
+  if (ids.length > 1) {
+    document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+      c.style.borderStyle = style;
+    });
+  }
+}
+
+// "pID": 122
+const vColumnsNames = {
+  taskname: 'pName',
+  res: 'pRes',
+  dur: '',
+  comp: 'pComp',
+  start: 'pStart',
+  end: 'pEnd',
+  planstart: 'pPlanStart',
+  planend: 'pPlanEnd',
+  link: 'pLink',
+  cost: 'pCost',
+  mile: 'pMile',
+  group: 'pGroup',
+  parent: 'pParent',
+  open: 'pOpen',
+  depend: 'pDepend',
+  caption: 'pCaption',
+  note: 'pNotes'
 }

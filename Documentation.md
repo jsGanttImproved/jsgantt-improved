@@ -192,6 +192,24 @@ Method definition:
 The XML provided will be parsed in exactly the same way as the contents of an external XML file and hence must match the format as described for [parseXML](Documentation#user-content-b-using-parsexml-with-an-external-xml-file) above
 
 
+### XML Export ###
+
+The following methods can be used to extract details of tasks in the project in XML format
+
+Method definition: **getXMLProject()**
+
+Returns a string containing the entire project in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
+
+Method definition: **getXMLTask(_pID_, _pIdx_)**
+
+| Parameter | Description |
+|:--------|:------------------------------------------------|
+| _pID:_ | (required) the numeric ID that identifies the task to extract |
+| _pIdx:_ | (optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID |
+
+Returns a string containing the specified task item in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
+
+
 ## Call Draw() ##
 ```javascript
 g.Draw();
@@ -259,7 +277,10 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setShowDeps():_  |Controls display of dependancy lines, defaults to 1 (show dependencies)|
 |_setEvents():_  |Controls events when a task is click in table data. You have to pass an object with the column and function. ex.: ` { taskname: console.log, res: console.log }`|
 |_setEventClickRow():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: `function(e){console.log(e)}`|
-|_pAdditionalHeaders:_| object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
+|_setEventsChange():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: `{ taskname: function(task, event, cell, column){ console.log(task, event, cell, column); } }`|
+|_setAdditionalHeaders:_ |Set object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
+|_setResources():_  |Set the list of possible resources, must be an array of objects, ex: `[{ id: 1, name: 'Mario' } , { id: 2, name: 'Henrique' }]`| 
+|_setEditable():_  |Set with true if you want to edit values in the data table, will show inputs instead of texts| 
 |_setDebug():_  |Set with true if you want to see debug in console| 
 
 
@@ -479,20 +500,3 @@ g.Draw();
 
 </script>
 ```
-
-# XML Export #
-
-The following methods can be used to extract details of tasks in the project in XML format
-
-Method definition: **getXMLProject()**
-
-Returns a string containing the entire project in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().
-
-Method definition: **getXMLTask(_pID_, _pIdx_)**
-
-| Parameter | Description |
-|:--------|:------------------------------------------------|
-| _pID:_ | (required) the numeric ID that identifies the task to extract |
-| _pIdx:_ | (optional) Boolean - if present and set to "true" the number passed in the pID parameter is treated as an array index for the task list rather than an ID |
-
-Returns a string containing the specified task item in JSGantt Improved XML format.  Dates will be exported in the currently defined input format as set by setDateInputFormat().

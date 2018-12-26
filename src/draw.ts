@@ -1,7 +1,7 @@
 import * as lang from './lang';
 import {
   mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners, addFormatListeners, moveToolTip,
-  addFolderListeners, addListenerClickCell, addListener
+  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies
 } from "./events";
 import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
@@ -44,6 +44,16 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowTaskInfoNotes = 1;
   this.vShowTaskInfoLink = 0;
   this.vEventClickRow = 1;
+  this.vShowDeps = 1;
+  this.vWorkingDays = {
+    0: true, // sunday
+    1: true,
+    2: true,
+    3: true,
+    4: true,
+    5: true,
+    6: true
+  };
   this.vEvents = {
     taskname: null,
     res: null,
@@ -55,7 +65,20 @@ export const GanttChart = function (pDiv, pFormat) {
     planenddate: null,
     cost: null,
   };
+  this.vEventsChange = {
+    taskname: null,
+    res: null,
+    dur: null,
+    comp: null,
+    startdate: null,
+    enddate: null,
+    planstartdate: null,
+    planenddate: null,
+    cost: null,
+  };
+  this.vResources = null;
   this.vAdditionalHeaders = {};
+  this.vEditable = false;
   this.vDebug = false;
   this.vShowSelector = new Array('top');
   this.vDateInputFormat = 'yyyy-mm-dd';
@@ -111,15 +134,15 @@ export const GanttChart = function (pDiv, pFormat) {
   this.getXMLTask = getXMLTask;
 
   this.CalcTaskXY = function () {
-    var vID;
-    var vList = this.getList();
-    var vBarDiv;
-    var vTaskDiv;
-    var vParDiv;
-    var vLeft, vTop, vWidth;
-    var vHeight = Math.floor((this.getRowHeight() / 2));
+    let vID;
+    let vList = this.getList();
+    let vBarDiv;
+    let vTaskDiv;
+    let vParDiv;
+    let vLeft, vTop, vWidth;
+    let vHeight = Math.floor((this.getRowHeight() / 2));
 
-    for (var i = 0; i < vList.length; i++) {
+    for (let i = 0; i < vList.length; i++) {
       vID = vList[i].getID();
       vBarDiv = vList[i].getBarDiv();
       vTaskDiv = vList[i].getTaskDiv();
@@ -142,7 +165,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
 
   this.clearDependencies = function () {
-    var parent = this.getLines();
+    let parent = this.getLines();
     while (parent.hasChildNodes()) parent.removeChild(parent.firstChild);
     this.vDepId = 1;
   };
@@ -150,12 +173,12 @@ export const GanttChart = function (pDiv, pFormat) {
 
   // sLine: Draw a straight line (colored one-pixel wide div)
   this.sLine = function (x1, y1, x2, y2, pClass) {
-    var vLeft = Math.min(x1, x2);
-    var vTop = Math.min(y1, y2);
-    var vWid = Math.abs(x2 - x1) + 1;
-    var vHgt = Math.abs(y2 - y1) + 1;
+    let vLeft = Math.min(x1, x2);
+    let vTop = Math.min(y1, y2);
+    let vWid = Math.abs(x2 - x1) + 1;
+    let vHgt = Math.abs(y2 - y1) + 1;
 
-    var vTmpDiv = document.createElement('div');
+    let vTmpDiv = document.createElement('div');
     vTmpDiv.id = this.vDivId + 'line' + this.vDepId++;
     vTmpDiv.style.position = 'absolute';
     vTmpDiv.style.overflow = 'hidden';
@@ -178,10 +201,10 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.drawDependency = function (x1, y1, x2, y2, pType, pClass) {
-    var vDir = 1;
-    var vBend = false;
-    var vShort = 4;
-    var vRow = Math.floor(this.getRowHeight() / 2);
+    let vDir = 1;
+    let vBend = false;
+    let vShort = 4;
+    let vRow = Math.floor(this.getRowHeight() / 2);
 
     if (y2 < y1) vRow *= -1;
 
@@ -218,7 +241,7 @@ export const GanttChart = function (pDiv, pFormat) {
     }
     else this.sLine(x1, y1, x2 - (1 * vDir), y2, pClass);
 
-    var vTmpDiv = this.sLine(x2, y2, x2 - 3 - ((vDir < 0) ? 1 : 0), y2 - 3 - ((vDir < 0) ? 1 : 0), pClass + "Arw");
+    let vTmpDiv = this.sLine(x2, y2, x2 - 3 - ((vDir < 0) ? 1 : 0), y2 - 3 - ((vDir < 0) ? 1 : 0), pClass + "Arw");
     vTmpDiv.style.width = '0px';
     vTmpDiv.style.height = '0px';
   };
@@ -229,22 +252,25 @@ export const GanttChart = function (pDiv, pFormat) {
       this.CalcTaskXY();
       this.clearDependencies();
 
-      var vList = this.getList();
-      for (var i = 0; i < vList.length; i++) {
-        var vDepend = vList[i].getDepend();
-        var vDependType = vList[i].getDepType();
-        var n = vDepend.length;
+      let vList = this.getList();
+      for (let i = 0; i < vList.length; i++) {
+        let vDepend = vList[i].getDepend();
+        let vDependType = vList[i].getDepType();
+        let n = vDepend.length;
 
         if (n > 0 && vList[i].getVisible() == 1) {
-          for (var k = 0; k < n; k++) {
-            var vTask = this.getArrayLocationByID(vDepend[k]);
+          for (let k = 0; k < n; k++) {
+            let vTask = this.getArrayLocationByID(vDepend[k]);
             if (vTask >= 0 && vList[vTask].getGroup() != 2) {
               if (vList[vTask].getVisible() == 1) {
-                if (vDebug) console.log(`init drawDependency`, new Date());
-                if (vDependType[k] == 'SS') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', 'gDepSS');
-                else if (vDependType[k] == 'FF') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', 'gDepFF');
-                else if (vDependType[k] == 'SF') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', 'gDepSF');
-                else if (vDependType[k] == 'FS') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'FS', 'gDepFS');
+                if (vDebug) {
+                  console.log(`init drawDependency `, vList[vTask].getID(), new Date());
+                }
+                const cssClass = 'gDepId' + vList[vTask].getID();
+                if (vDependType[k] == 'SS') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', cssClass + ' gDepSS');
+                else if (vDependType[k] == 'FF') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', cssClass + ' gDepFF');
+                else if (vDependType[k] == 'SF') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', cssClass + ' gDepSF');
+                else if (vDependType[k] == 'FS') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'FS', cssClass + ' gDepFS');
               }
             }
           }
@@ -256,8 +282,8 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.getArrayLocationByID = function (pId) {
-    var vList = this.getList();
-    for (var i = 0; i < vList.length; i++) {
+    let vList = this.getList();
+    for (let i = 0; i < vList.length; i++) {
       if (vList[i].getID() == pId)
         return i;
     }
@@ -265,9 +291,9 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.newNode = function (pParent, pNodeType, pId, pClass, pText, pWidth, pLeft, pDisplay, pColspan, pAttribs) {
-    var vNewNode = pParent.appendChild(document.createElement(pNodeType));
+    let vNewNode = pParent.appendChild(document.createElement(pNodeType));
     if (pAttribs) {
-      for (var i = 0; i + 1 < pAttribs.length; i += 2) {
+      for (let i = 0; i + 1 < pAttribs.length; i += 2) {
         vNewNode.setAttribute(pAttribs[i], pAttribs[i + 1]);
       }
     }
@@ -288,31 +314,22 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.Draw = function () {
-    var vMaxDate = new Date();
-    var vMinDate = new Date();
-    var vTmpDate = new Date();
-    var vTaskLeftPx = 0;
-    var vTaskRightPx = 0;
-    var vTaskWidth = 1;
+    let vMaxDate = new Date();
+    let vMinDate = new Date();
+    let vTmpDate = new Date();
+    let vTaskLeftPx = 0;
+    let vTaskRightPx = 0;
+    let vTaskWidth = 1;
 
-    var vTaskPlanLeftPx = 0;
-    var vTaskPlanRightPx = 0;
-    var vTaskPlanWidth = 1;
+    let vTaskPlanLeftPx = 0;
+    let vTaskPlanRightPx = 0;
 
-    var vNumCols = 0;
-    var vNumRows = 0;
-    var vSingleCell = false;
-    var vID = 0;
-    // var vMainTable = '';
-    var vDateRow = null;
-    // var vFirstCellItemRowStr = '';
-    // var vItemRowStr = '';
-    var vColWidth = 0;
-    // var vColUnit = 0;
-    // var vChild;
-    // var vGroup;
-    // var vTaskDiv;
-    // var vParDiv;
+    let vNumCols = 0;
+    let vNumRows = 0;
+    let vSingleCell = false;
+    let vID = 0;
+    let vDateRow = null;
+    let vColWidth = 0;
     let bd;
     if (this.vDebug) {
       bd = new Date();
@@ -335,14 +352,14 @@ export const GanttChart = function (pDiv, pFormat) {
       else if (this.vFormat == 'hour') vColWidth = this.vHourColWidth;
 
       // DRAW the Left-side of the chart (names, resources, comp%)
-      var vLeftHeader = document.createDocumentFragment();
+      let vLeftHeader = document.createDocumentFragment();
 
-      var vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
-      var vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
-      var vTmpTBody = this.newNode(vTmpTab, 'tbody');
-      var vTmpRow = this.newNode(vTmpTBody, 'tr');
+      let vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
+      let vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
+      let vTmpTBody = this.newNode(vTmpTab, 'tbody');
+      let vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-      var vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
+      let vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
       vTmpCell.appendChild(this.drawSelector('top'));
       if (this.vShowRes == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
       if (this.vShowDur == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
@@ -380,14 +397,15 @@ export const GanttChart = function (pDiv, pFormat) {
         }
       }
 
-      var vLeftTable = document.createDocumentFragment();
-      var vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
+      let vLeftTable = document.createDocumentFragment();
+      let vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
       this.setListBody(vTmpDiv2);
       vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
       vTmpTBody = this.newNode(vTmpTab, 'tbody');
 
-      for (i = 0; i < this.vTaskList.length; i++) {
-        if (this.vTaskList[i].getGroup() == 1) var vBGColor = 'ggroupitem';
+      for (let i = 0; i < this.vTaskList.length; i++) {
+        let vBGColor;
+        if (this.vTaskList[i].getGroup() == 1) vBGColor = 'ggroupitem';
         else vBGColor = 'glineitem';
 
         vID = this.vTaskList[i].getID();
@@ -399,8 +417,8 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskname');
 
-          var vCellContents = '';
-          for (j = 1; j < this.vTaskList[i].getLevel(); j++) {
+          let vCellContents = '';
+          for (let j = 1; j < this.vTaskList[i].getLevel(); j++) {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
           }
 
@@ -414,67 +432,104 @@ export const GanttChart = function (pDiv, pFormat) {
 
           if (this.vTaskList[i].getGroup() == 1) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
-            var vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
+            let vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
+
             vTmpDiv.appendChild(document.createTextNode('\u00A0' + this.vTaskList[i].getName()));
+            // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
+            // vTmpDiv.appendChild(document.createNode(text));
+            const callback = (task, e) => task.setName(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'taskname', this.Draw.bind(this));
             addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i], 'taskname');
           }
           else {
             vCellContents += '\u00A0\u00A0\u00A0\u00A0';
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + this.vTaskList[i].getName());
+            const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + text);
+            const callback = (task, e) => task.setName(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'taskname', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'taskname');
           }
 
           if (this.vShowRes == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gresource');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getResource());
+            const text = makeInput(this.vTaskList[i].getResource(), this.vEditable, 'resource', this.vTaskList[i].getResource(), this.vResources);
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setResource(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'res', this.Draw.bind(this), 'change');
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'res');
           }
           if (this.vShowDur == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getDuration(this.vFormat, this.vLangs[this.vLang]));
+            const text = makeInput(this.vTaskList[i].getDuration(this.vFormat, this.vLangs[this.vLang]), this.vEditable, 'text', this.vTaskList[i].getDuration());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setDur(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'dur', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'dur');
           }
           if (this.vShowComp == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCompStr());
+            const text = makeInput(this.vTaskList[i].getCompStr(), this.vEditable, 'percentage', this.vTaskList[i].getCompVal());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setCompVal(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'comp', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'comp');
           }
           if (this.vShowStartDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, formatDateStr(this.vTaskList[i].getStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'startdate');
+            const v = formatDateStr(this.vTaskList[i].getStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]);
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getStart());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setStart(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'start', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'start');
           }
           if (this.vShowEndDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, formatDateStr(this.vTaskList[i].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]));
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'enddate');
+            const v = formatDateStr(this.vTaskList[i].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]);
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getEnd());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setEnd(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'end', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'end');
           }
           if (this.vShowPlanStartDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanstartdate');
             const v = this.vTaskList[i].getPlanStart() ? formatDateStr(this.vTaskList[i].getPlanStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planstartdate');
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getPlanStart());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setPlanStart(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'planstart', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planstart');
           }
           if (this.vShowPlanEndDate == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanenddate');
             const v = this.vTaskList[i].getPlanEnd() ? formatDateStr(this.vTaskList[i].getPlanEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, v);
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planenddate');
+            const text = makeInput(v, this.vEditable, 'date', this.vTaskList[i].getPlanEnd());
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setPlanEnd(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'planend', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'planend');
           }
           if (this.vShowCost == 1) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gcost');
-            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, this.vTaskList[i].getCost());
-            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'costdate');
+            const text = makeInput(this.vTaskList[i].getCost(), this.vEditable, 'cost');
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+            const callback = (task, e) => task.setCost(e.target.value);
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'cost', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'cost');
           }
           if (this.vAdditionalHeaders) {
             for (const key in this.vAdditionalHeaders) {
               const header = this.vAdditionalHeaders[key];
               const css = header.class ? header.class : `gadditional-${key}`;
               const data = this.vTaskList[i].getDataObject();
-              if (data)
+              if (data) {
                 vTmpCell = this.newNode(vTmpRow, 'td', null, `gadditional ${css}`);
+              }
+              // const callback = (task, e) => task.setCost(e.target.value);
+              // addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'costdate');
               vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
             }
           }
@@ -509,7 +564,7 @@ export const GanttChart = function (pDiv, pFormat) {
       this.newNode(vTmpDiv2, 'br');
 
       // Draw the Chart Rows
-      var vRightHeader = document.createDocumentFragment();
+      let vRightHeader = document.createDocumentFragment();
       vTmpDiv = this.newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
       this.setChartHead(vTmpDiv);
       vTmpTab = this.newNode(vTmpDiv, 'table', this.vDivId + 'chartTableh', 'gcharttableh');
@@ -523,11 +578,11 @@ export const GanttChart = function (pDiv, pFormat) {
       vTmpDate.setSeconds(0);
       vTmpDate.setMilliseconds(0);
 
-      var vColSpan = 1;
+      let vColSpan = 1;
       // Major Date Header
       while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-        var vHeaderCellClass = 'gmajorheading';
-        vCellContents = '';
+        let vHeaderCellClass = 'gmajorheading';
+        let vCellContents = '';
 
         if (this.vFormat == 'day') {
           vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, 7);
@@ -578,8 +633,8 @@ export const GanttChart = function (pDiv, pFormat) {
       vNumCols = 0;
 
       while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-        vHeaderCellClass = 'gminorheading';
-        var vCellClass = 'gtaskcell';
+        let vHeaderCellClass = 'gminorheading';
+        let vCellClass = 'gtaskcell';
 
         if (this.vFormat == 'day') {
           if (vTmpDate.getDay() % 6 == 0) {
@@ -629,7 +684,7 @@ export const GanttChart = function (pDiv, pFormat) {
           while (vTmpDate.getDate() > 1) vTmpDate.setDate(vTmpDate.getDate() + 1);
         }
         else if (this.vFormat == 'hour') {
-          for (i = vTmpDate.getHours(); i < 24; i++) {
+          for (let i = vTmpDate.getHours(); i < 24; i++) {
             vTmpDate.setHours(i);//works around daylight savings but may look a little odd on days where the clock goes forward
             if (vTmpDate <= vMaxDate) {
               vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass);
@@ -652,7 +707,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
       vTmpDiv = this.newNode(vRightHeader, 'div', null, 'glabelfooter');
 
-      var vRightTable = document.createDocumentFragment();
+      let vRightTable = document.createDocumentFragment();
       vTmpDiv = this.newNode(vRightTable, 'div', this.vDivId + 'gchartbody', 'gchartgrid gcontainercol');
       this.setChartBody(vTmpDiv);
       vTmpTab = this.newNode(vTmpDiv, 'table', this.vDivId + 'chartTable', 'gcharttable', null, vTaskLeftPx);
@@ -662,19 +717,17 @@ export const GanttChart = function (pDiv, pFormat) {
 
       // Draw each row
 
-      var i = 0;
-      var j = 0;
+      let i = 0;
+      let j = 0;
       let bd;
-        if (this.vDebug) {
-          bd = new Date();
-          console.log('before tasks loop', bd);
-        }
+      if (this.vDebug) {
+        bd = new Date();
+        console.log('before tasks loop', bd);
+      }
       for (i = 0; i < this.vTaskList.length; i++) {
-        var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
-        var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
+        let curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
+        let curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
         if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
-
-
 
         vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat);
         vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat);
@@ -695,11 +748,11 @@ export const GanttChart = function (pDiv, pFormat) {
 
 
         vID = this.vTaskList[i].getID();
-        var vComb = (this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2);
-        var vCellFormat = '';
+        let vComb = (this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2);
+        let vCellFormat = '';
 
-        var vTmpItem = this.vTaskList[i];
-        var vCaptClass = null;
+        let vTmpItem = this.vTaskList[i];
+        let vCaptClass = null;
         if (this.vTaskList[i].getMile() && !vComb) {
           vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
           this.vTaskList[i].setChildRow(vTmpRow);
@@ -855,7 +908,7 @@ export const GanttChart = function (pDiv, pFormat) {
       this.setLines(vTmpDiv2);
 
       /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
-            var tmpGenSrc=document.createElement('textarea');
+            let tmpGenSrc=document.createElement('textarea');
             tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
             vDiv.appendChild(tmpGenSrc);
       //*/
@@ -864,8 +917,8 @@ export const GanttChart = function (pDiv, pFormat) {
 
       // now check if we are actually scrolling the pane
       if (this.vScrollTo != '') {
-        var vScrollDate = new Date(vMinDate.getTime());
-        var vScrollPx = 0;
+        let vScrollDate = new Date(vMinDate.getTime());
+        let vScrollPx = 0;
 
         if (this.vScrollTo.substr(0, 2) == 'px') {
           vScrollPx = parseInt(this.vScrollTo.substr(2));
@@ -881,12 +934,15 @@ export const GanttChart = function (pDiv, pFormat) {
 
       if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat);
       else this.vTodayPx = -1;
-      let bdd
+      
+      // Dependencies
+      let bdd;
       if (this.vDebug) {
         bdd = new Date();
         console.log('before DrawDependencies', bdd);
       }
-      this.DrawDependencies();
+      this.DrawDependencies(this.vDebug);
+      addListenerDependencies();
       if (this.vDebug) {
         const ad = new Date();
         console.log('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
@@ -901,15 +957,15 @@ export const GanttChart = function (pDiv, pFormat) {
 
 
   this.drawSelector = function (pPos) {
-    var vOutput = document.createDocumentFragment();
-    var vDisplay = false;
+    let vOutput = document.createDocumentFragment();
+    let vDisplay = false;
 
-    for (var i = 0; i < this.vShowSelector.length && !vDisplay; i++) {
+    for (let i = 0; i < this.vShowSelector.length && !vDisplay; i++) {
       if (this.vShowSelector[i].toLowerCase() == pPos.toLowerCase()) vDisplay = true;
     }
 
     if (vDisplay) {
-      var vTmpDiv = this.newNode(vOutput, 'div', null, 'gselector', this.vLangs[this.vLang]['format'] + ':');
+      let vTmpDiv = this.newNode(vOutput, 'div', null, 'gselector', this.vLangs[this.vLang]['format'] + ':');
 
       if (this.vFormatArr.join().toLowerCase().indexOf('hour') != -1)
         addFormatListeners(this, 'hour', this.newNode(vTmpDiv, 'span', this.vDivId + 'formathour' + pPos, 'gformlabel' + ((this.vFormat == 'hour') ? ' gselected' : ''), this.vLangs[this.vLang]['hour']));
@@ -936,32 +992,62 @@ export const GanttChart = function (pDiv, pFormat) {
   if (this.vDiv && this.vDiv.nodeName.toLowerCase() == 'div') this.vDivId = this.vDiv.id;
 }; //GanttChart
 
+const makeInput = function (formattedValue, editable, type = 'text', value = null, choices = null) {
+  if (!value) {
+    value = formattedValue;
+  }
+  if (editable) {
+    switch (type) {
+      case 'date':
+        value = value ? value.toISOString().split('T')[0] : ''
+        return `<input class="gantt-inputtable" type="date" value="${value}">`;
+      case 'resource':
+        if (choices) {
+          const found = choices.find(c => c.id == value || c.name == value);
+          if (found) {
+            value = found.id;
+          } else {
+            choices.push({ id: value, name: value });
+          }
+          return `<select>` + choices.map(c => `<option value="${c.id}" ${value == c.id ? 'selected' : ''} >${c.name}</option>`).join('') + `</select>`;
+        } else {
+          return `<input class="gantt-inputtable" type="text" value="${value ? value : ''}">`;
+        }
+      case 'cost':
+        return `<input class="gantt-inputtable" type="number" max="100" min="0" value="${value ? value : ''}">`;
+      default:
+        return `<input class="gantt-inputtable" value="${value ? value : ''}">`;
+    }
+  } else {
+    return formattedValue;
+  }
+}
 
 export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
-  var vCurTopBuf = 3;
-  var vCurLeftBuf = 5;
-  var vCurBotBuf = 3;
-  var vCurRightBuf = 15;
-  var vMouseX = (e) ? e.clientX : (<MouseEvent>window.event).clientX;
-  var vMouseY = (e) ? e.clientY : (<MouseEvent>window.event).clientY;
-  var vViewportX = document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-  var vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
-  var vNewX = vMouseX;
-  var vNewY = vMouseY;
+  let vCurTopBuf = 3;
+  let vCurLeftBuf = 5;
+  let vCurBotBuf = 3;
+  let vCurRightBuf = 15;
+  let vMouseX = (e) ? e.clientX : (<MouseEvent>window.event).clientX;
+  let vMouseY = (e) ? e.clientY : (<MouseEvent>window.event).clientY;
+  let vViewportX = document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+  let vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+  let vNewX = vMouseX;
+  let vNewY = vMouseY;
 
   if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
     // the clientX and clientY properties include the left and top borders of the client area
     vMouseX -= document.documentElement.clientLeft;
     vMouseY -= document.documentElement.clientTop;
 
-    var vZoomFactor = getZoomFactor();
+    let vZoomFactor = getZoomFactor();
     if (vZoomFactor != 1) {// IE 7 at non-default zoom level
       vMouseX = Math.round(vMouseX / vZoomFactor);
       vMouseY = Math.round(vMouseY / vZoomFactor);
     }
   }
 
-  var vScrollPos = getScrollPositions();
+  let vScrollPos = getScrollPositions();
 
   /* Code for positioned right of the mouse by default*/
 	/*

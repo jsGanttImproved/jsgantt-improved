@@ -4,7 +4,7 @@
 A fully featured gantt chart component built entirely in Javascript, CSS and AJAX. It is lightweight and there is no need of external libraries or additional images. 
 
 
-![Demo Image](/docs/demo.png)
+![Demo Image](/docs/demo.gif)
 
 
 Start using with including the files `jsgantt.js` and `jsgantt.css` that are inside `docs/` folder.
@@ -104,7 +104,8 @@ g.Draw();
 ## Features
 
   * Tasks & Collapsible Task Groups
-  * Dependencies
+  * Dependencies and Highlight when hover a task
+  * Edit data in gantt table with list of responsible
   * Task Completion
   * Table with Additional Columns
   * Task Styling or as HTML tags
@@ -141,10 +142,6 @@ For testing use `npm run test` with e2e tests.
 
 Or help us donating...
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick" />
-<input type="hidden" name="hosted_button_id" value="S7B43P63C5QEN" />
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-<img alt="" border="0" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" />
-</form>
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=S7B43P63C5QEN)
+
 
