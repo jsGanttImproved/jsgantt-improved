@@ -62,7 +62,7 @@ function start(e) {
       vShowStartDate,
       vShowEndDate,
       vShowPlanStartDate,
-      vShowPlanStartDate,
+      vShowPlanEndDate,
       vAdditionalHeaders,
       vEvents: {
         taskname: console.log,
