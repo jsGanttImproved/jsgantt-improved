@@ -15,8 +15,12 @@ Or install and use in JS
 
 Import in your JS `import {JSGantt} from 'jsgantt-improved';`
 
-For **Angular** use the component [ng-gantt](https://github.com/mariohmol/ng-gantt) 
+For **Angular** use the component [ng-gantt](https://github.com/jsGanttImproved/ng-gantt) 
 
+For **React** use the component [react-jsgantt](https://github.com/jsGanttImproved/react-jsgantt) 
+
+
+For **Vue** , see this example: https://stackblitz.com/edit/vue-sp2oj9
 
 
 
