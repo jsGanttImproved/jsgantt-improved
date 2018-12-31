@@ -20,7 +20,7 @@ For **Angular** use the component [ng-gantt](https://github.com/jsGanttImproved/
 For **React** use the component [react-jsgantt](https://github.com/jsGanttImproved/react-jsgantt) 
 
 
-For **Vue** , see this example: https://stackblitz.com/edit/vue-sp2oj9
+For **Vue** , see this example: https://stackblitz.com/edit/vue-jsgantt
 
 
 
