@@ -2387,6 +2387,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vCost = parseInt(document.createTextNode(pCost).data);
     var vGroup = parseInt(document.createTextNode(pGroup).data);
     var vDataObject = pDataObject;
+    var vCompVal;
     var parent = document.createTextNode(pParent).data;
     if (parent && parent !== '0') {
         parent = utils_1.hashKey(parent).toString();
@@ -2514,10 +2515,14 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         return '\u00A0'; };
     this.getCompVal = function () { if (vComp)
         return vComp;
+    else if (vCompVal)
+        return vCompVal;
     else
         return 0; };
     this.getCompStr = function () { if (vComp)
         return vComp + '%';
+    else if (vCompVal)
+        return vCompVal + '%';
     else
         return ''; };
     this.getNotes = function () { return vNotes; };
@@ -2624,7 +2629,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.setLevel = function (pLevel) { vLevel = parseInt(document.createTextNode(pLevel).data); };
     this.setNumKid = function (pNumKid) { vNumKid = parseInt(document.createTextNode(pNumKid).data); };
     this.setWeight = function (pWeight) { vWeight = parseInt(document.createTextNode(pWeight).data); };
-    this.setCompVal = function (pCompVal) { vComp = parseFloat(document.createTextNode(pCompVal).data); };
+    this.setCompVal = function (pCompVal) { vCompVal = parseFloat(document.createTextNode(pCompVal).data); };
     this.setCost = function (pCost) {
         vComp = parseInt(document.createTextNode(pCost).data);
     };
@@ -3067,7 +3072,6 @@ exports.formatDateStr = function (pDate, pDateFormatArr, pL) {
     return vDateStr;
 };
 exports.parseDateFormatStr = function (pFormatStr) {
-    var vDateStr = '';
     var vComponantStr = '';
     var vCurrChar = '';
     var vSeparators = new RegExp('[\/\\ -.,\'":]');

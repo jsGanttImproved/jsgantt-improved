@@ -214,7 +214,6 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
 };
 
 export const parseDateFormatStr = function (pFormatStr) {
-  let vDateStr = '';
   let vComponantStr = '';
   let vCurrChar = '';
   let vSeparators = new RegExp('[\/\\ -.,\'":]');
