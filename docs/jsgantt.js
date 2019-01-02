@@ -350,6 +350,13 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vColWidth = this.vHourColWidth;
             // DRAW the Left-side of the chart (names, resources, comp%)
             var vLeftHeader = document.createDocumentFragment();
+            /**
+             * LIST HEAD
+             *
+             *
+             *
+             * HEADINGS
+            */
             var vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
             var vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
             var vTmpTBody = this.newNode(vTmpTab, 'tbody');
@@ -407,11 +414,17 @@ exports.GanttChart = function (pDiv, pFormat) {
                     this.newNode(vTmpRow, 'td', null, "gtaskheading gadditional " + css, text);
                 }
             }
-            var vLeftTable = document.createDocumentFragment();
-            var vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
-            this.setListBody(vTmpDiv2);
-            vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
-            vTmpTBody = this.newNode(vTmpTab, 'tbody');
+            /**
+             * LIST BODY
+             *
+             *
+            */
+            // let vLeftTable = document.createDocumentFragment();
+            // let vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
+            // this.setListBody(vTmpDiv2);
+            // vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
+            // vTmpTBody = this.newNode(vTmpTab, 'tbody');
+            var vTmpDiv2 = void 0;
             var _loop_1 = function (i_1) {
                 var vBGColor = void 0;
                 if (this_1.vTaskList[i_1].getGroup() == 1)
@@ -576,9 +589,14 @@ exports.GanttChart = function (pDiv, pFormat) {
             }
             // Add some white space so the vertical scroll distance should always be greater
             // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
-            this.newNode(vTmpDiv2, 'br');
-            this.newNode(vTmpDiv2, 'br');
-            // Draw the Chart Rows
+            // this.newNode(vTmpDiv2, 'br');
+            // this.newNode(vTmpDiv2, 'br');
+            /**
+             * CHART HEAD
+             *
+             *
+             * HEADINGS
+             */
             var vRightHeader = document.createDocumentFragment();
             vTmpDiv = this.newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
             this.setChartHead(vTmpDiv);
@@ -710,6 +728,12 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vSingleCell = true;
             this.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
             vTmpDiv = this.newNode(vRightHeader, 'div', null, 'glabelfooter');
+            /**
+             * CHART GRID
+             *
+             *
+             *
+             */
             var vRightTable = document.createDocumentFragment();
             vTmpDiv = this.newNode(vRightTable, 'div', this.vDivId + 'gchartbody', 'gchartgrid gcontainercol');
             this.setChartBody(vTmpDiv);
@@ -890,13 +914,22 @@ exports.GanttChart = function (pDiv, pFormat) {
             }
             if (!vSingleCell)
                 vTmpTBody.appendChild(vDateRow.cloneNode(true));
+            // MAIN VIEW: Appending all generated components to main view
             while (this.vDiv.hasChildNodes())
                 this.vDiv.removeChild(this.vDiv.firstChild);
             vTmpDiv = this.newNode(this.vDiv, 'div', null, 'gchartcontainer');
-            vTmpDiv.appendChild(vLeftHeader);
-            vTmpDiv.appendChild(vRightHeader);
-            vTmpDiv.appendChild(vLeftTable);
-            vTmpDiv.appendChild(vRightTable);
+            var leftvTmpDiv = this.newNode(vTmpDiv, 'div', null, 'gmain gmainleft');
+            leftvTmpDiv.appendChild(vLeftHeader);
+            // leftvTmpDiv.appendChild(vLeftTable);
+            var rightvTmpDiv = this.newNode(vTmpDiv, 'div', null, 'gmain gmainright');
+            rightvTmpDiv.appendChild(vRightHeader);
+            rightvTmpDiv.appendChild(vRightTable);
+            vTmpDiv.appendChild(leftvTmpDiv);
+            vTmpDiv.appendChild(rightvTmpDiv);
+            //vTmpDiv.appendChild(vLeftHeader);
+            // vTmpDiv.appendChild(vRightHeader);
+            // vTmpDiv.appendChild(vLeftTable);
+            // vTmpDiv.appendChild(vRightTable);
             this.newNode(vTmpDiv, 'div', null, 'ggridfooter');
             vTmpDiv2 = this.newNode(this.getChartBody(), 'div', this.vDivId + 'Lines', 'glinediv');
             vTmpDiv2.style.visibility = 'hidden';
@@ -906,7 +939,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                   tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
                   vDiv.appendChild(tmpGenSrc);
             //*/
-            // Now all the content exists, register scroll listeners
+            // LISTENERS: Now all the content exists, register scroll listeners
             events_1.addScrollListeners(this);
             // now check if we are actually scrolling the pane
             if (this.vScrollTo != '') {

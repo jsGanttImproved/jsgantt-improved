@@ -636,7 +636,8 @@ div.gtaskbarcontainer {
   padding-top: 0px;
   background-color: #ffffff;
   position: relative;
-  overflow: auto;
+  /* overflow: auto; */
+  overflow: unset;
   min-height: 0%;
 }
 
@@ -647,7 +648,7 @@ div.gtaskbarcontainer {
   padding-top: 0px;
   background-color: #ffffff;
   position: relative;
-  overflow: hidden;
+  overflow: unset;
 }
 
 /* Old Internet Explorer version hacks */
@@ -777,7 +778,7 @@ td.gspanning div {
   .gchartgrid {
     overflow: unset !important;
   }
-  .glistgrid{
+  .glistgrid {
     float: none !important;
   }
 }
@@ -799,3 +800,30 @@ td.gspanning div {
 .gmilequarter td,
 .gitemquarter td		{ background-size: 19px 1px; background-image: linear-gradient(to left, #efefef, transparent 1px, transparent 18px); width: 100%; height: 19px; }
 */
+
+.gmain {
+  width: 50%;
+  display: inline-block;
+  height: 100%;
+}
+
+.gmainright {
+  /* position: absolute; */
+  overflow-x: scroll;
+  overflow-y: hidden;
+  top: 0;
+}
+
+.gmainleft{
+  overflow-x: scroll;
+}
+
+.gtasktableh tr,
+.gcharttable tr ,
+.gtasktable tr {
+  height: 22px !important;
+}
+
+.gtasktable{
+  margin-bottom: 14px;
+}
