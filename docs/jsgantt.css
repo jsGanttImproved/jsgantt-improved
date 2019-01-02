@@ -397,69 +397,6 @@ span.gfoldercollapse {
   margin-top: 4px;
 }
 
-/* Printer friendly styles - we could use these all the time but they are not as pretty! */
-
-/* note that "@media print" is not supported in IE6 or 7.  Fully patched IE8 should be OK */
-
-@media print {
-  .ggroupblack {
-    height: 0px;
-    border-top: 7px solid;
-    border-color: #000000;
-  }
-  .gtaskblue {
-    height: 0px;
-    border-top: 13px solid;
-    border-color: rgb(58, 132, 195);
-  }
-  .gtaskred {
-    height: 0px;
-    border-top: 13px solid;
-    border-color: rgb(196, 58, 58);
-  }
-  .gtaskgreen {
-    height: 0px;
-    border-top: 13px solid;
-    border-color: rgb(80, 193, 58);
-  }
-  .gtaskyellow {
-    height: 0px;
-    border-top: 13px solid;
-    border-color: rgb(247, 228, 56);
-  }
-  .gtaskpurple {
-    height: 0px;
-    border-top: 13px solid;
-    border-color: rgb(193, 58, 193);
-  }
-  .gtaskpink {
-    height: 0px;
-    border-top: 13px solid;
-    border-color: rgb(249, 177, 245);
-  }
-  .gtaskbluecomplete,
-  .gtaskredcomplete,
-  .gtaskgreencomplete,
-  .gtaskyellowcomplete,
-  .gtaskpurplecomplete,
-  .gtaskpinkcomplete {
-    height: 0px;
-    filter: alpha(opacity=40);
-    opacity: 0.4;
-    margin-top: -9px;
-    border-top: 5px solid;
-    border-color: #000000;
-  }
-  .ggroupblackcomplete {
-    height: 0px;
-    filter: alpha(opacity=80);
-    opacity: 0.8;
-    margin-top: -5px;
-    border-top: 3px solid;
-    border-color: #777777;
-  }
-}
-
 /*  END Task bar styles */
 
 .glinev {
@@ -808,22 +745,94 @@ td.gspanning div {
 }
 
 .gmainright {
-  /* position: absolute; */
   overflow-x: scroll;
   overflow-y: hidden;
   top: 0;
 }
 
-.gmainleft{
+.gmainleft {
   overflow-x: scroll;
 }
 
 .gtasktableh tr,
-.gcharttable tr ,
+.gcharttable tr,
 .gtasktable tr {
   height: 22px !important;
 }
 
-.gtasktable{
+.gtasktable {
   margin-bottom: 14px;
+}
+
+/* Printer friendly styles - we could use these all the time but they are not as pretty! */
+
+/* note that "@media print" is not supported in IE6 or 7.  Fully patched IE8 should be OK */
+
+@media print {
+  .ggroupblack {
+    height: 0px;
+    border-top: 7px solid;
+    border-color: #000000;
+  }
+  .gtaskblue {
+    height: 0px;
+    border-top: 13px solid;
+    border-color: rgb(58, 132, 195);
+  }
+  .gtaskred {
+    height: 0px;
+    border-top: 13px solid;
+    border-color: rgb(196, 58, 58);
+  }
+  .gtaskgreen {
+    height: 0px;
+    border-top: 13px solid;
+    border-color: rgb(80, 193, 58);
+  }
+  .gtaskyellow {
+    height: 0px;
+    border-top: 13px solid;
+    border-color: rgb(247, 228, 56);
+  }
+  .gtaskpurple {
+    height: 0px;
+    border-top: 13px solid;
+    border-color: rgb(193, 58, 193);
+  }
+  .gtaskpink {
+    height: 0px;
+    border-top: 13px solid;
+    border-color: rgb(249, 177, 245);
+  }
+  .gtaskbluecomplete,
+  .gtaskredcomplete,
+  .gtaskgreencomplete,
+  .gtaskyellowcomplete,
+  .gtaskpurplecomplete,
+  .gtaskpinkcomplete {
+    height: 0px;
+    filter: alpha(opacity=40);
+    opacity: 0.4;
+    margin-top: -9px;
+    border-top: 5px solid;
+    border-color: #000000;
+  }
+  .ggroupblackcomplete {
+    height: 0px;
+    filter: alpha(opacity=80);
+    opacity: 0.8;
+    margin-top: -5px;
+    border-top: 3px solid;
+    border-color: #777777;
+  }
+  .gmainright,
+  .gmainleft {
+    overflow: hidden;
+    width: auto;
+  }
+  table { page-break-after:auto }
+  tr    { page-break-inside:avoid; page-break-after:auto }
+  td    { page-break-inside:avoid; page-break-after:auto }
+  thead { display:table-header-group }
+  tfoot { display:table-footer-group }
 }
