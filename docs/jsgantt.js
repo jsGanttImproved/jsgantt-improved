@@ -2398,7 +2398,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     if (pPlanStart === void 0) { pPlanStart = null; }
     if (pPlanEnd === void 0) { pPlanEnd = null; }
     if (pDataObject === void 0) { pDataObject = null; }
-    var vGantt = pGantt ? pGantt : g; // hack for backwards compatibility
+    var vGantt = pGantt ? pGantt : this;
     var _id = document.createTextNode(pID).data;
     var vID = utils_1.hashKey(document.createTextNode(pID).data);
     var vName = document.createTextNode(pName).data;
@@ -2468,7 +2468,6 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         var vDependStr = pDepend + '';
         var vDepList = vDependStr.split(',');
         var n = vDepList.length;
-        var vGantt_1 = pGantt ? pGantt : g;
         for (var k = 0; k < n; k++) {
             if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
                 vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
@@ -2757,6 +2756,9 @@ exports.AddTaskItem = function (value) {
     }
 };
 exports.AddTaskItemObject = function (object) {
+    if (!object.pGantt) {
+        object.pGantt = this;
+    }
     return this.AddTaskItem(exports.TaskItemObject(object));
 };
 exports.RemoveTaskItem = function (pID) {
@@ -3321,6 +3323,7 @@ exports.criticalPath = function (tasks) {
                 childrens: []
             };
         }
+        console.log(path);
         if (!path[task.pID].childrens) {
             path[task.pID].childrens = [];
         }

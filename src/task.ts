@@ -158,7 +158,7 @@ export const TaskItemObject = function (object) {
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDataObject = null) {
-  let vGantt = pGantt ? pGantt : g; // hack for backwards compatibility
+  let vGantt = pGantt ? pGantt : this;
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
   let vName = document.createTextNode(pName).data;
@@ -238,8 +238,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     let vDepList = vDependStr.split(',');
     let n = vDepList.length;
 
-    let vGantt = pGantt ? pGantt : g;
-
     for (let k = 0; k < n; k++) {
       if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
         vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
@@ -299,7 +297,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getDepType = function () { if (vDependType) return vDependType; else return null; };
   this.getCaption = function () { if (vCaption) return vCaption; else return ''; };
   this.getResource = function () { if (vRes) return vRes; else return '\u00A0'; };
-  this.getCompVal = function () { if (vComp) return vComp; else if(vCompVal) return vCompVal; else return 0; };
+  this.getCompVal = function () { if (vComp) return vComp; else if (vCompVal) return vCompVal; else return 0; };
   this.getCompStr = function () { if (vComp) return vComp + '%'; else if (vCompVal) return vCompVal + '%'; else return ''; };
   this.getNotes = function () { return vNotes; };
   this.getSortIdx = function () { return vSortIdx; };
@@ -470,6 +468,9 @@ export const AddTaskItem = function (value) {
 };
 
 export const AddTaskItemObject = function (object) {
+  if (!object.pGantt) {
+    object.pGantt = this;
+  }
   return this.AddTaskItem(TaskItemObject(object));
 }
 

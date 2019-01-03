@@ -454,6 +454,7 @@ export const criticalPath = function (tasks) {
         childrens: []
       }
     }
+    console.log(path);
     if (!path[task.pID].childrens) {
       path[task.pID].childrens = [];
     }
