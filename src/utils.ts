@@ -1,4 +1,7 @@
 
+export const internalProperties = ['pID','pName','pStart','pEnd','pClass','pLink','pMile','pRes','pComp','pGroup','pParent',
+'pOpen','pDepend','pCaption','pNotes','pGantt','pCost','pPlanStart','pPlanEnd'];
+
 export const getMinDate = function (pList, pFormat) {
   let vDate = new Date();
   vDate.setTime(pList[0].getStart().getTime());

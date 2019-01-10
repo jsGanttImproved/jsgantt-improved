@@ -1,4 +1,4 @@
-import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr, hashKey } from "./utils";
+import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr, hashKey, internalProperties } from "./utils";
 
 declare let g: any;
 
@@ -132,8 +132,13 @@ export const sortTasks = function (pList, pID, pIdx) {
   return sortIdx;
 };
 
-
 export const TaskItemObject = function (object) {
+  const pDataObject = { ...object};
+
+  internalProperties.forEach(property=>{
+    delete pDataObject[property];
+  });
+
   return new TaskItem(object.pID,
     object.pName,
     object.pStart,
@@ -152,7 +157,8 @@ export const TaskItemObject = function (object) {
     object.pGantt,
     object.pCost,
     object.pPlanStart,
-    object.pPlanEnd
+    object.pPlanEnd,
+    object
   );
 }
 

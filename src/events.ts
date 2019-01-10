@@ -173,14 +173,16 @@ export const addListenerInputCell = function (vTmpCell, vEventsChange, callback,
 }
 
 export const addListenerDependencies = function () {
-  document.querySelectorAll('.gtaskbarcontainer').forEach(taskDiv => {
+  const elements = document.querySelectorAll('.gtaskbarcontainer');
+  for (let i = 0; i < elements.length; i++) {
+    const taskDiv = elements[i];
     taskDiv.addEventListener('mouseover', e => {
       toggleDependencies(e);
     });
     taskDiv.addEventListener('mouseout', e => {
       toggleDependencies(e);
     });
-  });
+  }
 }
 
 const toggleDependencies = function (e) {

@@ -1274,14 +1274,16 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
     }
 };
 exports.addListenerDependencies = function () {
-    document.querySelectorAll('.gtaskbarcontainer').forEach(function (taskDiv) {
+    var elements = document.querySelectorAll('.gtaskbarcontainer');
+    for (var i = 0; i < elements.length; i++) {
+        var taskDiv = elements[i];
         taskDiv.addEventListener('mouseover', function (e) {
             toggleDependencies(e);
         });
         taskDiv.addEventListener('mouseout', function (e) {
             toggleDependencies(e);
         });
-    });
+    }
 };
 var toggleDependencies = function (e) {
     var target = e.currentTarget;
@@ -2075,17 +2077,18 @@ exports.includeGetSet = function () {
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
             var val = options[key];
-            var ev = void 0;
             if (key === 'vResources') {
-                ev = "this.set" + key.substr(1) + "(val)";
+                // ev = `this.set${key.substr(1)}(val)`;
+                this['set' + key.substr(1)](val);
             }
             else if (val instanceof Array) {
-                ev = "this.set" + key.substr(1) + "(...val)";
+                // ev = `this.set${key.substr(1)}(...val)`;
+                this['set' + key.substr(1)].apply(this, val);
             }
             else {
-                ev = "this.set" + key.substr(1) + "(val)";
+                // ev = `this.set${key.substr(1)}(val)`;
+                this['set' + key.substr(1)](val);
             }
-            eval(ev);
         }
     };
     this.setUseFade = function (pVal) { this.vUseFade = pVal; };
@@ -2256,6 +2259,17 @@ exports.includeGetSet = function () {
 
 },{"./utils":9}],8:[function(require,module,exports){
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
 // Function to open/close and hide/show children of specified task
@@ -2391,7 +2405,11 @@ exports.sortTasks = function (pList, pID, pIdx) {
     return sortIdx;
 };
 exports.TaskItemObject = function (object) {
-    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd);
+    var pDataObject = __assign({}, object);
+    utils_1.internalProperties.forEach(function (property) {
+        delete pDataObject[property];
+    });
+    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd, object);
 };
 exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDataObject) {
     if (pCost === void 0) { pCost = null; }
@@ -2878,6 +2896,8 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebu
 },{"./utils":9}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.internalProperties = ['pID', 'pName', 'pStart', 'pEnd', 'pClass', 'pLink', 'pMile', 'pRes', 'pComp', 'pGroup', 'pParent',
+    'pOpen', 'pDepend', 'pCaption', 'pNotes', 'pGantt', 'pCost', 'pPlanStart', 'pPlanEnd'];
 exports.getMinDate = function (pList, pFormat) {
     var vDate = new Date();
     vDate.setTime(pList[0].getStart().getTime());
