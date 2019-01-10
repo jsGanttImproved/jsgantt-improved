@@ -361,7 +361,7 @@ export const GanttChart = function (pDiv, pFormat) {
        * 
        * 
        * HEADINGS
-      */ 
+      */
       let vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
       let vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
       let vTmpTBody = this.newNode(vTmpTab, 'tbody');
@@ -410,12 +410,7 @@ export const GanttChart = function (pDiv, pFormat) {
        * LIST BODY 
        * 
        * 
-      */ 
-      // let vLeftTable = document.createDocumentFragment();
-      // let vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
-      // this.setListBody(vTmpDiv2);
-      // vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
-      // vTmpTBody = this.newNode(vTmpTab, 'tbody');
+      */
       let vTmpDiv2;
 
       for (let i = 0; i < this.vTaskList.length; i++) {
@@ -439,8 +434,9 @@ export const GanttChart = function (pDiv, pFormat) {
 
           const task = this.vTaskList[i];
           const vEventClickRow = this.vEventClickRow;
-          addListener('click', function () {
-            if (vEventClickRow && typeof vEventClickRow === "function") {
+          addListener('click', function (e) {
+            if (e.target.classList.contains('gfoldercollapse') === false &&
+              vEventClickRow && typeof vEventClickRow === "function") {
               vEventClickRow(task);
             }
           }, vTmpRow);
@@ -578,7 +574,7 @@ export const GanttChart = function (pDiv, pFormat) {
       // this.newNode(vTmpDiv2, 'br');
       // this.newNode(vTmpDiv2, 'br');
 
-      
+
 
 
 
@@ -932,7 +928,7 @@ export const GanttChart = function (pDiv, pFormat) {
       // MAIN VIEW: Appending all generated components to main view
       while (this.vDiv.hasChildNodes()) this.vDiv.removeChild(this.vDiv.firstChild);
       vTmpDiv = this.newNode(this.vDiv, 'div', null, 'gchartcontainer');
-     
+
       let leftvTmpDiv = this.newNode(vTmpDiv, 'div', null, 'gmain gmainleft');
       leftvTmpDiv.appendChild(vLeftHeader);
       // leftvTmpDiv.appendChild(vLeftTable);
@@ -982,7 +978,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
       if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat);
       else this.vTodayPx = -1;
-      
+
       // Dependencies
       let bdd;
       if (this.vDebug) {

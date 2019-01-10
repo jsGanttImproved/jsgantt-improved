@@ -146,7 +146,8 @@ export const addScrollListeners = function (pGanttChart) {
 
 export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
   addListener('click', function (e) {
-    if (vEvents[column] && typeof vEvents[column] === 'function') {
+    if (e.target.classList.contains('gfoldercollapse') === false &&
+      vEvents[column] && typeof vEvents[column] === 'function') {
       vEvents[column](task, e, vTmpCell);
     }
   }, vTmpCell);

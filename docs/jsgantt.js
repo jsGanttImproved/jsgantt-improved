@@ -419,11 +419,6 @@ exports.GanttChart = function (pDiv, pFormat) {
              *
              *
             */
-            // let vLeftTable = document.createDocumentFragment();
-            // let vTmpDiv2 = this.newNode(vLeftTable, 'div', this.vDivId + 'glistbody', 'glistgrid gcontainercol');
-            // this.setListBody(vTmpDiv2);
-            // vTmpTab = this.newNode(vTmpDiv2, 'table', null, 'gtasktable');
-            // vTmpTBody = this.newNode(vTmpTab, 'tbody');
             var vTmpDiv2 = void 0;
             var _loop_1 = function (i_1) {
                 var vBGColor = void 0;
@@ -446,8 +441,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                     }
                     var task_2 = this_1.vTaskList[i_1];
                     var vEventClickRow_1 = this_1.vEventClickRow;
-                    events_1.addListener('click', function () {
-                        if (vEventClickRow_1 && typeof vEventClickRow_1 === "function") {
+                    events_1.addListener('click', function (e) {
+                        if (e.target.classList.contains('gfoldercollapse') === false &&
+                            vEventClickRow_1 && typeof vEventClickRow_1 === "function") {
                             vEventClickRow_1(task_2);
                         }
                     }, vTmpRow);
@@ -1245,7 +1241,8 @@ exports.addScrollListeners = function (pGanttChart) {
 };
 exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
     exports.addListener('click', function (e) {
-        if (vEvents[column] && typeof vEvents[column] === 'function') {
+        if (e.target.classList.contains('gfoldercollapse') === false &&
+            vEvents[column] && typeof vEvents[column] === 'function') {
             vEvents[column](task, e, vTmpCell);
         }
     }, vTmpCell);
