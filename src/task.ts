@@ -1,4 +1,4 @@
-import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr, hashKey } from "./utils";
+import { parseDateStr, isIE, stripUnwanted, getOffset, formatDateStr, hashKey, internalProperties } from "./utils";
 
 declare let g: any;
 
@@ -132,8 +132,13 @@ export const sortTasks = function (pList, pID, pIdx) {
   return sortIdx;
 };
 
-
 export const TaskItemObject = function (object) {
+  const pDataObject = { ...object};
+
+  internalProperties.forEach(property=>{
+    delete pDataObject[property];
+  });
+
   return new TaskItem(object.pID,
     object.pName,
     object.pStart,
@@ -152,13 +157,14 @@ export const TaskItemObject = function (object) {
     object.pGantt,
     object.pCost,
     object.pPlanStart,
-    object.pPlanEnd
+    object.pPlanEnd,
+    object
   );
 }
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDataObject = null) {
-  let vGantt = pGantt ? pGantt : g; // hack for backwards compatibility
+  let vGantt = pGantt ? pGantt : this;
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
   let vName = document.createTextNode(pName).data;
@@ -176,6 +182,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vCost = parseInt(document.createTextNode(pCost).data)
   let vGroup = parseInt(document.createTextNode(pGroup).data);
   let vDataObject = pDataObject;
+  let vCompVal;
 
   let parent = document.createTextNode(pParent).data;
   if (parent && parent !== '0') {
@@ -237,8 +244,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     let vDepList = vDependStr.split(',');
     let n = vDepList.length;
 
-    let vGantt = pGantt ? pGantt : g;
-
     for (let k = 0; k < n; k++) {
       if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
         vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
@@ -295,12 +300,11 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     if (vDepend) return vDepend; else return null;
   };
   this.getDataObject = function () { return vDataObject; };
-
   this.getDepType = function () { if (vDependType) return vDependType; else return null; };
   this.getCaption = function () { if (vCaption) return vCaption; else return ''; };
   this.getResource = function () { if (vRes) return vRes; else return '\u00A0'; };
-  this.getCompVal = function () { if (vComp) return vComp; else return 0; };
-  this.getCompStr = function () { if (vComp) return vComp + '%'; else return ''; };
+  this.getCompVal = function () { if (vComp) return vComp; else if (vCompVal) return vCompVal; else return 0; };
+  this.getCompStr = function () { if (vComp) return vComp + '%'; else if (vCompVal) return vCompVal + '%'; else return ''; };
   this.getNotes = function () { return vNotes; };
   this.getSortIdx = function () { return vSortIdx; };
   this.getToDelete = function () { return vToDelete; };
@@ -378,7 +382,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setLevel = function (pLevel) { vLevel = parseInt(document.createTextNode(pLevel).data); };
   this.setNumKid = function (pNumKid) { vNumKid = parseInt(document.createTextNode(pNumKid).data); };
   this.setWeight = function (pWeight) { vWeight = parseInt(document.createTextNode(pWeight).data); };
-  this.setCompVal = function (pCompVal) { vComp = parseFloat(document.createTextNode(pCompVal).data); };
+  this.setCompVal = function (pCompVal) { vCompVal = parseFloat(document.createTextNode(pCompVal).data); };
   this.setCost = function (pCost) {
     vComp = parseInt(document.createTextNode(pCost).data);
   };
@@ -470,6 +474,9 @@ export const AddTaskItem = function (value) {
 };
 
 export const AddTaskItemObject = function (object) {
+  if (!object.pGantt) {
+    object.pGantt = this;
+  }
   return this.AddTaskItem(TaskItemObject(object));
 }
 

@@ -32,9 +32,9 @@ Method definition: **GanttChart(_pDiv_, _pFormat_)**
 | _pFormat:_ | (required) used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format |
 
 ## Customize the look and feel using configuration methods ##
-see [Configuration Options](Documentation#user-content-options) below
+see [Configuration Options](#user-content-options) below
 
-## Add Tasks ##
+## <a href="user-content-a-using-addtaskitem"></a> Add Tasks ##
 
 ### a) Using Method() ###
 
@@ -131,7 +131,7 @@ The structure of the JSON file:
 ```
 
 
-### c) using parseXML() with an external XML file ###
+### <a name="user-content-b-using-parsexml-with-an-external-xml-file"> </a> c) using parseXML() with an external XML file ###
 ```javascript
 JSGantt.parseXML("project.xml",g);
 ```
@@ -170,9 +170,9 @@ The structure of the native XML file:
 </project>
 ```
 
-Field definitions are as described for the parameters to [TaskItem](Documentation#user-content-a-using-addtaskitem) above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones.  The pGantt element is not required for XML import.
+Field definitions are as described for the parameters to [TaskItem](#user-content-a-using-addtaskitem) above. The pClass element is optional in XML files and will default to "ggroupblack" for group tasks, "gtaskblue" for normal tasks and "gmilestone" for milestones.  The pGantt element is not required for XML import.
 
-JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the [XML Export methods](Documentation#user-content-xml-export) provided.
+JSGannt Improved will also test the provided XML file to see if it appears to be in Microsoft Project XML format. If so an attempt will be made to load up the project. This feature is experimental, the import is best effort and not guaranteed. Once loaded the project as interpreted by JSGantt Improved can be extracted using the [XML Export methods](#user-content-xml-export) provided.
 
 
 ### c) using parseXMLString() with XML held in a javascript string object ###
@@ -189,10 +189,10 @@ Method definition:
 |_pGanttObj:_|(required) a GanttChart object returned by a call to JSGantt.GanttChart()|
 
 
-The XML provided will be parsed in exactly the same way as the contents of an external XML file and hence must match the format as described for [parseXML](Documentation#user-content-b-using-parsexml-with-an-external-xml-file) above
+The XML provided will be parsed in exactly the same way as the contents of an external XML file and hence must match the format as described for [parseXML](#user-content-b-using-parsexml-with-an-external-xml-file) above
 
 
-### XML Export ###
+### <a name="user-content-xml-export"></a> XML Export ###
 
 The following methods can be used to extract details of tasks in the project in XML format
 
@@ -273,7 +273,7 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setShowTaskInfoEndDate():_|Controls whether the Task End Date information is displayed in the task tool tip, defaults to 1 (show information)|
 |_setShowTaskInfoLink():_|Controls whether the More Information link is displayed in the task tool tip, defaults to 0 (do NOT show link)|
 |_setShowTaskInfoNotes():_|Controls whether the Additional Notes data is displayed in the task tool tip, defaults to 1 (show notes)|
-|_setShowEndWeekDate():_|Controls whether the major heading in "Day" view displays the week end-date in the appropriate format (see [below](Documentation#user-content-display-date-formats)), defaults to 1 (show date)|
+|_setShowEndWeekDate():_|Controls whether the major heading in "Day" view displays the week end-date in the appropriate format (see [below](#user-content-display-date-formats)), defaults to 1 (show date)|
 |_setShowDeps():_  |Controls display of dependancy lines, defaults to 1 (show dependencies)|
 |_setEvents():_  |Controls events when a task is click in table data. You have to pass an object with the column and function. ex.: ` { taskname: console.log, res: console.log }`|
 |_setEventClickRow():_  |Controls events when a task row is cliked. Pass a function to exercute ex.: `function(e){console.log(e)}`|
@@ -295,7 +295,7 @@ The following options enable functionality using a set of specific key values
 |_setDateInputFormat():_|Defines the input format used for dates in task creation, accepts a single parameter. Valid parameter values are "yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy". Defaults to "yyyy-mm-dd"|
 |_setScrollTo():_    |Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value "today". Defaults to minimum display date|
 |_setUseSingleCell():_|Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  Numeric, a value of 0 disables this functionality (always use multiple cells), defaults to 25000|
-|_setLang():_        |Sets translation to use when drawing the chart.  Defaults to "en" as this is the only language provided in the base installation (see [Internationalisation](Documentation#user-content-internationalisation) below for details on how to add more translations.)|
+|_setLang():_        |Sets translation to use when drawing the chart.  Defaults to "en" as this is the only language provided in the base installation (see [Internationalisation](#user-content-internationalisation) below for details on how to add more translations.)|
 
 ## Layout ##
 Most of the look and feel of the Gantt Chart can be controlled using CSS however, as the length of a task bar is determined by column width, the following methods take a single numeric parameter that defines the appropriate column width in pixels.
@@ -311,7 +311,7 @@ Note that the task bar sizing code assumes the use of collapsed table borders 1p
 |_setRowHeight():_|Height of Gantt Chart rows in pixels. Used to route dependency lines near end points. Defaults to 20.|
 |_setMinGpLen():_    |Group tasks have their task bars embellished with end points, this value specifies the width of one of these end points in pixels.  A short task bar's length will be rounded up to display either a single or both endpoints correctly. Defaults to 8.|
 
-## Display Date Formats ##
+## <a name="user-content-display-date-formats"></a> Display Date Formats ##
 Date display formats can be individually controlled. The methods used to set these display formats each take a single format string parameter.  The format string can be made up of the following components (case sensitive)
 
 | Component | Description |
@@ -342,7 +342,7 @@ Date display formats can be individually controlled. The methods used to set the
 
 separated by one of the following characters: **"/\-.,'`<space`>:**
 
-Any text between separators that does not match one of the components above will be checked using a case insensitive match for a valid internationalised string (see [Internationalisation](Documentation#user-content-internationalisation) below).  If the value is still not found the text will be output unchanged.
+Any text between separators that does not match one of the components above will be checked using a case insensitive match for a valid internationalised string (see [Internationalisation](#user-content-internationalisation) below).  If the value is still not found the text will be output unchanged.
 
 The available date display methods are
 
@@ -361,7 +361,7 @@ The available date display methods are
 |_setMonthMinorDateDisplayFormat():_|Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.|
 |_setQuarterMinorDateDisplayFormat():_|Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.|
 
-## Internationalisation ##
+## <a name="user-content-internationalisation"></a> Internationalisation ##
 jsGanttImproved only provides English text however all hard coded strings can be replaced by calling the addLang() method available on the GanttChart object returned by a call to JSGantt.GanttChart()
 
 The addLang() method takes two parameters.  The first is a string identifier for the language, the second is a javascript object containing all the replacement text pairs, the default English settings are:

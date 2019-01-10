@@ -1,4 +1,7 @@
 
+export const internalProperties = ['pID','pName','pStart','pEnd','pClass','pLink','pMile','pRes','pComp','pGroup','pParent',
+'pOpen','pDepend','pCaption','pNotes','pGantt','pCost','pPlanStart','pPlanEnd'];
+
 export const getMinDate = function (pList, pFormat) {
   let vDate = new Date();
   vDate.setTime(pList[0].getStart().getTime());
@@ -214,7 +217,6 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
 };
 
 export const parseDateFormatStr = function (pFormatStr) {
-  let vDateStr = '';
   let vComponantStr = '';
   let vCurrChar = '';
   let vSeparators = new RegExp('[\/\\ -.,\'":]');
@@ -455,6 +457,7 @@ export const criticalPath = function (tasks) {
         childrens: []
       }
     }
+    console.log(path);
     if (!path[task.pID].childrens) {
       path[task.pID].childrens = [];
     }

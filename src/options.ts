@@ -11,16 +11,16 @@ export const includeGetSet = function () {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const val = options[key];
-      let ev;
       if (key === 'vResources') {
-        ev = `this.set${key.substr(1)}(val)`;
+        // ev = `this.set${key.substr(1)}(val)`;
+        this['set' + key.substr(1)](val);
       } else if (val instanceof Array) {
-        ev = `this.set${key.substr(1)}(...val)`;
+        // ev = `this.set${key.substr(1)}(...val)`;
+        this['set' + key.substr(1)].apply(this, val);
       } else {
-        ev = `this.set${key.substr(1)}(val)`;
-
+        // ev = `this.set${key.substr(1)}(val)`;
+        this['set' + key.substr(1)](val);
       }
-      eval(ev);
     }
   }
   this.setUseFade = function (pVal) { this.vUseFade = pVal; };
@@ -86,7 +86,7 @@ export const includeGetSet = function () {
     this.vFormat = pFormat;
     this.Draw();
   };
-  this.setWorkingDays = function(workingDays) { this.vWorkingDays = workingDays; };
+  this.setWorkingDays = function (workingDays) { this.vWorkingDays = workingDays; };
   this.setMinGpLen = function (pMinGpLen) { this.vMinGpLen = pMinGpLen; };
   this.setScrollTo = function (pDate) { this.vScrollTo = pDate; };
   this.setHourColWidth = function (pWidth) { this.vHourColWidth = pWidth; };

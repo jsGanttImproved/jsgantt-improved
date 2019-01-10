@@ -103,6 +103,23 @@ function start(e) {
     });
     //DELAY FROM INPUT
 
+    // Teste manual add task
+    // g.AddTaskItemObject({
+    //   pID: 100,
+    //   pName: "Task 1",
+    //   pStart: "2018-09-05",
+    //   pEnd: "2018-09-11",
+    //   pLink: "",
+    //   pClass: "gtaskgreen",
+    //   pMile: 0,
+    //   pComp: 100,
+    //   pGroup: 0,
+    //   pParent: 0,
+    //   pOpen: 1,
+    //   pNotes: "",
+    //   category: 'test'
+    // });
+
     if (vDebug) {
       bd = new Date();
       console.log('before reloading', bd);

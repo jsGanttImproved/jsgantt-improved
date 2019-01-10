@@ -140,10 +140,6 @@ export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
 };
 
 export const addScrollListeners = function (pGanttChart) {
-  addListener('scroll', function () { pGanttChart.getChartBody().scrollTop = pGanttChart.getListBody().scrollTop; }, pGanttChart.getListBody());
-  addListener('scroll', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, pGanttChart.getChartBody());
-  addListener('scroll', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, pGanttChart.getChartBody());
-  addListener('scroll', function () { pGanttChart.getChartBody().scrollLeft = pGanttChart.getChartHead().scrollLeft; }, pGanttChart.getChartHead());
   addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
   addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
 };
@@ -177,14 +173,16 @@ export const addListenerInputCell = function (vTmpCell, vEventsChange, callback,
 }
 
 export const addListenerDependencies = function () {
-  document.querySelectorAll('.gtaskbarcontainer').forEach(taskDiv => {
+  const elements = document.querySelectorAll('.gtaskbarcontainer');
+  for (let i = 0; i < elements.length; i++) {
+    const taskDiv = elements[i];
     taskDiv.addEventListener('mouseover', e => {
       toggleDependencies(e);
     });
     taskDiv.addEventListener('mouseout', e => {
       toggleDependencies(e);
     });
-  });
+  }
 }
 
 const toggleDependencies = function (e) {
