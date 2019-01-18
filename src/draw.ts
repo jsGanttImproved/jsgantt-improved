@@ -654,12 +654,10 @@ export const GanttChart = function (pDiv, pFormat) {
 
       while (vTmpDate.getTime() <= vMaxDate.getTime()) {
         let vHeaderCellClass = 'gminorheading';
-        let vCellClass = 'gtaskcell';
 
         if (this.vFormat == 'day') {
           if (vTmpDate.getDay() % 6 == 0) {
             vHeaderCellClass += 'wkend';
-            vCellClass += 'wkend';
           }
 
           if (vTmpDate <= vMaxDate) {
@@ -718,8 +716,13 @@ export const GanttChart = function (pDiv, pFormat) {
       }
       vDateRow = vTmpRow;
 
-      vTaskLeftPx = (vNumCols * (vColWidth + 1)) + 1;
-      vTaskPlanLeftPx = (vNumCols * (vColWidth + 1)) + 1;
+      // Calculate size of grids  : Plus 3 because 1 border left + 2 of paddings
+      vTaskLeftPx = (vNumCols * (vColWidth + 3)) + 1;
+      // Fix a small space at the end for day
+      if (this.vFormat === 'day') {
+        vTaskLeftPx += 2;
+      }
+      vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
 
       if (this.vUseSingleCell != 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
 
@@ -815,7 +818,8 @@ export const GanttChart = function (pDiv, pFormat) {
         else {
           vTaskWidth = vTaskRightPx;
 
-          // Draw Group Bar which has outer div with inner group div and several small divs to left and right to create angled-end indicators
+          // Draw Group Bar which has outer div with inner group div 
+          // and several small divs to left and right to create angled-end indicators
           if (this.vTaskList[i].getGroup()) {
             vTaskWidth = (vTaskWidth > this.vMinGpLen && vTaskWidth < this.vMinGpLen * 2) ? this.vMinGpLen * 2 : vTaskWidth; // Expand to show two end points
             vTaskWidth = (vTaskWidth < this.vMinGpLen) ? this.vMinGpLen : vTaskWidth; // expand to show one end point
@@ -922,7 +926,11 @@ export const GanttChart = function (pDiv, pFormat) {
         const ad = new Date();
         console.log('after tasks loop', ad, (ad.getTime() - bd.getTime()));
       }
-      if (!vSingleCell) vTmpTBody.appendChild(vDateRow.cloneNode(true));
+      if (!vSingleCell) {
+        vTmpTBody.appendChild(vDateRow.cloneNode(true));
+      } else if (this.vFormat == 'day') {
+        vTmpTBody.appendChild(vTmpRow.cloneNode(true));
+      }
 
 
       // MAIN VIEW: Appending all generated components to main view
@@ -940,10 +948,6 @@ export const GanttChart = function (pDiv, pFormat) {
       vTmpDiv.appendChild(leftvTmpDiv);
       vTmpDiv.appendChild(rightvTmpDiv);
 
-      //vTmpDiv.appendChild(vLeftHeader);
-      // vTmpDiv.appendChild(vRightHeader);
-      // vTmpDiv.appendChild(vLeftTable);
-      // vTmpDiv.appendChild(vRightTable);
       this.newNode(vTmpDiv, 'div', null, 'ggridfooter');
       vTmpDiv2 = this.newNode(this.getChartBody(), 'div', this.vDivId + 'Lines', 'glinediv');
       vTmpDiv2.style.visibility = 'hidden';
