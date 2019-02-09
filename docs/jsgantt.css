@@ -698,6 +698,10 @@ td.gspanning div {
   max-height: 16px;
 }
 
+.gadditional {
+  border: #efefef 1px solid;
+}
+
 .gadditional,
 .gresource,
 .gduration,

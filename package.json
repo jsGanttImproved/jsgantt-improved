@@ -1,6 +1,6 @@
 {
   "name": "jsgantt-improved",
-  "version": "2.1.3",
+  "version": "2.1.5",
   "description": "jsgantt-improved",
   "main": "dist/index.js",
   "scripts": {
