@@ -452,7 +452,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                         var vTmpSpan = this_1.newNode(vTmpDiv, 'span', this_1.vDivId + 'group_' + vID, 'gfoldercollapse', (this_1.vTaskList[i_1].getOpen() == 1) ? '-' : '+');
                         this_1.vTaskList[i_1].setGroupSpan(vTmpSpan);
                         events_1.addFolderListeners(this_1, vTmpSpan, vID);
-                        vTmpDiv.appendChild(document.createTextNode('\u00A0' + this_1.vTaskList[i_1].getName()));
+                        var divTask = document.createElement('span');
+                        divTask.innerHTML = '\u00A0' + this_1.vTaskList[i_1].getName();
+                        vTmpDiv.appendChild(divTask);
                         // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
                         // vTmpDiv.appendChild(document.createNode(text));
                         var callback = function (task, e) { return task.setName(e.target.value); };
@@ -3344,7 +3346,7 @@ exports.criticalPath = function (tasks) {
                 childrens: []
             };
         }
-        console.log(path);
+        // console.log(path);
         if (!path[task.pID].childrens) {
             path[task.pID].childrens = [];
         }

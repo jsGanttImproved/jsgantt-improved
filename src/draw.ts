@@ -446,8 +446,10 @@ export const GanttChart = function (pDiv, pFormat) {
             let vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
-
-            vTmpDiv.appendChild(document.createTextNode('\u00A0' + this.vTaskList[i].getName()));
+            
+            const divTask = document.createElement('span')
+            divTask.innerHTML = '\u00A0' + this.vTaskList[i].getName()
+            vTmpDiv.appendChild(divTask);
             // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
             // vTmpDiv.appendChild(document.createNode(text));
             const callback = (task, e) => task.setName(e.target.value);
