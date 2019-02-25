@@ -722,6 +722,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             if (this.vFormat === 'day') {
                 vTaskLeftPx += 2;
             }
+            vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
             vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
             if (this.vUseSingleCell != 0 && this.vUseSingleCell < (vNumCols * vNumRows))
                 vSingleCell = true;
