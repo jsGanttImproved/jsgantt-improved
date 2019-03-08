@@ -500,3 +500,21 @@ g.Draw();
 
 </script>
 ```
+
+
+## Troubleshooting
+
+* My grid has a few/lot of columns and i want to resize the space for the chart and data
+
+You can change the CSS and choose the size: 
+
+```css
+.gmainright{
+	width: 75%;
+}
+.gmainleft{
+	width: 25%;
+}
+```
+
+Reference: https://github.com/jsGanttImproved/jsgantt-improved/issues/157

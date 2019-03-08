@@ -477,7 +477,7 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
             const text = makeInput(this.vTaskList[i].getDuration(this.vFormat, this.vLangs[this.vLang]), this.vEditable, 'text', this.vTaskList[i].getDuration());
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
-            const callback = (task, e) => task.setDur(e.target.value);
+            const callback = (task, e) => task.setDuration(e.target.value);
             addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'dur', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'dur');
           }
