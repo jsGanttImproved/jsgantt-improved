@@ -194,9 +194,13 @@ const toggleDependencies = function (e) {
     style = '';
   }
   if (ids.length > 1) {
-    document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+    const frameZones = Array.from(document.querySelectorAll(`.gDepId${ids[1]}`));
+    frameZones.forEach((c: any) => {
       c.style.borderStyle = style;
     });
+   // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+     // c.style.borderStyle = style;
+    // });
   }
 }
 
