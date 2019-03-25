@@ -141,7 +141,9 @@ export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
 
 export const addScrollListeners = function (pGanttChart) {
   addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-  addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
+  addListener('resize', function () { 
+    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; 
+  }, window);
 };
 
 export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
