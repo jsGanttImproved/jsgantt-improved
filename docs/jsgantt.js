@@ -358,6 +358,7 @@ exports.GanttChart = function (pDiv, pFormat) {
              * HEADINGS
             */
             var vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
+            this.setListBody(vTmpDiv);
             var vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
             var vTmpTBody = this.newNode(vTmpTab, 'tbody');
             var vTmpRow = this.newNode(vTmpTBody, 'tr');
@@ -1244,7 +1245,9 @@ exports.addFormatListeners = function (pGanttChart, pFormat, pObj) {
 };
 exports.addScrollListeners = function (pGanttChart) {
     exports.addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-    exports.addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
+    exports.addListener('resize', function () {
+        pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
+    }, window);
 };
 exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
     exports.addListener('click', function (e) {
@@ -1297,9 +1300,13 @@ var toggleDependencies = function (e) {
         style = '';
     }
     if (ids.length > 1) {
-        document.querySelectorAll(".gDepId" + ids[1]).forEach(function (c) {
+        var frameZones = Array.from(document.querySelectorAll(".gDepId" + ids[1]));
+        frameZones.forEach(function (c) {
             c.style.borderStyle = style;
         });
+        // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+        // c.style.borderStyle = style;
+        // });
     }
 };
 // "pID": 122
