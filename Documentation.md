@@ -357,7 +357,7 @@ The available date display methods are
 |_setQuarterMajorDateDisplayFormat():_|Date format used for Gantt Chart major date headings displayed in "Year" format. Defaults to 'yyyy'.|
 |_setHourMinorDateDisplayFormat()_ |Date format used for Gantt Chart minor date headings displayed in "Hour" format. Defaults to 'HH'.|
 |_setDayMinorDateDisplayFormat():_ |Date format used for Gantt Chart minor date headings displayed in "Day" format. Defaults to 'dd'.|
-|_setWeekMinjorDateDisplayFormat():_|Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.|
+|_setWeekMinorDateDisplayFormat():_|Date format used for Gantt Chart minor date headings displayed in "Week" format. Defaults to 'dd/mm'.|
 |_setMonthMinorDateDisplayFormat():_|Date format used for Gantt Chart minor date headings displayed in "Month" format. Defaults to 'mon'.|
 |_setQuarterMinorDateDisplayFormat():_|Date format used for Gantt Chart minor date headings displayed in "Year" format. Defaults to 'qq'.|
 
