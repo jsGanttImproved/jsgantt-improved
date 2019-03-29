@@ -460,10 +460,10 @@ g.setOptions({
         res: console.log,
         dur: console.log,
         comp: console.log,
-        startdate: console.log,
-        enddate: console.log,
-        planstartdate: console.log,
-        planenddate: console.log,
+        start: console.log,
+        end: console.log,
+        planstart: console.log,
+        planend: console.log,
         cost: console.log
       },
   vEventClickRow: console.log
