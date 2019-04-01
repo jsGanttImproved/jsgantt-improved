@@ -164,7 +164,6 @@ export const addListenerInputCell = function (vTmpCell, vEventsChange, callback,
         callback(task, e);
       }
       if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
-        console.log(`column:`,column, `---`, vEventsChange[column])
         const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
         if (q && q.then) {
           q.then(e => draw());

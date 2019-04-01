@@ -435,12 +435,12 @@ export const GanttChart = function (pDiv, pFormat) {
 
           const task = this.vTaskList[i];
           const vEventClickRow = this.vEventClickRow;
-          // addListener('click', function (e) {
-          //   if (e.target.classList.contains('gfoldercollapse') === false &&
-          //     vEventClickRow && typeof vEventClickRow === "function") {
-          //     vEventClickRow(task);
-          //   }
-          // }, vTmpRow);
+          addListener('click', function (e) {
+            if (e.target.classList.contains('gfoldercollapse') === false &&
+              vEventClickRow && typeof vEventClickRow === "function") {
+              vEventClickRow(task);
+            }
+          }, vTmpRow);
 
           if (this.vTaskList[i].getGroup() == 1) {
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);

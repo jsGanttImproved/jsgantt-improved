@@ -421,138 +421,142 @@ exports.GanttChart = function (pDiv, pFormat) {
              *
             */
             var vTmpDiv2 = void 0;
-            for (var i_1 = 0; i_1 < this.vTaskList.length; i_1++) {
+            var _loop_1 = function (i_1) {
                 var vBGColor = void 0;
-                if (this.vTaskList[i_1].getGroup() == 1)
+                if (this_1.vTaskList[i_1].getGroup() == 1)
                     vBGColor = 'ggroupitem';
                 else
                     vBGColor = 'glineitem';
-                vID = this.vTaskList[i_1].getID();
-                if ((!(this.vTaskList[i_1].getParItem() && this.vTaskList[i_1].getParItem().getGroup() == 2)) || this.vTaskList[i_1].getGroup() == 2) {
-                    if (this.vTaskList[i_1].getVisible() == 0)
-                        vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
+                vID = this_1.vTaskList[i_1].getID();
+                if ((!(this_1.vTaskList[i_1].getParItem() && this_1.vTaskList[i_1].getParItem().getGroup() == 2)) || this_1.vTaskList[i_1].getGroup() == 2) {
+                    if (this_1.vTaskList[i_1].getVisible() == 0)
+                        vTmpRow = this_1.newNode(vTmpTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
                     else
-                        vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor);
-                    this.vTaskList[i_1].setListChildRow(vTmpRow);
-                    this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-                    vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskname');
+                        vTmpRow = this_1.newNode(vTmpTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor);
+                    this_1.vTaskList[i_1].setListChildRow(vTmpRow);
+                    this_1.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
+                    vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gtaskname');
                     var vCellContents = '';
-                    for (var j_1 = 1; j_1 < this.vTaskList[i_1].getLevel(); j_1++) {
+                    for (var j_1 = 1; j_1 < this_1.vTaskList[i_1].getLevel(); j_1++) {
                         vCellContents += '\u00A0\u00A0\u00A0\u00A0';
                     }
-                    var task = this.vTaskList[i_1];
-                    var vEventClickRow = this.vEventClickRow;
-                    // addListener('click', function (e) {
-                    //   if (e.target.classList.contains('gfoldercollapse') === false &&
-                    //     vEventClickRow && typeof vEventClickRow === "function") {
-                    //     vEventClickRow(task);
-                    //   }
-                    // }, vTmpRow);
-                    if (this.vTaskList[i_1].getGroup() == 1) {
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents);
-                        var vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i_1].getOpen() == 1) ? '-' : '+');
-                        this.vTaskList[i_1].setGroupSpan(vTmpSpan);
-                        events_1.addFolderListeners(this, vTmpSpan, vID);
+                    var task_2 = this_1.vTaskList[i_1];
+                    var vEventClickRow_1 = this_1.vEventClickRow;
+                    events_1.addListener('click', function (e) {
+                        if (e.target.classList.contains('gfoldercollapse') === false &&
+                            vEventClickRow_1 && typeof vEventClickRow_1 === "function") {
+                            vEventClickRow_1(task_2);
+                        }
+                    }, vTmpRow);
+                    if (this_1.vTaskList[i_1].getGroup() == 1) {
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, vCellContents);
+                        var vTmpSpan = this_1.newNode(vTmpDiv, 'span', this_1.vDivId + 'group_' + vID, 'gfoldercollapse', (this_1.vTaskList[i_1].getOpen() == 1) ? '-' : '+');
+                        this_1.vTaskList[i_1].setGroupSpan(vTmpSpan);
+                        events_1.addFolderListeners(this_1, vTmpSpan, vID);
                         var divTask = document.createElement('span');
-                        divTask.innerHTML = '\u00A0' + this.vTaskList[i_1].getName();
+                        divTask.innerHTML = '\u00A0' + this_1.vTaskList[i_1].getName();
                         vTmpDiv.appendChild(divTask);
                         // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
                         // vTmpDiv.appendChild(document.createNode(text));
                         var callback = function (task, e) { return task.setName(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'taskname', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i_1], 'taskname');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'taskname', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpDiv, this_1.vEvents, this_1.vTaskList[i_1], 'taskname');
                     }
                     else {
                         vCellContents += '\u00A0\u00A0\u00A0\u00A0';
-                        var text = makeInput(this.vTaskList[i_1].getName(), this.vEditable, 'text');
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, vCellContents + text);
+                        var text = makeInput(this_1.vTaskList[i_1].getName(), this_1.vEditable, 'text');
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, vCellContents + text);
                         var callback = function (task, e) { return task.setName(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'taskname', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'taskname');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'taskname', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'taskname');
                     }
-                    if (this.vShowRes == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gresource');
-                        var text = makeInput(this.vTaskList[i_1].getResource(), this.vEditable, 'resource', this.vTaskList[i_1].getResource(), this.vResources);
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowRes == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gresource');
+                        var text = makeInput(this_1.vTaskList[i_1].getResource(), this_1.vEditable, 'resource', this_1.vTaskList[i_1].getResource(), this_1.vResources);
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setResource(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'res', this.Draw.bind(this), 'change');
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'res');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'res', this_1.Draw.bind(this_1), 'change');
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'res');
                     }
-                    if (this.vShowDur == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gduration');
-                        var text = makeInput(this.vTaskList[i_1].getDuration(this.vFormat, this.vLangs[this.vLang]), this.vEditable, 'text', this.vTaskList[i_1].getDuration());
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowDur == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gduration');
+                        var text = makeInput(this_1.vTaskList[i_1].getDuration(this_1.vFormat, this_1.vLangs[this_1.vLang]), this_1.vEditable, 'text', this_1.vTaskList[i_1].getDuration());
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setDuration(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'dur', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'dur');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'dur', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'dur');
                     }
-                    if (this.vShowComp == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
-                        var text = makeInput(this.vTaskList[i_1].getCompStr(), this.vEditable, 'percentage', this.vTaskList[i_1].getCompVal());
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowComp == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gpccomplete');
+                        var text = makeInput(this_1.vTaskList[i_1].getCompStr(), this_1.vEditable, 'percentage', this_1.vTaskList[i_1].getCompVal());
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setCompVal(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'comp', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'comp');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'comp', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'comp');
                     }
-                    if (this.vShowStartDate == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gstartdate');
-                        var v = utils_1.formatDateStr(this.vTaskList[i_1].getStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]);
-                        var text = makeInput(v, this.vEditable, 'date', this.vTaskList[i_1].getStart());
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowStartDate == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gstartdate');
+                        var v = utils_1.formatDateStr(this_1.vTaskList[i_1].getStart(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]);
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getStart());
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setStart(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'start', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'start');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'start', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'start');
                     }
-                    if (this.vShowEndDate == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'genddate');
-                        var v = utils_1.formatDateStr(this.vTaskList[i_1].getEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]);
-                        var text = makeInput(v, this.vEditable, 'date', this.vTaskList[i_1].getEnd());
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowEndDate == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'genddate');
+                        var v = utils_1.formatDateStr(this_1.vTaskList[i_1].getEnd(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]);
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getEnd());
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setEnd(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'end', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'end');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'end', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'end');
                     }
-                    if (this.vShowPlanStartDate == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanstartdate');
-                        var v = this.vTaskList[i_1].getPlanStart() ? utils_1.formatDateStr(this.vTaskList[i_1].getPlanStart(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
-                        var text = makeInput(v, this.vEditable, 'date', this.vTaskList[i_1].getPlanStart());
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowPlanStartDate == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gplanstartdate');
+                        var v = this_1.vTaskList[i_1].getPlanStart() ? utils_1.formatDateStr(this_1.vTaskList[i_1].getPlanStart(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]) : '';
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getPlanStart());
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setPlanStart(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'planstart', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'planstart');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'planstart', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'planstart');
                     }
-                    if (this.vShowPlanEndDate == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gplanenddate');
-                        var v = this.vTaskList[i_1].getPlanEnd() ? utils_1.formatDateStr(this.vTaskList[i_1].getPlanEnd(), this.vDateTaskTableDisplayFormat, this.vLangs[this.vLang]) : '';
-                        var text = makeInput(v, this.vEditable, 'date', this.vTaskList[i_1].getPlanEnd());
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowPlanEndDate == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gplanenddate');
+                        var v = this_1.vTaskList[i_1].getPlanEnd() ? utils_1.formatDateStr(this_1.vTaskList[i_1].getPlanEnd(), this_1.vDateTaskTableDisplayFormat, this_1.vLangs[this_1.vLang]) : '';
+                        var text = makeInput(v, this_1.vEditable, 'date', this_1.vTaskList[i_1].getPlanEnd());
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setPlanEnd(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'planend', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'planend');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'planend', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'planend');
                     }
-                    if (this.vShowCost == 1) {
-                        vTmpCell = this.newNode(vTmpRow, 'td', null, 'gcost');
-                        var text = makeInput(this.vTaskList[i_1].getCost(), this.vEditable, 'cost');
-                        vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
+                    if (this_1.vShowCost == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gcost');
+                        var text = makeInput(this_1.vTaskList[i_1].getCost(), this_1.vEditable, 'cost');
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
                         var callback = function (task, e) { return task.setCost(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i_1], 'cost', this.Draw.bind(this));
-                        events_1.addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i_1], 'cost');
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'cost', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'cost');
                     }
-                    if (this.vAdditionalHeaders) {
-                        for (var key in this.vAdditionalHeaders) {
-                            var header = this.vAdditionalHeaders[key];
+                    if (this_1.vAdditionalHeaders) {
+                        for (var key in this_1.vAdditionalHeaders) {
+                            var header = this_1.vAdditionalHeaders[key];
                             var css = header.class ? header.class : "gadditional-" + key;
-                            var data = this.vTaskList[i_1].getDataObject();
+                            var data = this_1.vTaskList[i_1].getDataObject();
                             if (data) {
-                                vTmpCell = this.newNode(vTmpRow, 'td', null, "gadditional " + css);
+                                vTmpCell = this_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
                             }
                             // const callback = (task, e) => task.setCost(e.target.value);
                             // addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'costdate');
-                            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
+                            vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
                         }
                     }
                     vNumRows++;
                 }
+            };
+            var this_1 = this;
+            for (var i_1 = 0; i_1 < this.vTaskList.length; i_1++) {
+                _loop_1(i_1);
             }
             // DRAW the date format selector at bottom left.
             vTmpRow = this.newNode(vTmpTBody, 'tr');
@@ -1263,7 +1267,6 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
                 callback(task, e);
             }
             if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
-                console.log("column:", column, "---", vEventsChange[column]);
                 var q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
                 if (q && q.then) {
                     q.then(function (e) { return draw(); });
