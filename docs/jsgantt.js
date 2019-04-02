@@ -2148,8 +2148,7 @@ var sv = {
     'sat': 'lör'
 };
 exports.sv = sv;
-var nl =
-{
+var nl = {
   'format': 'Format',
   'hour': 'Uur',
   'day': 'Dag',
@@ -2222,6 +2221,7 @@ var nl =
   'sat': 'za'
 };
 exports.nl = nl;
+
 },{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
