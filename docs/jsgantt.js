@@ -3603,7 +3603,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var pLink = exports.getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
                 var pMile = exports.getXMLNodeValue(Task[i], 'Milestone', 1, 0);
 				
-				var percentKey = 'PercentWorkComplete';
+                var percentKey = 'PercentWorkComplete';
                 if (pGanttVar.getUsePercentCompleteInsteadOfWorkComplete()) {
                     percentKey = 'PercentComplete';
                 }
