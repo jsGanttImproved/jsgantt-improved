@@ -81,6 +81,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vAdditionalHeaders = {};
     this.vEditable = false;
     this.vDebug = false;
+    this.vUsePercentCompleteInsteadOfWorkComplete = false;
     this.vShowSelector = new Array('top');
     this.vDateInputFormat = 'yyyy-mm-dd';
     this.vDateTaskTableDisplayFormat = utils_1.parseDateFormatStr('dd/mm/yyyy');
@@ -2275,6 +2276,8 @@ exports.includeGetSet = function () {
     this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
     this.setEditable = function (editable) { this.vEditable = editable; };
     this.setDebug = function (debug) { this.vDebug = debug; };
+    this.setUsePercentCompleteInsteadOfWorkComplete = function (usePercentComplete) { this.vUsePercentCompleteInsteadOfWorkComplete = usePercentComplete; };
+
     /**
      * GETTERS
      */
@@ -2339,6 +2342,7 @@ exports.includeGetSet = function () {
     this.getEventClickRow = function () { return this.vEventClickRow; };
     this.getResources = function () { return this.vResources; };
     this.getAdditionalHeaders = function () { return this.vAdditionalHeaders; };
+    this.getUsePercentCompleteInsteadOfWorkComplete = function () { return this.vUsePercentCompleteInsteadOfWorkComplete; };
 };
 
 },{"./utils":9}],8:[function(require,module,exports){
@@ -3598,7 +3602,13 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var pEnd = exports.getXMLNodeValue(Task[i], 'Finish', 2, '');
                 var pLink = exports.getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
                 var pMile = exports.getXMLNodeValue(Task[i], 'Milestone', 1, 0);
-                var pComp = exports.getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
+				
+				var percentKey = 'PercentWorkComplete';
+                if (pGanttVar.getUsePercentCompleteInsteadOfWorkComplete()) {
+                    percentKey = 'PercentComplete';
+                }
+                var pComp = exports.getXMLNodeValue(Task[i], percentKey, 1, 0);
+				
                 var pCost = exports.getXMLNodeValue(Task[i], 'Cost', 2, 0);
                 var pGroup = exports.getXMLNodeValue(Task[i], 'Summary', 1, 0);
                 var pParent = 0;
