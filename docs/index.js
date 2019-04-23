@@ -134,8 +134,19 @@ function start(e) {
   } else {
     alert("Error, unable to create Gantt Chart");
   }
+
+  document.getElementById("idMainLeft").onscroll = () => { 
+    scrollingTwoMains('idMainLeft', 'idMainRight');
+  };
+
+  document.getElementById('idMainRight').onscroll = () => {
+    scrollingTwoMains('idMainRight', 'idMainLeft');
+  };
 }
 
+function scrollingTwoMains(mainMoving, mainMoved) {
+  document.getElementById(mainMoved).scrollTop = document.getElementById(mainMoving).scrollTop;
+}
 
 function editValue(list, task, event, cell, column) {
   const found = list.find(item => item.pID == task.getOriginalID());
