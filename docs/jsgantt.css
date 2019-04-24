@@ -766,6 +766,7 @@ td.gspanning div {
 
 .gmainright {
   overflow-x: scroll;
+  overflow-y: hidden;
   top: 0;
 }
 

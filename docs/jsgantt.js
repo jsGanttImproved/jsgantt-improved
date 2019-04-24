@@ -926,10 +926,10 @@ exports.GanttChart = function (pDiv, pFormat) {
             while (this.vDiv.hasChildNodes())
                 this.vDiv.removeChild(this.vDiv.firstChild);
             vTmpDiv = this.newNode(this.vDiv, 'div', null, 'gchartcontainer');
-            var leftvTmpDiv = this.newNode(vTmpDiv, 'div', 'idMainLeft', 'gmain gmainleft');
+            var leftvTmpDiv = this.newNode(vTmpDiv, 'div', null, 'gmain gmainleft');
             leftvTmpDiv.appendChild(vLeftHeader);
             // leftvTmpDiv.appendChild(vLeftTable);
-            var rightvTmpDiv = this.newNode(vTmpDiv, 'div', 'idMainRight', 'gmain gmainright',);
+            var rightvTmpDiv = this.newNode(vTmpDiv, 'div', null, 'gmain gmainright');
             rightvTmpDiv.appendChild(vRightHeader);
             rightvTmpDiv.appendChild(vRightTable);
             vTmpDiv.appendChild(leftvTmpDiv);
