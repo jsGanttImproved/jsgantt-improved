@@ -141,7 +141,9 @@ export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
 
 export const addScrollListeners = function (pGanttChart) {
   addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-  addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
+  addListener('resize', function () { 
+    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; 
+  }, window);
 };
 
 export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
@@ -154,7 +156,9 @@ export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
 }
 
 export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw = null, event = 'blur') {
-  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
+  
+  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]
+    && (vTmpCell.children[0].children[0].tagName === 'SELECT' || vTmpCell.children[0].children[0].tagName === 'INPUT')) {
     addListener(event, function (e) {
       if (callback) {
         callback(task, e);
@@ -194,9 +198,13 @@ const toggleDependencies = function (e) {
     style = '';
   }
   if (ids.length > 1) {
-    document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+    const frameZones = Array.from(document.querySelectorAll(`.gDepId${ids[1]}`));
+    frameZones.forEach((c: any) => {
       c.style.borderStyle = style;
     });
+   // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+     // c.style.borderStyle = style;
+    // });
   }
 }
 

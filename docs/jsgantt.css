@@ -89,6 +89,22 @@ td.gspanning {
   border: #efefef 1px solid;
 }
 
+.gtaskheading div,
+.gname div,
+.gtaskname div,
+.gresource div,
+.gduration div,
+.gpccomplete div,
+.gstartdate div,
+.gplanstartdate div,
+.gplanenddate div,
+.gcost div,
+.genddate div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .gtaskbarcontainer.gplan {
   position: absolute !important;
   top: 0px;

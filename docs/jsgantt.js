@@ -358,6 +358,7 @@ exports.GanttChart = function (pDiv, pFormat) {
              * HEADINGS
             */
             var vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
+            this.setListBody(vTmpDiv);
             var vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
             var vTmpTBody = this.newNode(vTmpTab, 'tbody');
             var vTmpRow = this.newNode(vTmpTBody, 'tr');
@@ -452,7 +453,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                         var vTmpSpan = this_1.newNode(vTmpDiv, 'span', this_1.vDivId + 'group_' + vID, 'gfoldercollapse', (this_1.vTaskList[i_1].getOpen() == 1) ? '-' : '+');
                         this_1.vTaskList[i_1].setGroupSpan(vTmpSpan);
                         events_1.addFolderListeners(this_1, vTmpSpan, vID);
-                        vTmpDiv.appendChild(document.createTextNode('\u00A0' + this_1.vTaskList[i_1].getName()));
+                        var divTask = document.createElement('span');
+                        divTask.innerHTML = '\u00A0' + this_1.vTaskList[i_1].getName();
+                        vTmpDiv.appendChild(divTask);
                         // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
                         // vTmpDiv.appendChild(document.createNode(text));
                         var callback = function (task, e) { return task.setName(e.target.value); };
@@ -479,7 +482,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gduration');
                         var text = makeInput(this_1.vTaskList[i_1].getDuration(this_1.vFormat, this_1.vLangs[this_1.vLang]), this_1.vEditable, 'text', this_1.vTaskList[i_1].getDuration());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
-                        var callback = function (task, e) { return task.setDur(e.target.value); };
+                        var callback = function (task, e) { return task.setDuration(e.target.value); };
                         events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'dur', this_1.Draw.bind(this_1));
                         events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'dur');
                     }
@@ -1242,7 +1245,9 @@ exports.addFormatListeners = function (pGanttChart, pFormat, pObj) {
 };
 exports.addScrollListeners = function (pGanttChart) {
     exports.addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-    exports.addListener('resize', function () { pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; }, window);
+    exports.addListener('resize', function () {
+        pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
+    }, window);
 };
 exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
     exports.addListener('click', function (e) {
@@ -1255,7 +1260,8 @@ exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
 exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw, event) {
     if (draw === void 0) { draw = null; }
     if (event === void 0) { event = 'blur'; }
-    if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
+    if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]
+        && (vTmpCell.children[0].children[0].tagName === 'SELECT' || vTmpCell.children[0].children[0].tagName === 'INPUT')) {
         exports.addListener(event, function (e) {
             if (callback) {
                 callback(task, e);
@@ -1295,9 +1301,13 @@ var toggleDependencies = function (e) {
         style = '';
     }
     if (ids.length > 1) {
-        document.querySelectorAll(".gDepId" + ids[1]).forEach(function (c) {
+        var frameZones = Array.from(document.querySelectorAll(".gDepId" + ids[1]));
+        frameZones.forEach(function (c) {
             c.style.borderStyle = style;
         });
+        // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+        // c.style.borderStyle = style;
+        // });
     }
 };
 // "pID": 122
@@ -2065,6 +2075,225 @@ var cn = {
     'qtrs': '季'
 };
 exports.cn = cn;
+var sv = {
+    'format': 'Filter',
+    'hour': 'Timme',
+    'day': 'Dag',
+    'week': 'Vecka',
+    'month': 'Månad',
+    'quarter': 'Kvartal',
+    'hours': 'Timmar',
+    'days': 'Dagar',
+    'weeks': 'Veckor',
+    'months': 'Månader',
+    'quarters': 'Kvartal',
+    'hr': 'Timme',
+    'dy': 'Dag',
+    'wk': 'Vecka',
+    'mth': 'Månad',
+    'qtr': 'Q',
+    'hrs': 'Timmar',
+    'dys': 'Dagar',
+    'wks': 'Veckor',
+    'mths': 'Månader',
+    'qtrs': 'Q',
+    'resource': 'Resurs',
+    'duration': 'Tidsåtgång',
+    'comp': '% klart',
+    'completion': 'Klart',
+    'startdate': 'Startdatum',
+    'planstartdate': 'Planerad startdatum',
+    'enddate': 'Slutdatum',
+    'planenddate': 'Planerad slutdatum',
+    'cost': 'Kostnad',
+    'moreinfo': 'Mer Information',
+    'notes': 'Notes',
+    'january': 'januari',
+    'february': 'februari',
+    'march': 'mars',
+    'april': 'april',
+    'maylong': 'maj',
+    'june': 'juni',
+    'july': 'juli',
+    'august': 'augusti',
+    'september': 'september',
+    'october': 'oktober',
+    'november': 'november',
+    'december': 'december',
+    'jan': 'jan',
+    'feb': 'feb',
+    'mar': 'mar',
+    'apr': 'apr',
+    'may': 'maj',
+    'jun': 'jun',
+    'jul': 'jul',
+    'aug': 'aug',
+    'sep': 'sep',
+    'oct': 'okt',
+    'nov': 'nov',
+    'dec': 'dec',
+    'sunday': 'söndag',
+    'monday': 'måndag',
+    'tuesday': 'tisdag',
+    'wednesday': 'onsdag',
+    'thursday': 'torsdag',
+    'friday': 'fredag',
+    'saturday': 'lördag',
+    'sun': 'sön',
+    'mon': 'mån',
+    'tue': 'tis',
+    'wed': 'ons',
+    'thu': 'tor',
+    'fri': 'fre',
+    'sat': 'lör'
+};
+exports.sv = sv;
+var nl = {
+    'format': 'Format',
+    'hour': 'Uur',
+    'day': 'Dag',
+    'week': 'Week',
+    'month': 'Maand',
+    'quarter': 'Kwartaal',
+    'hours': 'Uren',
+    'days': 'Dagen',
+    'weeks': 'Weken',
+    'months': 'Maanden',
+    'quarters': 'Kwartalen',
+    'hr': 'uur',
+    'dy': 'dag',
+    'wk': 'wk',
+    'mth': 'mnd',
+    'qtr': 'kw',
+    'hrs': 'uren',
+    'dys': 'dagen',
+    'wks': 'weken',
+    'mths': 'maanden',
+    'qtrs': 'kwartalen',
+    'resource': 'Resource',
+    'duration': 'Doorlooptijd',
+    'comp': '% gereed',
+    'completion': 'Gereed',
+    'startdate': 'Startdatum',
+    'planstartdate': 'Geplande startdatum',
+    'enddate': 'Einddatum',
+    'planenddate': 'Geplande einddatum',
+    'cost': 'Kosten',
+    'moreinfo': 'Meer informatie',
+    'notes': 'Notities',
+    'january': 'januari',
+    'february': 'februari',
+    'march': 'maart',
+    'april': 'april',
+    'maylong': 'mei',
+    'june': 'juni',
+    'july': 'juli',
+    'august': 'augustus',
+    'september': 'september',
+    'october': 'oktober',
+    'november': 'november',
+    'december': 'december',
+    'jan': 'jan',
+    'feb': 'feb',
+    'mar': 'mrt',
+    'apr': 'apr',
+    'may': 'mei',
+    'jun': 'jun',
+    'jul': 'jul',
+    'aug': 'aug',
+    'sep': 'sep',
+    'oct': 'okt',
+    'nov': 'nov',
+    'dec': 'dec',
+    'sunday': 'zondag',
+    'monday': 'maandag',
+    'tuesday': 'dinsdag',
+    'wednesday': 'woensdag',
+    'thursday': 'donderdag',
+    'friday': 'vrijdag',
+    'saturday': 'zaterdag',
+    'sun': 'zo',
+    'mon': 'ma',
+    'tue': 'di',
+    'wed': 'wo',
+    'thu': 'do',
+    'fri': 'vr',
+    'sat': 'za'
+};
+exports.nl = nl;
+var id = {
+    'format': 'Format',
+    'hour': 'Jam',
+    'day': 'Hari',
+    'week': 'Minggu',
+    'month': 'Bulan',
+    'quarter': 'Kuartal',
+    'hours': 'Jam',
+    'days': 'Hari',
+    'weeks': 'Minggu',
+    'months': 'Bulan',
+    'quarters': 'Kuartal',
+    'hr': 'Jam',
+    'dy': 'Hari',
+    'wk': 'Min',
+    'mth': 'Bln',
+    'qtr': 'Krtl',
+    'hrs': 'Jam',
+    'dys': 'Hari',
+    'wks': 'Min',
+    'mths': 'Bln',
+    'qtrs': 'Krtl',
+    'resource': 'Sumber Daya',
+    'duration': 'Durasi',
+    'comp': '% Penyelesaian',
+    'completion': 'Penyelesaian',
+    'startdate': 'Tanggal Mulai',
+    'planstartdate': 'Perencanaan Tanggal Mulai',
+    'enddate': 'Tanggal Akhir',
+    'planenddate': 'Perencanaan Tanggal Akhir',
+    'cost': 'Biaya',
+    'moreinfo': 'Informasi Lebih Lanjut',
+    'notes': 'Catatan',
+    'january': 'Januari',
+    'february': 'Februari',
+    'march': 'Maret',
+    'april': 'April',
+    'maylong': 'Mei',
+    'june': 'Juni',
+    'july': 'Juli',
+    'august': 'Agustus',
+    'september': 'September',
+    'october': 'Oktober',
+    'november': 'November',
+    'december': 'Desember',
+    'jan': 'Jan',
+    'feb': 'Feb',
+    'mar': 'Mar',
+    'apr': 'Apr',
+    'may': 'Mei',
+    'jun': 'Jun',
+    'jul': 'Jul',
+    'aug': 'Agu',
+    'sep': 'Sep',
+    'oct': 'Okt',
+    'nov': 'Nov',
+    'dec': 'Des',
+    'sunday': 'Minggu',
+    'monday': 'Senin',
+    'tuesday': 'Selasa',
+    'wednesday': 'Rabu',
+    'thursday': 'Kamis',
+    'friday': 'Jumat',
+    'saturday': 'Sabtu',
+    'sun': 'Min',
+    'mon': 'Sen',
+    'tue': 'Sel',
+    'wed': 'Rab',
+    'thu': 'Kam',
+    'fri': 'Jum',
+    'sat': 'Sab'
+};
+exports.id = id;
 
 },{}],7:[function(require,module,exports){
 "use strict";
@@ -3345,7 +3574,7 @@ exports.criticalPath = function (tasks) {
                 childrens: []
             };
         }
-        console.log(path);
+        // console.log(path);
         if (!path[task.pID].childrens) {
             path[task.pID].childrens = [];
         }

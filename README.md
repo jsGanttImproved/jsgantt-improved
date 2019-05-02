@@ -23,6 +23,8 @@ For **React** use the component [react-jsgantt](https://github.com/jsGanttImprov
 For **Vue** , see this example: https://stackblitz.com/edit/vue-jsgantt
 
 
+For **.NET** , see this example: [.NET Documentation](./docs/DotNet.md)
+
 
 ## Example
 
