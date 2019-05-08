@@ -1,6 +1,26 @@
 
-export const internalProperties = ['pID','pName','pStart','pEnd','pClass','pLink','pMile','pRes','pComp','pGroup','pParent',
-'pOpen','pDepend','pCaption','pNotes','pGantt','pCost','pPlanStart','pPlanEnd'];
+export const internalProperties = ['pID', 'pName', 'pStart', 'pEnd', 'pClass', 'pLink', 'pMile', 'pRes', 'pComp', 'pGroup', 'pParent',
+  'pOpen', 'pDepend', 'pCaption', 'pNotes', 'pGantt', 'pCost', 'pPlanStart', 'pPlanEnd'];
+
+export const internalPropertiesLang = {
+  'pID': 'id',
+  'pName': 'name',
+  'pStart': 'startdate',
+  'pEnd': 'enddate',
+  'pLink': 'link',
+  'pMile': 'mile',
+  'pRes': 'resource',
+  'pComp': 'comp',
+  'pGroup': 'group',
+  'pParent': 'parent',
+  'pOpen': 'open',
+  'pDepend': 'depend',
+  'pCaption': 'caption',
+  'pNotes': 'notes',
+  'pCost': 'cost',
+  'pPlanStart': 'planstartdate',
+  'pPlanEnd': 'planenddate'
+};
 
 export const getMinDate = function (pList, pFormat) {
   let vDate = new Date();

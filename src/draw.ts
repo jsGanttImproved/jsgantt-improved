@@ -118,6 +118,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vLines = null;
   this.vTimer = 20;
   this.vTooltipDelay = 1500;
+  this.vTooltipTemplate = null;
   this.includeGetSet = includeGetSet.bind(this);
   this.includeGetSet();
 
@@ -920,7 +921,7 @@ export const GanttChart = function (pDiv, pFormat) {
         // Add Task Info div for tooltip
         if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-          vTmpDiv2.appendChild(this.createTaskInfo(this.vTaskList[i]));
+          vTmpDiv2.appendChild(this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate));
           addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);
         }
       }
