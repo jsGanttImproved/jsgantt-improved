@@ -34,7 +34,6 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowPlanStartDate = 0;
   this.vShowPlanEndDate = 0;
   this.vShowCost = 0;
-  this.vShowPlanEndDate = 0;
   this.vShowEndWeekDate = 1;
   this.vShowTaskInfoRes = 1;
   this.vShowTaskInfoDur = 1;
@@ -576,7 +575,6 @@ export const GanttChart = function (pDiv, pFormat) {
       // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
       // this.newNode(vTmpDiv2, 'br');
       // this.newNode(vTmpDiv2, 'br');
-
 
 
 

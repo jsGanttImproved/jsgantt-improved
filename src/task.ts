@@ -313,7 +313,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       vDuration = '-';
     }
     else {
-      let vTaskEnd = new Date(this.getEnd().getTime());
       let vUnits = null;
       switch (pFormat) {
         case 'week': vUnits = 'day'; break;
@@ -322,17 +321,21 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
         default: vUnits = pFormat; break;
       }
 
-      if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
-        vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
-      }
-      let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-      if (Math.floor(tmpPer) != tmpPer) tmpPer = Math.round(tmpPer);
+      // let vTaskEnd = new Date(this.getEnd().getTime());
+      // if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
+      //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
+      // }
+      // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
+
+      console.log(this.getName(), this.getStart(), this.getEnd(), vUnits)
+      const hours = (this.getEnd().getTime() - this.getStart().getTime()) /1000/60/60;
+      let tmpPer;
       switch (vUnits) {
-        case 'hour': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']); break;
-        case 'day': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']); break;
-        case 'week': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']); break;
-        case 'month': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']); break;
-        case 'quarter': vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']); break;
+        case 'hour': tmpPer = Math.round(hours); vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']); break;
+        case 'day': tmpPer = Math.round(hours/24); vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']); break;
+        case 'week': tmpPer = Math.round(hours/24/7); vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']); break;
+        case 'month': tmpPer = Math.round(hours/24/7/30); vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']); break;
+        case 'quarter': tmpPer = Math.round(hours/24/7/30/3); vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']); break;
       }
     }
     return vDuration;

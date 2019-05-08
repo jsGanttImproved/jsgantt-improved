@@ -185,9 +185,9 @@
   },
   {
     "pID": 32,
-    "pName": "Calculate Chart Size",
-    "pStart": "2018-07-15",
-    "pEnd": "2018-07-24",
+    "pName": "Calculate One Day",
+    "pStart": "2018-07-15 00:00",
+    "pEnd": "2018-07-16 00:00",
     "pClass": "gtaskgreen",
     "pLink": "",
     "pMile": 0,

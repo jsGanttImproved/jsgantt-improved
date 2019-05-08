@@ -438,7 +438,7 @@ export const hashString = function (key) {
 }
 
 export const hashKey = function (key) {
-  return this.hashString(key) % 10000;
+  return this.hashString(key);
 }
 
 export const criticalPath = function (tasks) {

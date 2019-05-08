@@ -135,13 +135,13 @@ function start(e) {
     alert("Error, unable to create Gantt Chart");
   }
 
-  document.getElementById("idMainLeft").onscroll = () => { 
-    scrollingTwoMains('idMainLeft', 'idMainRight');
-  };
+  // document.getElementById("idMainLeft").onscroll = () => { 
+  //   scrollingTwoMains('idMainLeft', 'idMainRight');
+  // };
 
-  document.getElementById('idMainRight').onscroll = () => {
-    scrollingTwoMains('idMainRight', 'idMainLeft');
-  };
+  // document.getElementById('idMainRight').onscroll = () => {
+  //   scrollingTwoMains('idMainRight', 'idMainLeft');
+  // };
 }
 
 function scrollingTwoMains(mainMoving, mainMoved) {
