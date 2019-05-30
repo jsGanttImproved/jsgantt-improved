@@ -10,6 +10,7 @@ function start(e) {
     const vDebug = document.querySelector('#debug:checked') ? true : false;
     const vEditable = document.querySelector('#editable:checked') ? true : false;
     const vUseSort = document.querySelector('#sort:checked') ? true : false;
+    const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
 
 
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
@@ -96,6 +97,7 @@ function start(e) {
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vTooltipDelay: delay,
+      vTooltipTemplate: newtooltiptemplate,
       vDebug,
       vEditable,
       vUseSort,
@@ -135,13 +137,13 @@ function start(e) {
     alert("Error, unable to create Gantt Chart");
   }
 
-  document.getElementById("idMainLeft").onscroll = () => { 
-    scrollingTwoMains('idMainLeft', 'idMainRight');
-  };
+  // document.getElementById("idMainLeft").onscroll = () => { 
+  //   scrollingTwoMains('idMainLeft', 'idMainRight');
+  // };
 
-  document.getElementById('idMainRight').onscroll = () => {
-    scrollingTwoMains('idMainRight', 'idMainLeft');
-  };
+  // document.getElementById('idMainRight').onscroll = () => {
+  //   scrollingTwoMains('idMainRight', 'idMainLeft');
+  // };
 }
 
 function scrollingTwoMains(mainMoving, mainMoved) {
