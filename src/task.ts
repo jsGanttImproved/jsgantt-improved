@@ -284,8 +284,23 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     else return new Date();
   };
   this.getEnd = function () {
+    
     if (vEnd) return vEnd;
     else if (vPlanEnd) return vPlanEnd;
+
+    else if(vStart && vDuration) {
+      let date = new Date(vStart)
+      const vUnits = vDuration.split(' ')
+      const value = parseInt(vUnits[0])
+      switch (vUnits[1]) {
+        case 'hour': date.setMinutes(date.getMinutes()+(value*60)); break;
+        case 'day': date.setMinutes(date.getMinutes()+(value*60*24)); break;
+        case 'week': date.setMinutes(date.getMinutes()+(value*60*24*7));break;
+        case 'month': date.setMonth(date.getMonth()+(value)); break;
+        case 'quarter': date.setMonth(date.getMonth()+(value*3)); break;
+      }
+      return date
+    }
     else return new Date();
   };
   this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
@@ -312,6 +327,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     if (vMile) {
       vDuration = '-';
     }
+    else if (!vEnd && vDuration) {return vDuration}
     else {
       let vTaskEnd = new Date(this.getEnd().getTime());
       let vUnits = null;
