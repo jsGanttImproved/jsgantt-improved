@@ -60,6 +60,7 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
       let caption = '';
       let notes = '';
       let cost;
+      let duration ='';
       const additionalObject = {};
 
       for (let prop in pJsonObj[index]) {
@@ -138,13 +139,17 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
           case 'cost':
             cost = value;
             break;
+          case 'duration':
+          case 'pduration':
+            duration = value;
+            break;
           default:
             additionalObject[property.toLowerCase()] = value;
         }
       }
 
       //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-      pGanttVar.AddTaskItem(new TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, additionalObject));
+      pGanttVar.AddTaskItem(new TaskItem(id, name, start, end, itemClass, link, milestone, resourceName, completion, group, parent, open, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, duration, additionalObject));
       //}
     }
   }

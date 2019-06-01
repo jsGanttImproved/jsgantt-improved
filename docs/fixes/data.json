@@ -60,7 +60,7 @@
     "pID": 121,
     "pName": "<a href='yahoo.com'>Constructor Proc #1234 of February 2018</a>",
     "pStart": "2018-06-21",
-    "pEnd": "2018-07-09",
+    "pEnd": "",
     "pClass": "gtaskblue",
     "pLink": "",
     "pMile": 0,
@@ -71,7 +71,9 @@
     "pOpen": 1,
     "pDepend": "",
     "pCaption": "",
-    "pNotes": ""
+    "pNotes": "",
+    "pDuration": "3 days"
+
   },
   {
     "pID": 122,

@@ -158,12 +158,13 @@ export const TaskItemObject = function (object) {
     object.pCost,
     object.pPlanStart,
     object.pPlanEnd,
+    object.pDuration,
     object
   );
 }
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
-  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDataObject = null) {
+  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pDataObject = null) {
   let vGantt = pGantt ? pGantt : this;
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
@@ -195,7 +196,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vDepend = new Array();
   let vDependType = new Array();
   let vCaption = document.createTextNode(pCaption).data;
-  let vDuration = '';
+  let vDuration = pDuration || '';
   let vLevel = 0;
   let vNumKid = 0;
   let vWeight = 0;
@@ -284,8 +285,23 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     else return new Date();
   };
   this.getEnd = function () {
+    console.log('getend', vName, vEnd, vDuration);
     if (vEnd) return vEnd;
     else if (vPlanEnd) return vPlanEnd;
+
+    else if(vStart && vDuration) {
+      let date = new Date(vStart)
+      const vUnits = vDuration.split(' ')
+      const value = parseInt(vUnits[0])
+      switch (vUnits[1]) {
+        case 'hour': date.setMinutes(date.getMinutes()+(value*60)); break;
+        case 'day': date.setMinutes(date.getMinutes()+(value*60*24)); break;
+        case 'week': date.setMinutes(date.getMinutes()+(value*60*24*7));break;
+        case 'month': date.setMonth(date.getMonth()+(value)); break;
+        case 'quarter': date.setMonth(date.getMonth()+(value*3)); break;
+      }
+      return date
+    }
     else return new Date();
   };
   this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
@@ -309,9 +325,11 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getSortIdx = function () { return vSortIdx; };
   this.getToDelete = function () { return vToDelete; };
   this.getDuration = function (pFormat, pLang) {
+    console.log('getduration', vName, vEnd, vDuration);
     if (vMile) {
       vDuration = '-';
     }
+    else if (!vEnd && vDuration) {return vDuration}
     else {
       let vUnits = null;
       switch (pFormat) {
@@ -326,7 +344,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       // }
       // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-
+      
       const hours = (this.getEnd().getTime() - this.getStart().getTime()) / 1000 / 60 / 60;
       let tmpPer;
       switch (vUnits) {
