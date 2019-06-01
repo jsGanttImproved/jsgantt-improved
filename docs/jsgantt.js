@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsGantt = require("./src/jsgantt");
@@ -1484,6 +1484,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
             var caption = '';
             var notes = '';
             var cost = void 0;
+            var duration = '';
             var additionalObject = {};
             for (var prop in pJsonObj[index]) {
                 var property = prop;
@@ -1561,12 +1562,16 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                     case 'cost':
                         cost = value;
                         break;
+                    case 'duration':
+                    case 'pduration':
+                        duration = value;
+                        break;
                     default:
                         additionalObject[property.toLowerCase()] = value;
                 }
             }
             //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, additionalObject));
+            pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, duration, additionalObject));
             //}
         }
     }
@@ -2641,12 +2646,13 @@ exports.TaskItemObject = function (object) {
     utils_1.internalProperties.forEach(function (property) {
         delete pDataObject[property];
     });
-    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd, object);
+    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd, object.pDuration, object);
 };
-exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDataObject) {
+exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDuration, pDataObject) {
     if (pCost === void 0) { pCost = null; }
     if (pPlanStart === void 0) { pPlanStart = null; }
     if (pPlanEnd === void 0) { pPlanEnd = null; }
+    if (pDuration === void 0) { pDuration = null; }
     if (pDataObject === void 0) { pDataObject = null; }
     var vGantt = pGantt ? pGantt : this;
     var _id = document.createTextNode(pID).data;
@@ -2676,7 +2682,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vDepend = new Array();
     var vDependType = new Array();
     var vCaption = document.createTextNode(pCaption).data;
-    var vDuration = '';
+    var vDuration = pDuration || '';
     var vLevel = 0;
     var vNumKid = 0;
     var vWeight = 0;
@@ -2757,10 +2763,34 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
             return new Date();
     };
     this.getEnd = function () {
+        console.log('getend', vName, vEnd, vDuration);
         if (vEnd)
             return vEnd;
         else if (vPlanEnd)
             return vPlanEnd;
+        else if (vStart && vDuration) {
+            var date = new Date(vStart);
+            var vUnits = vDuration.split(' ');
+            var value = parseInt(vUnits[0]);
+            switch (vUnits[1]) {
+                case 'hour':
+                    date.setMinutes(date.getMinutes() + (value * 60));
+                    break;
+                case 'day':
+                    date.setMinutes(date.getMinutes() + (value * 60 * 24));
+                    break;
+                case 'week':
+                    date.setMinutes(date.getMinutes() + (value * 60 * 24 * 7));
+                    break;
+                case 'month':
+                    date.setMonth(date.getMonth() + (value));
+                    break;
+                case 'quarter':
+                    date.setMonth(date.getMonth() + (value * 3));
+                    break;
+            }
+            return date;
+        }
         else
             return new Date();
     };
@@ -2807,8 +2837,12 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getSortIdx = function () { return vSortIdx; };
     this.getToDelete = function () { return vToDelete; };
     this.getDuration = function (pFormat, pLang) {
+        console.log('getduration', vName, vEnd, vDuration);
         if (vMile) {
             vDuration = '-';
+        }
+        else if (!vEnd && vDuration) {
+            return vDuration;
         }
         else {
             var vUnits = null;
