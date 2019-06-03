@@ -285,7 +285,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     else return new Date();
   };
   this.getEnd = function () {
-    console.log('getend', vName, vEnd, vDuration);
     if (vEnd) return vEnd;
     else if (vPlanEnd) return vPlanEnd;
 
@@ -325,7 +324,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getSortIdx = function () { return vSortIdx; };
   this.getToDelete = function () { return vToDelete; };
   this.getDuration = function (pFormat, pLang) {
-    console.log('getduration', vName, vEnd, vDuration);
     if (vMile) {
       vDuration = '-';
     }
