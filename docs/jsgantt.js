@@ -149,9 +149,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vParDiv = vList[i].getChildRow();
             if (vBarDiv) {
                 vList[i].setStartX(vBarDiv.offsetLeft + 1);
-                vList[i].setStartY(vParDiv.offsetTop + vBarDiv.offsetTop + vHeight - 1);
+                vList[i].setStartY(vParDiv.offsetTop + vParDiv.offsetHeight /2);
                 vList[i].setEndX(vBarDiv.offsetLeft + vBarDiv.offsetWidth + 1);
-                vList[i].setEndY(vParDiv.offsetTop + vBarDiv.offsetTop + vHeight - 1);
+                vList[i].setEndY(vParDiv.offsetTop + vParDiv.offsetHeight /2);
             }
         }
     };
