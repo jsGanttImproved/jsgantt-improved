@@ -140,9 +140,9 @@ Its easy to get it set:
 
 * Clone this repo
 * Install lib dependencies: `npm i` 
-* Install global dependencies: `npm i -g browserify nodemon` 
+* Install global dependencies: `npm i -g browserify nodemon onchange` 
 * Run the demo, This will start a `localhost:8080` with a live  example:  `npm start`. 
-* Use `npm run watch:dist` or do your change in `src` and restart this command refresh the changes.
+* Use `npm run watch` or do your change in `src` and restart this command refresh the changes.
 
 For testing use `npm run test` with e2e tests.
 

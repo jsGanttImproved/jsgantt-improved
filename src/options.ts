@@ -103,6 +103,7 @@ export const includeGetSet = function () {
   this.setLines = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) this.vLines = pDiv; };
   this.setTimer = function (pVal) { this.vTimer = pVal * 1; };
   this.setTooltipDelay = function (pVal) { this.vTooltipDelay = pVal * 1; };
+  this.setTooltipTemplate = function (pVal) { this.vTooltipTemplate = pVal; };
   this.addLang = function (pLang, pVals) {
     if (!this.vLangs[pLang]) {
       this.vLangs[pLang] = new Object();
