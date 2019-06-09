@@ -264,7 +264,7 @@ export const GanttChart = function (pDiv, pFormat) {
             if (vTask >= 0 && vList[vTask].getGroup() != 2) {
               if (vList[vTask].getVisible() == 1) {
                 if (vDebug) {
-                  //console.log(`init drawDependency `, vList[vTask].getID(), new Date());
+                  console.log(`init drawDependency `, vList[vTask].getID(), new Date());
                 }
                 const cssClass = 'gDepId' + vList[vTask].getID();
                 if (vDependType[k] == 'SS') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', cssClass + ' gDepSS');
