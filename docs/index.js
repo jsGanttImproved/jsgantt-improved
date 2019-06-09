@@ -7,8 +7,8 @@ function start(e) {
   if (g.getDivId() != null) {
 
     const newDataurl = document.getElementById('dataurl').value ? document.getElementById('dataurl').value : './fixes/data.json';
-    //const vDebug = document.querySelector('#debug:checked') ? true : false;
-    vDebug = true;
+    const vDebug = document.querySelector('#debug:checked') ? true : false;
+    //vDebug = true;
     const vEditable = document.querySelector('#editable:checked') ? true : false;
     const vUseSort = document.querySelector('#sort:checked') ? true : false;
     const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
