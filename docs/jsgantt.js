@@ -35,6 +35,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vShowPlanStartDate = 0;
     this.vShowPlanEndDate = 0;
     this.vShowCost = 0;
+    this.vShowAddEntries = 0;
     this.vShowEndWeekDate = 1;
     this.vShowTaskInfoRes = 1;
     this.vShowTaskInfoDur = 1;
@@ -251,7 +252,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         if (vTask >= 0 && vList[vTask].getGroup() != 2) {
                             if (vList[vTask].getVisible() == 1) {
                                 if (vDebug) {
-                                    console.log("init drawDependency ", vList[vTask].getID(), new Date());
+                                    //console.log(`init drawDependency `, vList[vTask].getID(), new Date());
                                 }
                                 var cssClass = 'gDepId' + vList[vTask].getID();
                                 if (vDependType[k] == 'SS')
@@ -310,6 +311,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         return vNewNode;
     };
     this.Draw = function () {
+        var _this = this;
         var vMaxDate = new Date();
         var vMinDate = new Date();
         var vTmpDate = new Date();
@@ -388,6 +390,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                     this.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
                 }
             }
+            if (this.vShowAddEntries == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
             vTmpRow = this.newNode(vTmpTBody, 'tr');
             this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
             this.newNode(vTmpRow, 'td', null, 'gtaskname', '\u00A0');
@@ -415,6 +419,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                     this.newNode(vTmpRow, 'td', null, "gtaskheading gadditional " + css, text);
                 }
             }
+            if (this.vShowAddEntries == 1)
+                this.newNode(vTmpRow, 'td', null, 'gtaskheading gaddentries', this.vLangs[this.vLang]['addentries']);
             /**
              * LIST BODY
              *
@@ -551,6 +557,17 @@ exports.GanttChart = function (pDiv, pFormat) {
                             vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
                         }
                     }
+                    if (this_1.vShowAddEntries == 1) {
+                        vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gaddentries');
+                        var button = "<button>+</button>";
+                        vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, button);
+                        var callback = function (task, e) {
+                            console.log('hello');
+                            _this.vTaskList.push({});
+                        };
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'addentries', this_1.Draw.bind(this_1));
+                        events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'addentries');
+                    }
                     vNumRows++;
                 }
             };
@@ -586,6 +603,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                     this.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
                 }
             }
+            if (this.vShowAddEntries == 1)
+                this.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
             // Add some white space so the vertical scroll distance should always be greater
             // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
             // this.newNode(vTmpDiv2, 'br');
@@ -1261,7 +1280,7 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
     if (draw === void 0) { draw = null; }
     if (event === void 0) { event = 'blur'; }
     if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]
-        && (vTmpCell.children[0].children[0].tagName === 'SELECT' || vTmpCell.children[0].children[0].tagName === 'INPUT')) {
+        && ['SELECT', 'INPUT', 'BUTTON'].includes(vTmpCell.children[0].children[0].tagName)) {
         exports.addListener(event, function (e) {
             if (callback) {
                 callback(task, e);
@@ -2352,6 +2371,7 @@ exports.includeGetSet = function () {
     this.setShowPlanStartDate = function (pVal) { this.vShowPlanStartDate = pVal; };
     this.setShowPlanEndDate = function (pVal) { this.vShowPlanEndDate = pVal; };
     this.setShowCost = function (pVal) { this.vShowCost = pVal; };
+    this.setShowAddEntries = function (pVal) { this.vShowAddEntries = pVal; };
     this.setShowTaskInfoRes = function (pVal) { this.vShowTaskInfoRes = pVal; };
     this.setShowTaskInfoDur = function (pVal) { this.vShowTaskInfoDur = pVal; };
     this.setShowTaskInfoComp = function (pVal) { this.vShowTaskInfoComp = pVal; };
@@ -2447,6 +2467,7 @@ exports.includeGetSet = function () {
     this.getShowPlanStartDate = function () { return this.vShowPlanStartDate; };
     this.getShowPlanEndDate = function () { return this.vShowPlanEndDate; };
     this.getShowCost = function () { return this.vShowCost; };
+    this.getShowAddEntries = function () { return this.vShowAddEntries; };
     this.getShowTaskInfoRes = function () { return this.vShowTaskInfoRes; };
     this.getShowTaskInfoDur = function () { return this.vShowTaskInfoDur; };
     this.getShowTaskInfoComp = function () { return this.vShowTaskInfoComp; };
@@ -2763,7 +2784,6 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
             return new Date();
     };
     this.getEnd = function () {
-        console.log('getend', vName, vEnd, vDuration);
         if (vEnd)
             return vEnd;
         else if (vPlanEnd)
@@ -2837,7 +2857,6 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getSortIdx = function () { return vSortIdx; };
     this.getToDelete = function () { return vToDelete; };
     this.getDuration = function (pFormat, pLang) {
-        console.log('getduration', vName, vEnd, vDuration);
         if (vMile) {
             vDuration = '-';
         }
