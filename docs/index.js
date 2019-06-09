@@ -13,7 +13,6 @@ function start(e) {
     const vUseSort = document.querySelector('#sort:checked') ? true : false;
     const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
 
-    console.log('here')
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
     if (dataurl !== newDataurl) {
       dataurl = newDataurl;
