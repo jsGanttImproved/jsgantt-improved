@@ -12,7 +12,6 @@ import { includeGetSet } from './options';
 import { getXMLProject, getXMLTask } from './xml';
 
 
-
 // function that loads the main gantt chart properties and functions
 // pDiv: (required) this is a div object created in HTML
 // pFormat: (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
@@ -34,6 +33,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowPlanStartDate = 0;
   this.vShowPlanEndDate = 0;
   this.vShowCost = 0;
+  this.vShowAddEntries = 0;
   this.vShowEndWeekDate = 1;
   this.vShowTaskInfoRes = 1;
   this.vShowTaskInfoDur = 1;
@@ -385,6 +385,8 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
         }
       }
+      if (this.vShowAddEntries == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
+  
 
       vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -405,7 +407,7 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, `gtaskheading gadditional ${css}`, text);
         }
       }
-
+      if (this.vShowAddEntries == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gaddentries', this.vLangs[this.vLang]['addentries']);
 
       /**
        * LIST BODY 
@@ -534,6 +536,8 @@ export const GanttChart = function (pDiv, pFormat) {
             addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'cost', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'cost');
           }
+          
+
           if (this.vAdditionalHeaders) {
             for (const key in this.vAdditionalHeaders) {
               const header = this.vAdditionalHeaders[key];
@@ -546,6 +550,21 @@ export const GanttChart = function (pDiv, pFormat) {
               // addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'costdate');
               vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
             }
+          }
+
+          if (this.vShowAddEntries == 1) {
+            vTmpCell = this.newNode(vTmpRow, 'td', null, 'gaddentries');
+            const button = "<button>+</button>";
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, button);
+            
+            const callback = (task, e) => {
+                console.log('hello')
+                this.vTaskList.push({ 
+
+                })
+            }
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'addentries', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'addentries');
           }
           vNumRows++;
         }
@@ -564,6 +583,7 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
+
       if (this.vAdditionalHeaders) {
         for (const key in this.vAdditionalHeaders) {
           const header = this.vAdditionalHeaders[key];
@@ -571,6 +591,8 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
         }
       }
+
+      if (this.vShowAddEntries == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
 
       // Add some white space so the vertical scroll distance should always be greater
       // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)

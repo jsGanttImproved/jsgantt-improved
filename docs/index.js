@@ -8,10 +8,10 @@ function start(e) {
 
     const newDataurl = document.getElementById('dataurl').value ? document.getElementById('dataurl').value : './fixes/data.json';
     const vDebug = document.querySelector('#debug:checked') ? true : false;
+    //vDebug = true;
     const vEditable = document.querySelector('#editable:checked') ? true : false;
     const vUseSort = document.querySelector('#sort:checked') ? true : false;
     const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
-
 
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
     if (dataurl !== newDataurl) {
@@ -30,6 +30,7 @@ function start(e) {
     vUseSingleCell = document.getElementById('useSingleCell').value;
     vShowRes = document.querySelector('#vShowRes:checked') ? 1 : 0;
     vShowCost = document.querySelector('#vShowCost:checked') ? 1 : 0;
+    vShowAddEntries = document.querySelector('#vShowAddEntries:checked') ? 1 : 0;
     vShowComp = document.querySelector('#vShowComp:checked') ? 1 : 0;
     vShowDur = document.querySelector('#vShowDur:checked') ? 1 : 0;
     vShowStartDate = document.querySelector('#vShowStartDate:checked') ? 1 : 0;
@@ -58,6 +59,7 @@ function start(e) {
       vUseSingleCell, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
       vShowRes,
       vShowCost,
+      vShowAddEntries,
       vShowComp,
       vShowDur,
       vShowStartDate,
@@ -127,7 +129,7 @@ function start(e) {
       console.log('before reloading', bd);
     }
     g.Draw();
-    JSGantt.criticalPath(jsonObj)
+    //JSGantt.criticalPath(jsonObj)
     if (vDebug) {
       const ad = new Date();
       console.log('after reloading: total time', ad, (ad.getTime() - bd.getTime()));

@@ -32,6 +32,8 @@
     crossorigin="anonymous" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
     crossorigin="anonymous"></script>
+
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
 
@@ -64,10 +66,10 @@
         <input type="checkbox" id="vShowCost" checked onchange="start(event)" />
       </span>
 
-<!--       <span>
-        <label for="vShowAddEntries">Add Entry</label>
+      <span>
+        <label for="vShowAddEntries">Cost</label>
         <input type="checkbox" id="vShowAddEntries" checked onchange="start(event)" />
-      </span> -->
+      </span>
 
       <span>
         <label for="vShowComp">Comp</label>
@@ -128,7 +130,7 @@
 
   <br />
   Data getting from a URL, <a href="fixes/data.json">JSON Data</a>. Use `bigdata.json` to test with more data.
-  <input id="dataurl" onchange="start(event)" value="./fixes/data.json" type="text">
+  <input id="dataurl" onchange="start(event)" value="./fixes/bigdata.json" type="text">
   <br />
 
   Delay for tooltip to hide (in ms): <input id="delay" onchange="start(event)" value="150" type="number">
@@ -142,23 +144,10 @@
 
   <span>
     <label>Configure debug and see in console:</label>
-    <input type="checkbox" id="debug"  onchange="start(event)" />
+    <input type="checkbox" id="debug" checked onchange="start(event)" />
   </span>
 
   <br />
-
-  <span>
-    <label>Configure editable:</label>
-    <input type="checkbox" id="editable" checked onchange="start(event)" />
-  </span>
-
-  <br />
-
-  <span>
-    <label>Configure sortTasks:</label>
-    <input type="checkbox" id="sort"  onchange="start(event)" />
-  </span>
-
   <span>
     <label>Custom Tooltip Template:</label>
     <textarea id="tooltiptemplate" onchange="start(event)"><div>Nome: {{pName}}</div> <div>{{Lang:pStart}}: {{pStart}}</div></textarea>
