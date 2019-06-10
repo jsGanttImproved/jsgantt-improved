@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsGantt = require("./src/jsgantt");
@@ -252,7 +252,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         if (vTask >= 0 && vList[vTask].getGroup() != 2) {
                             if (vList[vTask].getVisible() == 1) {
                                 if (vDebug) {
-                                    //console.log(`init drawDependency `, vList[vTask].getID(), new Date());
+                                    console.log("init drawDependency ", vList[vTask].getID(), new Date());
                                 }
                                 var cssClass = 'gDepId' + vList[vTask].getID();
                                 if (vDependType[k] == 'SS')
@@ -2318,6 +2318,79 @@ var id = {
     'sat': 'Sab'
 };
 exports.id = id;
+var tr = {
+    'format': 'Biçim',
+    'hour': 'Saat',
+    'day': 'Gün',
+    'week': 'Hafta',
+    'month': 'Ay',
+    'quarter': 'Çeyrek Yıl',
+    'hours': 'Saat',
+    'days': 'Gün',
+    'weeks': 'Hafta',
+    'months': 'Ay',
+    'quarters': 'Çeyrek Yıl',
+    'hr': 'Saat',
+    'dy': 'Gün',
+    'wk': 'Hft',
+    'mth': 'Ay',
+    'qtr': 'Çyrk',
+    'hrs': 'Saat',
+    'dys': 'Gün',
+    'wks': 'Hft',
+    'mths': 'Ay',
+    'qtrs': 'Çyrk',
+    'resource': 'Kaynak',
+    'duration': 'Süre',
+    'comp': '% Tamamlanma.',
+    'completion': 'Tamamlanma',
+    'startdate': 'Başlangıç Tarihi',
+    'planstartdate': 'Plan Başlama Tarihi',
+    'enddate': 'Bitiş Tarihi',
+    'planenddate': 'Plan Bitiş Tarihi',
+    'cost': 'Tutar',
+    'moreinfo': 'Daha Fazla Bilgi',
+    'notes': 'Notlar',
+    'january': 'Ocak',
+    'february': 'Şubat',
+    'march': 'Mart',
+    'april': 'Nisan',
+    'maylong': 'Mayıs',
+    'june': 'Haziran',
+    'july': 'Temmuz',
+    'august': 'Ağustos',
+    'september': 'Eylül',
+    'october': 'Ekim',
+    'november': 'Kasım',
+    'december': 'Aralık',
+    'jan': 'Oca',
+    'feb': 'Şub',
+    'mar': 'Mar',
+    'apr': 'Nis',
+    'may': 'May',
+    'jun': 'Haz',
+    'jul': 'Tem',
+    'aug': 'Ağu',
+    'sep': 'Eyl',
+    'oct': 'Eki',
+    'nov': 'Kas',
+    'dec': 'Ara',
+    'sunday': 'Pazar',
+    'monday': 'Pazartesi',
+    'tuesday': 'Salı',
+    'wednesday': 'Çarşamba',
+    'thursday': 'Perşembe',
+    'friday': 'Cuma',
+    'saturday': 'Cumartesi',
+    'sun': 'Paz',
+    'mon': 'Pzt',
+    'tue': 'Sal',
+    'wed': 'Çrş',
+    'thu': 'Prş',
+    'fri': 'Cum',
+    'sat': 'Cmt'
+};
+exports.tr = tr;
 
 },{}],7:[function(require,module,exports){
 "use strict";
