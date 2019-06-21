@@ -23,7 +23,7 @@ function start(e) {
 
 
     // SET LANG FROM INPUT
-    lang = e && e.target ? e.target.value : 'pt';
+    lang = e && e.target ? e.target.value : 'en';
     delay = document.getElementById('delay').value;
 
 
