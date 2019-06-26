@@ -1279,8 +1279,8 @@ exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
 exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw, event) {
     if (draw === void 0) { draw = null; }
     if (event === void 0) { event = 'blur'; }
-    if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]
-        && ['SELECT', 'INPUT', 'BUTTON'].includes(vTmpCell.children[0].children[0].tagName)) {
+    var selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].find(function (k) { return k === vTmpCell.children[0].children[0].tagName; });
+    if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0] && selectInputOrButton) {
         exports.addListener(event, function (e) {
             if (callback) {
                 callback(task, e);

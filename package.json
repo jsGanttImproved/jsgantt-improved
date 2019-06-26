@@ -1,6 +1,6 @@
 {
   "name": "jsgantt-improved",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "jsgantt-improved",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "watch:build": "onchange 'src/**' '*.*' -- npm run build",
     "watch": "onchange 'src/**' '*.ts' -- npm run dist",
     "watch:test": "onchange 'src/**/*.ts' '*.ts' -- npm run test",
-    "test": "node node_modules/.bin/protractor protractor.conf.js",
+    "test": "npm start & node node_modules/.bin/protractor protractor.conf.js",
     "test-unit": "mocha -r ts-node/register test/**.ts",
     "browserify": "browserify dist/index.js --standalone JSGantt > jsgantt.js",
     "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && cp jsgantt.js dist/ && cp jsgantt.js docs/ && cp src/jsgantt.css docs/ && echo 'DIST finished'",
