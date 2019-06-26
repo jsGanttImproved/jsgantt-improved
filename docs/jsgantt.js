@@ -1279,25 +1279,27 @@ exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
 exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw, event) {
     if (draw === void 0) { draw = null; }
     if (event === void 0) { event = 'blur'; }
-    var selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].find(function (k) { return k === vTmpCell.children[0].children[0].tagName; });
-    if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0] && selectInputOrButton) {
-        exports.addListener(event, function (e) {
-            if (callback) {
-                callback(task, e);
-            }
-            if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
-                var q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
-                if (q && q.then) {
-                    q.then(function (e) { return draw(); });
+    if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
+        var selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].find(function (k) { return k === vTmpCell.children[0].children[0].tagName; });
+        if (selectInputOrButton) {
+            exports.addListener(event, function (e) {
+                if (callback) {
+                    callback(task, e);
+                }
+                if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
+                    var q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
+                    if (q && q.then) {
+                        q.then(function (e) { return draw(); });
+                    }
+                    else {
+                        draw();
+                    }
                 }
                 else {
                     draw();
                 }
-            }
-            else {
-                draw();
-            }
-        }, vTmpCell.children[0].children[0]);
+            }, vTmpCell.children[0].children[0]);
+        }
     }
 };
 exports.addListenerDependencies = function () {

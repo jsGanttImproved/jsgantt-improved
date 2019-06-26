@@ -141,8 +141,8 @@ export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
 
 export const addScrollListeners = function (pGanttChart) {
   addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-  addListener('resize', function () { 
-    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; 
+  addListener('resize', function () {
+    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
   }, window);
 };
 
@@ -156,23 +156,26 @@ export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
 }
 
 export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw = null, event = 'blur') {
-  const selectInputOrButton = ['SELECT','INPUT', 'BUTTON'].find(k=>k===vTmpCell.children[0].children[0].tagName);
-  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0] && selectInputOrButton ) {
-    addListener(event, function (e) {
-      if (callback) {
-        callback(task, e);
-      }
-      if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
-        const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
-        if (q && q.then) {
-          q.then(e => draw());
+
+  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
+    const selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].find(k => k === vTmpCell.children[0].children[0].tagName);
+    if (selectInputOrButton) {
+      addListener(event, function (e) {
+        if (callback) {
+          callback(task, e);
+        }
+        if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
+          const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
+          if (q && q.then) {
+            q.then(e => draw());
+          } else {
+            draw();
+          }
         } else {
           draw();
         }
-      } else {
-        draw();
-      }
-    }, vTmpCell.children[0].children[0]);
+      }, vTmpCell.children[0].children[0]);
+    }
   }
 }
 
@@ -201,8 +204,8 @@ const toggleDependencies = function (e) {
     frameZones.forEach((c: any) => {
       c.style.borderStyle = style;
     });
-   // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
-     // c.style.borderStyle = style;
+    // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+    // c.style.borderStyle = style;
     // });
   }
 }
