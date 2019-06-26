@@ -9,7 +9,6 @@ before_script:
   - "export DISPLAY=:99.0"
   # - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
-  - webdriver-manager update
   - npm run dist
   - cp jsgantt.js docs/ && cp src/jsgantt.css docs/ && cd docs && http-server &  # start a Web server
   - sleep 3 # give Web server some time to bind to sockets, etc
@@ -21,7 +20,7 @@ before_install:
 
 install:
   - npm install
-  - ./node_modules/protractor/bin/webdriver-manager update --versions.chrome 2.35
+  # - ./node_modules/protractor/bin/webdriver-manager update --versions.chrome 2.35
   - webdriver-manager update
   - node node_modules/protractor/bin/webdriver-manager update
   - node_modules/protractor/bin/webdriver-manager update
