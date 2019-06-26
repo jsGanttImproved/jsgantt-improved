@@ -19,14 +19,14 @@ describe('ng-packaged App', () => {
 
     element(by.css('.gtaskheading.gresource')).getText()
     .then(t=>{
-      expect(t).toEqual('Responsável');
+      expect(t).toEqual('Resource');
 
-      element(by.cssContainingText('option', 'en')).click();
+      element(by.cssContainingText('option', 'pt')).click();
 
       return  element(by.css('.gtaskheading.gresource')).getText()
     })
     .then(t=>{
-      expect(t).toEqual('Resource');
+      expect(t).toEqual('Responsável');
     });
   });
 
