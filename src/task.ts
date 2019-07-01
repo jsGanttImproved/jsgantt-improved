@@ -401,8 +401,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setNumKid = function (pNumKid) { vNumKid = parseInt(document.createTextNode(pNumKid).data); };
   this.setWeight = function (pWeight) { vWeight = parseInt(document.createTextNode(pWeight).data); };
   this.setCompVal = function (pCompVal) { vCompVal = parseFloat(document.createTextNode(pCompVal).data); };
-  this.setCost = function (pCost) {
-    vComp = parseInt(document.createTextNode(pCost).data);
+  this.setComp = function (pComp) {
+    vComp = parseInt(document.createTextNode(pComp).data);
   };
   this.setStartX = function (pX) { x1 = parseInt(document.createTextNode(pX).data); };
   this.setStartY = function (pY) { y1 = parseInt(document.createTextNode(pY).data); };
