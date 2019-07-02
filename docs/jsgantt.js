@@ -496,7 +496,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gpccomplete');
                         var text = makeInput(this_1.vTaskList[i_1].getCompStr(), this_1.vEditable, 'percentage', this_1.vTaskList[i_1].getCompVal());
                         vTmpDiv = this_1.newNode(vTmpCell, 'div', null, null, text);
-                        var callback = function (task, e) { return task.setCompVal(e.target.value); };
+                        var callback = function (task, e) { task.setComp(e.target.value); task.setCompVal(e.target.value); };
                         events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'comp', this_1.Draw.bind(this_1));
                         events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'comp');
                     }
@@ -3010,16 +3010,26 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.setDuration = function (pDuration) { vDuration = pDuration; };
     this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
     this.setStart = function (pStart) {
-        if (pStart instanceof Date)
-            vStart = pStart;
-        else
-            vStart = new Date(pStart);
+        if (pStart) {
+            // pStart can be a Date, a number or a string
+            var temp = new Date(pStart);
+            // Check if date is valid
+            // If not, does not change the value
+            if (temp instanceof Date && !isNaN(temp.valueOf())) {
+                vStart = temp;
+            }
+        }
     };
     this.setEnd = function (pEnd) {
-        if (pEnd instanceof Date)
-            vEnd = pEnd;
-        else
-            vEnd = new Date(pEnd);
+        if (pEnd) {
+            // pEnd can be a Date, a number or a string
+            var temp = new Date(pEnd);
+            // Check if date is valid
+            // If not, does not change the value
+            if (temp instanceof Date && !isNaN(temp.valueOf())) {
+                pEnd = temp;
+            }
+        }
     };
     this.setPlanStart = function (pPlanStart) {
         if (pPlanStart instanceof Date)
@@ -3041,8 +3051,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.setNumKid = function (pNumKid) { vNumKid = parseInt(document.createTextNode(pNumKid).data); };
     this.setWeight = function (pWeight) { vWeight = parseInt(document.createTextNode(pWeight).data); };
     this.setCompVal = function (pCompVal) { vCompVal = parseFloat(document.createTextNode(pCompVal).data); };
-    this.setCost = function (pCost) {
-        vComp = parseInt(document.createTextNode(pCost).data);
+    this.setComp = function (pComp) {
+        vComp = parseInt(document.createTextNode(pComp).data);
     };
     this.setStartX = function (pX) { x1 = parseInt(document.createTextNode(pX).data); };
     this.setStartY = function (pY) { y1 = parseInt(document.createTextNode(pY).data); };
@@ -3329,6 +3339,8 @@ exports.internalPropertiesLang = {
 };
 exports.getMinDate = function (pList, pFormat) {
     var vDate = new Date();
+    if (pList.length <= 0)
+        return vDate;
     vDate.setTime(pList[0].getStart().getTime());
     // Parse all Task End dates to find min
     for (var i = 0; i < pList.length; i++) {
@@ -3375,6 +3387,8 @@ exports.getMinDate = function (pList, pFormat) {
 };
 exports.getMaxDate = function (pList, pFormat) {
     var vDate = new Date();
+    if (pList.length <= 0)
+        return vDate;
     vDate.setTime(pList[0].getEnd().getTime());
     // Parse all Task End dates to find max
     for (var i = 0; i < pList.length; i++) {
