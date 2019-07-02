@@ -488,7 +488,7 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
             const text = makeInput(this.vTaskList[i].getCompStr(), this.vEditable, 'percentage', this.vTaskList[i].getCompVal());
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
-            const callback = (task, e) => task.setCompVal(e.target.value);
+            const callback = (task, e) => { task.setComp(e.target.value); task.setCompVal(e.target.value); }
             addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'comp', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'comp');
           }
