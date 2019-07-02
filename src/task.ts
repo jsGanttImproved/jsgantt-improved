@@ -380,12 +380,28 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setDuration = function (pDuration) { vDuration = pDuration; };
   this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
   this.setStart = function (pStart) {
-    if (pStart instanceof Date) vStart = pStart;
-    else vStart = new Date(pStart);
+    if (pStart) {
+        // pStart can be a Date, a number or a string
+        const temp = new Date(pStart);
+
+        // Check if date is valid
+        // If not, does not change the value
+        if (temp instanceof Date && !isNaN(temp.valueOf())) {
+            vStart = temp;
+        }
+    }
   };
   this.setEnd = function (pEnd) {
-    if (pEnd instanceof Date) vEnd = pEnd;
-    else vEnd = new Date(pEnd);
+    if (pEnd) {
+        // pEnd can be a Date, a number or a string
+        const temp = new Date(pEnd);
+
+        // Check if date is valid
+        // If not, does not change the value
+        if (temp instanceof Date && !isNaN(temp.valueOf())) {
+          pEnd = temp;
+        }
+    }
   };
   this.setPlanStart = function (pPlanStart) {
     if (pPlanStart instanceof Date) vPlanStart = pPlanStart;
