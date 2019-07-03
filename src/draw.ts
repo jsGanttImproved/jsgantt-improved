@@ -1072,7 +1072,8 @@ const makeInput = function (formattedValue, editable, type = 'text', value = nul
   if (editable) {
     switch (type) {
       case 'date':
-        value = value ? value.toISOString().split('T')[0] : ''
+        // Take timezone into account before converting to ISO String
+        value = value ? new Date(value.getTime() - (value.getTimezoneOffset() * 60000)).toISOString().split('T')[0] : '';
         return `<input class="gantt-inputtable" type="date" value="${value}">`;
       case 'resource':
         if (choices) {
