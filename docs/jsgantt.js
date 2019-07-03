@@ -1041,7 +1041,8 @@ var makeInput = function (formattedValue, editable, type, value, choices) {
     if (editable) {
         switch (type) {
             case 'date':
-                value = value ? value.toISOString().split('T')[0] : '';
+                // Take timezone into account before converting to ISO String
+                value = value ? new Date(value.getTime() - (value.getTimezoneOffset() * 60000)).toISOString().split('T')[0] : '';
                 return "<input class=\"gantt-inputtable\" type=\"date\" value=\"" + value + "\">";
             case 'resource':
                 if (choices) {
@@ -3207,6 +3208,10 @@ exports.RemoveTaskItem = function (pID) {
         else if (this.vTaskList[i].getParent() == pID)
             this.RemoveTaskItem(this.vTaskList[i].getID());
     }
+    this.vProcessNeeded = true;
+};
+exports.ClearTasks = function () {
+    this.vTaskList = [];
     this.vProcessNeeded = true;
 };
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.

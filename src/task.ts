@@ -568,6 +568,10 @@ export const RemoveTaskItem = function (pID) {
   this.vProcessNeeded = true;
 };
 
+export const ClearTasks = function () {
+  this.vTaskList = [];
+  this.vProcessNeeded = true;
+};
 
 
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.

@@ -233,6 +233,11 @@ If the task removed is a group item, all child tasks will also be removed.
 
 After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.
 
+
+**ClearTasks()**
+
+This method will clear al the tasks from the list and after that you have to call "g.Draw()".
+
 # Options #
 
 You can set Options as an object, following the example:
