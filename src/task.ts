@@ -288,16 +288,16 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     if (vEnd) return vEnd;
     else if (vPlanEnd) return vPlanEnd;
 
-    else if(vStart && vDuration) {
+    else if (vStart && vDuration) {
       let date = new Date(vStart)
       const vUnits = vDuration.split(' ')
       const value = parseInt(vUnits[0])
       switch (vUnits[1]) {
-        case 'hour': date.setMinutes(date.getMinutes()+(value*60)); break;
-        case 'day': date.setMinutes(date.getMinutes()+(value*60*24)); break;
-        case 'week': date.setMinutes(date.getMinutes()+(value*60*24*7));break;
-        case 'month': date.setMonth(date.getMonth()+(value)); break;
-        case 'quarter': date.setMonth(date.getMonth()+(value*3)); break;
+        case 'hour': date.setMinutes(date.getMinutes() + (value * 60)); break;
+        case 'day': date.setMinutes(date.getMinutes() + (value * 60 * 24)); break;
+        case 'week': date.setMinutes(date.getMinutes() + (value * 60 * 24 * 7)); break;
+        case 'month': date.setMonth(date.getMonth() + (value)); break;
+        case 'quarter': date.setMonth(date.getMonth() + (value * 3)); break;
       }
       return date
     }
@@ -327,7 +327,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     if (vMile) {
       vDuration = '-';
     }
-    else if (!vEnd && vDuration) {return vDuration}
+    else if (!vEnd && vDuration) { return vDuration }
     else {
       let vUnits = null;
       switch (pFormat) {
@@ -342,7 +342,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       // }
       // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-      
+
       const hours = (this.getEnd().getTime() - this.getStart().getTime()) / 1000 / 60 / 60;
       let tmpPer;
       switch (vUnits) {
@@ -380,27 +380,23 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setDuration = function (pDuration) { vDuration = pDuration; };
   this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
   this.setStart = function (pStart) {
-    if (pStart) {
-        // pStart can be a Date, a number or a string
-        const temp = new Date(pStart);
-
-        // Check if date is valid
-        // If not, does not change the value
-        if (temp instanceof Date && !isNaN(temp.valueOf())) {
-            vStart = temp;
-        }
+    if (pStart instanceof Date) {
+      vStart = pStart;
+    } else {
+      const temp = new Date(pStart);
+      if (temp instanceof Date && !isNaN(temp.valueOf())) {
+        vStart = temp;
+      }
     }
   };
   this.setEnd = function (pEnd) {
-    if (pEnd) {
-        // pEnd can be a Date, a number or a string
-        const temp = new Date(pEnd);
-
-        // Check if date is valid
-        // If not, does not change the value
-        if (temp instanceof Date && !isNaN(temp.valueOf())) {
-          vEnd = temp;
-        }
+    if (pEnd instanceof Date) {
+      vEnd = pEnd;
+    } else {
+      const temp = new Date(pEnd);
+      if (temp instanceof Date && !isNaN(temp.valueOf())) {
+        vEnd = temp;
+      }
     }
   };
   this.setPlanStart = function (pPlanStart) {
