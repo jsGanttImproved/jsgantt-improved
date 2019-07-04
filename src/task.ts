@@ -399,7 +399,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
         // Check if date is valid
         // If not, does not change the value
         if (temp instanceof Date && !isNaN(temp.valueOf())) {
-          pEnd = temp;
+          vEnd = temp;
         }
     }
   };
