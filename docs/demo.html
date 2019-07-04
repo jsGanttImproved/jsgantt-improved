@@ -136,8 +136,6 @@
 
   UseSingleCell: <input id="useSingleCell" onchange="start(event)" value="1000" type="number">
 
-  <br />
-  * Click events in table are binded to console.log for testing
 
   <br />
 
@@ -159,14 +157,25 @@
     <label>Configure sortTasks:</label>
     <input type="checkbox" id="sort"  onchange="start(event)" />
   </span>
+  
+  <br />
 
   <span>
-    <label>Custom Tooltip Template:</label>
+    <label>Custom Tooltip Template:</label><br />
     <textarea id="tooltiptemplate" onchange="start(event)"><div>Nome: {{pName}}</div> <div>{{Lang:pStart}}: {{pStart}}</div></textarea>
   </span>
-  
+
 
   <br />
+
+  <span>
+    <button onclick="clearTasks()">Clear all tasks</button>
+  </span>
+  
+  <br />
+  * Click events in table are binded to console.log for testing
+
+  <br /><br />
   <div id="embedded-Gantt">
   </div>
 

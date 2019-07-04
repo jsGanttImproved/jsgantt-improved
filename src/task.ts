@@ -565,7 +565,7 @@ export const RemoveTaskItem = function (pID) {
 };
 
 export const ClearTasks = function () {
-  this.vTaskList = [];
+  this.vTaskList.map(task => this.RemoveTaskItem(task.getID()));
   this.vProcessNeeded = true;
 };
 

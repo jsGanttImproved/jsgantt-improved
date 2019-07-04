@@ -7,7 +7,7 @@ import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
   getScrollPositions, getMaxDate, getMinDate
 } from './utils';
-import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows } from './task';
+import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
 import { includeGetSet } from './options';
 import { getXMLProject, getXMLTask } from './xml';
 
@@ -129,6 +129,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.AddTaskItem = AddTaskItem;
   this.AddTaskItemObject = AddTaskItemObject;
   this.RemoveTaskItem = RemoveTaskItem;
+  this.ClearTasks = ClearTasks;
 
   this.getXMLProject = getXMLProject;
   this.getXMLTask = getXMLTask;

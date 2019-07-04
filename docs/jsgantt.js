@@ -129,6 +129,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.AddTaskItem = task_1.AddTaskItem;
     this.AddTaskItemObject = task_1.AddTaskItemObject;
     this.RemoveTaskItem = task_1.RemoveTaskItem;
+    this.ClearTasks = task_1.ClearTasks;
     this.getXMLProject = xml_1.getXMLProject;
     this.getXMLTask = xml_1.getXMLTask;
     this.CalcTaskXY = function () {
@@ -3011,24 +3012,24 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.setDuration = function (pDuration) { vDuration = pDuration; };
     this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
     this.setStart = function (pStart) {
-        if (pStart) {
-            // pStart can be a Date, a number or a string
+        if (pStart instanceof Date) {
+            vStart = pStart;
+        }
+        else {
             var temp = new Date(pStart);
-            // Check if date is valid
-            // If not, does not change the value
             if (temp instanceof Date && !isNaN(temp.valueOf())) {
                 vStart = temp;
             }
         }
     };
     this.setEnd = function (pEnd) {
-        if (pEnd) {
-            // pEnd can be a Date, a number or a string
+        if (pEnd instanceof Date) {
+            vEnd = pEnd;
+        }
+        else {
             var temp = new Date(pEnd);
-            // Check if date is valid
-            // If not, does not change the value
             if (temp instanceof Date && !isNaN(temp.valueOf())) {
-                pEnd = temp;
+                vEnd = temp;
             }
         }
     };
@@ -3211,7 +3212,8 @@ exports.RemoveTaskItem = function (pID) {
     this.vProcessNeeded = true;
 };
 exports.ClearTasks = function () {
-    this.vTaskList = [];
+    var _this = this;
+    this.vTaskList.map(function (task) { return _this.RemoveTaskItem(task.getID()); });
     this.vProcessNeeded = true;
 };
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.

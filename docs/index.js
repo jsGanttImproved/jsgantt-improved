@@ -1,9 +1,10 @@
 let dataurl;
 let jsonObj;
+let g;
 
 function start(e) {
 
-  var g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
+  g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
   if (g.getDivId() != null) {
 
     const newDataurl = document.getElementById('dataurl').value ? document.getElementById('dataurl').value : './fixes/data.json';
@@ -150,6 +151,11 @@ function start(e) {
 
 function scrollingTwoMains(mainMoving, mainMoved) {
   document.getElementById(mainMoved).scrollTop = document.getElementById(mainMoving).scrollTop;
+}
+
+function clearTasks(){
+  g.ClearTasks();
+  g.Draw()
 }
 
 function editValue(list, task, event, cell, column) {
