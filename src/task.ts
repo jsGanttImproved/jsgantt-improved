@@ -105,6 +105,9 @@ export const taskLink = function (pRef, pWidth, pHeight) {
 
 
 export const sortTasks = function (pList, pID, pIdx) {
+  if(pList.length < 2){
+    return pIdx;
+  }
   let sortIdx = pIdx;
   let sortArr = new Array();
 
