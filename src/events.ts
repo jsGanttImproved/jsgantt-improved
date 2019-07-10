@@ -118,6 +118,26 @@ export const addListener = function (eventName, handler, control) {
   }
 };
 
+export const syncScroll = function(elements, attrName) {
+  let syncFlags = new Map(elements.map(e => [e, false]));
+
+  function scrollEvent(e) {
+    if (!syncFlags.get(e.target)) {      
+      for (const el of elements) {
+        if (el !== e.target) {
+          syncFlags.set(el, true);
+          el[attrName] = e.target[attrName];
+        }
+      }
+    }
+
+    syncFlags.set(e.target, false);
+  }
+  
+  for (const el of elements) {
+    el.addEventListener('scroll', scrollEvent);
+  }
+}
 
 export const addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
   addListener('mouseover', function (e) { showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);

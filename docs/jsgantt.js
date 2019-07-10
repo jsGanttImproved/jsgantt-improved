@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsGantt = require("./src/jsgantt");
@@ -46,6 +46,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vShowTaskInfoLink = 0;
     this.vEventClickRow = 1;
     this.vShowDeps = 1;
+    this.vTotalHeight = "300px ";
     this.vWorkingDays = {
         0: true,
         1: true,
@@ -361,6 +362,7 @@ exports.GanttChart = function (pDiv, pFormat) {
              * HEADINGS
             */
             var vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
+            var gListLbl = vTmpDiv;
             this.setListBody(vTmpDiv);
             var vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
             var vTmpTBody = this.newNode(vTmpTab, 'tbody');
@@ -428,6 +430,11 @@ exports.GanttChart = function (pDiv, pFormat) {
              *
             */
             var vTmpDiv2 = void 0;
+            var vTmpContentTabOuterWrapper = this.newNode(vLeftHeader, 'div', null, 'gtasktableouterwrapper');
+            var vTmpContentTabWrapper = this.newNode(vTmpContentTabOuterWrapper, 'div', null, 'gtasktablewrapper');
+            vTmpContentTabWrapper.style.width = "calc(100% + " + (utils_1.getScrollbarWidth() + 1) + "px)";
+            var vTmpContentTab = this.newNode(vTmpContentTabWrapper, 'table', null, 'gtasktable');
+            var vTmpContentTBody = this.newNode(vTmpContentTab, 'tbody');
             var _loop_1 = function (i_1) {
                 var vBGColor = void 0;
                 if (this_1.vTaskList[i_1].getGroup() == 1)
@@ -437,9 +444,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vID = this_1.vTaskList[i_1].getID();
                 if ((!(this_1.vTaskList[i_1].getParItem() && this_1.vTaskList[i_1].getParItem().getGroup() == 2)) || this_1.vTaskList[i_1].getGroup() == 2) {
                     if (this_1.vTaskList[i_1].getVisible() == 0)
-                        vTmpRow = this_1.newNode(vTmpTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
+                        vTmpRow = this_1.newNode(vTmpContentTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
                     else
-                        vTmpRow = this_1.newNode(vTmpTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor);
+                        vTmpRow = this_1.newNode(vTmpContentTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor);
                     this_1.vTaskList[i_1].setListChildRow(vTmpRow);
                     this_1.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
                     vTmpCell = this_1.newNode(vTmpRow, 'td', null, 'gtaskname');
@@ -577,7 +584,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 _loop_1(i_1);
             }
             // DRAW the date format selector at bottom left.
-            vTmpRow = this.newNode(vTmpTBody, 'tr');
+            vTmpRow = this.newNode(vTmpContentTBody, 'tr');
             this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
             vTmpCell.appendChild(this.drawSelector('bottom'));
@@ -618,6 +625,8 @@ exports.GanttChart = function (pDiv, pFormat) {
              */
             var vRightHeader = document.createDocumentFragment();
             vTmpDiv = this.newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
+            vTmpDiv.style.width = "calc(100% - " + utils_1.getScrollbarWidth() + "px)";
+            var gChartLbl = vTmpDiv;
             this.setChartHead(vTmpDiv);
             vTmpTab = this.newNode(vTmpDiv, 'table', this.vDivId + 'chartTableh', 'gcharttableh');
             vTmpTBody = this.newNode(vTmpTab, 'tbody');
@@ -764,6 +773,9 @@ exports.GanttChart = function (pDiv, pFormat) {
             this.setChartTable(vTmpTab);
             this.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
             vTmpTBody = this.newNode(vTmpTab, 'tbody');
+            events_1.syncScroll([vTmpContentTabWrapper, vTmpDiv], 'scrollTop');
+            events_1.syncScroll([gChartLbl, vTmpDiv], 'scrollLeft');
+            events_1.syncScroll([vTmpContentTabWrapper, gListLbl], 'scrollLeft');
             // Draw each row
             var i = 0;
             var j = 0;
@@ -946,6 +958,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             while (this.vDiv.hasChildNodes())
                 this.vDiv.removeChild(this.vDiv.firstChild);
             vTmpDiv = this.newNode(this.vDiv, 'div', null, 'gchartcontainer');
+            vTmpDiv.style.height = this.vTotalHeight;
             var leftvTmpDiv = this.newNode(vTmpDiv, 'div', null, 'gmain gmainleft');
             leftvTmpDiv.appendChild(vLeftHeader);
             // leftvTmpDiv.appendChild(vLeftTable);
@@ -1246,6 +1259,25 @@ exports.addListener = function (eventName, handler, control) {
     }
     else {
         return false;
+    }
+};
+exports.syncScroll = function (elements, attrName) {
+    var syncFlags = new Map(elements.map(function (e) { return [e, false]; }));
+    function scrollEvent(e) {
+        if (!syncFlags.get(e.target)) {
+            for (var _i = 0, elements_2 = elements; _i < elements_2.length; _i++) {
+                var el = elements_2[_i];
+                if (el !== e.target) {
+                    syncFlags.set(el, true);
+                    el[attrName] = e.target[attrName];
+                }
+            }
+        }
+        syncFlags.set(e.target, false);
+    }
+    for (var _i = 0, elements_1 = elements; _i < elements_1.length; _i++) {
+        var el = elements_1[_i];
+        el.addEventListener('scroll', scrollEvent);
     }
 };
 exports.addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
@@ -2712,6 +2744,9 @@ exports.taskLink = function (pRef, pWidth, pHeight) {
     window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth); // let OpenWindow = 
 };
 exports.sortTasks = function (pList, pID, pIdx) {
+    if (pList.length < 2) {
+        return pIdx;
+    }
     var sortIdx = pIdx;
     var sortArr = new Array();
     for (var i = 0; i < pList.length; i++) {
@@ -3667,6 +3702,24 @@ exports.getScrollPositions = function () {
         vScrollTop = Math.round(document.documentElement.scrollTop / vZoomFactor);
     }
     return { x: vScrollLeft, y: vScrollTop };
+};
+var scrollbarWidth = undefined;
+exports.getScrollbarWidth = function () {
+    if (scrollbarWidth)
+        return scrollbarWidth;
+    var outer = document.createElement('div');
+    outer.style.visibility = 'hidden';
+    outer.style.overflow = 'scroll'; // forcing scrollbar to appear
+    outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
+    document.body.appendChild(outer);
+    // Creating inner element and placing it in the container
+    var inner = document.createElement('div');
+    outer.appendChild(inner);
+    // Calculating difference between container's full width and the child width
+    scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
+    // Removing temporary elements from the DOM
+    outer.parentNode.removeChild(outer);
+    return scrollbarWidth;
 };
 exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     var DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format

@@ -124,7 +124,7 @@ td.gspanning {
 .gstartdate,
 .genddate {
   text-align: center;
-  min-width: 70px;
+  min-width: 105px;
   width: 105px;
   max-width: 105px;
   font-size: 10px;
@@ -533,6 +533,7 @@ div.gtaskbarcontainer {
   /* padding-left: 532px; LC width */
   line-height: 1;
   /* Overrides inherited CSS (e.g. from Bootstrap) */
+  display: flex;
 }
 
 .gcontainercol {
@@ -565,6 +566,13 @@ div.gtaskbarcontainer {
   padding-top: 0px;
   background-color: #ffffff;
   overflow: hidden;
+  flex: none;
+}
+
+.glistlbl,
+.gchartgrid {
+  display: flex;
+  flex-direction: column;
 }
 
 .glabelfooter {
@@ -591,6 +599,7 @@ div.gtaskbarcontainer {
   position: relative;
   /* overflow: auto; */
   overflow: unset;
+  overflow-y: auto;
   min-height: 0%;
 }
 
@@ -601,7 +610,8 @@ div.gtaskbarcontainer {
   padding-top: 0px;
   background-color: #ffffff;
   position: relative;
-  overflow: unset;
+  overflow: hidden;
+  flex: none;
 }
 
 /* Old Internet Explorer version hacks */
@@ -726,6 +736,7 @@ td.gspanning div {
   text-align: center;
   width: 70px;
   max-width: 70px;
+  min-width: 70px;
   font-size: 10px;
 }
 
@@ -759,30 +770,47 @@ td.gspanning div {
 */
 
 .gmain {
-  width: 50%;
-  display: inline-block;
   height: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  flex: auto;
 }
 
 .gmainright {
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow: hidden;
   top: 0;
 }
 
 .gmainleft {
-  overflow-x: scroll;
+  overflow: hidden;
 }
 
 .gtasktableh tr,
 .gcharttable tr,
+.gcharttableh tr,
 .gtasktable tr {
   height: 22px !important;
 }
 
-.gtasktable {
-  margin-bottom: 14px;
+.gtasktableouterwrapper {
+  overflow: hidden;
 }
+
+.gtasktablewrapper {
+  overflow-y: scroll;
+  flex: auto;
+  height: 100%;
+}
+
+.chartgrid {
+  overflow: auto;
+  flex: auto;
+}
+
+/* .gtasktable {
+  margin-bottom: 14px;
+} */
 
 /* Printer friendly styles - we could use these all the time but they are not as pretty! */
 
