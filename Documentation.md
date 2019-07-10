@@ -53,7 +53,7 @@ g.AddTaskItemObject({
   pMile: 0,
   pRes: "Brian",
   pComp: 0,
-  pGroup: 1,
+  pGroup: 0,
   pParent: 0,
   pOpen: 1,
   pDepend: "",
