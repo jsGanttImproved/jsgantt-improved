@@ -378,6 +378,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getListChildRow = function () { return vListChildRow; };
   this.getGroupSpan = function () { return vGroupSpan; };
   this.setName = function (pName) { vName = pName; };
+  this.setNotes = function (pNotes) { vNotes = pNotes; };
+  this.setClass = function (pClass) { vClass = pClass; };
   this.setCost = function (pCost) { vCost = pCost; };
   this.setResource = function (pRes) { vRes = pRes; };
   this.setDuration = function (pDuration) { vDuration = pDuration; };

@@ -65,6 +65,8 @@ exports.GanttChart = function (pDiv, pFormat) {
         planstartdate: null,
         planenddate: null,
         cost: null,
+        beforeDraw: null,
+        afterDraw: null
     };
     this.vEventsChange = {
         taskname: null,
@@ -313,6 +315,9 @@ exports.GanttChart = function (pDiv, pFormat) {
     };
     this.Draw = function () {
         var _this = this;
+        if (this.vEvents && this.vEvents.beforeDraw) {
+            this.vEvents.beforeDraw();
+        }
         var vMaxDate = new Date();
         var vMinDate = new Date();
         var vTmpDate = new Date();
@@ -1002,6 +1007,9 @@ exports.GanttChart = function (pDiv, pFormat) {
         if (this.vDebug) {
             var ad = new Date();
             console.log('after draw', ad, (ad.getTime() - bd.getTime()));
+        }
+        if (this.vEvents && this.vEvents.afterDraw) {
+            this.vEvents.afterDraw();
         }
     }; //this.draw
     this.drawSelector = function (pPos) {
@@ -2712,6 +2720,9 @@ exports.taskLink = function (pRef, pWidth, pHeight) {
     window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth); // let OpenWindow = 
 };
 exports.sortTasks = function (pList, pID, pIdx) {
+    if (pList.length < 2) {
+        return pIdx;
+    }
     var sortIdx = pIdx;
     var sortArr = new Array();
     for (var i = 0; i < pList.length; i++) {
@@ -3007,6 +3018,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getListChildRow = function () { return vListChildRow; };
     this.getGroupSpan = function () { return vGroupSpan; };
     this.setName = function (pName) { vName = pName; };
+    this.setNotes = function (pNotes) { vNotes = pNotes; };
+    this.setClass = function (pClass) { vClass = pClass; };
     this.setCost = function (pCost) { vCost = pCost; };
     this.setResource = function (pRes) { vRes = pRes; };
     this.setDuration = function (pDuration) { vDuration = pDuration; };
