@@ -1,4 +1,4 @@
-import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip } from "./utils";
+import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth } from "./utils";
 import { folder } from "./task";
 import { updateFlyingObj } from "./draw";
 
@@ -151,8 +151,23 @@ export const addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
   addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
 };
 
+export const updateGridHeaderWidth = function(pGanttChart) {
+  const head = pGanttChart.getChartHead();
+  const body = pGanttChart.getChartBody();
+  if (!head || !body) return;
+  const isScrollVisible = body.scrollHeight > body.clientHeight;
+  if (isScrollVisible) {
+    head.style.width = `calc(100% - ${getScrollbarWidth()}px)`;
+  } else {
+    head.style.width = '100%';
+  }
+}
+
 export const addFolderListeners = function (pGanttChart, pObj, pID) {
-  addListener('click', function () { folder(pID, pGanttChart); }, pObj);
+  addListener('click', function () { 
+    folder(pID, pGanttChart);
+    updateGridHeaderWidth(pGanttChart);
+  }, pObj);
 };
 
 export const addFormatListeners = function (pGanttChart, pFormat, pObj) {

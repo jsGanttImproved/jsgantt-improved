@@ -111,6 +111,7 @@ export const includeGetSet = function () {
       for (let vKey in this.vLangs['en']) this.vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : this.vLangs['en'][vKey];
     }
   };
+  this.setTotalHeight = function (pVal) { this.vTotalHeight = pVal; };
   this.setEvents = function (pEvents) { this.vEvents = pEvents; };
   this.setEventsChange = function (pEventsChange) { this.vEventsChange = pEventsChange; };
   this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };

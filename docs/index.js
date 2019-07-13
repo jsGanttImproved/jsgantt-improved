@@ -40,6 +40,7 @@ function start(e) {
     vShowPlanEndDate = document.querySelector('#vShowPlanEndDate:checked') ? 1 : 0;
     vShowTaskInfoLink = document.querySelector('#vShowTaskInfoLink:checked') ? 1 : 0;
     vShowEndWeekDate = document.querySelector('#vShowEndWeekDate:checked') ? 1 : 0;
+    vTotalHeight = document.querySelector('#vTotalHeight').value || undefined;
 
     vAdditionalHeaders = {
       category: {
@@ -68,6 +69,7 @@ function start(e) {
       vShowPlanStartDate,
       vShowPlanEndDate,
       vAdditionalHeaders,
+      vTotalHeight,
       vEvents: {
         taskname: console.log,
         res: console.log,

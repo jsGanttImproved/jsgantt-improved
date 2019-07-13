@@ -186,6 +186,7 @@ span.gfoldercollapse {
 .gtasktableh,
 .gtasktable {
   border-right: #efefef 1px solid;
+  width: 100%;
 }
 
 .gcharttableh,
@@ -545,7 +546,7 @@ div.gtaskbarcontainer {
 .glistgrid {
   min-width: 132px;
   /* LC width */
-  float: left;
+  float: left;  
   /* LC width */
   padding-right: 0px;
   padding-left: 0px;
@@ -774,16 +775,16 @@ td.gspanning div {
   
   display: flex;
   flex-direction: column;
-  flex: auto;
 }
 
 .gmainright {
   overflow: hidden;
-  top: 0;
+  flex: auto;
 }
 
 .gmainleft {
   overflow: hidden;
+  flex: 0 0 50%;
 }
 
 .gtasktableh tr,

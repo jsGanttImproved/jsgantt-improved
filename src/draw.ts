@@ -1,7 +1,7 @@
 import * as lang from './lang';
 import {
   mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners, addFormatListeners, moveToolTip,
-  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies, syncScroll
+  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies, syncScroll, updateGridHeaderWidth
 } from "./events";
 import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
@@ -44,7 +44,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowTaskInfoLink = 0;
   this.vEventClickRow = 1;
   this.vShowDeps = 1;
-  this.vTotalHeight = "300px ";
+  this.vTotalHeight = undefined;
   this.vWorkingDays = {
     0: true, // sunday
     1: true,
@@ -420,7 +420,7 @@ export const GanttChart = function (pDiv, pFormat) {
       let vTmpDiv2;
       let vTmpContentTabOuterWrapper = this.newNode(vLeftHeader, 'div', null, 'gtasktableouterwrapper');
       let vTmpContentTabWrapper = this.newNode(vTmpContentTabOuterWrapper, 'div', null, 'gtasktablewrapper');
-      vTmpContentTabWrapper.style.width = `calc(100% + ${getScrollbarWidth() + 1}px)`;
+      vTmpContentTabWrapper.style.width = `calc(100% + ${getScrollbarWidth()}px)`;
       let vTmpContentTab = this.newNode(vTmpContentTabWrapper, 'table', null, 'gtasktable');
       let vTmpContentTBody = this.newNode(vTmpContentTab, 'tbody');
 
@@ -618,7 +618,6 @@ export const GanttChart = function (pDiv, pFormat) {
        */
       let vRightHeader = document.createDocumentFragment();
       vTmpDiv = this.newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
-      vTmpDiv.style.width = `calc(100% - ${getScrollbarWidth()}px)`;
       const gChartLbl = vTmpDiv;
       this.setChartHead(vTmpDiv);
       vTmpTab = this.newNode(vTmpDiv, 'table', this.vDivId + 'chartTableh', 'gcharttableh');
@@ -1040,6 +1039,8 @@ export const GanttChart = function (pDiv, pFormat) {
       const ad = new Date();
       console.log('after draw', ad, (ad.getTime() - bd.getTime()));
     }
+    
+    updateGridHeaderWidth(this);
   }; //this.draw
 
 
