@@ -66,6 +66,8 @@ exports.GanttChart = function (pDiv, pFormat) {
         planstartdate: null,
         planenddate: null,
         cost: null,
+        beforeDraw: null,
+        afterDraw: null
     };
     this.vEventsChange = {
         taskname: null,
@@ -314,6 +316,9 @@ exports.GanttChart = function (pDiv, pFormat) {
     };
     this.Draw = function () {
         var _this = this;
+        if (this.vEvents && this.vEvents.beforeDraw) {
+            this.vEvents.beforeDraw();
+        }
         var vMaxDate = new Date();
         var vMinDate = new Date();
         var vTmpDate = new Date();
@@ -1016,6 +1021,9 @@ exports.GanttChart = function (pDiv, pFormat) {
             console.log('after draw', ad, (ad.getTime() - bd.getTime()));
         }
         events_1.updateGridHeaderWidth(this);
+        if (this.vEvents && this.vEvents.afterDraw) {
+            this.vEvents.afterDraw();
+        }
     }; //this.draw
     this.drawSelector = function (pPos) {
         var vOutput = document.createDocumentFragment();
@@ -3059,6 +3067,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getListChildRow = function () { return vListChildRow; };
     this.getGroupSpan = function () { return vGroupSpan; };
     this.setName = function (pName) { vName = pName; };
+    this.setNotes = function (pNotes) { vNotes = pNotes; };
+    this.setClass = function (pClass) { vClass = pClass; };
     this.setCost = function (pCost) { vCost = pCost; };
     this.setResource = function (pRes) { vRes = pRes; };
     this.setDuration = function (pDuration) { vDuration = pDuration; };

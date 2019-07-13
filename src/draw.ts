@@ -64,6 +64,8 @@ export const GanttChart = function (pDiv, pFormat) {
     planstartdate: null,
     planenddate: null,
     cost: null,
+    beforeDraw: null,
+    afterDraw: null
   };
   this.vEventsChange = {
     taskname: null,
@@ -316,6 +318,9 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.Draw = function () {
+    if (this.vEvents && this.vEvents.beforeDraw) {
+      this.vEvents.beforeDraw();
+    }
     let vMaxDate = new Date();
     let vMinDate = new Date();
     let vTmpDate = new Date();
@@ -389,7 +394,7 @@ export const GanttChart = function (pDiv, pFormat) {
         }
       }
       if (this.vShowAddEntries == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
-  
+
 
       vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -457,7 +462,7 @@ export const GanttChart = function (pDiv, pFormat) {
             let vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
-            
+
             const divTask = document.createElement('span')
             divTask.innerHTML = '\u00A0' + this.vTaskList[i].getName()
             vTmpDiv.appendChild(divTask);
@@ -544,7 +549,7 @@ export const GanttChart = function (pDiv, pFormat) {
             addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'cost', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'cost');
           }
-          
+
 
           if (this.vAdditionalHeaders) {
             for (const key in this.vAdditionalHeaders) {
@@ -564,12 +569,12 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gaddentries');
             const button = "<button>+</button>";
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, button);
-            
-            const callback = (task, e) => {
-                console.log('hello')
-                this.vTaskList.push({ 
 
-                })
+            const callback = (task, e) => {
+              console.log('hello')
+              this.vTaskList.push({
+
+              })
             }
             addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'addentries', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'addentries');
@@ -755,7 +760,7 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vFormat === 'day') {
         vTaskLeftPx += 2;
       }
-      vTmpTab.style.width = vTaskLeftPx+'px'; // Ensure that the headings has exactly the same width as the chart grid
+      vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
       vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
 
       if (this.vUseSingleCell != 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
@@ -1041,6 +1046,9 @@ export const GanttChart = function (pDiv, pFormat) {
     }
     
     updateGridHeaderWidth(this);
+    if (this.vEvents && this.vEvents.afterDraw) {
+      this.vEvents.afterDraw()
+    }
   }; //this.draw
 
 

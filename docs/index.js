@@ -79,7 +79,9 @@ function start(e) {
         end: console.log,
         planstart: console.log,
         planend: console.log,
-        cost: console.log
+        cost: console.log,
+        beforeDraw: ()=>console.log('before draw listener'),
+        afterDraw: ()=>console.log('before after listener')
       },
       vEventsChange: {
         taskname: editValue.bind(this, jsonObj),
