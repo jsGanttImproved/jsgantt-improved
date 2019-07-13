@@ -105,6 +105,8 @@ export const includeGetSet = function () {
   this.setTimer = function (pVal) { this.vTimer = pVal * 1; };
   this.setTooltipDelay = function (pVal) { this.vTooltipDelay = pVal * 1; };
   this.setTooltipTemplate = function (pVal) { this.vTooltipTemplate = pVal; };
+  this.setMinDate = function (pVal) { this.vMinDate = pVal; };
+  this.setMaxDate = function (pVal) { this.vMaxDate = pVal; };
   this.addLang = function (pLang, pVals) {
     if (!this.vLangs[pLang]) {
       this.vLangs[pLang] = new Object();
@@ -176,6 +178,8 @@ export const includeGetSet = function () {
   this.getChartTable = function () { return this.vChartTable; };
   this.getLines = function () { return this.vLines; };
   this.getTimer = function () { return this.vTimer; };
+  this.getMinDate = function () { return this.vMinDate; };
+  this.getMaxDate = function () { return this.vMaxDate; };
   this.getTooltipDelay = function () { return this.vTooltipDelay; };
   this.getList = function () { return this.vTaskList; };
   this.getEventsClickCell = function () { return this.vEvents; };
