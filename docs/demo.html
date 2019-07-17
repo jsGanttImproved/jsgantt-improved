@@ -18,6 +18,19 @@
     .row {
       width: 100%
     }
+
+    .space {
+      display: inline-block;
+      width: 30px;
+    }
+
+    .deadline-line {
+      position: absolute;
+      top: 0;
+      width: 1px;
+      height: 22px;
+      background: #777777;
+    }
   </style>
   <!-- External resources -->
   <!-- jQuery + Ajax [required by Bootstrap] -->
@@ -156,6 +169,19 @@
   <span>
     <label>Configure sortTasks:</label>
     <input type="checkbox" id="sort"  onchange="start(event)" />
+  </span>
+
+  <br />
+
+  <span>
+    <label>Custom elements (black lines for deadlines):</label>
+    <input type="checkbox" id="customElements" checked  onchange="start(event)" />
+    <div class="space"></div>
+    <label>Min Date:</label>
+    <input type="date" id="vMinDate" onchange="start(event)" />
+    <div class="space"></div>
+    <label>Max Date:</label>
+    <input type="date" id="vMaxDate" onchange="start(event)" />
   </span>
   
   <br />
