@@ -22,14 +22,14 @@ export const internalPropertiesLang = {
   'pPlanEnd': 'planenddate'
 };
 
-export const getMinDate = function (pList, pFormat) {
+export const getMinDate = function (pList, pFormat, pMinDate) {
   let vDate = new Date();
 
-  if (pList.length <= 0) return vDate;
+  if (pList.length <= 0) return pMinDate || vDate;
   
-  vDate.setTime(pList[0].getStart().getTime());
+  vDate.setTime((pMinDate && pMinDate.getTime()) || pList[0].getStart().getTime());
 
-  // Parse all Task End dates to find min
+  // Parse all Task Start dates to find min
   for (let i = 0; i < pList.length; i++) {
     if (pList[i].getStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getStart().getTime());
   }
@@ -68,12 +68,12 @@ export const getMinDate = function (pList, pFormat) {
   return (vDate);
 };
 
-export const getMaxDate = function (pList, pFormat) {
+export const getMaxDate = function (pList, pFormat, pMaxDate) {
   let vDate = new Date();
 
-  if (pList.length <= 0) return vDate;
+  if (pList.length <= 0) return pMaxDate || vDate;
 
-  vDate.setTime(pList[0].getEnd().getTime());
+  vDate.setTime((pMaxDate && pMaxDate.getTime()) || pList[0].getEnd().getTime());
 
   // Parse all Task End dates to find max
   for (let i = 0; i < pList.length; i++) {
@@ -129,6 +129,17 @@ export const changeFormat = function (pFormat, ganttObj) {
   if (ganttObj) ganttObj.setFormat(pFormat);
   else alert('Chart undefined');
 };
+
+export const coerceDate = function (date) {
+  if (date instanceof Date) {
+    return date;
+  } else {
+    const temp = new Date(date);
+    if (temp instanceof Date && !isNaN(temp.valueOf())) {
+      return temp;
+    }
+  }
+}
 
 export const parseDateStr = function (pDateStr, pFormatStr) {
   let vDate = new Date();

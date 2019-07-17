@@ -5,7 +5,7 @@ import {
 } from "./events";
 import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
-  getScrollPositions, getMaxDate, getMinDate, getScrollbarWidth
+  getScrollPositions, getMaxDate, getMinDate, getScrollbarWidth, coerceDate
 } from './utils';
 import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
 import { includeGetSet } from './options';
@@ -122,6 +122,8 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vTimer = 20;
   this.vTooltipDelay = 1500;
   this.vTooltipTemplate = null;
+  this.vMinDate = null;
+  this.vMaxDate = null;
   this.includeGetSet = includeGetSet.bind(this);
   this.includeGetSet();
 
@@ -163,8 +165,6 @@ export const GanttChart = function (pDiv, pFormat) {
       }
     }
   };
-
-
 
 
 
@@ -348,8 +348,8 @@ export const GanttChart = function (pDiv, pFormat) {
       this.vProcessNeeded = false;
 
       // get overall min/max dates plus padding
-      vMinDate = getMinDate(this.vTaskList, this.vFormat);
-      vMaxDate = getMaxDate(this.vTaskList, this.vFormat);
+      vMinDate = getMinDate(this.vTaskList, this.vFormat, this.getMinDate() && coerceDate(this.getMinDate()));
+      vMaxDate = getMaxDate(this.vTaskList, this.vFormat, this.getMaxDate() && coerceDate(this.getMaxDate()));
 
       // Calculate chart width variables.
       if (this.vFormat == 'day') vColWidth = this.vDayColWidth;
@@ -1046,6 +1046,10 @@ export const GanttChart = function (pDiv, pFormat) {
     }
     
     updateGridHeaderWidth(this);
+    this.chartRowDateToX = function (date) {
+      return getOffset(vMinDate, date, vColWidth, this.vFormat);
+    }
+
     if (this.vEvents && this.vEvents.afterDraw) {
       this.vEvents.afterDraw()
     }

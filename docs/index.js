@@ -42,6 +42,9 @@ function start(e) {
     vShowEndWeekDate = document.querySelector('#vShowEndWeekDate:checked') ? 1 : 0;
     vTotalHeight = document.querySelector('#vTotalHeight').value || undefined;
 
+    vMinDate = document.querySelector('#vMinDate').value;
+    vMaxDate = document.querySelector('#vMaxDate').value;
+
     vAdditionalHeaders = {
       category: {
         title: 'Category'
@@ -70,6 +73,8 @@ function start(e) {
       vShowPlanEndDate,
       vAdditionalHeaders,
       vTotalHeight,
+      vMinDate,
+      vMaxDate,
       vEvents: {
         taskname: console.log,
         res: console.log,
@@ -81,7 +86,12 @@ function start(e) {
         planend: console.log,
         cost: console.log,
         beforeDraw: ()=>console.log('before draw listener'),
-        afterDraw: ()=>console.log('before after listener')
+        afterDraw: ()=> {
+          console.log('before after listener');
+          if (document.querySelector("#customElements:checked")) {
+            drawCustomElements(g);
+          }
+        }
       },
       vEventsChange: {
         taskname: editValue.bind(this, jsonObj),
@@ -171,4 +181,19 @@ function editValue(list, task, event, cell, column) {
     found[column] = event ? event.target.value : '';
   }
 }
+
+function drawCustomElements(g) {
+  for (const item of g.getList()) {
+    if (item.getDataObject().deadline) {
+      const x = g.chartRowDateToX(new Date(item.getDataObject().deadline));
+      const td = item.getChildRow().querySelector('td');
+      td.style.position = 'relative';
+      const div = document.createElement('div');
+      div.style.left = `${x}px`;
+      div.classList.add('deadline-line');
+      td.appendChild(div);
+    }
+  }
+}
+
 start('pt')

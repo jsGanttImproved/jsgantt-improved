@@ -124,6 +124,8 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vTimer = 20;
     this.vTooltipDelay = 1500;
     this.vTooltipTemplate = null;
+    this.vMinDate = null;
+    this.vMaxDate = null;
     this.includeGetSet = options_1.includeGetSet.bind(this);
     this.includeGetSet();
     this.mouseOver = events_1.mouseOver;
@@ -344,8 +346,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                 task_1.processRows(this.vTaskList, 0, -1, 1, 1, this.getUseSort(), this.vDebug);
             this.vProcessNeeded = false;
             // get overall min/max dates plus padding
-            vMinDate = utils_1.getMinDate(this.vTaskList, this.vFormat);
-            vMaxDate = utils_1.getMaxDate(this.vTaskList, this.vFormat);
+            vMinDate = utils_1.getMinDate(this.vTaskList, this.vFormat, this.getMinDate() && utils_1.coerceDate(this.getMinDate()));
+            vMaxDate = utils_1.getMaxDate(this.vTaskList, this.vFormat, this.getMaxDate() && utils_1.coerceDate(this.getMaxDate()));
             // Calculate chart width variables.
             if (this.vFormat == 'day')
                 vColWidth = this.vDayColWidth;
@@ -1021,6 +1023,9 @@ exports.GanttChart = function (pDiv, pFormat) {
             console.log('after draw', ad, (ad.getTime() - bd.getTime()));
         }
         events_1.updateGridHeaderWidth(this);
+        this.chartRowDateToX = function (date) {
+            return utils_1.getOffset(vMinDate, date, vColWidth, this.vFormat);
+        };
         if (this.vEvents && this.vEvents.afterDraw) {
             this.vEvents.afterDraw();
         }
@@ -2567,6 +2572,8 @@ exports.includeGetSet = function () {
     this.setTimer = function (pVal) { this.vTimer = pVal * 1; };
     this.setTooltipDelay = function (pVal) { this.vTooltipDelay = pVal * 1; };
     this.setTooltipTemplate = function (pVal) { this.vTooltipTemplate = pVal; };
+    this.setMinDate = function (pVal) { this.vMinDate = pVal; };
+    this.setMaxDate = function (pVal) { this.vMaxDate = pVal; };
     this.addLang = function (pLang, pVals) {
         if (!this.vLangs[pLang]) {
             this.vLangs[pLang] = new Object();
@@ -2640,6 +2647,8 @@ exports.includeGetSet = function () {
     this.getChartTable = function () { return this.vChartTable; };
     this.getLines = function () { return this.vLines; };
     this.getTimer = function () { return this.vTimer; };
+    this.getMinDate = function () { return this.vMinDate; };
+    this.getMaxDate = function () { return this.vMaxDate; };
     this.getTooltipDelay = function () { return this.vTooltipDelay; };
     this.getList = function () { return this.vTaskList; };
     this.getEventsClickCell = function () { return this.vEvents; };
@@ -3406,12 +3415,12 @@ exports.internalPropertiesLang = {
     'pPlanStart': 'planstartdate',
     'pPlanEnd': 'planenddate'
 };
-exports.getMinDate = function (pList, pFormat) {
+exports.getMinDate = function (pList, pFormat, pMinDate) {
     var vDate = new Date();
     if (pList.length <= 0)
-        return vDate;
-    vDate.setTime(pList[0].getStart().getTime());
-    // Parse all Task End dates to find min
+        return pMinDate || vDate;
+    vDate.setTime((pMinDate && pMinDate.getTime()) || pList[0].getStart().getTime());
+    // Parse all Task Start dates to find min
     for (var i = 0; i < pList.length; i++) {
         if (pList[i].getStart().getTime() < vDate.getTime())
             vDate.setTime(pList[i].getStart().getTime());
@@ -3454,11 +3463,11 @@ exports.getMinDate = function (pList, pFormat) {
         vDate.setHours(0, 0, 0);
     return (vDate);
 };
-exports.getMaxDate = function (pList, pFormat) {
+exports.getMaxDate = function (pList, pFormat, pMaxDate) {
     var vDate = new Date();
     if (pList.length <= 0)
-        return vDate;
-    vDate.setTime(pList[0].getEnd().getTime());
+        return pMaxDate || vDate;
+    vDate.setTime((pMaxDate && pMaxDate.getTime()) || pList[0].getEnd().getTime());
     // Parse all Task End dates to find max
     for (var i = 0; i < pList.length; i++) {
         if (pList[i].getEnd().getTime() > vDate.getTime())
@@ -3516,6 +3525,17 @@ exports.changeFormat = function (pFormat, ganttObj) {
         ganttObj.setFormat(pFormat);
     else
         alert('Chart undefined');
+};
+exports.coerceDate = function (date) {
+    if (date instanceof Date) {
+        return date;
+    }
+    else {
+        var temp = new Date(date);
+        if (temp instanceof Date && !isNaN(temp.valueOf())) {
+            return temp;
+        }
+    }
 };
 exports.parseDateStr = function (pDateStr, pFormatStr) {
     var vDate = new Date();
