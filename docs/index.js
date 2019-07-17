@@ -114,7 +114,17 @@ function start(e) {
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vTooltipDelay: delay,
-      vTooltipTemplate: newtooltiptemplate,
+      // vTooltipTemplate: newtooltiptemplate,
+      vTooltipTemplate: t => {
+        if (t.getLevel() === 1) return;
+        if (t.getLevel() === 2) return `<div>Name: {{pName}}</div> ${t.getStart() ? '<div>{{Lang:pStart}}: {{pStart}}</div>' : ''}<div>Tooltip generated at: ${new Date()}</div>`;
+        return new Promise((resolve, reject) => {
+          const delay = 3000 + Math.random() * 1000;
+          setTimeout(() => {
+            resolve(`Tooltip content from the promise after ${delay}ms`);
+          }, delay);
+        });
+      },
       vDebug,
       vEditable,
       vUseSort,

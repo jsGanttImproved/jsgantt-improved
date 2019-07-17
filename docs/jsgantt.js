@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsGantt = require("./src/jsgantt");
@@ -3184,72 +3184,88 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         };
     };
 };
-exports.createTaskInfo = function (pTask, template) {
+exports.createTaskInfo = function (pTask, templateStrOrFn) {
     var _this = this;
-    if (template === void 0) { template = null; }
+    if (templateStrOrFn === void 0) { templateStrOrFn = null; }
     var vTmpDiv;
     var vTaskInfoBox = document.createDocumentFragment();
     var vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
-    if (template) {
-        var allData_1 = pTask.getAllData();
-        utils_1.internalProperties.forEach(function (key) {
-            var lang;
-            if (utils_1.internalPropertiesLang[key]) {
-                lang = _this.vLangs[_this.vLang][utils_1.internalPropertiesLang[key]];
+    var setupTemplate = function (template) {
+        if (template) {
+            var allData_1 = pTask.getAllData();
+            utils_1.internalProperties.forEach(function (key) {
+                var lang;
+                if (utils_1.internalPropertiesLang[key]) {
+                    lang = _this.vLangs[_this.vLang][utils_1.internalPropertiesLang[key]];
+                }
+                if (!lang) {
+                    lang = key;
+                }
+                var val = allData_1[key];
+                template = template.replace("{{" + key + "}}", val);
+                if (lang) {
+                    template = template.replace("{{Lang:" + key + "}}", lang);
+                }
+                else {
+                    template = template.replace("{{Lang:" + key + "}}", key);
+                }
+            });
+            vTaskInfo.innerHTML = "";
+            _this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
+        }
+        else {
+            _this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
+            if (_this.vShowTaskInfoStartDate == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['startdate'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getStart(), _this.vDateTaskDisplayFormat, _this.vLangs[_this.vLang]));
             }
-            if (!lang) {
-                lang = key;
+            if (_this.vShowTaskInfoEndDate == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['enddate'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getEnd(), _this.vDateTaskDisplayFormat, _this.vLangs[_this.vLang]));
             }
-            var val = allData_1[key];
-            template = template.replace("{{" + key + "}}", val);
-            if (lang) {
-                template = template.replace("{{Lang:" + key + "}}", lang);
+            if (_this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['duration'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(_this.vFormat, _this.vLangs[_this.vLang]));
             }
-            else {
-                template = template.replace("{{Lang:" + key + "}}", key);
+            if (_this.vShowTaskInfoComp == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['completion'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
             }
-        });
-        this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
+            if (_this.vShowTaskInfoRes == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['resource'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
+            }
+            if (_this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
+                var vTmpNode = _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
+                vTmpNode = _this.newNode(vTmpNode, 'a', null, 'gTaskText', _this.vLangs[_this.vLang]['moreinfo']);
+                vTmpNode.setAttribute('href', pTask.getLink());
+            }
+            if (_this.vShowTaskInfoNotes == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['notes'] + ': ');
+                if (pTask.getNotes())
+                    vTmpDiv.appendChild(pTask.getNotes());
+            }
+        }
+    };
+    if (typeof templateStrOrFn === 'function') {
+        var strOrPromise = templateStrOrFn(pTask);
+        if (!strOrPromise || typeof strOrPromise === 'string') {
+            setupTemplate(strOrPromise);
+        }
+        else if (strOrPromise.then) {
+            setupTemplate("Loading...");
+            strOrPromise.then(setupTemplate);
+        }
     }
     else {
-        this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
-        if (this.vShowTaskInfoStartDate == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['startdate'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getStart(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
-        }
-        if (this.vShowTaskInfoEndDate == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['enddate'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getEnd(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
-        }
-        if (this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['duration'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(this.vFormat, this.vLangs[this.vLang]));
-        }
-        if (this.vShowTaskInfoComp == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['completion'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
-        }
-        if (this.vShowTaskInfoRes == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['resource'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
-        }
-        if (this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
-            var vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
-            vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', this.vLangs[this.vLang]['moreinfo']);
-            vTmpNode.setAttribute('href', pTask.getLink());
-        }
-        if (this.vShowTaskInfoNotes == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['notes'] + ': ');
-            if (pTask.getNotes())
-                vTmpDiv.appendChild(pTask.getNotes());
-        }
+        setupTemplate(templateStrOrFn);
     }
     return vTaskInfoBox;
 };
