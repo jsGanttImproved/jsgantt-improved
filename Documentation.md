@@ -294,6 +294,7 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setEventsChange():_  |Controls events when a task row is cliked. Pass a function to execute ex.: `{ taskname: function(task, event, cell, column){ console.log(task, event, cell, column); } }`|
 |_setAdditionalHeaders:_ |Set object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
 |_setResources():_  |Set the list of possible resources, must be an array of objects, ex: `[{ id: 1, name: 'Mario' } , { id: 2, name: 'Henrique' }]`| 
+|_setTotalHeight():_ |Set component height as CSS height (e.g. "300px"). If set - the header is fixed and content is scrollable if needed. Otherwise component height is defined by content|
 |_setMinDate():_ |Set minimum date further than minimum task date. It doesn't trim any task if it starts before this minimum date, but can extend the chart to the left. This may be useful if you want to draw some custom elements on the chart or want to fix the time range regardless of the content|
 |_setMaxDate():_ |Similar to _setMinDate()_|
 |_setEditable():_  |Set with true if you want to edit values in the data table, will show inputs instead of texts| 

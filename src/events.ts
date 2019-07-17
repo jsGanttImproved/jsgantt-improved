@@ -1,4 +1,4 @@
-import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip } from "./utils";
+import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth } from "./utils";
 import { folder } from "./task";
 import { updateFlyingObj } from "./draw";
 
@@ -118,6 +118,26 @@ export const addListener = function (eventName, handler, control) {
   }
 };
 
+export const syncScroll = function(elements, attrName) {
+  let syncFlags = new Map(elements.map(e => [e, false]));
+
+  function scrollEvent(e) {
+    if (!syncFlags.get(e.target)) {      
+      for (const el of elements) {
+        if (el !== e.target) {
+          syncFlags.set(el, true);
+          el[attrName] = e.target[attrName];
+        }
+      }
+    }
+
+    syncFlags.set(e.target, false);
+  }
+  
+  for (const el of elements) {
+    el.addEventListener('scroll', scrollEvent);
+  }
+}
 
 export const addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
   addListener('mouseover', function (e) { showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
@@ -131,8 +151,23 @@ export const addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
   addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
 };
 
+export const updateGridHeaderWidth = function(pGanttChart) {
+  const head = pGanttChart.getChartHead();
+  const body = pGanttChart.getChartBody();
+  if (!head || !body) return;
+  const isScrollVisible = body.scrollHeight > body.clientHeight;
+  if (isScrollVisible) {
+    head.style.width = `calc(100% - ${getScrollbarWidth()}px)`;
+  } else {
+    head.style.width = '100%';
+  }
+}
+
 export const addFolderListeners = function (pGanttChart, pObj, pID) {
-  addListener('click', function () { folder(pID, pGanttChart); }, pObj);
+  addListener('click', function () { 
+    folder(pID, pGanttChart);
+    updateGridHeaderWidth(pGanttChart);
+  }, pObj);
 };
 
 export const addFormatListeners = function (pGanttChart, pFormat, pObj) {

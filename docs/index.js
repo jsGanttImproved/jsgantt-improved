@@ -40,6 +40,7 @@ function start(e) {
     vShowPlanEndDate = document.querySelector('#vShowPlanEndDate:checked') ? 1 : 0;
     vShowTaskInfoLink = document.querySelector('#vShowTaskInfoLink:checked') ? 1 : 0;
     vShowEndWeekDate = document.querySelector('#vShowEndWeekDate:checked') ? 1 : 0;
+    vTotalHeight = document.querySelector('#vTotalHeight').value || undefined;
 
     vMinDate = document.querySelector('#vMinDate').value;
     vMaxDate = document.querySelector('#vMaxDate').value;
@@ -71,6 +72,7 @@ function start(e) {
       vShowPlanStartDate,
       vShowPlanEndDate,
       vAdditionalHeaders,
+      vTotalHeight,
       vMinDate,
       vMaxDate,
       vEvents: {
