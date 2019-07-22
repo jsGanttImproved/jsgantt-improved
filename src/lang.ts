@@ -142,7 +142,8 @@ const en =
   'wed': 'Wed',
   'thu': 'Thu',
   'fri': 'Fri',
-  'sat': 'Sat'
+  'sat': 'Sat',
+  'tooltipLoading': 'Loading...'
 }
 
 const de = {
@@ -349,7 +350,8 @@ const ru = {
   'dys': 'дн.',
   'wks': 'нед.',
   'mths': 'мес.',
-  'qtrs': 'кв.'
+  'qtrs': 'кв.',
+  'tooltipLoading': 'Загрузка...'
 }
 
 const fr = {

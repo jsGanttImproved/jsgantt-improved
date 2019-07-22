@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsGantt = require("./src/jsgantt");
@@ -946,8 +946,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                 // Add Task Info div for tooltip
                 if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
                     vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-                    vTmpDiv2.appendChild(this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate));
-                    events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);
+                    var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _a.component, callback = _a.callback;
+                    vTmpDiv2.appendChild(component);
+                    events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
                 }
             }
             if (this.vDebug) {
@@ -1209,12 +1210,16 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
             this.addListener('mouseout', function () { utils_1.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
         }
         clearTimeout(pGanttChartObj.vTool.delayTimeout);
+        var newHTML = pContents.innerHTML;
+        if (pGanttChartObj.vTool.vToolCont.getAttribute("content") !== newHTML) {
+            pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
+            // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
+            utils_1.stripIds(pGanttChartObj.vTool.vToolCont);
+            pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);
+        }
         if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
             if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing) {
                 pGanttChartObj.vTool.vToolCont.setAttribute('showing', vShowing);
-                pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
-                // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
-                utils_1.stripIds(pGanttChartObj.vTool.vToolCont);
             }
             pGanttChartObj.vTool.style.visibility = 'visible';
             // Rather than follow the mouse just have it stay put
@@ -1293,9 +1298,36 @@ exports.syncScroll = function (elements, attrName) {
         el.addEventListener('scroll', scrollEvent);
     }
 };
-exports.addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
-    exports.addListener('mouseover', function (e) { exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
-    exports.addListener('mouseout', function (e) { utils_1.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
+exports.addTooltipListeners = function (pGanttChart, pObj1, pObj2, callback) {
+    var isShowingTooltip = false;
+    exports.addListener('mouseover', function (e) {
+        if (isShowingTooltip || !callback) {
+            exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+        }
+        else if (callback) {
+            isShowingTooltip = true;
+            var promise = callback();
+            exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+            if (promise && promise.then) {
+                promise.then(function () {
+                    if (pGanttChart.vTool.vToolCont.getAttribute('showing') === pObj2.id &&
+                        pGanttChart.vTool.style.visibility === 'visible') {
+                        exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+                    }
+                });
+            }
+        }
+    }, pObj1);
+    exports.addListener('mouseout', function (e) {
+        var outTo = e.relatedTarget;
+        if (utils_1.isParentElementOrSelf(outTo, pObj1) || (pGanttChart.vTool && utils_1.isParentElementOrSelf(outTo, pGanttChart.vTool))) {
+            // not actually out
+        }
+        else {
+            isShowingTooltip = false;
+        }
+        utils_1.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer());
+    }, pObj1);
 };
 exports.addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
     exports.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj1);
@@ -1807,7 +1839,8 @@ var en = {
     'wed': 'Wed',
     'thu': 'Thu',
     'fri': 'Fri',
-    'sat': 'Sat'
+    'sat': 'Sat',
+    'tooltipLoading': 'Loading...'
 };
 exports.en = en;
 var de = {
@@ -2013,7 +2046,8 @@ var ru = {
     'dys': 'дн.',
     'wks': 'нед.',
     'mths': 'мес.',
-    'qtrs': 'кв.'
+    'qtrs': 'кв.',
+    'tooltipLoading': 'Загрузка...'
 };
 exports.ru = ru;
 var fr = {
@@ -3184,74 +3218,101 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         };
     };
 };
-exports.createTaskInfo = function (pTask, template) {
+/**
+ * @param pTask
+ * @param templateStrOrFn template string or function(task). In any case parameters in template string are substituted.
+ *        If string - just a static template.
+ *        If function(task): string - per task template. Can return null|undefined to fallback to default template.
+ *        If function(task): Promise<string>) - async per task template. Tooltip will show 'Loading...' if promise is not yet complete.
+ *          Otherwise returned template will be handled in the same manner as in other cases.
+ */
+exports.createTaskInfo = function (pTask, templateStrOrFn) {
     var _this = this;
-    if (template === void 0) { template = null; }
+    if (templateStrOrFn === void 0) { templateStrOrFn = null; }
     var vTmpDiv;
     var vTaskInfoBox = document.createDocumentFragment();
     var vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
-    if (template) {
-        var allData_1 = pTask.getAllData();
-        utils_1.internalProperties.forEach(function (key) {
-            var lang;
-            if (utils_1.internalPropertiesLang[key]) {
-                lang = _this.vLangs[_this.vLang][utils_1.internalPropertiesLang[key]];
+    var setupTemplate = function (template) {
+        vTaskInfo.innerHTML = "";
+        if (template) {
+            var allData_1 = pTask.getAllData();
+            utils_1.internalProperties.forEach(function (key) {
+                var lang;
+                if (utils_1.internalPropertiesLang[key]) {
+                    lang = _this.vLangs[_this.vLang][utils_1.internalPropertiesLang[key]];
+                }
+                if (!lang) {
+                    lang = key;
+                }
+                var val = allData_1[key];
+                template = template.replace("{{" + key + "}}", val);
+                if (lang) {
+                    template = template.replace("{{Lang:" + key + "}}", lang);
+                }
+                else {
+                    template = template.replace("{{Lang:" + key + "}}", key);
+                }
+            });
+            _this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
+        }
+        else {
+            _this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
+            if (_this.vShowTaskInfoStartDate == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['startdate'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getStart(), _this.vDateTaskDisplayFormat, _this.vLangs[_this.vLang]));
             }
-            if (!lang) {
-                lang = key;
+            if (_this.vShowTaskInfoEndDate == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['enddate'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getEnd(), _this.vDateTaskDisplayFormat, _this.vLangs[_this.vLang]));
             }
-            var val = allData_1[key];
-            template = template.replace("{{" + key + "}}", val);
-            if (lang) {
-                template = template.replace("{{Lang:" + key + "}}", lang);
+            if (_this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['duration'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(_this.vFormat, _this.vLangs[_this.vLang]));
             }
-            else {
-                template = template.replace("{{Lang:" + key + "}}", key);
+            if (_this.vShowTaskInfoComp == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['completion'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
             }
-        });
-        this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
+            if (_this.vShowTaskInfoRes == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['resource'] + ': ');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
+            }
+            if (_this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
+                var vTmpNode = _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
+                vTmpNode = _this.newNode(vTmpNode, 'a', null, 'gTaskText', _this.vLangs[_this.vLang]['moreinfo']);
+                vTmpNode.setAttribute('href', pTask.getLink());
+            }
+            if (_this.vShowTaskInfoNotes == 1) {
+                vTmpDiv = _this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
+                _this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['notes'] + ': ');
+                if (pTask.getNotes())
+                    vTmpDiv.appendChild(pTask.getNotes());
+            }
+        }
+    };
+    var callback;
+    if (typeof templateStrOrFn === 'function') {
+        callback = function () {
+            var strOrPromise = templateStrOrFn(pTask);
+            if (!strOrPromise || typeof strOrPromise === 'string') {
+                setupTemplate(strOrPromise);
+            }
+            else if (strOrPromise.then) {
+                setupTemplate(_this.vLangs[_this.vLang]['tooltipLoading'] || _this.vLangs['en']['tooltipLoading']);
+                return strOrPromise.then(setupTemplate);
+            }
+        };
     }
     else {
-        this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
-        if (this.vShowTaskInfoStartDate == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['startdate'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getStart(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
-        }
-        if (this.vShowTaskInfoEndDate == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['enddate'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', utils_1.formatDateStr(pTask.getEnd(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
-        }
-        if (this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['duration'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(this.vFormat, this.vLangs[this.vLang]));
-        }
-        if (this.vShowTaskInfoComp == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['completion'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
-        }
-        if (this.vShowTaskInfoRes == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['resource'] + ': ');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
-        }
-        if (this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
-            var vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
-            vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', this.vLangs[this.vLang]['moreinfo']);
-            vTmpNode.setAttribute('href', pTask.getLink());
-        }
-        if (this.vShowTaskInfoNotes == 1) {
-            vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
-            this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['notes'] + ': ');
-            if (pTask.getNotes())
-                vTmpDiv.appendChild(pTask.getNotes());
-        }
+        setupTemplate(templateStrOrFn);
     }
-    return vTaskInfoBox;
+    return { component: vTaskInfoBox, callback: callback };
 };
 exports.AddTaskItem = function (value) {
     var vExists = false;
@@ -3929,6 +3990,14 @@ exports.criticalPath = function (tasks) {
         _loop_1();
     }
 };
+function isParentElementOrSelf(child, parent) {
+    while (child) {
+        if (child === parent)
+            return true;
+        child = child.parentElement;
+    }
+}
+exports.isParentElementOrSelf = isParentElementOrSelf;
 
 },{}],10:[function(require,module,exports){
 "use strict";

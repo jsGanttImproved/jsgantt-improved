@@ -189,7 +189,6 @@
     <div class="space"></div>
     <label>Max Date:</label>
     <input type="date" id="vMaxDate" onchange="start(event)" />
-
   </span>
   
   <br />
@@ -197,6 +196,9 @@
   <span>
     <label>Custom Tooltip Template:</label><br />
     <textarea id="tooltiptemplate" onchange="start(event)"><div>Nome: {{pName}}</div> <div>{{Lang:pStart}}: {{pStart}}</div></textarea>
+    <div class="space"></div>
+    <label>Dynamic tooltip:</label>
+    <input type="checkbox" id="dynamicTooltip" checked onchange="start(event)" />
   </span>
 
 
