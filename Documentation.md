@@ -297,6 +297,7 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setTotalHeight():_ |Set component height as CSS height (e.g. "300px"). If set - the header is fixed and content is scrollable if needed. Otherwise component height is defined by content|
 |_setMinDate():_ |Set minimum date further than minimum task date. It doesn't trim any task if it starts before this minimum date, but can extend the chart to the left. This may be useful if you want to draw some custom elements on the chart or want to fix the time range regardless of the content|
 |_setMaxDate():_ |Similar to _setMinDate()_|
+|_setTooltipTemplate():_ |Set template for the tooltip. Can be <ul><li>*string* - just a static template</li><li>*function(task): string* - function returning template for a given task</li><li>*function(task): Promise&lt;string&gt;* - function returning promise resolving to string. Until promise is resolved tooltip shows `tooltipLoading` from lang section</li></ul>In each case variables inside string are substituted (see example). If function is given and it returns undefined or null - default template is used (like if argument was not passed at all). Function argument is evaluated when tooltip needs to be shown.
 |_setEditable():_  |Set with true if you want to edit values in the data table, will show inputs instead of texts| 
 |_setDebug():_  |Set with true if you want to see debug in console| 
 
@@ -406,7 +407,7 @@ The addLang() method takes two parameters.  The first is a string identifier for
 |_jul_          |Jul               |_startdate_    |Start Date        |_wks_          |Wks               |
 |_aug_          |Aug               |_enddate_      |End Date          |_mths_         |Mths              |
 |_sep_          |Sep               |_moreinfo_     |More Information  |_qtrs_         |Qtrs              |
-|_oct_          |Oct               |_notes_        |Notes             |               |                  |
+|_oct_          |Oct               |_notes_        |Notes             |_tooltipTemplate_|Loading...      |
 |_nov_          |Nov               |               |                  |               |                  |
 |_dec_          |Dec               |               |                  |               |                  |
 

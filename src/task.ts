@@ -467,13 +467,21 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   }
 };
 
-
+/**
+ * @param pTask 
+ * @param templateStrOrFn template string or function(task). In any case parameters in template string are substituted.
+ *        If string - just a static template.
+ *        If function(task): string - per task template. Can return null|undefined to fallback to default template.
+ *        If function(task): Promise<string>) - async per task template. Tooltip will show 'Loading...' if promise is not yet complete.
+ *          Otherwise returned template will be handled in the same manner as in other cases.
+ */
 export const createTaskInfo = function (pTask, templateStrOrFn = null) {
   let vTmpDiv;
   let vTaskInfoBox = document.createDocumentFragment();
   let vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
 
   const setupTemplate = template => {
+    vTaskInfo.innerHTML = "";
     if (template) {
       let allData = pTask.getAllData()
       internalProperties.forEach(key => {
@@ -494,7 +502,6 @@ export const createTaskInfo = function (pTask, templateStrOrFn = null) {
           template = template.replace(`{{Lang:${key}}}`, key);
         }
       });
-      vTaskInfo.innerHTML = "";
       this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
     } else {
       this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
@@ -537,19 +544,22 @@ export const createTaskInfo = function (pTask, templateStrOrFn = null) {
     }
   };
 
+  let callback;
   if (typeof templateStrOrFn === 'function') {
-    const strOrPromise = templateStrOrFn(pTask);
-    if (!strOrPromise || typeof strOrPromise === 'string') {
-      setupTemplate(strOrPromise);
-    } else if (strOrPromise.then) {
-      setupTemplate("Loading...");
-      strOrPromise.then(setupTemplate);
-    }
+    callback = () => {
+      const strOrPromise = templateStrOrFn(pTask);
+      if (!strOrPromise || typeof strOrPromise === 'string') {
+        setupTemplate(strOrPromise);
+      } else if (strOrPromise.then) {
+        setupTemplate(this.vLangs[this.vLang]['tooltipLoading'] || this.vLangs['en']['tooltipLoading']);
+        return strOrPromise.then(setupTemplate);
+      }
+    };
   } else {
     setupTemplate(templateStrOrFn);
   }
 
-  return vTaskInfoBox;
+  return {component: vTaskInfoBox, callback};
 };
 
 

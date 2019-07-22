@@ -549,3 +549,10 @@ export const criticalPath = function (tasks) {
     }
   }
 }
+
+export function isParentElementOrSelf(child, parent) {
+  while (child) {
+    if (child === parent) return true;
+    child = child.parentElement;
+  }
+}

@@ -87,7 +87,7 @@ function start(e) {
         cost: console.log,
         beforeDraw: ()=>console.log('before draw listener'),
         afterDraw: ()=> {
-          console.log('before after listener');
+          console.log('after draw listener');
           if (document.querySelector("#customElements:checked")) {
             drawCustomElements(g);
           }
@@ -114,17 +114,10 @@ function start(e) {
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vTooltipDelay: delay,
-      // vTooltipTemplate: newtooltiptemplate,
-      vTooltipTemplate: t => {
-        if (t.getLevel() === 1) return;
-        if (t.getLevel() === 2) return `<div>Name: {{pName}}</div> ${t.getStart() ? '<div>{{Lang:pStart}}: {{pStart}}</div>' : ''}<div>Tooltip generated at: ${new Date()}</div>`;
-        return new Promise((resolve, reject) => {
-          const delay = 3000 + Math.random() * 1000;
-          setTimeout(() => {
-            resolve(`Tooltip content from the promise after ${delay}ms`);
-          }, delay);
-        });
-      },
+      vTooltipTemplate: 
+        document.querySelector("#dynamicTooltip:checked") ?
+          generateTooltip :
+          newtooltiptemplate,
       vDebug,
       vEditable,
       vUseSort,
@@ -204,6 +197,42 @@ function drawCustomElements(g) {
       td.appendChild(div);
     }
   }
+}
+
+function generateTooltip(task) {
+  // default tooltip for level 1
+  if (task.getLevel() === 1) return;
+    
+  // string tooltip for level 2. Show completed/total child count and current timestamp
+  if (task.getLevel() === 2) {
+    let childCount = 0;
+    let complete = 0;
+    for (const item of g.getList()) {
+      if (item.getParent() == task.getID()) {
+        if (item.getCompVal() === 100) {
+          complete++;
+        }
+        childCount++;
+      }
+    }
+    console.log(`Generated dynamic sync template for '${task.getName()}'`);
+    return `
+      <dl>
+        <dt>Name:</dt><dd>{{pName}}</dd>
+        <dt>Complete child tasks:</dt><dd style="color:${complete === childCount ? 'green' : 'red'}">${complete}/${childCount}</dd>
+        <dt>Tooltip generated at:</dt><dd>${new Date()}</dd>
+      </dl>
+    `;
+  }
+  
+  // async tooltip for level 3 and below
+  return new Promise((resolve, reject) => {
+    const delay = Math.random() * 3000;
+    setTimeout(() => {
+      console.log(`Generated dynamic async template for '${task.getName()}'`);
+      resolve(`Tooltip content from the promise after ${Math.round(delay)}ms`);
+    }, delay);
+  });
 }
 
 start('pt')

@@ -1,4 +1,4 @@
-import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth } from "./utils";
+import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth, isParentElementOrSelf } from "./utils";
 import { folder } from "./task";
 import { updateFlyingObj } from "./draw";
 
@@ -45,13 +45,18 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
       this.addListener('mouseout', function () { delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
     }
     clearTimeout(pGanttChartObj.vTool.delayTimeout);
+
+    const newHTML = pContents.innerHTML;
+    if (pGanttChartObj.vTool.vToolCont.getAttribute("content") !== newHTML) {
+      pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
+      // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
+      stripIds(pGanttChartObj.vTool.vToolCont);
+      pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);
+    }
+    
     if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
       if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing) {
         pGanttChartObj.vTool.vToolCont.setAttribute('showing', vShowing);
-
-        pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
-        // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
-        stripIds(pGanttChartObj.vTool.vToolCont);
       }
 
       pGanttChartObj.vTool.style.visibility = 'visible';
@@ -139,9 +144,37 @@ export const syncScroll = function(elements, attrName) {
   }
 }
 
-export const addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
-  addListener('mouseover', function (e) { showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
-  addListener('mouseout', function (e) { delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
+export const addTooltipListeners = function (pGanttChart, pObj1, pObj2, callback) {
+  let isShowingTooltip = false;
+
+  addListener('mouseover', function (e) { 
+    if (isShowingTooltip || !callback) {
+      showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+    } else if (callback) {
+      isShowingTooltip = true;
+      const promise = callback();
+      showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); 
+      if (promise && promise.then) {
+        promise.then(() => {
+          if (pGanttChart.vTool.vToolCont.getAttribute('showing') === pObj2.id &&
+              pGanttChart.vTool.style.visibility === 'visible') {
+            showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+          }
+        });
+      }
+    }
+  }, pObj1);
+  
+  addListener('mouseout', function (e) {
+    const outTo = e.relatedTarget;
+    if (isParentElementOrSelf(outTo, pObj1) || (pGanttChart.vTool && isParentElementOrSelf(outTo, pGanttChart.vTool))) {
+      // not actually out
+    } else {
+      isShowingTooltip = false;
+    }
+    
+    delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer());
+  }, pObj1);
 };
 
 export const addThisRowListeners = function (pGanttChart, pObj1, pObj2) {

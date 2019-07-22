@@ -961,8 +961,9 @@ export const GanttChart = function (pDiv, pFormat) {
         // Add Task Info div for tooltip
         if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-          vTmpDiv2.appendChild(this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate));
-          addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);
+          const {component, callback} = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
+          vTmpDiv2.appendChild(component);
+          addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
         }
       }
       if (this.vDebug) {

@@ -946,8 +946,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                 // Add Task Info div for tooltip
                 if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
                     vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-                    vTmpDiv2.appendChild(this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate));
-                    events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);
+                    var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _a.component, callback = _a.callback;
+                    vTmpDiv2.appendChild(component);
+                    events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
                 }
             }
             if (this.vDebug) {
@@ -1209,12 +1210,16 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
             this.addListener('mouseout', function () { utils_1.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
         }
         clearTimeout(pGanttChartObj.vTool.delayTimeout);
+        var newHTML = pContents.innerHTML;
+        if (pGanttChartObj.vTool.vToolCont.getAttribute("content") !== newHTML) {
+            pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
+            // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
+            utils_1.stripIds(pGanttChartObj.vTool.vToolCont);
+            pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);
+        }
         if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
             if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing) {
                 pGanttChartObj.vTool.vToolCont.setAttribute('showing', vShowing);
-                pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
-                // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
-                utils_1.stripIds(pGanttChartObj.vTool.vToolCont);
             }
             pGanttChartObj.vTool.style.visibility = 'visible';
             // Rather than follow the mouse just have it stay put
@@ -1293,9 +1298,36 @@ exports.syncScroll = function (elements, attrName) {
         el.addEventListener('scroll', scrollEvent);
     }
 };
-exports.addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
-    exports.addListener('mouseover', function (e) { exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
-    exports.addListener('mouseout', function (e) { utils_1.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
+exports.addTooltipListeners = function (pGanttChart, pObj1, pObj2, callback) {
+    var isShowingTooltip = false;
+    exports.addListener('mouseover', function (e) {
+        if (isShowingTooltip || !callback) {
+            exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+        }
+        else if (callback) {
+            isShowingTooltip = true;
+            var promise = callback();
+            exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+            if (promise && promise.then) {
+                promise.then(function () {
+                    if (pGanttChart.vTool.vToolCont.getAttribute('showing') === pObj2.id &&
+                        pGanttChart.vTool.style.visibility === 'visible') {
+                        exports.showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+                    }
+                });
+            }
+        }
+    }, pObj1);
+    exports.addListener('mouseout', function (e) {
+        var outTo = e.relatedTarget;
+        if (utils_1.isParentElementOrSelf(outTo, pObj1) || (pGanttChart.vTool && utils_1.isParentElementOrSelf(outTo, pGanttChart.vTool))) {
+            // not actually out
+        }
+        else {
+            isShowingTooltip = false;
+        }
+        utils_1.delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer());
+    }, pObj1);
 };
 exports.addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
     exports.addListener('mouseover', function () { pGanttChart.mouseOver(pObj1, pObj2); }, pObj1);
@@ -1807,7 +1839,8 @@ var en = {
     'wed': 'Wed',
     'thu': 'Thu',
     'fri': 'Fri',
-    'sat': 'Sat'
+    'sat': 'Sat',
+    'tooltipLoading': 'Loading...'
 };
 exports.en = en;
 var de = {
@@ -2013,7 +2046,8 @@ var ru = {
     'dys': 'дн.',
     'wks': 'нед.',
     'mths': 'мес.',
-    'qtrs': 'кв.'
+    'qtrs': 'кв.',
+    'tooltipLoading': 'Загрузка...'
 };
 exports.ru = ru;
 var fr = {
@@ -3184,6 +3218,14 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         };
     };
 };
+/**
+ * @param pTask
+ * @param templateStrOrFn template string or function(task). In any case parameters in template string are substituted.
+ *        If string - just a static template.
+ *        If function(task): string - per task template. Can return null|undefined to fallback to default template.
+ *        If function(task): Promise<string>) - async per task template. Tooltip will show 'Loading...' if promise is not yet complete.
+ *          Otherwise returned template will be handled in the same manner as in other cases.
+ */
 exports.createTaskInfo = function (pTask, templateStrOrFn) {
     var _this = this;
     if (templateStrOrFn === void 0) { templateStrOrFn = null; }
@@ -3191,6 +3233,7 @@ exports.createTaskInfo = function (pTask, templateStrOrFn) {
     var vTaskInfoBox = document.createDocumentFragment();
     var vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
     var setupTemplate = function (template) {
+        vTaskInfo.innerHTML = "";
         if (template) {
             var allData_1 = pTask.getAllData();
             utils_1.internalProperties.forEach(function (key) {
@@ -3210,7 +3253,6 @@ exports.createTaskInfo = function (pTask, templateStrOrFn) {
                     template = template.replace("{{Lang:" + key + "}}", key);
                 }
             });
-            vTaskInfo.innerHTML = "";
             _this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
         }
         else {
@@ -3254,20 +3296,23 @@ exports.createTaskInfo = function (pTask, templateStrOrFn) {
             }
         }
     };
+    var callback;
     if (typeof templateStrOrFn === 'function') {
-        var strOrPromise = templateStrOrFn(pTask);
-        if (!strOrPromise || typeof strOrPromise === 'string') {
-            setupTemplate(strOrPromise);
-        }
-        else if (strOrPromise.then) {
-            setupTemplate("Loading...");
-            strOrPromise.then(setupTemplate);
-        }
+        callback = function () {
+            var strOrPromise = templateStrOrFn(pTask);
+            if (!strOrPromise || typeof strOrPromise === 'string') {
+                setupTemplate(strOrPromise);
+            }
+            else if (strOrPromise.then) {
+                setupTemplate(_this.vLangs[_this.vLang]['tooltipLoading'] || _this.vLangs['en']['tooltipLoading']);
+                return strOrPromise.then(setupTemplate);
+            }
+        };
     }
     else {
         setupTemplate(templateStrOrFn);
     }
-    return vTaskInfoBox;
+    return { component: vTaskInfoBox, callback: callback };
 };
 exports.AddTaskItem = function (value) {
     var vExists = false;
@@ -3945,6 +3990,14 @@ exports.criticalPath = function (tasks) {
         _loop_1();
     }
 };
+function isParentElementOrSelf(child, parent) {
+    while (child) {
+        if (child === parent)
+            return true;
+        child = child.parentElement;
+    }
+}
+exports.isParentElementOrSelf = isParentElementOrSelf;
 
 },{}],10:[function(require,module,exports){
 "use strict";
