@@ -1,6 +1,6 @@
 {
   "name": "jsgantt-improved",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "jsgantt-improved",
   "main": "dist/index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "browserify": "browserify dist/index.js --standalone JSGantt > jsgantt.js",
     "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && cp jsgantt.js dist/ && cp jsgantt.js docs/ && cp src/jsgantt.css docs/ && echo 'DIST finished'",
     "publish-npm": "npm run dist && npm publish",
-    "demo": "nodemon server.js",
+    "demo": "node server.js",
     "demo-full": "npm run dist && npm run demo",
     "e2e-prepare": "npm i -g webdriver-manager && webdriver-manager update && ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager update"
   },

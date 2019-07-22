@@ -121,6 +121,7 @@ function start(e) {
       vDebug,
       vEditable,
       vUseSort,
+      vFormat: 'week',
       vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
     });
     //DELAY FROM INPUT

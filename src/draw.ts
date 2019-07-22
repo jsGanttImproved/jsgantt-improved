@@ -961,7 +961,7 @@ export const GanttChart = function (pDiv, pFormat) {
         // Add Task Info div for tooltip
         if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-          const {component, callback} = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
+          const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
           vTmpDiv2.appendChild(component);
           addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
         }
@@ -1045,7 +1045,7 @@ export const GanttChart = function (pDiv, pFormat) {
       const ad = new Date();
       console.log('after draw', ad, (ad.getTime() - bd.getTime()));
     }
-    
+
     updateGridHeaderWidth(this);
     this.chartRowDateToX = function (date) {
       return getOffset(vMinDate, date, vColWidth, this.vFormat);

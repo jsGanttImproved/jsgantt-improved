@@ -97,7 +97,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
     let assignments = findXMLNode(pXmlDoc, 'Assignment');
     if (typeof assignments == 'undefined') j = 0;
     else j = assignments.length;
-    
+
     for (i = 0; i < j; i++) {
       let uid;
       let resUID = getXMLNodeValue(assignments[i], 'ResourceUID', 1, -1);

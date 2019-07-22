@@ -53,7 +53,7 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
       stripIds(pGanttChartObj.vTool.vToolCont);
       pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);
     }
-    
+
     if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
       if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing) {
         pGanttChartObj.vTool.vToolCont.setAttribute('showing', vShowing);
@@ -123,11 +123,11 @@ export const addListener = function (eventName, handler, control) {
   }
 };
 
-export const syncScroll = function(elements, attrName) {
+export const syncScroll = function (elements, attrName) {
   let syncFlags = new Map(elements.map(e => [e, false]));
 
   function scrollEvent(e) {
-    if (!syncFlags.get(e.target)) {      
+    if (!syncFlags.get(e.target)) {
       for (const el of elements) {
         if (el !== e.target) {
           syncFlags.set(el, true);
@@ -138,7 +138,7 @@ export const syncScroll = function(elements, attrName) {
 
     syncFlags.set(e.target, false);
   }
-  
+
   for (const el of elements) {
     el.addEventListener('scroll', scrollEvent);
   }
@@ -147,24 +147,24 @@ export const syncScroll = function(elements, attrName) {
 export const addTooltipListeners = function (pGanttChart, pObj1, pObj2, callback) {
   let isShowingTooltip = false;
 
-  addListener('mouseover', function (e) { 
+  addListener('mouseover', function (e) {
     if (isShowingTooltip || !callback) {
       showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
     } else if (callback) {
       isShowingTooltip = true;
       const promise = callback();
-      showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); 
+      showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
       if (promise && promise.then) {
         promise.then(() => {
           if (pGanttChart.vTool.vToolCont.getAttribute('showing') === pObj2.id &&
-              pGanttChart.vTool.style.visibility === 'visible') {
+            pGanttChart.vTool.style.visibility === 'visible') {
             showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
           }
         });
       }
     }
   }, pObj1);
-  
+
   addListener('mouseout', function (e) {
     const outTo = e.relatedTarget;
     if (isParentElementOrSelf(outTo, pObj1) || (pGanttChart.vTool && isParentElementOrSelf(outTo, pGanttChart.vTool))) {
@@ -172,7 +172,7 @@ export const addTooltipListeners = function (pGanttChart, pObj1, pObj2, callback
     } else {
       isShowingTooltip = false;
     }
-    
+
     delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer());
   }, pObj1);
 };
@@ -184,7 +184,7 @@ export const addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
   addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
 };
 
-export const updateGridHeaderWidth = function(pGanttChart) {
+export const updateGridHeaderWidth = function (pGanttChart) {
   const head = pGanttChart.getChartHead();
   const body = pGanttChart.getChartBody();
   if (!head || !body) return;
@@ -197,7 +197,7 @@ export const updateGridHeaderWidth = function(pGanttChart) {
 }
 
 export const addFolderListeners = function (pGanttChart, pObj, pID) {
-  addListener('click', function () { 
+  addListener('click', function () {
     folder(pID, pGanttChart);
     updateGridHeaderWidth(pGanttChart);
   }, pObj);

@@ -105,7 +105,7 @@ export const taskLink = function (pRef, pWidth, pHeight) {
 
 
 export const sortTasks = function (pList, pID, pIdx) {
-  if(pList.length < 2){
+  if (pList.length < 2) {
     return pIdx;
   }
   let sortIdx = pIdx;
@@ -559,7 +559,7 @@ export const createTaskInfo = function (pTask, templateStrOrFn = null) {
     setupTemplate(templateStrOrFn);
   }
 
-  return {component: vTaskInfoBox, callback};
+  return { component: vTaskInfoBox, callback };
 };
 
 

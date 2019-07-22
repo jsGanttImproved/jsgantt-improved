@@ -26,7 +26,7 @@ export const getMinDate = function (pList, pFormat, pMinDate) {
   let vDate = new Date();
 
   if (pList.length <= 0) return pMinDate || vDate;
-  
+
   vDate.setTime((pMinDate && pMinDate.getTime()) || pList[0].getStart().getTime());
 
   // Parse all Task Start dates to find min
@@ -358,7 +358,7 @@ export const getScrollPositions = function () {
 };
 
 let scrollbarWidth = undefined;
-export const getScrollbarWidth = function() {
+export const getScrollbarWidth = function () {
   if (scrollbarWidth) return scrollbarWidth;
 
   const outer = document.createElement('div');
