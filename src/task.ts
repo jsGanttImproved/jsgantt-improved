@@ -105,6 +105,9 @@ export const taskLink = function (pRef, pWidth, pHeight) {
 
 
 export const sortTasks = function (pList, pID, pIdx) {
+  if (pList.length < 2) {
+    return pIdx;
+  }
   let sortIdx = pIdx;
   let sortArr = new Array();
 
@@ -288,16 +291,16 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     if (vEnd) return vEnd;
     else if (vPlanEnd) return vPlanEnd;
 
-    else if(vStart && vDuration) {
+    else if (vStart && vDuration) {
       let date = new Date(vStart)
       const vUnits = vDuration.split(' ')
       const value = parseInt(vUnits[0])
       switch (vUnits[1]) {
-        case 'hour': date.setMinutes(date.getMinutes()+(value*60)); break;
-        case 'day': date.setMinutes(date.getMinutes()+(value*60*24)); break;
-        case 'week': date.setMinutes(date.getMinutes()+(value*60*24*7));break;
-        case 'month': date.setMonth(date.getMonth()+(value)); break;
-        case 'quarter': date.setMonth(date.getMonth()+(value*3)); break;
+        case 'hour': date.setMinutes(date.getMinutes() + (value * 60)); break;
+        case 'day': date.setMinutes(date.getMinutes() + (value * 60 * 24)); break;
+        case 'week': date.setMinutes(date.getMinutes() + (value * 60 * 24 * 7)); break;
+        case 'month': date.setMonth(date.getMonth() + (value)); break;
+        case 'quarter': date.setMonth(date.getMonth() + (value * 3)); break;
       }
       return date
     }
@@ -327,7 +330,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     if (vMile) {
       vDuration = '-';
     }
-    else if (!vEnd && vDuration) {return vDuration}
+    else if (!vEnd && vDuration) { return vDuration }
     else {
       let vUnits = null;
       switch (pFormat) {
@@ -342,7 +345,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
       // }
       // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-      
+
       const hours = (this.getEnd().getTime() - this.getStart().getTime()) / 1000 / 60 / 60;
       let tmpPer;
       switch (vUnits) {
@@ -375,17 +378,31 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getListChildRow = function () { return vListChildRow; };
   this.getGroupSpan = function () { return vGroupSpan; };
   this.setName = function (pName) { vName = pName; };
+  this.setNotes = function (pNotes) { vNotes = pNotes; };
+  this.setClass = function (pClass) { vClass = pClass; };
   this.setCost = function (pCost) { vCost = pCost; };
   this.setResource = function (pRes) { vRes = pRes; };
   this.setDuration = function (pDuration) { vDuration = pDuration; };
   this.setDataObject = function (pDataObject) { vDataObject = pDataObject; };
   this.setStart = function (pStart) {
-    if (pStart instanceof Date) vStart = pStart;
-    else vStart = new Date(pStart);
+    if (pStart instanceof Date) {
+      vStart = pStart;
+    } else {
+      const temp = new Date(pStart);
+      if (temp instanceof Date && !isNaN(temp.valueOf())) {
+        vStart = temp;
+      }
+    }
   };
   this.setEnd = function (pEnd) {
-    if (pEnd instanceof Date) vEnd = pEnd;
-    else vEnd = new Date(pEnd);
+    if (pEnd instanceof Date) {
+      vEnd = pEnd;
+    } else {
+      const temp = new Date(pEnd);
+      if (temp instanceof Date && !isNaN(temp.valueOf())) {
+        vEnd = temp;
+      }
+    }
   };
   this.setPlanStart = function (pPlanStart) {
     if (pPlanStart instanceof Date) vPlanStart = pPlanStart;
@@ -401,8 +418,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setNumKid = function (pNumKid) { vNumKid = parseInt(document.createTextNode(pNumKid).data); };
   this.setWeight = function (pWeight) { vWeight = parseInt(document.createTextNode(pWeight).data); };
   this.setCompVal = function (pCompVal) { vCompVal = parseFloat(document.createTextNode(pCompVal).data); };
-  this.setCost = function (pCost) {
-    vComp = parseInt(document.createTextNode(pCost).data);
+  this.setComp = function (pComp) {
+    vComp = parseInt(document.createTextNode(pComp).data);
   };
   this.setStartX = function (pX) { x1 = parseInt(document.createTextNode(pX).data); };
   this.setStartY = function (pY) { y1 = parseInt(document.createTextNode(pY).data); };
@@ -450,74 +467,99 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   }
 };
 
-
-export const createTaskInfo = function (pTask, template = null) {
+/**
+ * @param pTask 
+ * @param templateStrOrFn template string or function(task). In any case parameters in template string are substituted.
+ *        If string - just a static template.
+ *        If function(task): string - per task template. Can return null|undefined to fallback to default template.
+ *        If function(task): Promise<string>) - async per task template. Tooltip will show 'Loading...' if promise is not yet complete.
+ *          Otherwise returned template will be handled in the same manner as in other cases.
+ */
+export const createTaskInfo = function (pTask, templateStrOrFn = null) {
   let vTmpDiv;
   let vTaskInfoBox = document.createDocumentFragment();
   let vTaskInfo = this.newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
 
-  if (template) {
-    let allData = pTask.getAllData()
-    internalProperties.forEach(key => {
-      let lang;
-      if (internalPropertiesLang[key]) {
-        lang = this.vLangs[this.vLang][internalPropertiesLang[key]];
-      }
+  const setupTemplate = template => {
+    vTaskInfo.innerHTML = "";
+    if (template) {
+      let allData = pTask.getAllData()
+      internalProperties.forEach(key => {
+        let lang;
+        if (internalPropertiesLang[key]) {
+          lang = this.vLangs[this.vLang][internalPropertiesLang[key]];
+        }
 
-      if (!lang) {
-        lang = key
-      }
-      const val = allData[key];
+        if (!lang) {
+          lang = key
+        }
+        const val = allData[key];
 
-      template = template.replace(`{{${key}}}`, val);
-      if (lang) {
-        template = template.replace(`{{Lang:${key}}}`, lang);
-      } else {
-        template = template.replace(`{{Lang:${key}}}`, key);
+        template = template.replace(`{{${key}}}`, val);
+        if (lang) {
+          template = template.replace(`{{Lang:${key}}}`, lang);
+        } else {
+          template = template.replace(`{{Lang:${key}}}`, key);
+        }
+      });
+      this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
+    } else {
+      this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
+      if (this.vShowTaskInfoStartDate == 1) {
+        vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['startdate'] + ': ');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskText', formatDateStr(pTask.getStart(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
       }
-    });
-    this.newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
+      if (this.vShowTaskInfoEndDate == 1) {
+        vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['enddate'] + ': ');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskText', formatDateStr(pTask.getEnd(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
+      }
+      if (this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
+        vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['duration'] + ': ');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(this.vFormat, this.vLangs[this.vLang]));
+      }
+      if (this.vShowTaskInfoComp == 1) {
+        vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['completion'] + ': ');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
+      }
+      if (this.vShowTaskInfoRes == 1) {
+        vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['resource'] + ': ');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
+      }
+      if (this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
+        vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
+        let vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
+        vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', this.vLangs[this.vLang]['moreinfo']);
+        vTmpNode.setAttribute('href', pTask.getLink());
+      }
+      if (this.vShowTaskInfoNotes == 1) {
+        vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
+        this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['notes'] + ': ');
+        if (pTask.getNotes()) vTmpDiv.appendChild(pTask.getNotes());
+      }
+    }
+  };
+
+  let callback;
+  if (typeof templateStrOrFn === 'function') {
+    callback = () => {
+      const strOrPromise = templateStrOrFn(pTask);
+      if (!strOrPromise || typeof strOrPromise === 'string') {
+        setupTemplate(strOrPromise);
+      } else if (strOrPromise.then) {
+        setupTemplate(this.vLangs[this.vLang]['tooltipLoading'] || this.vLangs['en']['tooltipLoading']);
+        return strOrPromise.then(setupTemplate);
+      }
+    };
   } else {
-    this.newNode(vTaskInfo, 'span', null, 'gTtTitle', pTask.getName());
-    if (this.vShowTaskInfoStartDate == 1) {
-      vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIsd');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['startdate'] + ': ');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskText', formatDateStr(pTask.getStart(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
-    }
-    if (this.vShowTaskInfoEndDate == 1) {
-      vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIed');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['enddate'] + ': ');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskText', formatDateStr(pTask.getEnd(), this.vDateTaskDisplayFormat, this.vLangs[this.vLang]));
-    }
-    if (this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
-      vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['duration'] + ': ');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(this.vFormat, this.vLangs[this.vLang]));
-    }
-    if (this.vShowTaskInfoComp == 1) {
-      vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIc');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['completion'] + ': ');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getCompStr());
-    }
-    if (this.vShowTaskInfoRes == 1) {
-      vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['resource'] + ': ');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
-    }
-    if (this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
-      vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIl');
-      let vTmpNode = this.newNode(vTmpDiv, 'span', null, 'gTaskLabel');
-      vTmpNode = this.newNode(vTmpNode, 'a', null, 'gTaskText', this.vLangs[this.vLang]['moreinfo']);
-      vTmpNode.setAttribute('href', pTask.getLink());
-    }
-    if (this.vShowTaskInfoNotes == 1) {
-      vTmpDiv = this.newNode(vTaskInfo, 'div', null, 'gTILine gTIn');
-      this.newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['notes'] + ': ');
-      if (pTask.getNotes()) vTmpDiv.appendChild(pTask.getNotes());
-    }
+    setupTemplate(templateStrOrFn);
   }
 
-  return vTaskInfoBox;
+  return { component: vTaskInfoBox, callback };
 };
 
 
@@ -552,6 +594,10 @@ export const RemoveTaskItem = function (pID) {
   this.vProcessNeeded = true;
 };
 
+export const ClearTasks = function () {
+  this.vTaskList.map(task => this.RemoveTaskItem(task.getID()));
+  this.vProcessNeeded = true;
+};
 
 
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.

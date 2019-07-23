@@ -1,16 +1,15 @@
 import * as lang from './lang';
 import {
   mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners, addFormatListeners, moveToolTip,
-  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies
+  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies, syncScroll, updateGridHeaderWidth
 } from "./events";
 import {
   parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getZoomFactor,
-  getScrollPositions, getMaxDate, getMinDate
+  getScrollPositions, getMaxDate, getMinDate, getScrollbarWidth, coerceDate
 } from './utils';
-import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows } from './task';
+import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
 import { includeGetSet } from './options';
 import { getXMLProject, getXMLTask } from './xml';
-
 
 
 // function that loads the main gantt chart properties and functions
@@ -34,6 +33,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowPlanStartDate = 0;
   this.vShowPlanEndDate = 0;
   this.vShowCost = 0;
+  this.vShowAddEntries = 0;
   this.vShowEndWeekDate = 1;
   this.vShowTaskInfoRes = 1;
   this.vShowTaskInfoDur = 1;
@@ -44,6 +44,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowTaskInfoLink = 0;
   this.vEventClickRow = 1;
   this.vShowDeps = 1;
+  this.vTotalHeight = undefined;
   this.vWorkingDays = {
     0: true, // sunday
     1: true,
@@ -63,6 +64,8 @@ export const GanttChart = function (pDiv, pFormat) {
     planstartdate: null,
     planenddate: null,
     cost: null,
+    beforeDraw: null,
+    afterDraw: null
   };
   this.vEventsChange = {
     taskname: null,
@@ -119,6 +122,8 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vTimer = 20;
   this.vTooltipDelay = 1500;
   this.vTooltipTemplate = null;
+  this.vMinDate = null;
+  this.vMaxDate = null;
   this.includeGetSet = includeGetSet.bind(this);
   this.includeGetSet();
 
@@ -129,6 +134,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.AddTaskItem = AddTaskItem;
   this.AddTaskItemObject = AddTaskItemObject;
   this.RemoveTaskItem = RemoveTaskItem;
+  this.ClearTasks = ClearTasks;
 
   this.getXMLProject = getXMLProject;
   this.getXMLTask = getXMLTask;
@@ -159,8 +165,6 @@ export const GanttChart = function (pDiv, pFormat) {
       }
     }
   };
-
-
 
 
 
@@ -314,6 +318,9 @@ export const GanttChart = function (pDiv, pFormat) {
   };
 
   this.Draw = function () {
+    if (this.vEvents && this.vEvents.beforeDraw) {
+      this.vEvents.beforeDraw();
+    }
     let vMaxDate = new Date();
     let vMinDate = new Date();
     let vTmpDate = new Date();
@@ -341,8 +348,8 @@ export const GanttChart = function (pDiv, pFormat) {
       this.vProcessNeeded = false;
 
       // get overall min/max dates plus padding
-      vMinDate = getMinDate(this.vTaskList, this.vFormat);
-      vMaxDate = getMaxDate(this.vTaskList, this.vFormat);
+      vMinDate = getMinDate(this.vTaskList, this.vFormat, this.getMinDate() && coerceDate(this.getMinDate()));
+      vMaxDate = getMaxDate(this.vTaskList, this.vFormat, this.getMaxDate() && coerceDate(this.getMaxDate()));
 
       // Calculate chart width variables.
       if (this.vFormat == 'day') vColWidth = this.vDayColWidth;
@@ -363,6 +370,7 @@ export const GanttChart = function (pDiv, pFormat) {
        * HEADINGS
       */
       let vTmpDiv = this.newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
+      const gListLbl = vTmpDiv;
       this.setListBody(vTmpDiv);
       let vTmpTab = this.newNode(vTmpDiv, 'table', null, 'gtasktableh');
       let vTmpTBody = this.newNode(vTmpTab, 'tbody');
@@ -385,6 +393,8 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
         }
       }
+      if (this.vShowAddEntries == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
+
 
       vTmpRow = this.newNode(vTmpTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -405,14 +415,19 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, `gtaskheading gadditional ${css}`, text);
         }
       }
-
+      if (this.vShowAddEntries == 1) this.newNode(vTmpRow, 'td', null, 'gtaskheading gaddentries', this.vLangs[this.vLang]['addentries']);
 
       /**
-       * LIST BODY 
+       * LIST BODY
        * 
        * 
       */
       let vTmpDiv2;
+      let vTmpContentTabOuterWrapper = this.newNode(vLeftHeader, 'div', null, 'gtasktableouterwrapper');
+      let vTmpContentTabWrapper = this.newNode(vTmpContentTabOuterWrapper, 'div', null, 'gtasktablewrapper');
+      vTmpContentTabWrapper.style.width = `calc(100% + ${getScrollbarWidth()}px)`;
+      let vTmpContentTab = this.newNode(vTmpContentTabWrapper, 'table', null, 'gtasktable');
+      let vTmpContentTBody = this.newNode(vTmpContentTab, 'tbody');
 
       for (let i = 0; i < this.vTaskList.length; i++) {
         let vBGColor;
@@ -422,8 +437,8 @@ export const GanttChart = function (pDiv, pFormat) {
         vID = this.vTaskList[i].getID();
 
         if ((!(this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2)) || this.vTaskList[i].getGroup() == 2) {
-          if (this.vTaskList[i].getVisible() == 0) vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
-          else vTmpRow = this.newNode(vTmpTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor);
+          if (this.vTaskList[i].getVisible() == 0) vTmpRow = this.newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
+          else vTmpRow = this.newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor);
           this.vTaskList[i].setListChildRow(vTmpRow);
           this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
           vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskname');
@@ -447,7 +462,7 @@ export const GanttChart = function (pDiv, pFormat) {
             let vTmpSpan = this.newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
             this.vTaskList[i].setGroupSpan(vTmpSpan);
             addFolderListeners(this, vTmpSpan, vID);
-            
+
             const divTask = document.createElement('span')
             divTask.innerHTML = '\u00A0' + this.vTaskList[i].getName()
             vTmpDiv.appendChild(divTask);
@@ -486,7 +501,7 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gpccomplete');
             const text = makeInput(this.vTaskList[i].getCompStr(), this.vEditable, 'percentage', this.vTaskList[i].getCompVal());
             vTmpDiv = this.newNode(vTmpCell, 'div', null, null, text);
-            const callback = (task, e) => task.setCompVal(e.target.value);
+            const callback = (task, e) => { task.setComp(e.target.value); task.setCompVal(e.target.value); }
             addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'comp', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'comp');
           }
@@ -534,6 +549,8 @@ export const GanttChart = function (pDiv, pFormat) {
             addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'cost', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'cost');
           }
+
+
           if (this.vAdditionalHeaders) {
             for (const key in this.vAdditionalHeaders) {
               const header = this.vAdditionalHeaders[key];
@@ -547,12 +564,27 @@ export const GanttChart = function (pDiv, pFormat) {
               vTmpDiv = this.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
             }
           }
+
+          if (this.vShowAddEntries == 1) {
+            vTmpCell = this.newNode(vTmpRow, 'td', null, 'gaddentries');
+            const button = "<button>+</button>";
+            vTmpDiv = this.newNode(vTmpCell, 'div', null, null, button);
+
+            const callback = (task, e) => {
+              console.log('hello')
+              this.vTaskList.push({
+
+              })
+            }
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'addentries', this.Draw.bind(this));
+            addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'addentries');
+          }
           vNumRows++;
         }
       }
 
       // DRAW the date format selector at bottom left.
-      vTmpRow = this.newNode(vTmpTBody, 'tr');
+      vTmpRow = this.newNode(vTmpContentTBody, 'tr');
       this.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
       vTmpCell = this.newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
       vTmpCell.appendChild(this.drawSelector('bottom'));
@@ -564,6 +596,7 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vShowPlanStartDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
       if (this.vShowPlanEndDate == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
       if (this.vShowCost == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
+
       if (this.vAdditionalHeaders) {
         for (const key in this.vAdditionalHeaders) {
           const header = this.vAdditionalHeaders[key];
@@ -571,6 +604,8 @@ export const GanttChart = function (pDiv, pFormat) {
           this.newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
         }
       }
+
+      if (this.vShowAddEntries == 1) this.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
 
       // Add some white space so the vertical scroll distance should always be greater
       // than for the right pane (keep to a minimum as it is seen in unconstrained height designs)
@@ -588,6 +623,7 @@ export const GanttChart = function (pDiv, pFormat) {
        */
       let vRightHeader = document.createDocumentFragment();
       vTmpDiv = this.newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
+      const gChartLbl = vTmpDiv;
       this.setChartHead(vTmpDiv);
       vTmpTab = this.newNode(vTmpDiv, 'table', this.vDivId + 'chartTableh', 'gcharttableh');
       vTmpTBody = this.newNode(vTmpTab, 'tbody');
@@ -724,7 +760,7 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vFormat === 'day') {
         vTaskLeftPx += 2;
       }
-      vTmpTab.style.width = vTaskLeftPx+'px'; // Ensure that the headings has exactly the same width as the chart grid
+      vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
       vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
 
       if (this.vUseSingleCell != 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
@@ -748,6 +784,10 @@ export const GanttChart = function (pDiv, pFormat) {
       this.setChartTable(vTmpTab);
       this.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
       vTmpTBody = this.newNode(vTmpTab, 'tbody');
+
+      syncScroll([vTmpContentTabWrapper, vTmpDiv], 'scrollTop');
+      syncScroll([gChartLbl, vTmpDiv], 'scrollLeft');
+      syncScroll([vTmpContentTabWrapper, gListLbl], 'scrollLeft');
 
       // Draw each row
 
@@ -921,8 +961,9 @@ export const GanttChart = function (pDiv, pFormat) {
         // Add Task Info div for tooltip
         if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
           vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-          vTmpDiv2.appendChild(this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate));
-          addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2);
+          const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
+          vTmpDiv2.appendChild(component);
+          addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
         }
       }
       if (this.vDebug) {
@@ -939,6 +980,7 @@ export const GanttChart = function (pDiv, pFormat) {
       // MAIN VIEW: Appending all generated components to main view
       while (this.vDiv.hasChildNodes()) this.vDiv.removeChild(this.vDiv.firstChild);
       vTmpDiv = this.newNode(this.vDiv, 'div', null, 'gchartcontainer');
+      vTmpDiv.style.height = this.vTotalHeight;
 
       let leftvTmpDiv = this.newNode(vTmpDiv, 'div', null, 'gmain gmainleft');
       leftvTmpDiv.appendChild(vLeftHeader);
@@ -1003,6 +1045,15 @@ export const GanttChart = function (pDiv, pFormat) {
       const ad = new Date();
       console.log('after draw', ad, (ad.getTime() - bd.getTime()));
     }
+
+    updateGridHeaderWidth(this);
+    this.chartRowDateToX = function (date) {
+      return getOffset(vMinDate, date, vColWidth, this.vFormat);
+    }
+
+    if (this.vEvents && this.vEvents.afterDraw) {
+      this.vEvents.afterDraw()
+    }
   }; //this.draw
 
 
@@ -1050,7 +1101,8 @@ const makeInput = function (formattedValue, editable, type = 'text', value = nul
   if (editable) {
     switch (type) {
       case 'date':
-        value = value ? value.toISOString().split('T')[0] : ''
+        // Take timezone into account before converting to ISO String
+        value = value ? new Date(value.getTime() - (value.getTimezoneOffset() * 60000)).toISOString().split('T')[0] : '';
         return `<input class="gantt-inputtable" type="date" value="${value}">`;
       case 'resource':
         if (choices) {

@@ -29,9 +29,11 @@
 */
 
 import { showToolTip, moveToolTip, addTooltipListeners, addThisRowListeners, addFormatListeners, addScrollListeners, addFolderListeners, addListener } from "./events";
-import { getMinDate, getMaxDate, findObj, changeFormat, parseDateStr, 
-  formatDateStr, parseDateFormatStr, stripIds, stripUnwanted, delayedHide, getOffset, 
-  getScrollPositions, isIE, benchMark, getIsoWeek, getZoomFactor, hideToolTip, fadeToolTip, criticalPath } from "./utils";
+import {
+  getMinDate, getMaxDate, findObj, changeFormat, parseDateStr,
+  formatDateStr, parseDateFormatStr, stripIds, stripUnwanted, delayedHide, getOffset,
+  getScrollPositions, isIE, benchMark, getIsoWeek, getZoomFactor, hideToolTip, fadeToolTip, criticalPath
+} from "./utils";
 import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } from './xml';
 import { folder, hide, show, taskLink, sortTasks, TaskItem, processRows } from "./task";
 import { GanttChart, updateFlyingObj } from "./draw";

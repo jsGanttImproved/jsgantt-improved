@@ -39,18 +39,18 @@ const es = {
   'sat': '	Sab',
   'resource': 'Recurso',
   'duration': 'Duración',
-  'comp': '% Completado',
-  'completion': 'Terminado',
+  'comp': '% Compl.',
+  'completion': 'Completado',
   'startdate': 'Inicio',
-  'planstartdate': 'Inicio Plan',
-  'cost': 'Custo',
+  'planstartdate': 'Inicio Planificado',
+  'cost': 'Coste',
   'enddate': 'Fin',
-  'planenddate': 'Plan Fin',
-  'moreinfo': '+información',
+  'planenddate': 'Fin Planificado',
+  'moreinfo': 'Más Información',
   'notes': 'Notas',
   'format': 'Formato',
   'hour': 'Hora',
-  'day': 'Dia',
+  'day': 'Día',
   'week': 'Semana',
   'month': 'Mes',
   'quarter': 'Trimestre',
@@ -59,16 +59,17 @@ const es = {
   'weeks': 'Semanas',
   'months': 'Meses',
   'quarters': 'Trimestres',
-  'hr': 'Hr',
-  'dy': 'D',
-  'wk': 'Sem',
+  'hr': 'h',
+  'dy': 'Día',
+  'wk': 'Sem.',
   'mth': 'Mes',
-  'qtr': 'Trim',
-  'hrs': 'Hrs',
-  'dys': 'Dias',
-  'wks': 'Sems',
+  'qtr': 'Trim.',
+  'hrs': 'h',
+  'dys': 'Días',
+  'wks': 'Sem.',
   'mths': 'Meses',
-  'qtrs': 'Trims'
+  'qtrs': 'Trim.',
+  'tooltipLoading': 'Cargando...'
 };
 
 const en =
@@ -142,7 +143,8 @@ const en =
   'wed': 'Wed',
   'thu': 'Thu',
   'fri': 'Fri',
-  'sat': 'Sat'
+  'sat': 'Sat',
+  'tooltipLoading': 'Loading...'
 }
 
 const de = {
@@ -349,7 +351,8 @@ const ru = {
   'dys': 'дн.',
   'wks': 'нед.',
   'mths': 'мес.',
-  'qtrs': 'кв.'
+  'qtrs': 'кв.',
+  'tooltipLoading': 'Загрузка...'
 }
 
 const fr = {
@@ -721,4 +724,79 @@ const id =
   'sat': 'Sab'
 }
 
-export { en, es, de, pt, fr, ru, cn, sv, nl, id }
+const tr =
+{
+  'format': 'Biçim',
+  'hour': 'Saat',
+  'day': 'Gün',
+  'week': 'Hafta',
+  'month': 'Ay',
+  'quarter': 'Çeyrek Yıl',
+  'hours': 'Saat',
+  'days': 'Gün',
+  'weeks': 'Hafta',
+  'months': 'Ay',
+  'quarters': 'Çeyrek Yıl',
+  'hr': 'Saat',
+  'dy': 'Gün',
+  'wk': 'Hft',
+  'mth': 'Ay',
+  'qtr': 'Çyrk',
+  'hrs': 'Saat',
+  'dys': 'Gün',
+  'wks': 'Hft',
+  'mths': 'Ay',
+  'qtrs': 'Çyrk',
+  'resource': 'Kaynak',
+  'duration': 'Süre',
+  'comp': '% Tamamlanma.',
+  'completion': 'Tamamlanma',
+  'startdate': 'Başlangıç Tarihi',
+  'planstartdate': 'Plan Başlama Tarihi',
+  'enddate': 'Bitiş Tarihi',
+  'planenddate': 'Plan Bitiş Tarihi',
+  'cost': 'Tutar',
+  'moreinfo': 'Daha Fazla Bilgi',
+  'notes': 'Notlar',
+  'january': 'Ocak',
+  'february': 'Şubat',
+  'march': 'Mart',
+  'april': 'Nisan',
+  'maylong': 'Mayıs',
+  'june': 'Haziran',
+  'july': 'Temmuz',
+  'august': 'Ağustos',
+  'september': 'Eylül',
+  'october': 'Ekim',
+  'november': 'Kasım',
+  'december': 'Aralık',
+  'jan': 'Oca',
+  'feb': 'Şub',
+  'mar': 'Mar',
+  'apr': 'Nis',
+  'may': 'May',
+  'jun': 'Haz',
+  'jul': 'Tem',
+  'aug': 'Ağu',
+  'sep': 'Eyl',
+  'oct': 'Eki',
+  'nov': 'Kas',
+  'dec': 'Ara',
+  'sunday': 'Pazar',
+  'monday': 'Pazartesi',
+  'tuesday': 'Salı',
+  'wednesday': 'Çarşamba',
+  'thursday': 'Perşembe',
+  'friday': 'Cuma',
+  'saturday': 'Cumartesi',
+  'sun': 'Paz',
+  'mon': 'Pzt',
+  'tue': 'Sal',
+  'wed': 'Çrş',
+  'thu': 'Prş',
+  'fri': 'Cum',
+  'sat': 'Cmt'
+}
+
+
+export { en, es, de, pt, fr, ru, cn, sv, nl, id, tr }

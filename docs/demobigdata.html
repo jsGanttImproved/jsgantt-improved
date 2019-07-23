@@ -18,19 +18,6 @@
     .row {
       width: 100%
     }
-
-    .space {
-      display: inline-block;
-      width: 30px;
-    }
-
-    .deadline-line {
-      position: absolute;
-      top: 0;
-      width: 1px;
-      height: 22px;
-      background: #777777;
-    }
   </style>
   <!-- External resources -->
   <!-- jQuery + Ajax [required by Bootstrap] -->
@@ -45,6 +32,8 @@
     crossorigin="anonymous" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
     crossorigin="anonymous"></script>
+
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
 
@@ -77,10 +66,10 @@
         <input type="checkbox" id="vShowCost" checked onchange="start(event)" />
       </span>
 
-<!--       <span>
-        <label for="vShowAddEntries">Add Entry</label>
+      <span>
+        <label for="vShowAddEntries">Cost</label>
         <input type="checkbox" id="vShowAddEntries" checked onchange="start(event)" />
-      </span> -->
+      </span>
 
       <span>
         <label for="vShowComp">Comp</label>
@@ -127,8 +116,8 @@
 
   Choose a language:
   <select id="lang" onchange="start(event)">
-    <option value='en'>en</option>
     <option value='pt'>pt</option>
+    <option value='en'>en</option>
     <option value='ru'>ru</option>
     <option value='es'>es</option>
     <option value='fr'>fr</option>
@@ -137,81 +126,35 @@
     <option value='sv'>sv</option>
     <option value='nl'>nl</option>
     <option value='id'>id</option>
-    <option value='tr'>tr</option>
   </select>
 
   <br />
   Data getting from a URL, <a href="fixes/data.json">JSON Data</a>. Use `bigdata.json` to test with more data.
-  <input id="dataurl" onchange="start(event)" value="./fixes/data.json" type="text">
+  <input id="dataurl" onchange="start(event)" value="./fixes/bigdata.json" type="text">
   <br />
 
   Delay for tooltip to hide (in ms): <input id="delay" onchange="start(event)" value="150" type="number">
 
   UseSingleCell: <input id="useSingleCell" onchange="start(event)" value="1000" type="number">
 
+  <br />
+  * Click events in table are binded to console.log for testing
 
   <br />
 
   <span>
     <label>Configure debug and see in console:</label>
-    <input type="checkbox" id="debug"  onchange="start(event)" />
+    <input type="checkbox" id="debug" checked onchange="start(event)" />
   </span>
 
   <br />
-
   <span>
-    <label>Configure editable:</label>
-    <input type="checkbox" id="editable" checked onchange="start(event)" />
-  </span>
-
-  <br />
-
-  <span>
-    <label>Configure sortTasks:</label>
-    <input type="checkbox" id="sort"  onchange="start(event)" />
-  </span>
-
-  <br />
-
-  
-  <span>
-    <label>Height:</label>
-    <input type="text" id="vTotalHeight"fl onchange="start(event)" />
-    (CSS style height like "300px". Empty for auto height)
-
-
-  <span>
-    <label>Custom elements (black lines for deadlines):</label>
-    <input type="checkbox" id="customElements" checked  onchange="start(event)" />
-    <div class="space"></div>
-    <label>Min Date:</label>
-    <input type="date" id="vMinDate" onchange="start(event)" />
-    <div class="space"></div>
-    <label>Max Date:</label>
-    <input type="date" id="vMaxDate" onchange="start(event)" />
-  </span>
-  
-  <br />
-
-  <span>
-    <label>Custom Tooltip Template:</label><br />
+    <label>Custom Tooltip Template:</label>
     <textarea id="tooltiptemplate" onchange="start(event)"><div>Nome: {{pName}}</div> <div>{{Lang:pStart}}: {{pStart}}</div></textarea>
-    <div class="space"></div>
-    <label>Dynamic tooltip:</label>
-    <input type="checkbox" id="dynamicTooltip" checked onchange="start(event)" />
-  </span>
-
-
-  <br />
-
-  <span>
-    <button onclick="clearTasks()">Clear all tasks</button>
   </span>
   
-  <br />
-  * Click events in table are binded to console.log for testing
 
-  <br /><br />
+  <br />
   <div id="embedded-Gantt">
   </div>
 

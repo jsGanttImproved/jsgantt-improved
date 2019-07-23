@@ -48,6 +48,7 @@ export const includeGetSet = function () {
   this.setShowPlanStartDate = function (pVal) { this.vShowPlanStartDate = pVal; };
   this.setShowPlanEndDate = function (pVal) { this.vShowPlanEndDate = pVal; };
   this.setShowCost = function (pVal) { this.vShowCost = pVal; };
+  this.setShowAddEntries = function (pVal) { this.vShowAddEntries = pVal; };
   this.setShowTaskInfoRes = function (pVal) { this.vShowTaskInfoRes = pVal; };
   this.setShowTaskInfoDur = function (pVal) { this.vShowTaskInfoDur = pVal; };
   this.setShowTaskInfoComp = function (pVal) { this.vShowTaskInfoComp = pVal; };
@@ -104,12 +105,15 @@ export const includeGetSet = function () {
   this.setTimer = function (pVal) { this.vTimer = pVal * 1; };
   this.setTooltipDelay = function (pVal) { this.vTooltipDelay = pVal * 1; };
   this.setTooltipTemplate = function (pVal) { this.vTooltipTemplate = pVal; };
+  this.setMinDate = function (pVal) { this.vMinDate = pVal; };
+  this.setMaxDate = function (pVal) { this.vMaxDate = pVal; };
   this.addLang = function (pLang, pVals) {
     if (!this.vLangs[pLang]) {
       this.vLangs[pLang] = new Object();
       for (let vKey in this.vLangs['en']) this.vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : this.vLangs['en'][vKey];
     }
   };
+  this.setTotalHeight = function (pVal) { this.vTotalHeight = pVal; };
   this.setEvents = function (pEvents) { this.vEvents = pEvents; };
   this.setEventsChange = function (pEventsChange) { this.vEventsChange = pEventsChange; };
   this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
@@ -136,6 +140,7 @@ export const includeGetSet = function () {
   this.getShowPlanStartDate = function () { return this.vShowPlanStartDate; };
   this.getShowPlanEndDate = function () { return this.vShowPlanEndDate; };
   this.getShowCost = function () { return this.vShowCost; };
+  this.getShowAddEntries = function () { return this.vShowAddEntries; };
   this.getShowTaskInfoRes = function () { return this.vShowTaskInfoRes; };
   this.getShowTaskInfoDur = function () { return this.vShowTaskInfoDur; };
   this.getShowTaskInfoComp = function () { return this.vShowTaskInfoComp; };
@@ -174,6 +179,8 @@ export const includeGetSet = function () {
   this.getChartTable = function () { return this.vChartTable; };
   this.getLines = function () { return this.vLines; };
   this.getTimer = function () { return this.vTimer; };
+  this.getMinDate = function () { return this.vMinDate; };
+  this.getMaxDate = function () { return this.vMaxDate; };
   this.getTooltipDelay = function () { return this.vTooltipDelay; };
   this.getList = function () { return this.vTaskList; };
   this.getEventsClickCell = function () { return this.vEvents; };

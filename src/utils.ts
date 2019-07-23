@@ -22,11 +22,14 @@ export const internalPropertiesLang = {
   'pPlanEnd': 'planenddate'
 };
 
-export const getMinDate = function (pList, pFormat) {
+export const getMinDate = function (pList, pFormat, pMinDate) {
   let vDate = new Date();
-  vDate.setTime(pList[0].getStart().getTime());
 
-  // Parse all Task End dates to find min
+  if (pList.length <= 0) return pMinDate || vDate;
+
+  vDate.setTime((pMinDate && pMinDate.getTime()) || pList[0].getStart().getTime());
+
+  // Parse all Task Start dates to find min
   for (let i = 0; i < pList.length; i++) {
     if (pList[i].getStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getStart().getTime());
   }
@@ -65,10 +68,12 @@ export const getMinDate = function (pList, pFormat) {
   return (vDate);
 };
 
-export const getMaxDate = function (pList, pFormat) {
+export const getMaxDate = function (pList, pFormat, pMaxDate) {
   let vDate = new Date();
 
-  vDate.setTime(pList[0].getEnd().getTime());
+  if (pList.length <= 0) return pMaxDate || vDate;
+
+  vDate.setTime((pMaxDate && pMaxDate.getTime()) || pList[0].getEnd().getTime());
 
   // Parse all Task End dates to find max
   for (let i = 0; i < pList.length; i++) {
@@ -124,6 +129,17 @@ export const changeFormat = function (pFormat, ganttObj) {
   if (ganttObj) ganttObj.setFormat(pFormat);
   else alert('Chart undefined');
 };
+
+export const coerceDate = function (date) {
+  if (date instanceof Date) {
+    return date;
+  } else {
+    const temp = new Date(date);
+    if (temp instanceof Date && !isNaN(temp.valueOf())) {
+      return temp;
+    }
+  }
+}
 
 export const parseDateStr = function (pDateStr, pFormatStr) {
   let vDate = new Date();
@@ -341,6 +357,29 @@ export const getScrollPositions = function () {
   return { x: vScrollLeft, y: vScrollTop };
 };
 
+let scrollbarWidth = undefined;
+export const getScrollbarWidth = function () {
+  if (scrollbarWidth) return scrollbarWidth;
+
+  const outer = document.createElement('div');
+  outer.style.visibility = 'hidden';
+  outer.style.overflow = 'scroll'; // forcing scrollbar to appear
+  outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
+  document.body.appendChild(outer);
+
+  // Creating inner element and placing it in the container
+  const inner = document.createElement('div');
+  outer.appendChild(inner);
+
+  // Calculating difference between container's full width and the child width
+  scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
+
+  // Removing temporary elements from the DOM
+  outer.parentNode.removeChild(outer);
+
+  return scrollbarWidth;
+}
+
 export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
   const DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
   const WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
@@ -508,5 +547,12 @@ export const criticalPath = function (tasks) {
     } else {
       node = null;
     }
+  }
+}
+
+export function isParentElementOrSelf(child, parent) {
+  while (child) {
+    if (child === parent) return true;
+    child = child.parentElement;
   }
 }

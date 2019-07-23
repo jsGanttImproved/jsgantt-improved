@@ -233,6 +233,20 @@ If the task removed is a group item, all child tasks will also be removed.
 
 After adding or removing tasks a call to "g.Draw()" must be made to redraw the chart.
 
+
+**ClearTasks()**
+
+This method will clear al the tasks from the list and after that you have to call "g.Draw()".
+
+## Drawing custom elements on the chart ##
+
+If you want to draw something custom in addition to task bars you may find following useful:
+
+1. Put your drawing call in `afterDraw` callback. It's called in the end of each `Draw` call so view will mostly stay in sync. There you can get task row elements with `g.getList()[...].getChildRow()` and add HTML you need.
+2. Use `g.chartRowDateToX(date)` to get X coordinate for a date.
+3. If custom drawings go beyond min/max task dates - extend chart range with `vMinDate`/`vMaxDate` chart options.
+4. See example in demo with *Custom elements* flag.
+
 # Options #
 
 You can set Options as an object, following the example:
@@ -280,6 +294,10 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setEventsChange():_  |Controls events when a task row is cliked. Pass a function to execute ex.: `{ taskname: function(task, event, cell, column){ console.log(task, event, cell, column); } }`|
 |_setAdditionalHeaders:_ |Set object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
 |_setResources():_  |Set the list of possible resources, must be an array of objects, ex: `[{ id: 1, name: 'Mario' } , { id: 2, name: 'Henrique' }]`| 
+|_setTotalHeight():_ |Set component height as CSS height (e.g. "300px"). If set - the header is fixed and content is scrollable if needed. Otherwise component height is defined by content|
+|_setMinDate():_ |Set minimum date further than minimum task date. It doesn't trim any task if it starts before this minimum date, but can extend the chart to the left. This may be useful if you want to draw some custom elements on the chart or want to fix the time range regardless of the content|
+|_setMaxDate():_ |Similar to _setMinDate()_|
+|_setTooltipTemplate():_ |Set template for the tooltip. Can be <ul><li>*string* - just a static template</li><li>*function(task): string* - function returning template for a given task</li><li>*function(task): Promise&lt;string&gt;* - function returning promise resolving to string. Until promise is resolved tooltip shows `tooltipLoading` from lang section</li></ul>In each case variables inside string are substituted (see example). If function is given and it returns undefined or null - default template is used (like if argument was not passed at all). Function argument is evaluated when tooltip needs to be shown.
 |_setEditable():_  |Set with true if you want to edit values in the data table, will show inputs instead of texts| 
 |_setDebug():_  |Set with true if you want to see debug in console| 
 
@@ -389,7 +407,7 @@ The addLang() method takes two parameters.  The first is a string identifier for
 |_jul_          |Jul               |_startdate_    |Start Date        |_wks_          |Wks               |
 |_aug_          |Aug               |_enddate_      |End Date          |_mths_         |Mths              |
 |_sep_          |Sep               |_moreinfo_     |More Information  |_qtrs_         |Qtrs              |
-|_oct_          |Oct               |_notes_        |Notes             |               |                  |
+|_oct_          |Oct               |_notes_        |Notes             |_tooltipTemplate_|Loading...      |
 |_nov_          |Nov               |               |                  |               |                  |
 |_dec_          |Dec               |               |                  |               |                  |
 
@@ -464,7 +482,9 @@ g.setOptions({
         end: console.log,
         planstart: console.log,
         planend: console.log,
-        cost: console.log
+        cost: console.log,
+        beforeDraw: ()=>console.log('before draw listener'),
+        afterDraw: ()=>console.log('before after listener')
       },
   vEventClickRow: console.log
 });

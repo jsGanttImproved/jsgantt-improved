@@ -1,4 +1,4 @@
-import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip } from "./utils";
+import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth, isParentElementOrSelf } from "./utils";
 import { folder } from "./task";
 import { updateFlyingObj } from "./draw";
 
@@ -45,13 +45,18 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
       this.addListener('mouseout', function () { delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
     }
     clearTimeout(pGanttChartObj.vTool.delayTimeout);
+
+    const newHTML = pContents.innerHTML;
+    if (pGanttChartObj.vTool.vToolCont.getAttribute("content") !== newHTML) {
+      pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
+      // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
+      stripIds(pGanttChartObj.vTool.vToolCont);
+      pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);
+    }
+
     if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing || pGanttChartObj.vTool.style.visibility != 'visible') {
       if (pGanttChartObj.vTool.vToolCont.getAttribute('showing') != vShowing) {
         pGanttChartObj.vTool.vToolCont.setAttribute('showing', vShowing);
-
-        pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
-        // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
-        stripIds(pGanttChartObj.vTool.vToolCont);
       }
 
       pGanttChartObj.vTool.style.visibility = 'visible';
@@ -118,10 +123,58 @@ export const addListener = function (eventName, handler, control) {
   }
 };
 
+export const syncScroll = function (elements, attrName) {
+  let syncFlags = new Map(elements.map(e => [e, false]));
 
-export const addTooltipListeners = function (pGanttChart, pObj1, pObj2) {
-  addListener('mouseover', function (e) { showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer()); }, pObj1);
-  addListener('mouseout', function (e) { delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer()); }, pObj1);
+  function scrollEvent(e) {
+    if (!syncFlags.get(e.target)) {
+      for (const el of elements) {
+        if (el !== e.target) {
+          syncFlags.set(el, true);
+          el[attrName] = e.target[attrName];
+        }
+      }
+    }
+
+    syncFlags.set(e.target, false);
+  }
+
+  for (const el of elements) {
+    el.addEventListener('scroll', scrollEvent);
+  }
+}
+
+export const addTooltipListeners = function (pGanttChart, pObj1, pObj2, callback) {
+  let isShowingTooltip = false;
+
+  addListener('mouseover', function (e) {
+    if (isShowingTooltip || !callback) {
+      showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+    } else if (callback) {
+      isShowingTooltip = true;
+      const promise = callback();
+      showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+      if (promise && promise.then) {
+        promise.then(() => {
+          if (pGanttChart.vTool.vToolCont.getAttribute('showing') === pObj2.id &&
+            pGanttChart.vTool.style.visibility === 'visible') {
+            showToolTip(pGanttChart, e, pObj2, null, pGanttChart.getTimer());
+          }
+        });
+      }
+    }
+  }, pObj1);
+
+  addListener('mouseout', function (e) {
+    const outTo = e.relatedTarget;
+    if (isParentElementOrSelf(outTo, pObj1) || (pGanttChart.vTool && isParentElementOrSelf(outTo, pGanttChart.vTool))) {
+      // not actually out
+    } else {
+      isShowingTooltip = false;
+    }
+
+    delayedHide(pGanttChart, pGanttChart.vTool, pGanttChart.getTimer());
+  }, pObj1);
 };
 
 export const addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
@@ -131,8 +184,23 @@ export const addThisRowListeners = function (pGanttChart, pObj1, pObj2) {
   addListener('mouseout', function () { pGanttChart.mouseOut(pObj1, pObj2); }, pObj2);
 };
 
+export const updateGridHeaderWidth = function (pGanttChart) {
+  const head = pGanttChart.getChartHead();
+  const body = pGanttChart.getChartBody();
+  if (!head || !body) return;
+  const isScrollVisible = body.scrollHeight > body.clientHeight;
+  if (isScrollVisible) {
+    head.style.width = `calc(100% - ${getScrollbarWidth()}px)`;
+  } else {
+    head.style.width = '100%';
+  }
+}
+
 export const addFolderListeners = function (pGanttChart, pObj, pID) {
-  addListener('click', function () { folder(pID, pGanttChart); }, pObj);
+  addListener('click', function () {
+    folder(pID, pGanttChart);
+    updateGridHeaderWidth(pGanttChart);
+  }, pObj);
 };
 
 export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
@@ -141,8 +209,8 @@ export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
 
 export const addScrollListeners = function (pGanttChart) {
   addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
-  addListener('resize', function () { 
-    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop; 
+  addListener('resize', function () {
+    pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
   }, window);
 };
 
@@ -156,24 +224,26 @@ export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
 }
 
 export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw = null, event = 'blur') {
-  
-  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]
-    && (vTmpCell.children[0].children[0].tagName === 'SELECT' || vTmpCell.children[0].children[0].tagName === 'INPUT')) {
-    addListener(event, function (e) {
-      if (callback) {
-        callback(task, e);
-      }
-      if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
-        const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
-        if (q && q.then) {
-          q.then(e => draw());
+
+  if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
+    const selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].find(k => k === vTmpCell.children[0].children[0].tagName);
+    if (selectInputOrButton) {
+      addListener(event, function (e) {
+        if (callback) {
+          callback(task, e);
+        }
+        if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
+          const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
+          if (q && q.then) {
+            q.then(e => draw());
+          } else {
+            draw();
+          }
         } else {
           draw();
         }
-      } else {
-        draw();
-      }
-    }, vTmpCell.children[0].children[0]);
+      }, vTmpCell.children[0].children[0]);
+    }
   }
 }
 
@@ -202,8 +272,8 @@ const toggleDependencies = function (e) {
     frameZones.forEach((c: any) => {
       c.style.borderStyle = style;
     });
-   // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
-     // c.style.borderStyle = style;
+    // document.querySelectorAll(`.gDepId${ids[1]}`).forEach((c: any) => {
+    // c.style.borderStyle = style;
     // });
   }
 }

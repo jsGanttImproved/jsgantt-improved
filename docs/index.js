@@ -1,17 +1,18 @@
 let dataurl;
 let jsonObj;
+let g;
 
 function start(e) {
 
-  var g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
+  g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
   if (g.getDivId() != null) {
 
     const newDataurl = document.getElementById('dataurl').value ? document.getElementById('dataurl').value : './fixes/data.json';
     const vDebug = document.querySelector('#debug:checked') ? true : false;
+    //vDebug = true;
     const vEditable = document.querySelector('#editable:checked') ? true : false;
     const vUseSort = document.querySelector('#sort:checked') ? true : false;
     const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
-
 
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
     if (dataurl !== newDataurl) {
@@ -23,13 +24,14 @@ function start(e) {
 
 
     // SET LANG FROM INPUT
-    lang = e && e.target ? e.target.value : 'pt';
+    lang = e && e.target ? e.target.value : 'en';
     delay = document.getElementById('delay').value;
 
 
     vUseSingleCell = document.getElementById('useSingleCell').value;
     vShowRes = document.querySelector('#vShowRes:checked') ? 1 : 0;
     vShowCost = document.querySelector('#vShowCost:checked') ? 1 : 0;
+    vShowAddEntries = document.querySelector('#vShowAddEntries:checked') ? 1 : 0;
     vShowComp = document.querySelector('#vShowComp:checked') ? 1 : 0;
     vShowDur = document.querySelector('#vShowDur:checked') ? 1 : 0;
     vShowStartDate = document.querySelector('#vShowStartDate:checked') ? 1 : 0;
@@ -38,6 +40,10 @@ function start(e) {
     vShowPlanEndDate = document.querySelector('#vShowPlanEndDate:checked') ? 1 : 0;
     vShowTaskInfoLink = document.querySelector('#vShowTaskInfoLink:checked') ? 1 : 0;
     vShowEndWeekDate = document.querySelector('#vShowEndWeekDate:checked') ? 1 : 0;
+    vTotalHeight = document.querySelector('#vTotalHeight').value || undefined;
+
+    vMinDate = document.querySelector('#vMinDate').value;
+    vMaxDate = document.querySelector('#vMaxDate').value;
 
     vAdditionalHeaders = {
       category: {
@@ -58,6 +64,7 @@ function start(e) {
       vUseSingleCell, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
       vShowRes,
       vShowCost,
+      vShowAddEntries,
       vShowComp,
       vShowDur,
       vShowStartDate,
@@ -65,6 +72,9 @@ function start(e) {
       vShowPlanStartDate,
       vShowPlanEndDate,
       vAdditionalHeaders,
+      vTotalHeight,
+      vMinDate,
+      vMaxDate,
       vEvents: {
         taskname: console.log,
         res: console.log,
@@ -74,7 +84,14 @@ function start(e) {
         end: console.log,
         planstart: console.log,
         planend: console.log,
-        cost: console.log
+        cost: console.log,
+        beforeDraw: ()=>console.log('before draw listener'),
+        afterDraw: ()=> {
+          console.log('after draw listener');
+          if (document.querySelector("#customElements:checked")) {
+            drawCustomElements(g);
+          }
+        }
       },
       vEventsChange: {
         taskname: editValue.bind(this, jsonObj),
@@ -97,10 +114,14 @@ function start(e) {
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vTooltipDelay: delay,
-      vTooltipTemplate: newtooltiptemplate,
+      vTooltipTemplate: 
+        document.querySelector("#dynamicTooltip:checked") ?
+          generateTooltip :
+          newtooltiptemplate,
       vDebug,
       vEditable,
       vUseSort,
+      vFormat: 'week',
       vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
     });
     //DELAY FROM INPUT
@@ -127,7 +148,7 @@ function start(e) {
       console.log('before reloading', bd);
     }
     g.Draw();
-    JSGantt.criticalPath(jsonObj)
+    //JSGantt.criticalPath(jsonObj)
     if (vDebug) {
       const ad = new Date();
       console.log('after reloading: total time', ad, (ad.getTime() - bd.getTime()));
@@ -150,6 +171,11 @@ function scrollingTwoMains(mainMoving, mainMoved) {
   document.getElementById(mainMoved).scrollTop = document.getElementById(mainMoving).scrollTop;
 }
 
+function clearTasks(){
+  g.ClearTasks();
+  g.Draw()
+}
+
 function editValue(list, task, event, cell, column) {
   const found = list.find(item => item.pID == task.getOriginalID());
   if (!found) {
@@ -159,4 +185,55 @@ function editValue(list, task, event, cell, column) {
     found[column] = event ? event.target.value : '';
   }
 }
+
+function drawCustomElements(g) {
+  for (const item of g.getList()) {
+    if (item.getDataObject().deadline) {
+      const x = g.chartRowDateToX(new Date(item.getDataObject().deadline));
+      const td = item.getChildRow().querySelector('td');
+      td.style.position = 'relative';
+      const div = document.createElement('div');
+      div.style.left = `${x}px`;
+      div.classList.add('deadline-line');
+      td.appendChild(div);
+    }
+  }
+}
+
+function generateTooltip(task) {
+  // default tooltip for level 1
+  if (task.getLevel() === 1) return;
+    
+  // string tooltip for level 2. Show completed/total child count and current timestamp
+  if (task.getLevel() === 2) {
+    let childCount = 0;
+    let complete = 0;
+    for (const item of g.getList()) {
+      if (item.getParent() == task.getID()) {
+        if (item.getCompVal() === 100) {
+          complete++;
+        }
+        childCount++;
+      }
+    }
+    console.log(`Generated dynamic sync template for '${task.getName()}'`);
+    return `
+      <dl>
+        <dt>Name:</dt><dd>{{pName}}</dd>
+        <dt>Complete child tasks:</dt><dd style="color:${complete === childCount ? 'green' : 'red'}">${complete}/${childCount}</dd>
+        <dt>Tooltip generated at:</dt><dd>${new Date()}</dd>
+      </dl>
+    `;
+  }
+  
+  // async tooltip for level 3 and below
+  return new Promise((resolve, reject) => {
+    const delay = Math.random() * 3000;
+    setTimeout(() => {
+      console.log(`Generated dynamic async template for '${task.getName()}'`);
+      resolve(`Tooltip content from the promise after ${Math.round(delay)}ms`);
+    }, delay);
+  });
+}
+
 start('pt')
