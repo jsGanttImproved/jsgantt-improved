@@ -15,6 +15,8 @@ Or install and use in JS
 
 Import in your JS `import {JSGantt} from 'jsgantt-improved';`
 
+See the [FULL DOCUMENTATION](./docs/Documentation.md) for more details in all features.
+
 For **Angular** use the component [ng-gantt](https://github.com/jsGanttImproved/ng-gantt) 
 
 For **React** use the component [react-jsgantt](https://github.com/jsGanttImproved/react-jsgantt) 
