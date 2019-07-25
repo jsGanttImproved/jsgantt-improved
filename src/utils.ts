@@ -380,7 +380,7 @@ export const getScrollbarWidth = function () {
   return scrollbarWidth;
 }
 
-export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
+export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
   const DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
   const WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
   const MONTH_CELL_MARGIN_WIDTH = 1; // Cell margin for 'month' format
@@ -393,11 +393,24 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
   let vTaskRightPx = 0;
   let tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
   let tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
-
-  let vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
+  const oneHour = 3600000
+  let vTaskRight = (tmpTaskEnd - tmpTaskStart) / oneHour; // Length of task in hours
 
   let vPosTmpDate;
   if (pFormat == 'day') {
+    if (!pShowWeekends) {
+      let start = curTaskStart;
+      let end = curTaskEnd;
+      let countWeekends = 0;
+      while (start < end) {
+        const day = start.getDay();
+        if (day === 6 || day == 0) {
+          countWeekends++
+        }
+        start = new Date(start.getTime() + 24 * oneHour);
+      }
+      vTaskRight -= countWeekends * 24;
+    }
     vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + DAY_CELL_MARGIN_WIDTH) - 1);
   }
   else if (pFormat == 'week') {

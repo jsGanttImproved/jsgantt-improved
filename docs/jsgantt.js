@@ -37,6 +37,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.vShowCost = 0;
     this.vShowAddEntries = 0;
     this.vShowEndWeekDate = 1;
+    this.vShowWeekends = 1;
     this.vShowTaskInfoRes = 1;
     this.vShowTaskInfoDur = 1;
     this.vShowTaskInfoComp = 1;
@@ -244,8 +245,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.DrawDependencies = function (vDebug) {
         if (vDebug === void 0) { vDebug = false; }
         if (this.getShowDeps() == 1) {
-            //First recalculate the x,y
-            this.CalcTaskXY();
+            this.CalcTaskXY(); //First recalculate the x,y
             this.clearDependencies();
             var vList = this.getList();
             for (var i = 0; i < vList.length; i++) {
@@ -651,12 +651,17 @@ exports.GanttChart = function (pDiv, pFormat) {
                 var vHeaderCellClass = 'gmajorheading';
                 var vCellContents = '';
                 if (this.vFormat == 'day') {
-                    vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, 7);
+                    var colspan = 7;
+                    if (!this.vShowWeekends) {
+                        vHeaderCellClass += ' tinytext';
+                        colspan = 5;
+                    }
+                    vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, colspan);
                     vCellContents += utils_1.formatDateStr(vTmpDate, this.vDayMajorDateDisplayFormat, this.vLangs[this.vLang]);
                     vTmpDate.setDate(vTmpDate.getDate() + 6);
                     if (this.vShowEndWeekDate == 1)
                         vCellContents += ' - ' + utils_1.formatDateStr(vTmpDate, this.vDayMajorDateDisplayFormat, this.vLangs[this.vLang]);
-                    this.newNode(vTmpCell, 'div', null, null, vCellContents, vColWidth * 7);
+                    this.newNode(vTmpCell, 'div', null, null, vCellContents, vColWidth * colspan);
                     vTmpDate.setDate(vTmpDate.getDate() + 1);
                 }
                 else if (this.vFormat == 'week') {
@@ -702,6 +707,10 @@ exports.GanttChart = function (pDiv, pFormat) {
                 var vHeaderCellClass = 'gminorheading';
                 if (this.vFormat == 'day') {
                     if (vTmpDate.getDay() % 6 == 0) {
+                        if (!this.vShowWeekends) {
+                            vTmpDate.setDate(vTmpDate.getDate() + 1);
+                            continue;
+                        }
                         vHeaderCellClass += 'wkend';
                     }
                     if (vTmpDate <= vMaxDate) {
@@ -795,16 +804,16 @@ exports.GanttChart = function (pDiv, pFormat) {
                 var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
                 if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0)
                     curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
-                vTaskLeftPx = utils_1.getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat);
-                vTaskRightPx = utils_1.getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat);
+                vTaskLeftPx = utils_1.getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends);
+                vTaskRightPx = utils_1.getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends);
                 var curTaskPlanStart = void 0, curTaskPlanEnd = void 0;
                 curTaskPlanStart = this.vTaskList[i].getPlanStart();
                 curTaskPlanEnd = this.vTaskList[i].getPlanEnd();
                 if (curTaskPlanStart && curTaskPlanEnd) {
                     if ((curTaskPlanEnd.getTime() - (curTaskPlanEnd.getTimezoneOffset() * 60000)) % (86400000) == 0)
                         curTaskPlanEnd = new Date(curTaskPlanEnd.getFullYear(), curTaskPlanEnd.getMonth(), curTaskPlanEnd.getDate() + 1, curTaskPlanEnd.getHours(), curTaskPlanEnd.getMinutes(), curTaskPlanEnd.getSeconds()); // add 1 day here to simplify calculations below
-                    vTaskPlanLeftPx = utils_1.getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat);
-                    vTaskPlanRightPx = utils_1.getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat);
+                    vTaskPlanLeftPx = utils_1.getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends);
+                    vTaskPlanRightPx = utils_1.getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends);
                 }
                 else {
                     vTaskPlanLeftPx = vTaskPlanRightPx = 0;
@@ -998,12 +1007,12 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vScrollDate.setMinutes(0, 0, 0);
                     else
                         vScrollDate.setHours(0, 0, 0, 0);
-                    vScrollPx = utils_1.getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat);
+                    vScrollPx = utils_1.getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends);
                 }
                 this.getChartBody().scrollLeft = vScrollPx;
             }
             if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime())
-                this.vTodayPx = utils_1.getOffset(vMinDate, new Date(), vColWidth, this.vFormat);
+                this.vTodayPx = utils_1.getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends);
             else
                 this.vTodayPx = -1;
             // Dependencies
@@ -1025,7 +1034,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         }
         events_1.updateGridHeaderWidth(this);
         this.chartRowDateToX = function (date) {
-            return utils_1.getOffset(vMinDate, date, vColWidth, this.vFormat);
+            return utils_1.getOffset(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends);
         };
         if (this.vEvents && this.vEvents.afterDraw) {
             this.vEvents.afterDraw();
@@ -2553,6 +2562,7 @@ exports.includeGetSet = function () {
     this.setShowTaskInfoNotes = function (pVal) { this.vShowTaskInfoNotes = pVal; };
     this.setShowTaskInfoLink = function (pVal) { this.vShowTaskInfoLink = pVal; };
     this.setShowEndWeekDate = function (pVal) { this.vShowEndWeekDate = pVal; };
+    this.setShowWeekends = function (pVal) { this.vShowWeekends = pVal; };
     this.setShowSelector = function () {
         var vValidSelectors = 'top bottom';
         this.vShowSelector = new Array();
@@ -2652,6 +2662,7 @@ exports.includeGetSet = function () {
     this.getShowTaskInfoNotes = function () { return this.vShowTaskInfoNotes; };
     this.getShowTaskInfoLink = function () { return this.vShowTaskInfoLink; };
     this.getShowEndWeekDate = function () { return this.vShowEndWeekDate; };
+    this.getShowWeekends = function () { return this.vShowWeekends; };
     this.getShowSelector = function () { return this.vShowSelector; };
     this.getShowDeps = function () { return this.vShowDeps; };
     this.getDateInputFormat = function () { return this.vDateInputFormat; };
@@ -3830,7 +3841,7 @@ exports.getScrollbarWidth = function () {
     outer.parentNode.removeChild(outer);
     return scrollbarWidth;
 };
-exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
+exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
     var DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
     var WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
     var MONTH_CELL_MARGIN_WIDTH = 1; // Cell margin for 'month' format
@@ -3842,9 +3853,23 @@ exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat) {
     var vTaskRightPx = 0;
     var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
     var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
-    var vTaskRight = (tmpTaskEnd - tmpTaskStart) / 3600000; // Length of task in hours
+    var oneHour = 3600000;
+    var vTaskRight = (tmpTaskEnd - tmpTaskStart) / oneHour; // Length of task in hours
     var vPosTmpDate;
     if (pFormat == 'day') {
+        if (!pShowWeekends) {
+            var start = curTaskStart;
+            var end = curTaskEnd;
+            var countWeekends = 0;
+            while (start < end) {
+                var day = start.getDay();
+                if (day === 6 || day == 0) {
+                    countWeekends++;
+                }
+                start = new Date(start.getTime() + 24 * oneHour);
+            }
+            vTaskRight -= countWeekends * 24;
+        }
         vTaskRightPx = Math.ceil((vTaskRight / 24) * (pColWidth + DAY_CELL_MARGIN_WIDTH) - 1);
     }
     else if (pFormat == 'week') {

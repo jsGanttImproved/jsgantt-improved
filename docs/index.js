@@ -42,6 +42,8 @@ function start(e) {
     vShowEndWeekDate = document.querySelector('#vShowEndWeekDate:checked') ? 1 : 0;
     vTotalHeight = document.querySelector('#vTotalHeight').value || undefined;
 
+    vShowWeekends = document.querySelector('#vShowWeekends:checked') ? 1 : 0;
+
     vMinDate = document.querySelector('#vMinDate').value;
     vMaxDate = document.querySelector('#vMaxDate').value;
 
@@ -85,8 +87,8 @@ function start(e) {
         planstart: console.log,
         planend: console.log,
         cost: console.log,
-        beforeDraw: ()=>console.log('before draw listener'),
-        afterDraw: ()=> {
+        beforeDraw: () => console.log('before draw listener'),
+        afterDraw: () => {
           console.log('after draw listener');
           if (document.querySelector("#customElements:checked")) {
             drawCustomElements(g);
@@ -113,8 +115,9 @@ function start(e) {
       vEventClickRow: console.log,
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
+      vShowWeekends, // Show weekends days in the vFormat day
       vTooltipDelay: delay,
-      vTooltipTemplate: 
+      vTooltipTemplate:
         document.querySelector("#dynamicTooltip:checked") ?
           generateTooltip :
           newtooltiptemplate,
@@ -171,7 +174,7 @@ function scrollingTwoMains(mainMoving, mainMoved) {
   document.getElementById(mainMoved).scrollTop = document.getElementById(mainMoving).scrollTop;
 }
 
-function clearTasks(){
+function clearTasks() {
   g.ClearTasks();
   g.Draw()
 }
@@ -203,7 +206,7 @@ function drawCustomElements(g) {
 function generateTooltip(task) {
   // default tooltip for level 1
   if (task.getLevel() === 1) return;
-    
+
   // string tooltip for level 2. Show completed/total child count and current timestamp
   if (task.getLevel() === 2) {
     let childCount = 0;
@@ -225,7 +228,7 @@ function generateTooltip(task) {
       </dl>
     `;
   }
-  
+
   // async tooltip for level 3 and below
   return new Promise((resolve, reject) => {
     const delay = Math.random() * 3000;

@@ -16,6 +16,10 @@ div.gantt {
 
 /* cell defaults */
 
+.tinytext div{
+  font-size: 2px;
+}
+
 .gmajorheading,
 .gminorheading,
 .gminorheadingwkend,
@@ -27,6 +31,7 @@ div.gantt {
   text-align: center;
   cursor: default
 }
+
 
 .gtasklist {
   height: 19px;
