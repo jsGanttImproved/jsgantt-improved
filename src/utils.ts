@@ -383,8 +383,8 @@ export const getScrollbarWidth = function () {
 export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
   const DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
   const WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
-  const MONTH_CELL_MARGIN_WIDTH = 1; // Cell margin for 'month' format
-  const QUARTER_CELL_MARGIN_WIDTH = 1; // Cell margin for 'quarter' format
+  const MONTH_CELL_MARGIN_WIDTH = 3; // Cell margin for 'month' format
+  const QUARTER_CELL_MARGIN_WIDTH = 3; // Cell margin for 'quarter' format
   const HOUR_CELL_MARGIN_WIDTH = 3; // Cell margin for 'hour' format
 
   let vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
