@@ -646,7 +646,7 @@ export const GanttChart = function (pDiv, pFormat) {
         if (this.vFormat == 'day') {
           let colspan = 7;
           if (!this.vShowWeekends) {
-            vHeaderCellClass += ' tinytext';
+            vHeaderCellClass += ' headweekends';
             colspan = 5;
           }
 
@@ -982,10 +982,12 @@ export const GanttChart = function (pDiv, pFormat) {
         const ad = new Date();
         console.log('after tasks loop', ad, (ad.getTime() - bd.getTime()));
       }
+
       if (!vSingleCell) {
         vTmpTBody.appendChild(vDateRow.cloneNode(true));
-      } else if (this.vFormat == 'day') {
-        vTmpTBody.appendChild(vTmpRow.cloneNode(true));
+      }
+      else if (this.vFormat == 'day') {
+        vTmpTBody.appendChild(document.createElement('tr'));
       }
 
 
