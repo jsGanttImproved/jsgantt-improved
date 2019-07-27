@@ -15,9 +15,10 @@ div.gantt {
 }
 
 /* cell defaults */
-
-.tinytext div{
-  font-size: 2px;
+.headweekends div {
+  font-size: 8px;
+  width: 100% !important;
+  margin: 0;
 }
 
 .gmajorheading,
@@ -355,7 +356,7 @@ span.gfoldercollapse {
   /* Old browsers */
   background: linear-gradient(to bottom, rgba(58, 132, 195, 1) 0%, rgba(65, 154, 214, 1) 20%, rgba(75, 184, 240, 1) 40%, rgba(58, 139, 194, 1) 70%, rgba(38, 85, 139, 1) 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4bb8f0', endColorstr='#3a84c3', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4bb8f0', endColorstr='#3a84c3', GradientType=0);
   /* IE6-9 */
 }
 
@@ -364,7 +365,7 @@ span.gfoldercollapse {
   /* Old browsers */
   background: linear-gradient(to bottom, rgba(196, 58, 58, 1) 0%, rgba(211, 65, 65, 1) 20%, rgba(239, 76, 76, 1) 40%, rgba(196, 58, 58, 1) 70%, rgba(135, 37, 37, 1) 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef4c4c', endColorstr='#c43a3a', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ef4c4c', endColorstr='#c43a3a', GradientType=0);
   /* IE6-9 */
 }
 
@@ -373,7 +374,7 @@ span.gfoldercollapse {
   /* Old browsers */
   background: linear-gradient(to bottom, rgba(80, 193, 58, 1) 0%, rgba(88, 209, 64, 1) 20%, rgba(102, 237, 75, 1) 40%, rgba(80, 193, 58, 1) 70%, rgba(53, 132, 37, 1) 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66ED4B', endColorstr='#50c13a', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66ED4B', endColorstr='#50c13a', GradientType=0);
   /* IE6-9 */
 }
 
@@ -382,7 +383,7 @@ span.gfoldercollapse {
   /* Old browsers */
   background: linear-gradient(to bottom, rgba(247, 228, 56, 1) 0%, rgba(239, 239, 55, 1) 20%, rgba(255, 255, 58, 1) 40%, rgba(242, 236, 55, 1) 70%, rgba(241, 218, 54, 1) 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff3a', endColorstr='#f7e438', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff3a', endColorstr='#f7e438', GradientType=0);
   /* IE6-9 */
 }
 
@@ -391,7 +392,7 @@ span.gfoldercollapse {
   /* Old browsers */
   background: linear-gradient(to bottom, rgba(193, 58, 193, 1) 0%, rgba(211, 65, 211, 1) 20%, rgba(239, 76, 239, 1) 40%, rgba(193, 58, 193, 1) 70%, rgba(137, 38, 137, 1) 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef4cef', endColorstr='#892689', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ef4cef', endColorstr='#892689', GradientType=0);
   /* IE6-9 */
 }
 
@@ -400,7 +401,7 @@ span.gfoldercollapse {
   /* Old browsers */
   background: linear-gradient(to bottom, rgba(249, 177, 245, 1) 0%, rgba(247, 192, 243, 1) 20%, rgba(247, 202, 244, 1) 40%, rgba(249, 192, 246, 1) 70%, rgba(252, 174, 247, 1) 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7caf4', endColorstr='#fcaef7', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7caf4', endColorstr='#fcaef7', GradientType=0);
   /* IE6-9 */
 }
 
@@ -551,7 +552,7 @@ div.gtaskbarcontainer {
 .glistgrid {
   min-width: 132px;
   /* LC width */
-  float: left;  
+  float: left;
   /* LC width */
   padding-right: 0px;
   padding-left: 0px;
@@ -747,11 +748,13 @@ td.gspanning div {
 }
 
 @media print {
+
   /* All your print styles go here */
   html,
   .gchartgrid {
     overflow: unset !important;
   }
+
   .glistgrid {
     float: none !important;
   }
@@ -777,7 +780,7 @@ td.gspanning div {
 
 .gmain {
   height: 100%;
-  
+
   display: flex;
   flex-direction: column;
 }
@@ -828,36 +831,43 @@ td.gspanning div {
     border-top: 7px solid;
     border-color: #000000;
   }
+
   .gtaskblue {
     height: 0px;
     border-top: 13px solid;
     border-color: rgb(58, 132, 195);
   }
+
   .gtaskred {
     height: 0px;
     border-top: 13px solid;
     border-color: rgb(196, 58, 58);
   }
+
   .gtaskgreen {
     height: 0px;
     border-top: 13px solid;
     border-color: rgb(80, 193, 58);
   }
+
   .gtaskyellow {
     height: 0px;
     border-top: 13px solid;
     border-color: rgb(247, 228, 56);
   }
+
   .gtaskpurple {
     height: 0px;
     border-top: 13px solid;
     border-color: rgb(193, 58, 193);
   }
+
   .gtaskpink {
     height: 0px;
     border-top: 13px solid;
     border-color: rgb(249, 177, 245);
   }
+
   .gtaskbluecomplete,
   .gtaskredcomplete,
   .gtaskgreencomplete,
@@ -871,6 +881,7 @@ td.gspanning div {
     border-top: 5px solid;
     border-color: #000000;
   }
+
   .ggroupblackcomplete {
     height: 0px;
     filter: alpha(opacity=80);
@@ -879,16 +890,34 @@ td.gspanning div {
     border-top: 3px solid;
     border-color: #777777;
   }
+
   .gmainright,
   .gmainleft {
     overflow: hidden;
     width: auto;
   }
-  table { page-break-after:auto }
-  tr    { page-break-inside:avoid; page-break-after:auto }
-  td    { page-break-inside:avoid; page-break-after:auto }
-  thead { display:table-header-group }
-  tfoot { display:table-footer-group }
+
+  table {
+    page-break-after: auto
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto
+  }
+
+  td {
+    page-break-inside: avoid;
+    page-break-after: auto
+  }
+
+  thead {
+    display: table-header-group
+  }
+
+  tfoot {
+    display: table-footer-group
+  }
 }
 
 /* Fix for OSx trackpad hiding the scroll bars*/
@@ -906,11 +935,12 @@ td.gspanning div {
 
 .frame::-webkit-scrollbar-thumb {
   border-radius: 8px;
-  border: 2px solid white; /* should match background, can't be transparent */
+  border: 2px solid white;
+  /* should match background, can't be transparent */
   background-color: rgba(0, 0, 0, .5);
 }
 
-.frame::-webkit-scrollbar-track { 
-  background-color: #fff; 
-  border-radius: 8px; 
+.frame::-webkit-scrollbar-track {
+  background-color: #fff;
+  border-radius: 8px;
 }

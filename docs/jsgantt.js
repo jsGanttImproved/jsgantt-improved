@@ -653,7 +653,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 if (this.vFormat == 'day') {
                     var colspan = 7;
                     if (!this.vShowWeekends) {
-                        vHeaderCellClass += ' tinytext';
+                        vHeaderCellClass += ' headweekends';
                         colspan = 5;
                     }
                     vTmpCell = this.newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, colspan);
@@ -904,15 +904,18 @@ exports.GanttChart = function (pDiv, pFormat) {
                             vTmpCell = this.newNode(vTmpRow, 'td', null, 'gtaskcell');
                             vTmpDivCell = vTmpDiv = this.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                         }
-                        // draw the lines for dependecies
+                        // DRAW TASK BAR
                         vTmpDiv = this.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
                         this.vTaskList[i].setBarDiv(vTmpDiv);
-                        vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
-                        this.vTaskList[i].setTaskDiv(vTmpDiv2);
+                        if (this.vTaskList[i].getStartVar()) {
+                            vTmpDiv2 = this.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
+                            this.vTaskList[i].setTaskDiv(vTmpDiv2);
+                        }
                         // PLANNED
-                        if (vTaskPlanLeftPx && vTaskPlanLeftPx != vTaskLeftPx) { // vTaskPlanRightPx vTaskPlanLeftPx
+                        // If they are different, show plan bar... show if there is no real vStart as well (just plan dates)
+                        if (vTaskPlanLeftPx && (vTaskPlanLeftPx != vTaskLeftPx || !this.vTaskList[i].getStartVar())) {
                             var vTmpPlanDiv = this.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
-                            var vTmpDiv3 = this.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+                            this.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
                         }
                         // and opaque completion div
                         this.newNode(vTmpDiv2, 'div', this.vDivId + 'complete_' + vID, this.vTaskList[i].getClass() + 'complete', null, this.vTaskList[i].getCompStr());
@@ -968,7 +971,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 vTmpTBody.appendChild(vDateRow.cloneNode(true));
             }
             else if (this.vFormat == 'day') {
-                vTmpTBody.appendChild(vTmpRow.cloneNode(true));
+                vTmpTBody.appendChild(document.createElement('tr'));
             }
             // MAIN VIEW: Appending all generated components to main view
             while (this.vDiv.hasChildNodes())
@@ -2975,6 +2978,9 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         else
             return new Date();
     };
+    this.getStartVar = function () {
+        return vStart;
+    };
     this.getEnd = function () {
         if (vEnd)
             return vEnd;
@@ -3844,8 +3850,8 @@ exports.getScrollbarWidth = function () {
 exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
     var DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
     var WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
-    var MONTH_CELL_MARGIN_WIDTH = 1; // Cell margin for 'month' format
-    var QUARTER_CELL_MARGIN_WIDTH = 1; // Cell margin for 'quarter' format
+    var MONTH_CELL_MARGIN_WIDTH = 3; // Cell margin for 'month' format
+    var QUARTER_CELL_MARGIN_WIDTH = 3; // Cell margin for 'quarter' format
     var HOUR_CELL_MARGIN_WIDTH = 3; // Cell margin for 'hour' format
     var vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
     var curTaskStart = new Date(pStartDate.getTime());
