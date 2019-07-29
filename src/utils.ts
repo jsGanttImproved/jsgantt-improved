@@ -460,6 +460,7 @@ export const hideToolTip = function (pGanttChartObj, pTool, pTimer) {
     pTool.style.opacity = 0;
     pTool.style.filter = 'alpha(opacity=0)';
     pTool.style.visibility = 'hidden';
+    pTool.vToolCont.setAttribute("showing", null);
   }
 };
 
@@ -486,6 +487,7 @@ export const fadeToolTip = function (pDirection, pTool, pMaxAlpha) {
       pTool.style.opacity = 0;
       pTool.style.filter = 'alpha(opacity=0)';
       pTool.style.visibility = 'hidden';
+      pTool.vToolCont.setAttribute("showing", null);
     }
   }
 };
