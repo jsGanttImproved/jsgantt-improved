@@ -696,7 +696,10 @@ exports.GanttChart = function (pDiv, pFormat) {
                     vScrollPx = parseInt(this.vScrollTo.substr(2));
                 }
                 else {
-                    if (this.vScrollTo instanceof Date) {
+                    if (this.vScrollTo === 'today') {
+                        vScrollDate = new Date();
+                    }
+                    else if (this.vScrollTo instanceof Date) {
                         vScrollDate = this.vScrollTo;
                     }
                     else {
