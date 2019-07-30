@@ -36,8 +36,9 @@ import {
 } from "./utils";
 import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } from './xml';
 import { folder, hide, show, taskLink, sortTasks, TaskItem, processRows } from "./task";
-import { GanttChart, updateFlyingObj } from "./draw";
+import { GanttChart } from "./draw";
 import { parseJSON, parseJSONString, addJSONTask } from "./json";
+import { updateFlyingObj } from "./draw_utils";
 
 export let JSGantt; if (!JSGantt) JSGantt = {};
 

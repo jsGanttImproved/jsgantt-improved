@@ -1,4 +1,5 @@
 import { parseDateFormatStr } from "./utils";
+import { COLUMN_ORDER } from "./draw_columns";
 
 export const includeGetSet = function () {
 
@@ -11,7 +12,7 @@ export const includeGetSet = function () {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const val = options[key];
-      if (key === 'vResources') {
+      if (key === 'vResources' || key === 'vColumnOrder') {
         // ev = `this.set${key.substr(1)}(val)`;
         this['set' + key.substr(1)](val);
       } else if (val instanceof Array) {
@@ -120,6 +121,8 @@ export const includeGetSet = function () {
   this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
   this.setResources = function (resources) { this.vResources = resources; };
   this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
+  this.setColumnOrder = function (order) { this.vColumnOrder = order; };
+  
   this.setEditable = function (editable) { this.vEditable = editable; }
   this.setDebug = function (debug) { this.vDebug = debug; }
   /**
@@ -190,4 +193,5 @@ export const includeGetSet = function () {
   this.getEventClickRow = function () { return this.vEventClickRow; };
   this.getResources = function () { return this.vResources; };
   this.getAdditionalHeaders = function () { return this.vAdditionalHeaders; };
+  this.getColumnOrder = function () { return this.vColumnOrder || COLUMN_ORDER; };
 }
