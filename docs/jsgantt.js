@@ -692,16 +692,21 @@ exports.GanttChart = function (pDiv, pFormat) {
             if (this.vScrollTo != '') {
                 var vScrollDate = new Date(vMinDate.getTime());
                 var vScrollPx = 0;
-                if (this.vScrollTo.substr(0, 2) == 'px') {
+                if (this.vScrollTo.substr && this.vScrollTo.substr(0, 2) == 'px') {
                     vScrollPx = parseInt(this.vScrollTo.substr(2));
                 }
                 else {
-                    vScrollDate = utils_1.parseDateStr(this.vScrollTo, this.getDateInputFormat());
+                    if (this.vScrollTo instanceof Date) {
+                        vScrollDate = this.vScrollTo;
+                    }
+                    else {
+                        vScrollDate = utils_1.parseDateStr(this.vScrollTo, this.getDateInputFormat());
+                    }
                     if (this.vFormat == 'hour')
                         vScrollDate.setMinutes(0, 0, 0);
                     else
                         vScrollDate.setHours(0, 0, 0, 0);
-                    vScrollPx = utils_1.getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends);
+                    vScrollPx = utils_1.getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends) - 30;
                 }
                 this.getChartBody().scrollLeft = vScrollPx;
             }

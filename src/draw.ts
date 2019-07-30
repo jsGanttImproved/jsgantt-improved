@@ -750,14 +750,21 @@ export const GanttChart = function (pDiv, pFormat) {
         let vScrollDate = new Date(vMinDate.getTime());
         let vScrollPx = 0;
 
-        if (this.vScrollTo.substr(0, 2) == 'px') {
+        if (this.vScrollTo.substr && this.vScrollTo.substr(0, 2) == 'px') {
           vScrollPx = parseInt(this.vScrollTo.substr(2));
         }
         else {
-          vScrollDate = parseDateStr(this.vScrollTo, this.getDateInputFormat());
+          if(this.vScrollTo === 'today'){
+            vScrollDate = new Date();
+          } else if (this.vScrollTo instanceof Date) {
+            vScrollDate = this.vScrollTo;
+          } else {
+            vScrollDate = parseDateStr(this.vScrollTo, this.getDateInputFormat());
+          }
+
           if (this.vFormat == 'hour') vScrollDate.setMinutes(0, 0, 0);
           else vScrollDate.setHours(0, 0, 0, 0);
-          vScrollPx = getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends);
+          vScrollPx = getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends) - 30;
         }
         this.getChartBody().scrollLeft = vScrollPx;
       }

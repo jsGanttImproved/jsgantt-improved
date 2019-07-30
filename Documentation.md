@@ -313,7 +313,7 @@ The following options enable functionality using a set of specific key values
 |_setFormatArr():_   |Controls which format options are shown in the format selector, accepts multiple parameters. Valid parameter values are "Hour", "Day", "Week", "Month", "Quarter". Defaults to all valid values.|
 |_setCaptionType():_ |Controls which task field to use as a caption on the Gantt Chart task bar, accepts a single parameter. Valid parameter values are "None", "Caption", "Resource", "Duration", "Complete". Defaults to "None"|
 |_setDateInputFormat():_|Defines the input format used for dates in task creation, accepts a single parameter. Valid parameter values are "yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy". Defaults to "yyyy-mm-dd"|
-|_setScrollTo():_    |Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() above. Also accepts the special value "today". Defaults to minimum display date|
+|_setScrollTo():_    |Sets the date the Gantt Chart will be scrolled to, specified in the date input format set by setDateInputFormat() or in a JS Date format. Also accepts the special value "today". Defaults to minimum display date|
 |_setUseSingleCell():_|Sets the threshold total number of cells at which the task list will use a single table cell for each row rather than one cell per period.  Useful to improve performance on large charts.  Numeric, a value of 0 disables this functionality (always use multiple cells), defaults to 25000|
 |_setLang():_        |Sets translation to use when drawing the chart.  Defaults to "en" as this is the only language provided in the base installation (see [Internationalisation](#user-content-internationalisation) below for details on how to add more translations.)|
 
@@ -475,6 +475,7 @@ g.setOptions({
   vShowEndWeekDate: 0,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
   vUseSingleCell: 10000, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
   vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+  vScrollTo: new Date(),
   vEvents: {
         taskname: console.log,
         res: console.log,

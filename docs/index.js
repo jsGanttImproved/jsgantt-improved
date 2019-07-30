@@ -24,6 +24,7 @@ function start(e) {
     } else {
       JSGantt.addJSONTask(g, jsonObj)
     }
+    const vScrollTo = 'today'; // or new Date() or a Date object with a specific date
 
 
     // SET LANG FROM INPUT
@@ -127,6 +128,7 @@ function start(e) {
       vDebug,
       vEditable,
       vColumnOrder,
+      vScrollTo,
       vUseSort,
       vFormat: 'week',
       vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
