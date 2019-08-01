@@ -115,9 +115,11 @@
   },
   {
     "pID": 124,
-    "pName": "Task Functions",
+    "pName": "Test Plan End",
     "pStart": "2019-07-09",
     "pEnd": "2019-07-29",
+    "pPlanStart": "2019-07-09",
+    "pPlanEnd": "2019-09-29",
     "pClass": "gtaskred",
     "pLink": "",
     "pMile": 0,
@@ -130,7 +132,7 @@
     "pCaption": "This is a caption",
     "pNotes": null,
     "pCost": 34,
-    "deadline": "2019-07-05"
+    "deadline": "2019-09-05"
   },
   {
     "pID": 2,
