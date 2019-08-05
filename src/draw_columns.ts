@@ -1,6 +1,7 @@
-import { formatDateStr } from "./utils";
+import { formatDateStr } from "./utils/date_utils";
+import { AddTaskItemObject } from "./task";
 import { addListenerInputCell, addListenerClickCell } from "./events";
-import { newNode, makeInput } from "./draw_utils";
+import { newNode, makeInput } from "./utils/draw_utils";
 
 
 export const COLUMN_ORDER = [
@@ -111,8 +112,8 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
     vTmpDiv = newNode(vTmpCell, 'div', null, null, button);
 
     const callback = (task, e) => {
-      vTaskList.push({
-
+      AddTaskItemObject({
+        vParent: task.getParent()  
       });
     }
     addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'addentries', Draw.bind(this));

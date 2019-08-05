@@ -1,6 +1,6 @@
 import { TaskItem } from "./task";
-import { formatDateStr, parseDateFormatStr } from "./utils";
-import { newNode } from "./draw_utils";
+import { formatDateStr, parseDateFormatStr } from "./utils/date_utils";
+import { newNode } from "./utils/draw_utils";
 
 export const parseXML = function (pFile, pGanttVar) {
   let xhttp;

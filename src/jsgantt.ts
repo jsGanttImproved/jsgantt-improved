@@ -28,17 +28,21 @@
 	Copyright (c) 2009, Shlomy Gantz BlueBrick Inc.
 */
 
-import { showToolTip, moveToolTip, addTooltipListeners, addThisRowListeners, addFormatListeners, addScrollListeners, addFolderListeners, addListener } from "./events";
 import {
-  getMinDate, getMaxDate, findObj, changeFormat, parseDateStr,
-  formatDateStr, parseDateFormatStr, stripIds, stripUnwanted, delayedHide, getOffset,
-  getScrollPositions, isIE, benchMark, getIsoWeek, getZoomFactor, hideToolTip, fadeToolTip, criticalPath
-} from "./utils";
+  showToolTip, addTooltipListeners, addThisRowListeners, addFormatListeners,
+  folder, hide, show,
+  addScrollListeners, addFolderListeners, addListener
+} from "./events";
+import {
+  findObj, changeFormat,
+  stripIds, stripUnwanted, delayedHide, getOffset,
+  getScrollPositions, isIE, benchMark, getZoomFactor, hideToolTip, fadeToolTip, criticalPath, updateFlyingObj, moveToolTip
+} from "./utils/general_utils";
 import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } from './xml';
-import { folder, hide, show, taskLink, sortTasks, TaskItem, processRows } from "./task";
+import { taskLink, sortTasks, TaskItem, processRows } from "./task";
 import { GanttChart } from "./draw";
 import { parseJSON, parseJSONString, addJSONTask } from "./json";
-import { updateFlyingObj } from "./draw_utils";
+import { getMinDate, getMaxDate, parseDateStr, formatDateStr, parseDateFormatStr, getIsoWeek } from "utils/date_utils";
 
 export let JSGantt; if (!JSGantt) JSGantt = {};
 

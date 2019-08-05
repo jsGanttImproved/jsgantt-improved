@@ -4,14 +4,16 @@ import {
   addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies, syncScroll, updateGridHeaderWidth
 } from "./events";
 import {
-  parseDateFormatStr, formatDateStr, getOffset, parseDateStr, getMaxDate, getMinDate, getScrollbarWidth, coerceDate
-} from './utils';
+ getOffset,  getScrollbarWidth
+} from './utils/general_utils';
 import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
-import { includeGetSet } from './options';
+
 import { getXMLProject, getXMLTask } from './xml';
 import { COLUMN_ORDER, draw_list_headings, draw_header, draw_bottom, draw_task_headings } from './draw_columns';
-import { newNode, makeInput, getArrayLocationByID, CalcTaskXY, sLine, drawSelector } from './draw_utils';
+import { newNode, makeInput, getArrayLocationByID, CalcTaskXY, sLine, drawSelector } from './utils/draw_utils';
 import { drawDependency, DrawDependencies } from './draw_dependencies';
+import { includeGetSet } from 'options';
+import { parseDateFormatStr, getMinDate, coerceDate, getMaxDate, formatDateStr, parseDateStr } from 'utils/date_utils';
 
 
 // function that loads the main gantt chart properties and functions
@@ -173,7 +175,7 @@ export const GanttChart = function (pDiv, pFormat) {
     let vTaskPlanLeftPx = 0;
     let vTaskPlanRightPx = 0;
 
-    let vNumCols = 0;
+    let vNumCols: number = 0;
     let vNumRows = 0;
     let vSingleCell = false;
     let vID = 0;

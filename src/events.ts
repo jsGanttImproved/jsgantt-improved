@@ -1,6 +1,100 @@
-import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth, isParentElementOrSelf } from "./utils";
-import { folder } from "./task";
-import { updateFlyingObj } from "./draw_utils";
+import {
+  delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth,
+  isParentElementOrSelf, updateFlyingObj
+} from "./utils/general_utils";
+
+// Function to open/close and hide/show children of specified task
+export const folder = function (pID, ganttObj) {
+  let vList = ganttObj.getList();
+
+  ganttObj.clearDependencies(); // clear these first so slow rendering doesn't look odd
+
+  for (let i = 0; i < vList.length; i++) {
+    if (vList[i].getID() == pID) {
+      if (vList[i].getOpen() == 1) {
+        vList[i].setOpen(0);
+        hide(pID, ganttObj);
+
+        if (isIE())
+          vList[i].getGroupSpan().innerText = '+';
+        else
+          vList[i].getGroupSpan().textContent = '+';
+      }
+      else {
+        vList[i].setOpen(1);
+        show(pID, 1, ganttObj);
+
+        if (isIE())
+          vList[i].getGroupSpan().innerText = '-';
+        else
+          vList[i].getGroupSpan().textContent = '-';
+      }
+    }
+  }
+  let bd;
+  if (this.vDebug) {
+    bd = new Date();
+    console.log('after drawDependency', bd);
+  }
+  ganttObj.DrawDependencies(this.vDebug);
+  if (this.vDebug) {
+    const ad = new Date();
+    console.log('after drawDependency', ad, (ad.getTime() - bd.getTime()));
+  }
+};
+
+export const hide = function (pID, ganttObj) {
+  let vList = ganttObj.getList();
+  let vID = 0;
+
+  for (let i = 0; i < vList.length; i++) {
+    if (vList[i].getParent() == pID) {
+      vID = vList[i].getID();
+      // it's unlikely but if the task list has been updated since
+      // the chart was drawn some of the rows may not exist
+      if (vList[i].getListChildRow()) vList[i].getListChildRow().style.display = 'none';
+      if (vList[i].getChildRow()) vList[i].getChildRow().style.display = 'none';
+      vList[i].setVisible(0);
+      if (vList[i].getGroup()) hide(vID, ganttObj);
+    }
+  }
+};
+
+// Function to show children of specified task
+export const show = function (pID, pTop, ganttObj) {
+  let vList = ganttObj.getList();
+  let vID = 0;
+  let vState = '';
+
+  for (let i = 0; i < vList.length; i++) {
+    if (vList[i].getParent() == pID) {
+      if (vList[i].getParItem().getGroupSpan()) {
+        if (isIE()) vState = vList[i].getParItem().getGroupSpan().innerText;
+        else vState = vList[i].getParItem().getGroupSpan().textContent;
+      }
+      i = vList.length;
+    }
+  }
+
+  for (let i = 0; i < vList.length; i++) {
+    if (vList[i].getParent() == pID) {
+      let vChgState = false;
+      vID = vList[i].getID();
+
+      if (pTop == 1 && vState == '+') vChgState = true;
+      else if (vState == '-') vChgState = true;
+      else if (vList[i].getParItem() && vList[i].getParItem().getGroup() == 2) vList[i].setVisible(1);
+
+      if (vChgState) {
+        if (vList[i].getListChildRow()) vList[i].getListChildRow().style.display = '';
+        if (vList[i].getChildRow()) vList[i].getChildRow().style.display = '';
+        vList[i].setVisible(1);
+      }
+      if (vList[i].getGroup()) show(vID, 0, ganttObj);
+    }
+  }
+};
+
 
 export const mouseOver = function (pObj1, pObj2) {
   if (this.getUseRowHlt()) {
@@ -81,29 +175,6 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
 };
 
 
-
-export const moveToolTip = function (pNewX, pNewY, pTool, timer) {
-  let vSpeed = parseInt(pTool.getAttribute('moveSpeed'));
-  let vOldX = parseInt(pTool.style.left);
-  let vOldY = parseInt(pTool.style.top);
-
-  if (pTool.style.visibility != 'visible') {
-    pTool.style.left = pNewX + 'px';
-    pTool.style.top = pNewY + 'px';
-    clearInterval(pTool.moveInterval);
-  }
-  else {
-    if (pNewX != vOldX && pNewY != vOldY) {
-      vOldX += Math.ceil((pNewX - vOldX) / vSpeed);
-      vOldY += Math.ceil((pNewY - vOldY) / vSpeed);
-      pTool.style.left = vOldX + 'px';
-      pTool.style.top = vOldY + 'px';
-    }
-    else {
-      clearInterval(pTool.moveInterval);
-    }
-  }
-};
 
 
 export const addListener = function (eventName, handler, control) {

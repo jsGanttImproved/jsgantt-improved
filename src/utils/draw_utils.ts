@@ -1,5 +1,4 @@
-import { getZoomFactor, getScrollPositions } from "./utils";
-import { moveToolTip, addFormatListeners } from "./events";
+import { addFormatListeners } from "../events";
 
 export const makeInput = function (formattedValue, editable, type = 'text', value = null, choices = null) {
   if (!value) {
@@ -57,76 +56,6 @@ export const newNode = function (pParent, pNodeType, pId = null, pClass = null, 
   return vNewNode;
 };
 
-
-export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
-  let vCurTopBuf = 3;
-  let vCurLeftBuf = 5;
-  let vCurBotBuf = 3;
-  let vCurRightBuf = 15;
-  let vMouseX = (e) ? e.clientX : (<MouseEvent>window.event).clientX;
-  let vMouseY = (e) ? e.clientY : (<MouseEvent>window.event).clientY;
-  let vViewportX = document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-  let vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
-  let vNewX = vMouseX;
-  let vNewY = vMouseY;
-
-  if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
-    // the clientX and clientY properties include the left and top borders of the client area
-    vMouseX -= document.documentElement.clientLeft;
-    vMouseY -= document.documentElement.clientTop;
-
-    let vZoomFactor = getZoomFactor();
-    if (vZoomFactor != 1) {// IE 7 at non-default zoom level
-      vMouseX = Math.round(vMouseX / vZoomFactor);
-      vMouseY = Math.round(vMouseY / vZoomFactor);
-    }
-  }
-
-  let vScrollPos = getScrollPositions();
-
-  /* Code for positioned right of the mouse by default*/
-	/*
-	if (vMouseX+vCurRightBuf+pGanttChartObj.vTool.offsetWidth>vViewportX)
-	{
-		if (vMouseX-vCurLeftBuf-pGanttChartObj.vTool.offsetWidth<0) vNewX=vScrollPos.x;
-		else vNewX=vMouseX+vScrollPos.x-vCurLeftBuf-pGanttChartObj.vTool.offsetWidth;
-	}
-	else vNewX=vMouseX+vScrollPos.x+vCurRightBuf;
-	*/
-
-  /* Code for positioned left of the mouse by default */
-  if (vMouseX - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth < 0) {
-    if (vMouseX + vCurRightBuf + pGanttChartObj.vTool.offsetWidth > vViewportX) vNewX = vScrollPos.x;
-    else vNewX = vMouseX + vScrollPos.x + vCurRightBuf;
-  }
-  else vNewX = vMouseX + vScrollPos.x - vCurLeftBuf - pGanttChartObj.vTool.offsetWidth;
-
-  /* Code for positioned below the mouse by default */
-  if (vMouseY + vCurBotBuf + pGanttChartObj.vTool.offsetHeight > vViewportY) {
-    if (vMouseY - vCurTopBuf - pGanttChartObj.vTool.offsetHeight < 0) vNewY = vScrollPos.y;
-    else vNewY = vMouseY + vScrollPos.y - vCurTopBuf - pGanttChartObj.vTool.offsetHeight;
-  }
-  else vNewY = vMouseY + vScrollPos.y + vCurBotBuf;
-
-  /* Code for positioned above the mouse by default */
-	/*
-	if (vMouseY-vCurTopBuf-pGanttChartObj.vTool.offsetHeight<0)
-	{
-		if (vMouseY+vCurBotBuf+pGanttChartObj.vTool.offsetHeight>vViewportY) vNewY=vScrollPos.y;
-		else vNewY=vMouseY+vScrollPos.y+vCurBotBuf;
-	}
-	else vNewY=vMouseY+vScrollPos.y-vCurTopBuf-pGanttChartObj.vTool.offsetHeight;
-	*/
-
-  if (pGanttChartObj.getUseMove()) {
-    clearInterval(pGanttChartObj.vTool.moveInterval);
-    pGanttChartObj.vTool.moveInterval = setInterval(function () { moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer); }, pTimer);
-  }
-  else {
-    pGanttChartObj.vTool.style.left = vNewX + 'px';
-    pGanttChartObj.vTool.style.top = vNewY + 'px';
-  }
-};
 
 
 export const getArrayLocationByID = function (pId) {
