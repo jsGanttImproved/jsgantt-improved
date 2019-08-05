@@ -945,11 +945,6 @@ td.gspanning div {
   border-radius: 8px; 
 }
 
-.frame::-webkit-scrollbar-track {
-  background-color: #fff;
-  border-radius: 8px;
-}
-
 .gscrollbar-calculation-container {
   visibility: hidden;
   overflow: scroll;
