@@ -914,3 +914,10 @@ td.gspanning div {
   background-color: #fff; 
   border-radius: 8px; 
 }
+
+.gscrollbar-calculation-container {
+  visibility: hidden;
+  overflow: scroll;
+  -ms-overflow-style: scrollbar;
+  display: block;
+}

@@ -539,3 +539,11 @@ You can change the CSS and choose the size:
 ```
 
 Reference: https://github.com/jsGanttImproved/jsgantt-improved/issues/157
+
+* Table headers are missing when vTotalHeight is set
+
+There's a piece of code to calculate scrollbar size, which creates a temporary div in body.
+
+Some styles may mess with this div and cause incorrect calculation.
+
+This temp div has class `gscrollbar-calculation-container`, so if you have top level styles you can't controll - you may add styles to this class to fix scrollbar calculation.
