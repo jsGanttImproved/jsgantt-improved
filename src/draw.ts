@@ -12,8 +12,8 @@ import { getXMLProject, getXMLTask } from './xml';
 import { COLUMN_ORDER, draw_list_headings, draw_header, draw_bottom, draw_task_headings } from './draw_columns';
 import { newNode, makeInput, getArrayLocationByID, CalcTaskXY, sLine, drawSelector } from './utils/draw_utils';
 import { drawDependency, DrawDependencies } from './draw_dependencies';
-import { includeGetSet } from 'options';
-import { parseDateFormatStr, getMinDate, coerceDate, getMaxDate, formatDateStr, parseDateStr } from 'utils/date_utils';
+import { includeGetSet } from './options';
+import { parseDateFormatStr, getMinDate, coerceDate, getMaxDate, formatDateStr, parseDateStr } from './utils/date_utils';
 
 
 // function that loads the main gantt chart properties and functions

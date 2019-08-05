@@ -42,7 +42,7 @@ import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } fr
 import { taskLink, sortTasks, TaskItem, processRows } from "./task";
 import { GanttChart } from "./draw";
 import { parseJSON, parseJSONString, addJSONTask } from "./json";
-import { getMinDate, getMaxDate, parseDateStr, formatDateStr, parseDateFormatStr, getIsoWeek } from "utils/date_utils";
+import { getMinDate, getMaxDate, parseDateStr, formatDateStr, parseDateFormatStr, getIsoWeek } from "./utils/date_utils";
 
 export let JSGantt; if (!JSGantt) JSGantt = {};
 

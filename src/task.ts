@@ -1,6 +1,6 @@
 import { isIE, stripUnwanted, internalPropertiesLang, hashKey, internalProperties } from "./utils/general_utils";
 import { newNode } from "./utils/draw_utils";
-import { parseDateStr, formatDateStr } from "utils/date_utils";
+import { parseDateStr, formatDateStr } from "./utils/date_utils";
 declare let g: any;
 
 // function to open window to display task link
