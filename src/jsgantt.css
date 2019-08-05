@@ -940,7 +940,14 @@ td.gspanning div {
   background-color: rgba(0, 0, 0, .5);
 }
 
-.frame::-webkit-scrollbar-track {
-  background-color: #fff;
-  border-radius: 8px;
+.frame::-webkit-scrollbar-track { 
+  background-color: #fff; 
+  border-radius: 8px; 
+}
+
+.gscrollbar-calculation-container {
+  visibility: hidden;
+  overflow: scroll;
+  -ms-overflow-style: scrollbar;
+  display: block;
 }
