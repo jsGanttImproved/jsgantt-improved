@@ -98,10 +98,8 @@
   {
     "pID": 123,
     "pName": "Task by Minute/Hour",
-    "pStart": "",
-    "pEnd": "",
-    "pPlanStart": "2019-07-01",
-    "pPlanEnd": "2019-07-15 12:00",
+    "pStart": "2019-07-01",
+    "pEnd": "2019-07-15 12:00",
     "pClass": "gtaskyellow",
     "pLink": "",
     "pMile": 0,
@@ -117,9 +115,11 @@
   },
   {
     "pID": 124,
-    "pName": "Task Functions",
+    "pName": "Test Plan End",
     "pStart": "2019-07-09",
     "pEnd": "2019-07-29",
+    "pPlanStart": "2019-07-09",
+    "pPlanEnd": "2019-09-29",
     "pClass": "gtaskred",
     "pLink": "",
     "pMile": 0,
@@ -132,7 +132,7 @@
     "pCaption": "This is a caption",
     "pNotes": null,
     "pCost": 34,
-    "deadline": "2019-07-05"
+    "deadline": "2019-09-05"
   },
   {
     "pID": 2,
@@ -342,20 +342,19 @@
   },
   {
     "pID": 35,
-    "pName": "Make Updates",
-    "pStart": "2019-07-17",
-    "pEnd": "2019-01-15",
+    "pName": "Just plan dates",
+    "pPlanStart": "2019-07-17",
+    "pPlanEnd": "2019-09-15",
     "pClass": "gtaskpurple",
     "pLink": "",
     "pMile": 0,
     "pRes": "Mario",
-    "pComp": 30,
+    "pComp": 0,
     "pGroup": 0,
     "pParent": 3,
     "pOpen": 1,
     "pDepend": "333",
     "pCaption": "",
-    "pNotes": "",
-    "deadline": "2019-02-01"
+    "pNotes": ""
   }
 ]

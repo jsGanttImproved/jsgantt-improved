@@ -1,6 +1,6 @@
 import { delayedHide, changeFormat, stripIds, isIE, findObj, fadeToolTip, getScrollbarWidth, isParentElementOrSelf } from "./utils";
 import { folder } from "./task";
-import { updateFlyingObj } from "./draw";
+import { updateFlyingObj } from "./draw_utils";
 
 export const mouseOver = function (pObj1, pObj2) {
   if (this.getUseRowHlt()) {

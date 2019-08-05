@@ -188,6 +188,7 @@
     (CSS style height like "300px". Empty for auto height)
 
 
+    <br /><br />
   <span>
     <label>Custom elements (black lines for deadlines):</label>
     <input type="checkbox" id="customElements" checked  onchange="start(event)" />
@@ -210,6 +211,17 @@
   </span>
 
 
+  <br /><br />
+  <span>
+    <label>Custom columns order:</label>
+    <input type="text" id="vColumnOrder" 
+    
+    onchange="start(event)" />
+    <!-- value="vShowDur,vShowComp,vShowRes,vShowStartDate,vShowEndDate,vShowPlanStartDate,vShowPlanEndDate,vShowCost,vAdditionalHeaders,vShowAddEntries"  -->
+  </span>
+
+  
+
   <br />
 
   <span>
@@ -217,7 +229,11 @@
   </span>
   
   <br />
-  * Click events in table are binded to console.log for testing
+
+  <small>
+    * Click events in table are binded to console.log for testing
+  </small>
+  
 
   <br /><br />
   <div id="embedded-Gantt">

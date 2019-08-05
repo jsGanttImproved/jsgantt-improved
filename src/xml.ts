@@ -1,5 +1,6 @@
 import { TaskItem } from "./task";
 import { formatDateStr, parseDateFormatStr } from "./utils";
+import { newNode } from "./draw_utils";
 
 export const parseXML = function (pFile, pGanttVar) {
   let xhttp;
@@ -309,7 +310,7 @@ export const getXMLTask = function (pID, pIdx) {
     vTask += '<pCaption>' + this.vTaskList[vIdx].getCaption() + '</pCaption>';
 
     let vTmpFrag = document.createDocumentFragment();
-    let vTmpDiv = this.newNode(vTmpFrag, 'div', null, null, this.vTaskList[vIdx].getNotes().innerHTML);
+    let vTmpDiv = newNode(vTmpFrag, 'div', null, null, this.vTaskList[vIdx].getNotes().innerHTML);
     vTask += '<pNotes>' + vTmpDiv.innerHTML + '</pNotes>';
     vTask += '</task>';
   }

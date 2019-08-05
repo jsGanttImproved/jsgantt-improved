@@ -13,7 +13,10 @@ function start(e) {
     const vEditable = document.querySelector('#editable:checked') ? true : false;
     const vUseSort = document.querySelector('#sort:checked') ? true : false;
     const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
-
+    let vColumnOrder;
+    if(document.querySelector('#vColumnOrder').value){
+      vColumnOrder = document.querySelector('#vColumnOrder').value.split(',')
+    }
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
     if (dataurl !== newDataurl) {
       dataurl = newDataurl;
@@ -21,6 +24,7 @@ function start(e) {
     } else {
       JSGantt.addJSONTask(g, jsonObj)
     }
+    const vScrollTo = 'today'; // or new Date() or a Date object with a specific date
 
 
     // SET LANG FROM INPUT
@@ -123,6 +127,8 @@ function start(e) {
           newtooltiptemplate,
       vDebug,
       vEditable,
+      vColumnOrder,
+      vScrollTo,
       vUseSort,
       vFormat: 'week',
       vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
