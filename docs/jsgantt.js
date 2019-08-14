@@ -607,7 +607,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                         // If they are different, show plan bar... show if there is no real vStart as well (just plan dates)
                         if (vTaskPlanLeftPx && (vTaskPlanLeftPx != vTaskLeftPx || !this.vTaskList[i].getStartVar())) {
                             var vTmpPlanDiv = draw_utils_1.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
-                            draw_utils_1.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+                            var vTmpPlanDiv2 = draw_utils_1.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+                            this.vTaskList[i].setPlanTaskDiv(vTmpPlanDiv2);
                         }
                         // and opaque completion div
                         draw_utils_1.newNode(vTmpDiv2, 'div', this.vDivId + 'complete_' + vID, this.vTaskList[i].getClass() + 'complete', null, this.vTaskList[i].getCompStr());
@@ -653,6 +654,13 @@ exports.GanttChart = function (pDiv, pFormat) {
                     var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _a.component, callback = _a.callback;
                     vTmpDiv2.appendChild(component);
                     events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
+                }
+                // Add Plan Task Info div for tooltip
+                if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv) {
+                    vTmpDiv2 = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
+                    var _b = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _b.component, callback = _b.callback;
+                    vTmpDiv2.appendChild(component);
+                    events_1.addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
                 }
             }
             if (this.vDebug) {
@@ -2750,6 +2758,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vCellDiv = null;
     var vBarDiv = null;
     var vTaskDiv = null;
+    var vPlanTaskDiv = null;
     var vListChildRow = null;
     var vChildRow = null;
     var vGroupSpan = null;
@@ -2963,6 +2972,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getCellDiv = function () { return vCellDiv; };
     this.getBarDiv = function () { return vBarDiv; };
     this.getTaskDiv = function () { return vTaskDiv; };
+    this.getPlanTaskDiv = function () { return vPlanTaskDiv; };
     this.getChildRow = function () { return vChildRow; };
     this.getListChildRow = function () { return vListChildRow; };
     this.getGroupSpan = function () { return vGroupSpan; };
@@ -3048,6 +3058,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         vBarDiv = pDiv; };
     this.setTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)
         vTaskDiv = pDiv; };
+    this.setPlanTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)
+        vPlanTaskDiv = pDiv; };
     this.setChildRow = function (pRow) { if (typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement)
         vChildRow = pRow; };
     this.setListChildRow = function (pRow) { if (typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement)

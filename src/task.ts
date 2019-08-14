@@ -121,6 +121,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vCellDiv = null;
   let vBarDiv = null;
   let vTaskDiv = null;
+  let vPlanTaskDiv = null;
   let vListChildRow = null;
   let vChildRow = null;
   let vGroupSpan = null;
@@ -286,6 +287,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getCellDiv = function () { return vCellDiv; };
   this.getBarDiv = function () { return vBarDiv; };
   this.getTaskDiv = function () { return vTaskDiv; };
+  this.getPlanTaskDiv = function () { return vPlanTaskDiv; };
   this.getChildRow = function () { return vChildRow; };
   this.getListChildRow = function () { return vListChildRow; };
   this.getGroupSpan = function () { return vGroupSpan; };
@@ -354,6 +356,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   };
   this.setBarDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vBarDiv = pDiv; };
   this.setTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vTaskDiv = pDiv; };
+  this.setPlanTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vPlanTaskDiv = pDiv; };
   this.setChildRow = function (pRow) { if (typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement) vChildRow = pRow; };
   this.setListChildRow = function (pRow) { if (typeof HTMLTableRowElement !== 'function' || pRow instanceof HTMLTableRowElement) vListChildRow = pRow; };
   this.setGroupSpan = function (pSpan) { if (typeof HTMLSpanElement !== 'function' || pSpan instanceof HTMLSpanElement) vGroupSpan = pSpan; };
