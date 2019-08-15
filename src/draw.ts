@@ -4,7 +4,7 @@ import {
   addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies, syncScroll, updateGridHeaderWidth
 } from "./events";
 import {
- getOffset,  getScrollbarWidth
+  getOffset, getScrollbarWidth
 } from './utils/general_utils';
 import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
 
@@ -651,9 +651,14 @@ export const GanttChart = function (pDiv, pFormat) {
             // DRAW TASK BAR
             vTmpDiv = newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
             this.vTaskList[i].setBarDiv(vTmpDiv);
-
             if (this.vTaskList[i].getStartVar()) {
+
+              // textbar
               vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
+              if (this.vTaskList[i].getBarText()) {
+                console.log(vTaskWidth)
+                const textBar = newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
+              }
               this.vTaskList[i].setTaskDiv(vTmpDiv2);
             }
 
@@ -764,7 +769,7 @@ export const GanttChart = function (pDiv, pFormat) {
           vScrollPx = parseInt(this.vScrollTo.substr(2));
         }
         else {
-          if(this.vScrollTo === 'today'){
+          if (this.vScrollTo === 'today') {
             vScrollDate = new Date();
           } else if (this.vScrollTo instanceof Date) {
             vScrollDate = this.vScrollTo;

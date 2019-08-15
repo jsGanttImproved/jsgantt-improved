@@ -471,6 +471,15 @@ div.gtaskbarcontainer {
   top: 0px
 }
 
+.textbar{
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 40%;
+  display: inline-block;
+}
+
 .JSGanttToolTip {
   position: absolute;
   display: block;

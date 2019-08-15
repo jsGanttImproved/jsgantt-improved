@@ -600,7 +600,12 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpDiv = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
                         this.vTaskList[i].setBarDiv(vTmpDiv);
                         if (this.vTaskList[i].getStartVar()) {
+                            // textbar
                             vTmpDiv2 = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
+                            if (this.vTaskList[i].getBarText()) {
+                                console.log(vTaskWidth);
+                                var textBar = draw_utils_1.newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
+                            }
                             this.vTaskList[i].setTaskDiv(vTmpDiv2);
                         }
                         // PLANNED
@@ -1547,6 +1552,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
         var notes = '';
         var cost = void 0;
         var duration = '';
+        var bartext = '';
         var additionalObject = {};
         for (var prop in pJsonObj[index]) {
             var property = prop;
@@ -1628,12 +1634,16 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                 case 'pduration':
                     duration = value;
                     break;
+                case 'bartext':
+                case 'pbartext':
+                    bartext = value;
+                    break;
                 default:
                     additionalObject[property.toLowerCase()] = value;
             }
         }
         //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-        pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, duration, additionalObject));
+        pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, duration, bartext, additionalObject));
         //}
     }
 };
@@ -2709,13 +2719,14 @@ exports.TaskItemObject = function (object) {
     general_utils_1.internalProperties.forEach(function (property) {
         delete pDataObject[property];
     });
-    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd, object.pDuration, object);
+    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd, object.pDuration, object.pBarText, object);
 };
-exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDuration, pDataObject) {
+exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDuration, pBarText, pDataObject) {
     if (pCost === void 0) { pCost = null; }
     if (pPlanStart === void 0) { pPlanStart = null; }
     if (pPlanEnd === void 0) { pPlanEnd = null; }
     if (pDuration === void 0) { pDuration = null; }
+    if (pBarText === void 0) { pBarText = null; }
     if (pDataObject === void 0) { pDataObject = null; }
     var vGantt = pGantt ? pGantt : this;
     var _id = document.createTextNode(pID).data;
@@ -2746,6 +2757,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vDependType = new Array();
     var vCaption = document.createTextNode(pCaption).data;
     var vDuration = pDuration || '';
+    var vBarText = pBarText || '';
     var vLevel = 0;
     var vNumKid = 0;
     var vWeight = 0;
@@ -2899,6 +2911,12 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         return vCompVal + '%';
     else
         return ''; };
+    this.getCompRestStr = function () { if (vComp)
+        return (100 - vComp) + '%';
+    else if (vCompVal)
+        return (100 - vCompVal) + '%';
+    else
+        return ''; };
     this.getNotes = function () { return vNotes; };
     this.getSortIdx = function () { return vSortIdx; };
     this.getToDelete = function () { return vToDelete; };
@@ -2957,6 +2975,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         }
         return vDuration;
     };
+    this.getBarText = function () { return vBarText; };
     this.getParent = function () { return vParent; };
     this.getGroup = function () { return vGroup; };
     this.getOpen = function () { return vOpen; };
@@ -3054,6 +3073,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
             vGroup = parseInt(document.createTextNode(pGroup).data);
         }
     };
+    this.setBarText = function (pBarText) { if (pBarText)
+        vBarText = pBarText; };
     this.setBarDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)
         vBarDiv = pDiv; };
     this.setTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement)

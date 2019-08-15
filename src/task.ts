@@ -71,12 +71,13 @@ export const TaskItemObject = function (object) {
     object.pPlanStart,
     object.pPlanEnd,
     object.pDuration,
+    object.pBarText,
     object
   );
 }
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
-  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pDataObject = null) {
+  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null) {
   let vGantt = pGantt ? pGantt : this;
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
@@ -109,6 +110,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vDependType = new Array();
   let vCaption = document.createTextNode(pCaption).data;
   let vDuration = pDuration || '';
+  let vBarText = pBarText || '';
   let vLevel = 0;
   let vNumKid = 0;
   let vWeight = 0;
@@ -236,6 +238,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getResource = function () { if (vRes) return vRes; else return '\u00A0'; };
   this.getCompVal = function () { if (vComp) return vComp; else if (vCompVal) return vCompVal; else return 0; };
   this.getCompStr = function () { if (vComp) return vComp + '%'; else if (vCompVal) return vCompVal + '%'; else return ''; };
+  this.getCompRestStr = function () { if (vComp) return (100 - vComp) + '%'; else if (vCompVal) return (100 - vCompVal) + '%'; else return ''; };
   this.getNotes = function () { return vNotes; };
   this.getSortIdx = function () { return vSortIdx; };
   this.getToDelete = function () { return vToDelete; };
@@ -272,6 +275,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     return vDuration;
   };
 
+  this.getBarText = function () { return vBarText; };
   this.getParent = function () { return vParent; };
   this.getGroup = function () { return vGroup; };
   this.getOpen = function () { return vOpen; };
@@ -354,6 +358,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       vGroup = parseInt(document.createTextNode(pGroup).data);
     }
   };
+  this.setBarText = function (pBarText) { if (pBarText) vBarText = pBarText; };
+
   this.setBarDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vBarDiv = pDiv; };
   this.setTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vTaskDiv = pDiv; };
   this.setPlanTaskDiv = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) vPlanTaskDiv = pDiv; };

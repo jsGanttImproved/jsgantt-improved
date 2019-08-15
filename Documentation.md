@@ -60,6 +60,7 @@ g.AddTaskItemObject({
   pCaption: "",
   pCost: 1000,
   pNotes: "Some Notes text",
+  pBarText: "ex. bar text",
   category: "My Category",
   sector: "Finance"
 });
@@ -70,7 +71,7 @@ g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',       
 
 
 Method definition:
-**TaskItem(_pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt_)**
+**TaskItem(_pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt_, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null)**
 
 | Parameter | Description |
 |:--------|:------------------------------------------------|
@@ -92,7 +93,8 @@ Method definition:
 |_pCaption:_|(optional) caption that will be added after task bar if CaptionType set to "Caption"|
 |_pNotes:_|(optional) Detailed task information that will be displayed in tool tip for this task|
 |_pGantt:_|(required) javascript JSGantt.GanttChart object from which to take settings.  Defaults to "g" for backwards compatibility|
-|_pCost:_| cost of that task, numeric        
+|_pCost:_| cost of that task, numeric  
+|_pBarText:_|(optional) Use to include text inside a task bar|      
 
 <sup>*</sup> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.
 
@@ -125,6 +127,7 @@ The structure of the JSON file:
   "pCaption": "",
   "pCost":  "",
   "pNotes": "Some Notes text",
+  "pBarText": "ex. bar text",
   "category": "My Category",
   "sector": "Finance"
 }
@@ -515,6 +518,7 @@ g.AddTaskItemObject({
   pCaption: "",
   pCost: 1000,
   pNotes: "Some Notes text",
+  pBarText: "ex. bar text",
   category: "My Category",
   sector: "Finance"
 });
