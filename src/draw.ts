@@ -4,7 +4,7 @@ import {
   addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies, syncScroll, updateGridHeaderWidth
 } from "./events";
 import {
- getOffset,  getScrollbarWidth
+  getOffset, getScrollbarWidth
 } from './utils/general_utils';
 import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
 
@@ -651,9 +651,14 @@ export const GanttChart = function (pDiv, pFormat) {
             // DRAW TASK BAR
             vTmpDiv = newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
             this.vTaskList[i].setBarDiv(vTmpDiv);
-
             if (this.vTaskList[i].getStartVar()) {
+
+              // textbar
               vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
+              if (this.vTaskList[i].getBarText()) {
+                console.log(vTaskWidth)
+                const textBar = newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
+              }
               this.vTaskList[i].setTaskDiv(vTmpDiv2);
             }
 
@@ -662,7 +667,8 @@ export const GanttChart = function (pDiv, pFormat) {
             // If they are different, show plan bar... show if there is no real vStart as well (just plan dates)
             if (vTaskPlanLeftPx && (vTaskPlanLeftPx != vTaskLeftPx || !this.vTaskList[i].getStartVar())) {
               const vTmpPlanDiv = newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
-              newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+              const vTmpPlanDiv2 = newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+              this.vTaskList[i].setPlanTaskDiv(vTmpPlanDiv2);
             }
 
             // and opaque completion div
@@ -701,6 +707,13 @@ export const GanttChart = function (pDiv, pFormat) {
           const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
           vTmpDiv2.appendChild(component);
           addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
+        }
+        // Add Plan Task Info div for tooltip
+        if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv) {
+          vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
+          const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
+          vTmpDiv2.appendChild(component);
+          addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
         }
       }
       if (this.vDebug) {
@@ -756,7 +769,7 @@ export const GanttChart = function (pDiv, pFormat) {
           vScrollPx = parseInt(this.vScrollTo.substr(2));
         }
         else {
-          if(this.vScrollTo === 'today'){
+          if (this.vScrollTo === 'today') {
             vScrollDate = new Date();
           } else if (this.vScrollTo instanceof Date) {
             vScrollDate = this.vScrollTo;

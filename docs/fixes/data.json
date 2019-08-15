@@ -274,7 +274,7 @@
   },
   {
     "pID": 341,
-    "pName": "Loop each Task",
+    "pName": "Test Bar Task",
     "pStart": "2019-03-26",
     "pEnd": "2019-04-11",
     "pClass": "gtaskred",
@@ -287,7 +287,8 @@
     "pOpen": 1,
     "pDepend": "",
     "pCaption": "",
-    "pNotes": ""
+    "pNotes": "",
+    "pBarText": "this is a bar text"
   },
   {
     "pID": "A342",
