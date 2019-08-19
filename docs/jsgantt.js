@@ -603,8 +603,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                             // textbar
                             vTmpDiv2 = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
                             if (this.vTaskList[i].getBarText()) {
-                                console.log(vTaskWidth);
-                                var textBar = draw_utils_1.newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
+                                draw_utils_1.newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
                             }
                             this.vTaskList[i].setTaskDiv(vTmpDiv2);
                         }
@@ -4294,7 +4293,6 @@ exports.criticalPath = function (tasks) {
                 childrens: []
             };
         }
-        // console.log(path);
         if (!path[task.pID].childrens) {
             path[task.pID].childrens = [];
         }
