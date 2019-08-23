@@ -603,8 +603,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                             // textbar
                             vTmpDiv2 = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
                             if (this.vTaskList[i].getBarText()) {
-                                console.log(vTaskWidth);
-                                var textBar = draw_utils_1.newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
+                                draw_utils_1.newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
                             }
                             this.vTaskList[i].setTaskDiv(vTmpDiv2);
                         }
@@ -2446,6 +2445,80 @@ var tr = {
     'sat': 'Cmt'
 };
 exports.tr = tr;
+var ja = {
+    'format': 'タイムライン表示',
+    'hour': '時',
+    'day': '日',
+    'week': '週',
+    'month': '月',
+    'quarter': '四半期',
+    'hours': '時間',
+    'days': '日間',
+    'weeks': '週間',
+    'months': '月間',
+    'quarters': '四半期',
+    'hr': '時',
+    'dy': '日',
+    'wk': '週',
+    'mth': '月',
+    'qtr': '四',
+    'hrs': '時間',
+    'dys': '日間',
+    'wks': '週間',
+    'mths': '月間',
+    'qtrs': '四半期',
+    'resource': 'リソース',
+    'duration': '期間',
+    'comp': '進捗率',
+    'completion': '進捗率',
+    'startdate': '開始日',
+    'planstartdate': '予定開始日',
+    'enddate': '期日',
+    'planenddate': '予定期日',
+    'cost': 'コスト',
+    'moreinfo': '詳細',
+    'notes': 'ノート',
+    'january': '1月',
+    'february': '2月',
+    'march': '3月',
+    'april': '4月',
+    'maylong': '5月',
+    'june': '6月',
+    'july': '7月',
+    'august': '8月',
+    'september': '9月',
+    'october': '10月',
+    'november': '11月',
+    'december': '12月',
+    'jan': '1月',
+    'feb': '2月',
+    'mar': '3月',
+    'apr': '4月',
+    'may': '5月',
+    'jun': '6月',
+    'jul': '7月',
+    'aug': '8月',
+    'sep': '9月',
+    'oct': '10月',
+    'nov': '11月',
+    'dec': '12月',
+    'sunday': '日曜日',
+    'monday': '月曜日',
+    'tuesday': '火曜日',
+    'wednesday': '水曜日',
+    'thursday': '木曜日',
+    'friday': '金曜日',
+    'saturday': '土曜日',
+    'sun': '日',
+    'mon': '月',
+    'tue': '火',
+    'wed': '水',
+    'thu': '木',
+    'fri': '金',
+    'sat': '土',
+    'tooltipLoading': 'ローディング中...'
+};
+exports.ja = ja;
 
 },{}],9:[function(require,module,exports){
 "use strict";
@@ -4294,7 +4367,6 @@ exports.criticalPath = function (tasks) {
                 childrens: []
             };
         }
-        // console.log(path);
         if (!path[task.pID].childrens) {
             path[task.pID].childrens = [];
         }

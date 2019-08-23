@@ -37,7 +37,9 @@ see [Configuration Options](#user-content-options) below
 ## <a href="user-content-a-using-addtaskitem"></a> Add Tasks ##
 
 ### a) Using Method() ###
+Using `g.AddTaskItemObject` method we have to pass all data in "key":"value" format, as shown below. Any numerica data, like pID below should be passed without quotes while text/character data like pName and any dates must be enclosed in quotes. Also, in this way we can pass any custom variables like "category" and "section" shown below. Adding such custom variables will **NOT** add corresponding columns in the data table on left side of gantt chart. Such custom variables can be then accessed inside jsgantt.js file by using `task.getDataObject().yourCustomAttr`.
 
+If you want to have custom variables data to be shown in the task table, you should set additional headers for these variables. See [Additional Headers](#AdditionalHeaders) below.
 ```javascript
 
 // passing object
@@ -72,6 +74,8 @@ g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',       
 
 Method definition:
 **TaskItem(_pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt_, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null)**
+
+This method takes only the variables defined above and explained below. You can **NOT** pass custom variables this way.
 
 | Parameter | Description |
 |:--------|:------------------------------------------------|
@@ -448,7 +452,7 @@ g.setOptions({
 
 
 Putting all this information together the final code to produce the chart included in the example index file provided is as follows:
-
+<span id='AdditionalHeaders'></span>
 ```html
 <link href="jsgantt.css" rel="stylesheet" type="text/css"/>
 <script src="jsgantt.js" type="text/javascript"></script>

@@ -656,8 +656,7 @@ export const GanttChart = function (pDiv, pFormat) {
               // textbar
               vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
               if (this.vTaskList[i].getBarText()) {
-                console.log(vTaskWidth)
-                const textBar = newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
+                newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
               }
               this.vTaskList[i].setTaskDiv(vTmpDiv2);
             }
