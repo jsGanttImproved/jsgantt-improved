@@ -68,6 +68,9 @@ export const show = function (pID, pTop, ganttObj) {
 
   for (let i = 0; i < vList.length; i++) {
     if (vList[i].getParent() == pID) {
+      if (!vList[i].getParItem()) {
+        console.error(`Cant find parent on who event (maybe problems with Task ID and Parent Id mixes?)`);
+      }
       if (vList[i].getParItem().getGroupSpan()) {
         if (isIE()) vState = vList[i].getParItem().getGroupSpan().innerText;
         else vState = vList[i].getParItem().getGroupSpan().textContent;
