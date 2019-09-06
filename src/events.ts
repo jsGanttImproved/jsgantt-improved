@@ -300,7 +300,7 @@ export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
 export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw = null, event = 'blur') {
 
   if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
-    const selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].find(k => k === vTmpCell.children[0].children[0].tagName);
+    const selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].filter(k => k === vTmpCell.children[0].children[0].tagName);
     if (selectInputOrButton) {
       addListener(event, function (e) {
         if (callback) {

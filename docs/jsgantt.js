@@ -1110,6 +1110,9 @@ exports.show = function (pID, pTop, ganttObj) {
     var vState = '';
     for (var i = 0; i < vList.length; i++) {
         if (vList[i].getParent() == pID) {
+            if (!vList[i].getParItem()) {
+                console.error("Cant find parent on who event (maybe problems with Task ID and Parent Id mixes?)");
+            }
             if (vList[i].getParItem().getGroupSpan()) {
                 if (general_utils_1.isIE())
                     vState = vList[i].getParItem().getGroupSpan().innerText;
@@ -1325,7 +1328,7 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
     if (draw === void 0) { draw = null; }
     if (event === void 0) { event = 'blur'; }
     if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
-        var selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].find(function (k) { return k === vTmpCell.children[0].children[0].tagName; });
+        var selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].filter(function (k) { return k === vTmpCell.children[0].children[0].tagName; });
         if (selectInputOrButton) {
             exports.addListener(event, function (e) {
                 if (callback) {
