@@ -12,9 +12,9 @@ export const makeInput = function (formattedValue, editable, type = 'text', valu
         return `<input class="gantt-inputtable" type="date" value="${value}">`;
       case 'resource':
         if (choices) {
-          const found = choices.find(c => c.id == value || c.name == value);
-          if (found) {
-            value = found.id;
+          const found = choices.filter(c => c.id == value || c.name == value);
+          if (found && found.length > 0) {
+            value = found[0].id;
           } else {
             choices.push({ id: value, name: value });
           }

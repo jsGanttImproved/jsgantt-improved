@@ -301,7 +301,7 @@ export const addListenerInputCell = function (vTmpCell, vEventsChange, callback,
 
   if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
     const selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].filter(k => k === vTmpCell.children[0].children[0].tagName);
-    if (selectInputOrButton) {
+    if (selectInputOrButton && selectInputOrButton.length > 0) {
       addListener(event, function (e) {
         if (callback) {
           callback(task, e);

@@ -1329,7 +1329,7 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
     if (event === void 0) { event = 'blur'; }
     if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
         var selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].filter(function (k) { return k === vTmpCell.children[0].children[0].tagName; });
-        if (selectInputOrButton) {
+        if (selectInputOrButton && selectInputOrButton.length > 0) {
             exports.addListener(event, function (e) {
                 if (callback) {
                     callback(task, e);
@@ -3712,9 +3712,9 @@ exports.makeInput = function (formattedValue, editable, type, value, choices) {
                 return "<input class=\"gantt-inputtable\" type=\"date\" value=\"" + value + "\">";
             case 'resource':
                 if (choices) {
-                    var found = choices.find(function (c) { return c.id == value || c.name == value; });
-                    if (found) {
-                        value = found.id;
+                    var found = choices.filter(function (c) { return c.id == value || c.name == value; });
+                    if (found && found.length > 0) {
+                        value = found[0].id;
                     }
                     else {
                         choices.push({ id: value, name: value });
