@@ -119,6 +119,10 @@ export const sLine = function (x1, y1, x2, y2, pClass) {
 
   this.getLines().appendChild(vTmpDiv);
 
+  if (this.vEvents.onLineDraw && typeof this.vEvents.onLineDraw === 'function' ) {
+    this.vEvents.onLineDraw(vTmpDiv);
+  }
+
   return vTmpDiv;
 };
 

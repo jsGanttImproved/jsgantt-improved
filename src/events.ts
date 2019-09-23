@@ -197,6 +197,20 @@ export const addListener = function (eventName, handler, control) {
   }
 };
 
+export const removeListener = function(eventName, handler, control) {
+  // Check if control is a string
+  if (control === String(control)) control = findObj(control);
+  if (control.removeEventListener) {
+    //Standard W3C
+    return control.removeEventListener(eventName, handler, false);
+  } else if (control.detachEvent) {
+    //IExplore
+    return control.attachEvent('on' + eventName, handler);
+  } else {
+    return false;
+  }
+};
+
 export const syncScroll = function (elements, attrName) {
   let syncFlags = new Map(elements.map(e => [e, false]));
 
