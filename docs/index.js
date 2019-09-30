@@ -14,16 +14,10 @@ function start(e) {
     const vUseSort = document.querySelector('#sort:checked') ? true : false;
     const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
     let vColumnOrder;
-    if(document.querySelector('#vColumnOrder').value){
+    if (document.querySelector('#vColumnOrder').value) {
       vColumnOrder = document.querySelector('#vColumnOrder').value.split(',')
     }
-    // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
-    if (dataurl !== newDataurl) {
-      dataurl = newDataurl;
-      jsonObj = JSGantt.parseJSON(dataurl, g, vDebug);
-    } else {
-      JSGantt.addJSONTask(g, jsonObj)
-    }
+
     const vScrollTo = 'today'; // or new Date() or a Date object with a specific date
 
 
@@ -151,6 +145,15 @@ function start(e) {
     //   pNotes: "",
     //   category: 'test'
     // });
+
+    // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
+    if (dataurl !== newDataurl) {
+      dataurl = newDataurl;
+      JSGantt.parseJSON(dataurl, g, vDebug)
+        .then(j => jsonObj = j);
+    } else {
+      JSGantt.addJSONTask(g, jsonObj)
+    }
 
     if (vDebug) {
       bd = new Date();
