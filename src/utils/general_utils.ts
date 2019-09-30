@@ -665,3 +665,66 @@ export const moveToolTip = function (pNewX, pNewY, pTool, timer) {
     }
   }
 };
+
+export const makeRequest = (pFile, json = true, vDebug = false) => {
+  if ((<any>window).fetch) {
+    const f = fetch(pFile);
+    if (json) {
+      return f.then(res => res.json())
+    } else {
+      return f;
+    }
+  } else {
+    return makeRequestOldBrowsers(pFile, vDebug)
+      .then((xhttp: any) => {
+        if (json) {
+          let jsonObj = JSON.parse(xhttp.response);
+          return jsonObj;
+        } else {
+          let xmlDoc = xhttp.responseXML;
+          return xmlDoc;
+        }
+      });
+  }
+};
+
+export const makeRequestOldBrowsers = (pFile, vDebug = false) => {
+  return new Promise((resolve, reject) => {
+
+    let bd;
+    if (vDebug) {
+      bd = new Date();
+      console.log('before jsonparse', bd);
+    }
+
+    let xhttp;
+    if ((<any>window).XMLHttpRequest) {
+      xhttp = new XMLHttpRequest();
+    } else {	// IE 5/6
+      xhttp = new (<any>window).ActiveXObject('Microsoft.XMLHTTP');
+    }
+
+    xhttp.open('GET', pFile, true);
+    xhttp.send(null);
+
+    xhttp.onload = function (e) {
+      if (xhttp.readyState === 4) {
+        if (xhttp.status === 200) {
+          // resolve(xhttp.responseText);
+        } else {
+
+          console.error(xhttp.statusText);
+        }
+
+        if (vDebug) {
+          bd = new Date();
+          console.log('before jsonparse', bd);
+        }
+        resolve(xhttp);
+      }
+    };
+    xhttp.onerror = function (e) {
+      reject(xhttp.statusText);
+    };
+  });
+};

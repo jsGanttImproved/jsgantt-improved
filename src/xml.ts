@@ -1,20 +1,13 @@
 import { TaskItem } from "./task";
 import { formatDateStr, parseDateFormatStr } from "./utils/date_utils";
 import { newNode } from "./utils/draw_utils";
+import { makeRequest } from "./utils/general_utils";
 
 export const parseXML = function (pFile, pGanttVar) {
-  let xhttp;
-  if ((<any>window).XMLHttpRequest) {
-    xhttp = new (<any>window).XMLHttpRequest();
-  } else {	// IE 5/6
-    xhttp = new (<any>window).ActiveXObject('Microsoft.XMLHTTP');
-  }
-
-  xhttp.open('GET', pFile, false);
-  xhttp.send(null);
-  let xmlDoc = xhttp.responseXML;
-
-  AddXMLTask(pGanttVar, xmlDoc);
+  return makeRequest(pFile, false, false)
+    .then(xmlDoc => {
+      AddXMLTask(pGanttVar, xmlDoc);
+    });
 };
 
 export const parseXMLString = function (pStr, pGanttVar) {
@@ -61,7 +54,6 @@ export const getXMLNodeValue = function (pRoot, pNodeName, pType, pDefault) {
 
 export const AddXMLTask = function (pGanttVar, pXmlDoc) {
   let project = '';
-  let vMSP = false;
   let Task;
   let n = 0;
   let m = 0;
@@ -78,7 +70,6 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
   if (typeof projNode != 'undefined' && projNode.length > 0) project = projNode[0].getAttribute('xmlns');
 
   if (project == 'http://schemas.microsoft.com/project') {
-    vMSP = true;
     pGanttVar.setDateInputFormat('yyyy-mm-dd');
     Task = findXMLNode(pXmlDoc, 'Task');
     if (typeof Task == 'undefined') n = 0;

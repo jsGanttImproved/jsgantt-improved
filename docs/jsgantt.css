@@ -157,6 +157,11 @@ td.gspanning {
   overflow: hidden;
 }
 
+.gtaskname.gtaskeditable div,
+.gtaskname.gtaskeditable {
+  overflow: unset;
+}
+
 .gselector {
   text-align: left;
   white-space: nowrap;
@@ -471,7 +476,7 @@ div.gtaskbarcontainer {
   top: 0px
 }
 
-.textbar{
+.textbar {
   word-break: break-all;
   white-space: nowrap;
   overflow: hidden;
@@ -736,7 +741,7 @@ td.gspanning div {
 }
 
 .gantt-inputtable {
-  width: 100%;
+  max-width: 100%;
   max-height: 16px;
 }
 
@@ -949,9 +954,9 @@ td.gspanning div {
   background-color: rgba(0, 0, 0, .5);
 }
 
-.frame::-webkit-scrollbar-track { 
-  background-color: #fff; 
-  border-radius: 8px; 
+.frame::-webkit-scrollbar-track {
+  background-color: #fff;
+  border-radius: 8px;
 }
 
 .gscrollbar-calculation-container {

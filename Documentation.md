@@ -109,6 +109,8 @@ This method takes only the variables defined above and explained below. You can 
 JSGantt.parseJSON('./fixes/data.json', g);
 ```
 
+This function returns a promise if you would like to do an event after the json is loaded.
+
 
 The structure of the JSON file:
 ```json

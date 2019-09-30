@@ -255,7 +255,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpRow_1 = draw_utils_1.newNode(vTmpContentTBody, 'tr', this_1.vDivId + 'child_' + vID, 'gname ' + vBGColor);
                     this_1.vTaskList[i_1].setListChildRow(vTmpRow_1);
                     draw_utils_1.newNode(vTmpRow_1, 'td', null, 'gtasklist', '\u00A0');
-                    vTmpCell = draw_utils_1.newNode(vTmpRow_1, 'td', null, 'gtaskname');
+                    var editableClass = this_1.vEditable ? 'gtaskname gtaskeditable' : 'gtaskname';
+                    vTmpCell = draw_utils_1.newNode(vTmpRow_1, 'td', null, editableClass);
                     var vCellContents = '';
                     for (var j_1 = 1; j_1 < this_1.vTaskList[i_1].getLevel(); j_1++) {
                         vCellContents += '\u00A0\u00A0\u00A0\u00A0';
@@ -1494,41 +1495,75 @@ exports.JSGantt.criticalPath = general_utils_1.criticalPath;
 
 },{"./draw":2,"./events":5,"./json":7,"./task":10,"./utils/date_utils":11,"./utils/general_utils":13,"./xml":14}],7:[function(require,module,exports){
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var task_1 = require("./task");
+var general_utils_1 = require("./utils/general_utils");
 /**
  *
  * @param pFile
  * @param pGanttlet
  */
-exports.parseJSON = function (pFile, pGanttVar, vDebug) {
+exports.parseJSON = function (pFile, pGanttVar, vDebug, redrawAfter) {
     if (vDebug === void 0) { vDebug = false; }
-    var xhttp;
-    if (window.XMLHttpRequest) {
-        xhttp = new XMLHttpRequest();
-    }
-    else { // IE 5/6
-        xhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
-    }
-    xhttp.open('GET', pFile, false);
-    xhttp.send(null);
-    var bd;
-    if (vDebug) {
-        bd = new Date();
-        console.log('before jsonparse', bd);
-    }
-    var jsonObj = JSON.parse(xhttp.response);
-    if (vDebug) {
-        var ad = new Date();
-        console.log('after jsonparse', ad, (ad.getTime() - bd.getTime()));
-        bd = new Date();
-    }
-    exports.addJSONTask(pGanttVar, jsonObj);
-    if (this.vDebug) {
-        var ad = new Date();
-        console.log('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
-    }
-    return jsonObj;
+    if (redrawAfter === void 0) { redrawAfter = true; }
+    return __awaiter(this, void 0, void 0, function () {
+        var jsonObj, bd, ad;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, general_utils_1.makeRequest(pFile, true, true)];
+                case 1:
+                    jsonObj = _a.sent();
+                    if (vDebug) {
+                        bd = new Date();
+                        console.log('before jsonparse', bd);
+                    }
+                    exports.addJSONTask(pGanttVar, jsonObj);
+                    if (this.vDebug) {
+                        ad = new Date();
+                        console.log('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
+                    }
+                    if (redrawAfter) {
+                        pGanttVar.Draw();
+                    }
+                    return [2 /*return*/, jsonObj];
+            }
+        });
+    });
 };
 exports.parseJSONString = function (pStr, pGanttVar) {
     exports.addJSONTask(pGanttVar, JSON.parse(pStr));
@@ -1650,7 +1685,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
     }
 };
 
-},{"./task":10}],8:[function(require,module,exports){
+},{"./task":10,"./utils/general_utils":13}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var es = {
@@ -4501,6 +4536,69 @@ exports.moveToolTip = function (pNewX, pNewY, pTool, timer) {
         }
     }
 };
+exports.makeRequest = function (pFile, json, vDebug) {
+    if (json === void 0) { json = true; }
+    if (vDebug === void 0) { vDebug = false; }
+    if (window.fetch) {
+        var f = fetch(pFile);
+        if (json) {
+            return f.then(function (res) { return res.json(); });
+        }
+        else {
+            return f;
+        }
+    }
+    else {
+        return exports.makeRequestOldBrowsers(pFile, vDebug)
+            .then(function (xhttp) {
+            if (json) {
+                var jsonObj = JSON.parse(xhttp.response);
+                return jsonObj;
+            }
+            else {
+                var xmlDoc = xhttp.responseXML;
+                return xmlDoc;
+            }
+        });
+    }
+};
+exports.makeRequestOldBrowsers = function (pFile, vDebug) {
+    if (vDebug === void 0) { vDebug = false; }
+    return new Promise(function (resolve, reject) {
+        var bd;
+        if (vDebug) {
+            bd = new Date();
+            console.log('before jsonparse', bd);
+        }
+        var xhttp;
+        if (window.XMLHttpRequest) {
+            xhttp = new XMLHttpRequest();
+        }
+        else { // IE 5/6
+            xhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
+        }
+        xhttp.open('GET', pFile, true);
+        xhttp.send(null);
+        xhttp.onload = function (e) {
+            if (xhttp.readyState === 4) {
+                if (xhttp.status === 200) {
+                    // resolve(xhttp.responseText);
+                }
+                else {
+                    console.error(xhttp.statusText);
+                }
+                if (vDebug) {
+                    bd = new Date();
+                    console.log('before jsonparse', bd);
+                }
+                resolve(xhttp);
+            }
+        };
+        xhttp.onerror = function (e) {
+            reject(xhttp.statusText);
+        };
+    });
+};
 
 },{}],14:[function(require,module,exports){
 "use strict";
@@ -4508,18 +4606,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var task_1 = require("./task");
 var date_utils_1 = require("./utils/date_utils");
 var draw_utils_1 = require("./utils/draw_utils");
+var general_utils_1 = require("./utils/general_utils");
 exports.parseXML = function (pFile, pGanttVar) {
-    var xhttp;
-    if (window.XMLHttpRequest) {
-        xhttp = new window.XMLHttpRequest();
-    }
-    else { // IE 5/6
-        xhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
-    }
-    xhttp.open('GET', pFile, false);
-    xhttp.send(null);
-    var xmlDoc = xhttp.responseXML;
-    exports.AddXMLTask(pGanttVar, xmlDoc);
+    return general_utils_1.makeRequest(pFile, false, false)
+        .then(function (xmlDoc) {
+        exports.AddXMLTask(pGanttVar, xmlDoc);
+    });
 };
 exports.parseXMLString = function (pStr, pGanttVar) {
     var xmlDoc;
@@ -4564,7 +4656,6 @@ exports.getXMLNodeValue = function (pRoot, pNodeName, pType, pDefault) {
 };
 exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
     var project = '';
-    var vMSP = false;
     var Task;
     var n = 0;
     var m = 0;
@@ -4580,7 +4671,6 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
     if (typeof projNode != 'undefined' && projNode.length > 0)
         project = projNode[0].getAttribute('xmlns');
     if (project == 'http://schemas.microsoft.com/project') {
-        vMSP = true;
         pGanttVar.setDateInputFormat('yyyy-mm-dd');
         Task = exports.findXMLNode(pXmlDoc, 'Task');
         if (typeof Task == 'undefined')
@@ -4835,5 +4925,5 @@ exports.getXMLTask = function (pID, pIdx) {
     return vTask;
 };
 
-},{"./task":10,"./utils/date_utils":11,"./utils/draw_utils":12}]},{},[1])(1)
+},{"./task":10,"./utils/date_utils":11,"./utils/draw_utils":12,"./utils/general_utils":13}]},{},[1])(1)
 });

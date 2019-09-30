@@ -264,7 +264,8 @@ export const GanttChart = function (pDiv, pFormat) {
           else vTmpRow = newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor);
           this.vTaskList[i].setListChildRow(vTmpRow);
           newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-          vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskname');
+          const editableClass = this.vEditable ? 'gtaskname gtaskeditable' : 'gtaskname';
+          vTmpCell = newNode(vTmpRow, 'td', null, editableClass);
 
           let vCellContents = '';
           for (let j = 1; j < this.vTaskList[i].getLevel(); j++) {

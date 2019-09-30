@@ -1,36 +1,25 @@
 import { TaskItem } from "./task";
+import { makeRequest } from "./utils/general_utils";
 
 /**
  * 
  * @param pFile 
  * @param pGanttlet 
  */
-export const parseJSON = function (pFile, pGanttVar, vDebug = false) {
-  let xhttp;
-  if ((<any>window).XMLHttpRequest) {
-    xhttp = new XMLHttpRequest();
-  } else {	// IE 5/6
-    xhttp = new (<any>window).ActiveXObject('Microsoft.XMLHTTP');
-  }
-  xhttp.open('GET', pFile, false);
-  xhttp.send(null);
-
+export const parseJSON = async function (pFile, pGanttVar, vDebug = false, redrawAfter = true) {
+  const jsonObj = await makeRequest(pFile, true, true);
   let bd;
   if (vDebug) {
     bd = new Date();
     console.log('before jsonparse', bd);
   }
-  let jsonObj = JSON.parse(xhttp.response);
-  if (vDebug) {
-    const ad = new Date();
-    console.log('after jsonparse', ad, (ad.getTime() - bd.getTime()));
-    bd = new Date();
-  }
-
   addJSONTask(pGanttVar, jsonObj);
   if (this.vDebug) {
     const ad = new Date();
     console.log('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
+  }
+  if(redrawAfter){
+    pGanttVar.Draw();
   }
   return jsonObj;
 };
