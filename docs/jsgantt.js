@@ -1329,8 +1329,9 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
     if (draw === void 0) { draw = null; }
     if (event === void 0) { event = 'blur'; }
     if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
-        var selectInputOrButton = ['SELECT', 'INPUT', 'BUTTON'].filter(function (k) { return k === vTmpCell.children[0].children[0].tagName; });
-        if (selectInputOrButton && selectInputOrButton.length > 0) {
+        var tagName = vTmpCell.children[0].children[0].tagName;
+        var selectInputOrButton = tagName === 'SELECT' || tagName === 'INPUT' || tagName === 'BUTTON';
+        if (selectInputOrButton) {
             exports.addListener(event, function (e) {
                 if (callback) {
                     callback(task, e);
@@ -2557,6 +2558,80 @@ var ja = {
     'tooltipLoading': 'ローディング中...'
 };
 exports.ja = ja;
+var cs = {
+    'format': 'Zobrazení',
+    'hour': 'Hodina',
+    'day': 'Den',
+    'week': 'Týden',
+    'month': 'Měsíc',
+    'quarter': 'Kvartál',
+    'hours': 'Hodiny',
+    'days': 'Dni',
+    'weeks': 'Týdny',
+    'months': 'Měsíce',
+    'quarters': 'Kvartály',
+    'hr': 'Ho',
+    'dy': 'Den',
+    'wk': 'Tyd',
+    'mth': 'Měs',
+    'qtr': 'Kvar',
+    'hrs': 'Ho',
+    'dys': 'Dni',
+    'wks': 'Tyd',
+    'mths': 'Měs',
+    'qtrs': 'Kvar',
+    'resource': 'Přiřazeno',
+    'duration': 'Trvání',
+    'comp': '% Hotovo',
+    'completion': 'Hotovo',
+    'startdate': 'Start',
+    'planstartdate': 'Plánovaný start',
+    'enddate': 'Konec',
+    'planenddate': 'Plánovaný konec',
+    'cost': 'Náklady',
+    'moreinfo': 'Více informací',
+    'notes': 'Poznámky',
+    'january': 'Leden',
+    'february': 'Únor',
+    'march': 'Březen',
+    'april': 'Duben',
+    'maylong': 'Květen',
+    'june': 'Červen',
+    'july': 'Červenec',
+    'august': 'Srpen',
+    'september': 'Září',
+    'october': 'Říjen',
+    'november': 'Listopad',
+    'december': 'Prosinec',
+    'jan': 'Led',
+    'feb': 'Úno',
+    'mar': 'Bře',
+    'apr': 'Dub',
+    'may': 'Kvě',
+    'jun': 'Čer',
+    'jul': 'Čvc',
+    'aug': 'Srp',
+    'sep': 'Zář',
+    'oct': 'Říj',
+    'nov': 'Lis',
+    'dec': 'Pro',
+    'sunday': 'Neděle',
+    'monday': 'Pondělí',
+    'tuesday': 'Úterý',
+    'wednesday': 'Středa',
+    'thursday': 'Čtvrtek',
+    'friday': 'Pátek',
+    'saturday': 'Sobota',
+    'sun': 'Ne',
+    'mon': 'Po',
+    'tue': 'Út',
+    'wed': 'St',
+    'thu': 'Čt',
+    'fri': 'Pa',
+    'sat': 'So',
+    'tooltipLoading': 'Nahrávám...'
+};
+exports.cs = cs;
 
 },{}],9:[function(require,module,exports){
 "use strict";
