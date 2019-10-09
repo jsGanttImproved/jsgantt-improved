@@ -698,6 +698,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             vTmpDiv2 = draw_utils_1.newNode(this.getChartBody(), 'div', this.vDivId + 'Lines', 'glinediv');
             if (this.vEvents.onLineContainerHover && typeof this.vEvents.onLineContainerHover === 'function') {
                 events_1.addListener('mouseover', this.vEvents.onLineContainerHover, vTmpDiv2);
+                events_1.addListener('mouseout', this.vEvents.onLineContainerHover, vTmpDiv2);
             }
             vTmpDiv2.style.visibility = 'hidden';
             this.setLines(vTmpDiv2);

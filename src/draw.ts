@@ -772,7 +772,8 @@ export const GanttChart = function (pDiv, pFormat) {
       newNode(vTmpDiv, 'div', null, 'ggridfooter');
       vTmpDiv2 = newNode(this.getChartBody(), 'div', this.vDivId + 'Lines', 'glinediv');
       if (this.vEvents.onLineContainerHover && typeof this.vEvents.onLineContainerHover === 'function') {
-        addListener('mouseover', this.vEvents.onLineContainerHover, vTmpDiv2)
+        addListener('mouseover', this.vEvents.onLineContainerHover, vTmpDiv2);
+        addListener('mouseout', this.vEvents.onLineContainerHover, vTmpDiv2);
       }
       vTmpDiv2.style.visibility = 'hidden';
       this.setLines(vTmpDiv2);
