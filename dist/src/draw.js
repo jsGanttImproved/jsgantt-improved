@@ -67,7 +67,8 @@ exports.GanttChart = function (pDiv, pFormat) {
         afterDraw: null,
         beforeLineDraw: null,
         afterLineDraw: null,
-        onLineDraw: null
+        onLineDraw: null,
+        onLineContainerHover: null
     };
     this.vEventsChange = {
         taskname: null,
@@ -695,6 +696,9 @@ exports.GanttChart = function (pDiv, pFormat) {
             vTmpDiv.appendChild(rightvTmpDiv);
             draw_utils_1.newNode(vTmpDiv, 'div', null, 'ggridfooter');
             vTmpDiv2 = draw_utils_1.newNode(this.getChartBody(), 'div', this.vDivId + 'Lines', 'glinediv');
+            if (this.vEvents.onLineContainerHover && typeof this.vEvents.onLineContainerHover === 'function') {
+                events_1.addListener('mouseover', this.vEvents.onLineContainerHover, vTmpDiv2);
+            }
             vTmpDiv2.style.visibility = 'hidden';
             this.setLines(vTmpDiv2);
             /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
