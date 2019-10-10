@@ -337,7 +337,7 @@ export const addListenerDependencies = function (vLineOptions) {
 const toggleDependencies = function (e, vLineOptions) {
   const target: any = e.currentTarget;
   const ids = target.getAttribute('id').split('_');
-  let style = vLineOptions.hoverStyle || 'groove';
+  let style = vLineOptions && vLineOptions.borderStyleHover !== undefined ? vLineOptions.hoverStyle : 'groove';
   if (e.type === 'mouseout') {
     style = '';
   }
