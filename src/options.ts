@@ -104,6 +104,7 @@ export const includeGetSet = function () {
   this.setListBody = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) this.vListBody = pDiv; };
   this.setChartTable = function (pTable) { if (typeof HTMLTableElement !== 'function' || pTable instanceof HTMLTableElement) this.vChartTable = pTable; };
   this.setLines = function (pDiv) { if (typeof HTMLDivElement !== 'function' || pDiv instanceof HTMLDivElement) this.vLines = pDiv; };
+  this.setLineOptions = function (lineOptions) { this.vLineOptions = lineOptions; };
   this.setTimer = function (pVal) { this.vTimer = pVal * 1; };
   this.setTooltipDelay = function (pVal) { this.vTooltipDelay = pVal * 1; };
   this.setTooltipTemplate = function (pVal) { this.vTooltipTemplate = pVal; };

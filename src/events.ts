@@ -321,23 +321,23 @@ export const addListenerInputCell = function (vTmpCell, vEventsChange, callback,
   }
 }
 
-export const addListenerDependencies = function () {
+export const addListenerDependencies = function (vLineOptions) {
   const elements = document.querySelectorAll('.gtaskbarcontainer');
   for (let i = 0; i < elements.length; i++) {
     const taskDiv = elements[i];
     taskDiv.addEventListener('mouseover', e => {
-      toggleDependencies(e);
+      toggleDependencies(e, vLineOptions);
     });
     taskDiv.addEventListener('mouseout', e => {
-      toggleDependencies(e);
+      toggleDependencies(e, vLineOptions);
     });
   }
 }
 
-const toggleDependencies = function (e) {
+const toggleDependencies = function (e, vLineOptions) {
   const target: any = e.currentTarget;
   const ids = target.getAttribute('id').split('_');
-  let style = 'groove';
+  let style = vLineOptions.hoverStyle || 'groove';
   if (e.type === 'mouseout') {
     style = '';
   }
