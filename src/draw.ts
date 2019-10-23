@@ -794,7 +794,7 @@ export const GanttChart = function (pDiv, pFormat) {
         console.log('before DrawDependencies', bdd);
       }
       this.DrawDependencies(this.vDebug);
-      addListenerDependencies();
+      addListenerDependencies(this.vLineOptions);
       if (this.vDebug) {
         const ad = new Date();
         console.log('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
