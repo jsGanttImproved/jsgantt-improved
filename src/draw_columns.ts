@@ -97,9 +97,7 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
       const header = vAdditionalHeaders[key];
       const css = header.class ? header.class : `gadditional-${key}`;
       const data = vTaskList[i].getDataObject();
-      if (data) {
-        vTmpCell = newNode(vTmpRow, 'td', null, `gadditional ${css}`);
-      }
+      vTmpCell = newNode(vTmpRow, 'td', null, `gadditional ${css}`);
       // const callback = (task, e) => task.setCost(e.target.value);
       // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'costdate');
       vTmpDiv = newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
@@ -113,7 +111,7 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
 
     const callback = (task, e) => {
       AddTaskItemObject({
-        vParent: task.getParent()  
+        vParent: task.getParent()
       });
     }
     addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'addentries', Draw.bind(this));
@@ -123,7 +121,7 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
 
 export const draw_bottom = function (column, vTmpRow, vAdditionalHeaders) {
   if ('vShowRes' == column) newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-  if ('vShowDur' == column) newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');  
+  if ('vShowDur' == column) newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
   if ('vShowComp' == column) newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
   if ('vShowStartDate' == column) newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
   if ('vShowEndDate' == column) newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');

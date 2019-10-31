@@ -12,7 +12,6 @@ export const taskLink = function (pRef, pWidth, pHeight) {
   window.open(pRef, 'newwin', 'height=' + vHeight + ',width=' + vWidth); // let OpenWindow = 
 };
 
-
 export const sortTasks = function (pList, pID, pIdx) {
   if (pList.length < 2) {
     return pIdx;

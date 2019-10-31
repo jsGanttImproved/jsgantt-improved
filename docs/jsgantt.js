@@ -854,9 +854,7 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
             var header = vAdditionalHeaders[key];
             var css = header.class ? header.class : "gadditional-" + key;
             var data = vTaskList[i].getDataObject();
-            if (data) {
-                vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
-            }
+            vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
             // const callback = (task, e) => task.setCost(e.target.value);
             // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'costdate');
             vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
@@ -4800,6 +4798,9 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var pName = exports.getXMLNodeValue(Task[i], 'Name', 2, 'No Task Name');
                 var pStart = exports.getXMLNodeValue(Task[i], 'Start', 2, '');
                 var pEnd = exports.getXMLNodeValue(Task[i], 'Finish', 2, '');
+                var pPlanStart = exports.getXMLNodeValue(Task[i], 'PlanStart', 2, '');
+                var pPlanEnd = exports.getXMLNodeValue(Task[i], 'PlanFinish', 2, '');
+                var pDuration = exports.getXMLNodeValue(Task[i], 'Duration', 2, '');
                 var pLink = exports.getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
                 var pMile = exports.getXMLNodeValue(Task[i], 'Milestone', 1, 0);
                 var pComp = exports.getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
@@ -4889,7 +4890,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                         // Now create a subtask
                         maxPID++;
                         vSplitEnd = exports.getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-                        pGanttVar.AddTaskItem(new task_1.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost));
+                        pGanttVar.AddTaskItem(new task_1.TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
                         vSubCreated = true;
                         vDepend = '';
                     }
@@ -4901,7 +4902,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 if (vSubCreated)
                     pDepend = '';
                 // Finally add the task
-                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
             }
         }
     }
@@ -4916,6 +4917,9 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var pName = exports.getXMLNodeValue(Task[i], 'pName', 2, 'No Task Name');
                 var pStart = exports.getXMLNodeValue(Task[i], 'pStart', 2, '');
                 var pEnd = exports.getXMLNodeValue(Task[i], 'pEnd', 2, '');
+                var pPlanStart = exports.getXMLNodeValue(Task[i], 'pPlanStart', 2, '');
+                var pPlanEnd = exports.getXMLNodeValue(Task[i], 'pPlanEnd', 2, '');
+                var pDuration = exports.getXMLNodeValue(Task[i], 'pDuration', 2, '');
                 var pLink = exports.getXMLNodeValue(Task[i], 'pLink', 2, '');
                 var pMile = exports.getXMLNodeValue(Task[i], 'pMile', 1, 0);
                 var pComp = exports.getXMLNodeValue(Task[i], 'pComp', 1, 0);
@@ -4937,7 +4941,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                         pClass = 'gtaskblue';
                 }
                 // Finally add the task
-                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
             }
         }
     }
@@ -4972,6 +4976,9 @@ exports.getXMLTask = function (pID, pIdx) {
         vTask += '<pName>' + this.vTaskList[vIdx].getName() + '</pName>';
         vTask += '<pStart>' + date_utils_1.formatDateStr(this.vTaskList[vIdx].getStart(), vOutFrmt, this.vLangs[this.vLang]) + '</pStart>';
         vTask += '<pEnd>' + date_utils_1.formatDateStr(this.vTaskList[vIdx].getEnd(), vOutFrmt, this.vLangs[this.vLang]) + '</pEnd>';
+        vTask += '<pPlanStart>' + date_utils_1.formatDateStr(this.vTaskList[vIdx].getPlanStart(), vOutFrmt, this.vLangs[this.vLang]) + '</pPlanStart>';
+        vTask += '<pPlanEnd>' + date_utils_1.formatDateStr(this.vTaskList[vIdx].getPlanEnd(), vOutFrmt, this.vLangs[this.vLang]) + '</pPlanEnd>';
+        vTask += '<pDuration>' + this.vTaskList[vIdx].getDuration() + '</pDuration>';
         vTask += '<pClass>' + this.vTaskList[vIdx].getClass() + '</pClass>';
         vTask += '<pLink>' + this.vTaskList[vIdx].getLink() + '</pLink>';
         vTask += '<pMile>' + this.vTaskList[vIdx].getMile() + '</pMile>';

@@ -120,6 +120,9 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         let pName = getXMLNodeValue(Task[i], 'Name', 2, 'No Task Name');
         let pStart = getXMLNodeValue(Task[i], 'Start', 2, '');
         let pEnd = getXMLNodeValue(Task[i], 'Finish', 2, '');
+        let pPlanStart = getXMLNodeValue(Task[i], 'PlanStart', 2, '');
+        let pPlanEnd = getXMLNodeValue(Task[i], 'PlanFinish', 2, '');
+        let pDuration = getXMLNodeValue(Task[i], 'Duration', 2, '');
         let pLink = getXMLNodeValue(Task[i], 'HyperlinkAddress', 2, '');
         let pMile = getXMLNodeValue(Task[i], 'Milestone', 1, 0);
         let pComp = getXMLNodeValue(Task[i], 'PercentWorkComplete', 1, 0);
@@ -198,7 +201,9 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
             // Now create a subtask
             maxPID++;
             vSplitEnd = getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-            pGanttVar.AddTaskItem(new TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost));
+            pGanttVar.AddTaskItem(new TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', 
+            pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost, 
+            pPlanStart, pPlanEnd, pDuration));
             vSubCreated = true;
             vDepend = '';
           }
@@ -210,7 +215,8 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         if (vSubCreated) pDepend = '';
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
+        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, 
+          pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
       }
     }
   }
@@ -227,6 +233,9 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         let pName = getXMLNodeValue(Task[i], 'pName', 2, 'No Task Name');
         let pStart = getXMLNodeValue(Task[i], 'pStart', 2, '');
         let pEnd = getXMLNodeValue(Task[i], 'pEnd', 2, '');
+        let pPlanStart = getXMLNodeValue(Task[i], 'pPlanStart', 2, '');
+        let pPlanEnd = getXMLNodeValue(Task[i], 'pPlanEnd', 2, '');
+        let pDuration = getXMLNodeValue(Task[i], 'pDuration', 2, '');
         let pLink = getXMLNodeValue(Task[i], 'pLink', 2, '');
         let pMile = getXMLNodeValue(Task[i], 'pMile', 1, 0);
         let pComp = getXMLNodeValue(Task[i], 'pComp', 1, 0);
@@ -246,7 +255,8 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         }
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost));
+        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, 
+          pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
       }
     }
   }
@@ -282,6 +292,9 @@ export const getXMLTask = function (pID, pIdx) {
     vTask += '<pName>' + this.vTaskList[vIdx].getName() + '</pName>';
     vTask += '<pStart>' + formatDateStr(this.vTaskList[vIdx].getStart(), vOutFrmt, this.vLangs[this.vLang]) + '</pStart>';
     vTask += '<pEnd>' + formatDateStr(this.vTaskList[vIdx].getEnd(), vOutFrmt, this.vLangs[this.vLang]) + '</pEnd>';
+    vTask += '<pPlanStart>' + formatDateStr(this.vTaskList[vIdx].getPlanStart(), vOutFrmt, this.vLangs[this.vLang]) + '</pPlanStart>';
+    vTask += '<pPlanEnd>' + formatDateStr(this.vTaskList[vIdx].getPlanEnd(), vOutFrmt, this.vLangs[this.vLang]) + '</pPlanEnd>';
+    vTask += '<pDuration>' + this.vTaskList[vIdx].getDuration() + '</pDuration>';
     vTask += '<pClass>' + this.vTaskList[vIdx].getClass() + '</pClass>';
     vTask += '<pLink>' + this.vTaskList[vIdx].getLink() + '</pLink>';
     vTask += '<pMile>' + this.vTaskList[vIdx].getMile() + '</pMile>';
