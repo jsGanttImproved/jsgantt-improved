@@ -64,7 +64,15 @@ export const DrawDependencies = function (vDebug = false) {
               if (vDebug) {
                 console.log(`init drawDependency `, vList[vTask].getID(), new Date());
               }
-              const cssClass = 'gDepId' + vList[vTask].getID();
+              var cssClass = 'gDepId' + vList[vTask].getID() +
+                  ' ' + 'gDepNextId' + vList[i].getID();
+
+              var dependedData = vList[vTask].getDataObject();
+              var nextDependedData = vList[i].getDataObject();
+              if(dependedData && dependedData.pID && nextDependedData && nextDependedData.pID) {
+                cssClass += ' gDepDataId' + dependedData.pID + ' ' + 'gDepNextDataId' + nextDependedData.pID;
+              }
+
               if (vDependType[k] == 'SS') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getStartX() - 1, vList[i].getStartY(), 'SS', cssClass + ' gDepSS');
               else if (vDependType[k] == 'FF') this.drawDependency(vList[vTask].getEndX(), vList[vTask].getEndY(), vList[i].getEndX(), vList[i].getEndY(), 'FF', cssClass + ' gDepFF');
               else if (vDependType[k] == 'SF') this.drawDependency(vList[vTask].getStartX() - 1, vList[vTask].getStartY(), vList[i].getEndX(), vList[i].getEndY(), 'SF', cssClass + ' gDepSF');
