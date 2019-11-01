@@ -1,8 +1,19 @@
 import * as lang from './lang';
 import {
-  mouseOver, mouseOut, addThisRowListeners, addTooltipListeners, addScrollListeners,
-  addFolderListeners, addListenerClickCell, addListener, addListenerInputCell, addListenerDependencies, syncScroll, updateGridHeaderWidth
-} from "./events";
+  mouseOver,
+  mouseOut,
+  addThisRowListeners,
+  addTooltipListeners,
+  addScrollListeners,
+  addFolderListeners,
+  addListenerClickCell,
+  addListener,
+  addListenerInputCell,
+  addListenerDependencies,
+  syncScroll,
+  updateGridHeaderWidth,
+  removeListener
+} from './events';
 import {
   getOffset, getScrollbarWidth
 } from './utils/general_utils';
@@ -70,7 +81,11 @@ export const GanttChart = function (pDiv, pFormat) {
     planenddate: null,
     cost: null,
     beforeDraw: null,
-    afterDraw: null
+    afterDraw: null,
+    beforeLineDraw: null,
+    afterLineDraw: null,
+    onLineDraw: null,
+    onLineContainerHover: null
   };
   this.vEventsChange = {
     taskname: null,
@@ -82,6 +97,7 @@ export const GanttChart = function (pDiv, pFormat) {
     planstartdate: null,
     planenddate: null,
     cost: null,
+    line: null
   };
   this.vResources = null;
   this.vAdditionalHeaders = {};
@@ -135,6 +151,8 @@ export const GanttChart = function (pDiv, pFormat) {
 
   this.mouseOver = mouseOver;
   this.mouseOut = mouseOut;
+  this.addListener = addListener.bind(this);
+  this.removeListener = removeListener.bind(this);
 
   this.createTaskInfo = createTaskInfo;
   this.AddTaskItem = AddTaskItem;
@@ -157,6 +175,13 @@ export const GanttChart = function (pDiv, pFormat) {
 
   this.clearDependencies = function () {
     let parent = this.getLines();
+    if (
+        this.vEventsChange.line &&
+        typeof this.vEventsChange.line === 'function'
+    ) {
+      this.removeListener('click', this.vEventsChange.line, parent);
+      this.addListener('click', this.vEventsChange.line, parent);
+    }
     while (parent.hasChildNodes()) parent.removeChild(parent.firstChild);
     this.vDepId = 1;
   };
@@ -747,6 +772,10 @@ export const GanttChart = function (pDiv, pFormat) {
 
       newNode(vTmpDiv, 'div', null, 'ggridfooter');
       vTmpDiv2 = newNode(this.getChartBody(), 'div', this.vDivId + 'Lines', 'glinediv');
+      if (this.vEvents.onLineContainerHover && typeof this.vEvents.onLineContainerHover === 'function') {
+        addListener('mouseover', this.vEvents.onLineContainerHover, vTmpDiv2);
+        addListener('mouseout', this.vEvents.onLineContainerHover, vTmpDiv2);
+      }
       vTmpDiv2.style.visibility = 'hidden';
       this.setLines(vTmpDiv2);
 
@@ -793,8 +822,14 @@ export const GanttChart = function (pDiv, pFormat) {
         bdd = new Date();
         console.log('before DrawDependencies', bdd);
       }
+      if (this.vEvents && typeof this.vEvents.beforeLineDraw === 'function') {
+        this.vEvents.beforeLineDraw();
+      }
       this.DrawDependencies(this.vDebug);
       addListenerDependencies(this.vLineOptions);
+      if (this.vEvents && typeof this.vEvents.afterLineDraw === 'function') {
+        this.vEvents.afterLineDraw();
+      }
       if (this.vDebug) {
         const ad = new Date();
         console.log('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
