@@ -34,23 +34,26 @@
   </style>
   <!-- External resources -->
   <!-- jQuery + Ajax [required by Bootstrap] -->
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+    integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
     crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+    integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
     crossorigin="anonymous"></script>
   <!-- Required by smooth scrolling -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <!-- Bootstrap v4.0.0 Alpha -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
-    crossorigin="anonymous" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+    integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
     crossorigin="anonymous"></script>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
 
   <!-- jsGanttImproved App -->
   <link href="jsgantt.css" rel="stylesheet" type="text/css" />
-  <script src="jsgantt.js" type="text/javascript"></script>
+  <script src="../dist/jsgantt.js" type="text/javascript"></script>
 </head>
 
 <!-- Content -->
@@ -77,7 +80,7 @@
         <input type="checkbox" id="vShowCost" checked onchange="start(event)" />
       </span>
 
-<!--       <span>
+      <!--       <span>
         <label for="vShowAddEntries">Add Entry</label>
         <input type="checkbox" id="vShowAddEntries" checked onchange="start(event)" />
       </span> -->
@@ -127,19 +130,20 @@
 
   Choose a language:
   <select id="lang" onchange="start(event)">
-    <option value='en'>en</option>
-    <option value='pt'>pt</option>
-    <option value='ru'>ru</option>
-    <option value='es'>es</option>
-    <option value='fr'>fr</option>
-    <option value='de'>de</option>
-    <option value='cn'>cn</option>
-    <option value='sv'>sv</option>
-    <option value='nl'>nl</option>
-    <option value='id'>id</option>
-    <option value='tr'>tr</option>
-    <option value='ja'>ja</option>
-    <option value='cs'>cs</option>
+    <option value='cn'>Chinese (cn)</option>
+    <option value='cs'>Czech (cs)</option>
+    <option value='nl'>Dutch (Standard)</option>
+    <option value='en' selected>English (en)</option>
+    <option value='fr'>French (fr)</option>
+    <option value='de'>German (de)</option>
+    <option value='hu'>Hungarian (hu)</option>
+    <option value='id'>Indonesian (id)</option>
+    <option value='ja'>Japanese (ja)</option>
+    <option value='pt'>Portuguese (pt)</option>
+    <option value='ru'>Russian (ru)</option>
+    <option value='es'>Spanish (es)</option>
+    <option value='sv'>Swedish (sv)</option>
+    <option value='tr'>Turkish (tr)</option>
   </select>
 
   <br />
@@ -156,7 +160,7 @@
 
   <span>
     <label>Configure debug and see in console:</label>
-    <input type="checkbox" id="debug"  onchange="start(event)" />
+    <input type="checkbox" id="debug" onchange="start(event)" />
   </span>
 
   <br />
@@ -170,76 +174,75 @@
 
   <span>
     <label>Configure sortTasks:</label>
-    <input type="checkbox" id="sort"  onchange="start(event)" />
+    <input type="checkbox" id="sort" onchange="start(event)" />
   </span>
 
   <span>
     <label>Show Weekenddays:</label>
-    <input type="checkbox" id="vShowWeekends" checked  onchange="start(event)" />
+    <input type="checkbox" id="vShowWeekends" checked onchange="start(event)" />
   </span>
 
 
-  
+
 
   <br />
 
-  
+
   <span>
     <label>Height:</label>
-    <input type="text" id="vTotalHeight"fl onchange="start(event)" />
+    <input type="text" id="vTotalHeight" fl onchange="start(event)" />
     (CSS style height like "300px". Empty for auto height)
 
 
     <br /><br />
-  <span>
-    <label>Custom elements (black lines for deadlines):</label>
-    <input type="checkbox" id="customElements" checked  onchange="start(event)" />
-    <div class="space"></div>
-    <label>Min Date:</label>
-    <input type="date" id="vMinDate" onchange="start(event)" />
-    <div class="space"></div>
-    <label>Max Date:</label>
-    <input type="date" id="vMaxDate" onchange="start(event)" />
-  </span>
-  
-  <br />
+    <span>
+      <label>Custom elements (black lines for deadlines):</label>
+      <input type="checkbox" id="customElements" checked onchange="start(event)" />
+      <div class="space"></div>
+      <label>Min Date:</label>
+      <input type="date" id="vMinDate" onchange="start(event)" />
+      <div class="space"></div>
+      <label>Max Date:</label>
+      <input type="date" id="vMaxDate" onchange="start(event)" />
+    </span>
 
-  <span>
-    <label>Custom Tooltip Template:</label><br />
-    <textarea id="tooltiptemplate" onchange="start(event)"><div>Nome: {{pName}}</div> <div>{{Lang:pStart}}: {{pStart}}</div></textarea>
-    <div class="space"></div>
-    <label>Dynamic tooltip:</label>
-    <input type="checkbox" id="dynamicTooltip" checked onchange="start(event)" />
-  </span>
+    <br />
+
+    <span>
+      <label>Custom Tooltip Template:</label><br />
+      <textarea id="tooltiptemplate"
+        onchange="start(event)"><div>Nome: {{pName}}</div> <div>{{Lang:pStart}}: {{pStart}}</div></textarea>
+      <div class="space"></div>
+      <label>Dynamic tooltip:</label>
+      <input type="checkbox" id="dynamicTooltip" checked onchange="start(event)" />
+    </span>
 
 
-  <br /><br />
-  <span>
-    <label>Custom columns order:</label>
-    <input type="text" id="vColumnOrder" 
-    
-    onchange="start(event)" />
-    <!-- value="vShowDur,vShowComp,vShowRes,vShowStartDate,vShowEndDate,vShowPlanStartDate,vShowPlanEndDate,vShowCost,vAdditionalHeaders,vShowAddEntries"  -->
-  </span>
+    <br /><br />
+    <span>
+      <label>Custom columns order:</label>
+      <input type="text" id="vColumnOrder" onchange="start(event)" />
+      <!-- value="vShowDur,vShowComp,vShowRes,vShowStartDate,vShowEndDate,vShowPlanStartDate,vShowPlanEndDate,vShowCost,vAdditionalHeaders,vShowAddEntries"  -->
+    </span>
 
-  
 
-  <br />
 
-  <span>
-    <button onclick="clearTasks()">Clear all tasks</button>
-  </span>
-  
-  <br />
+    <br />
 
-  <small>
-    * Click events in table are binded to console.log for testing
-  </small>
-  
+    <span>
+      <button onclick="clearTasks()">Clear all tasks</button>
+    </span>
 
-  <br /><br />
-  <div id="embedded-Gantt">
-  </div>
+    <br />
+
+    <small>
+      * Click events in table are binded to console.log for testing
+    </small>
+
+
+    <br /><br />
+    <div id="embedded-Gantt">
+    </div>
 
 </body>
 <script type="text/javascript" src="index.js"></script>
