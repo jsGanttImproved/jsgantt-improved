@@ -67,7 +67,9 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
   let pars = new Array();
 
   let projNode = findXMLNode(pXmlDoc, 'Project');
-  if (typeof projNode != 'undefined' && projNode.length > 0) project = projNode[0].getAttribute('xmlns');
+  if (typeof projNode != 'undefined' && projNode.length > 0) {
+    project = projNode[0].getAttribute('xmlns');
+  }
 
   if (project == 'http://schemas.microsoft.com/project') {
     pGanttVar.setDateInputFormat('yyyy-mm-dd');
@@ -201,9 +203,9 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
             // Now create a subtask
             maxPID++;
             vSplitEnd = getXMLNodeValue(splits[k], (k + 1 == j) ? 'Finish' : 'Start', 2, '');
-            pGanttVar.AddTaskItem(new TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue', 
-            pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost, 
-            pPlanStart, pPlanEnd, pDuration));
+            pGanttVar.AddTaskItem(new TaskItem(maxPID, pName, vSplitStart, vSplitEnd, 'gtaskblue',
+              pLink, pMile, pRes, pComp, 0, pID, pOpen, vDepend, pCaption, pNotes, pGanttVar, pCost,
+              pPlanStart, pPlanEnd, pDuration));
             vSubCreated = true;
             vDepend = '';
           }
@@ -215,7 +217,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         if (vSubCreated) pDepend = '';
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, 
+        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup,
           pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
       }
     }
@@ -255,7 +257,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         }
 
         // Finally add the task
-        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, 
+        pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp,
           pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
       }
     }

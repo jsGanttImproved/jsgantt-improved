@@ -29,14 +29,14 @@
 */
 
 import {
-  showToolTip, addTooltipListeners, addThisRowListeners, addFormatListeners,
-  folder, hide, show,
-  addScrollListeners, addFolderListeners, addListener
+	showToolTip, addTooltipListeners, addThisRowListeners, addFormatListeners,
+	folder, hide, show,
+	addScrollListeners, addFolderListeners, addListener
 } from "./events";
 import {
-  findObj, changeFormat,
-  stripIds, stripUnwanted, delayedHide, getOffset,
-  getScrollPositions, isIE, benchMark, getZoomFactor, hideToolTip, fadeToolTip, criticalPath, updateFlyingObj, moveToolTip, 
+	findObj, changeFormat,
+	stripIds, stripUnwanted, delayedHide, getOffset,
+	getScrollPositions, isIE, benchMark, getZoomFactor, hideToolTip, fadeToolTip, criticalPath, updateFlyingObj, moveToolTip,
 } from "./utils/general_utils";
 import { parseXML, parseXMLString, findXMLNode, getXMLNodeValue, AddXMLTask } from './xml';
 import { taskLink, sortTasks, TaskItem, processRows } from "./task";

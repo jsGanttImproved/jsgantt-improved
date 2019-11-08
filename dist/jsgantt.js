@@ -4865,8 +4865,9 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
     var res = new Array();
     var pars = new Array();
     var projNode = exports.findXMLNode(pXmlDoc, 'Project');
-    if (typeof projNode != 'undefined' && projNode.length > 0)
+    if (typeof projNode != 'undefined' && projNode.length > 0) {
         project = projNode[0].getAttribute('xmlns');
+    }
     if (project == 'http://schemas.microsoft.com/project') {
         pGanttVar.setDateInputFormat('yyyy-mm-dd');
         Task = exports.findXMLNode(pXmlDoc, 'Task');

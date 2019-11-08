@@ -187,8 +187,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     }
   }
 
-
-
   this.getID = function () { return vID; };
   this.getOriginalID = function () { return _id; };
   this.getGantt = function () { return vGantt; }
