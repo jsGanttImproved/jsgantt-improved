@@ -30,9 +30,6 @@ For **.NET** , see this example: [.NET Documentation](./docs/DotNet.md)
 
 ## Example
 
-Take a look at this Landing Page with docs and live examples:
-
-* https://jsganttimproved.github.io/jsgantt-improved
 
 You can view a Solo live example at:
 
