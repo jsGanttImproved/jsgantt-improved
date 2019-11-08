@@ -728,3 +728,8 @@ export const makeRequestOldBrowsers = (pFile, vDebug = false) => {
     };
   });
 };
+
+
+export const calculateStartEndFromDepend = (tasksList) => {
+
+}

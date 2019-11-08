@@ -5,12 +5,12 @@ import { browser, by, element } from 'protractor';
 
 const dv = browser.driver;
 
-describe('Initial test', () => {
-  it('Import', () => {
+describe('Browser test', () => {
+  it('JSGantt exists', () => {
     expect(JSGantt).to.exist;
   });
 
-  it('Import', () => {
+  it('Driver exists', () => {
     expect(dv).to.exist;
   });
 });
