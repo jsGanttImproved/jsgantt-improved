@@ -160,20 +160,20 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     let n = vDepList.length;
 
     for (let k = 0; k < n; k++) {
-      if (vDepList[k].toUpperCase().indexOf('SS') != -1) {
-        vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SS'));
+      if (vDepList[k].toUpperCase().endsWith('SS')) {
+        vDepend[k] = vDepList[k].substring(0, vDepList[k].length-2);
         vDependType[k] = 'SS';
       }
-      else if (vDepList[k].toUpperCase().indexOf('FF') != -1) {
-        vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('FF'));
+      else if (vDepList[k].toUpperCase().endsWith('FF')) {
+        vDepend[k] = vDepList[k].substring(0, vDepList[k].length-2);
         vDependType[k] = 'FF';
       }
-      else if (vDepList[k].toUpperCase().indexOf('SF') != -1) {
-        vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('SF'));
+      else if (vDepList[k].toUpperCase().endsWith('SF')) {
+        vDepend[k] = vDepList[k].substring(0, vDepList[k].length-2);
         vDependType[k] = 'SF';
       }
-      else if (vDepList[k].toUpperCase().indexOf('FS') != -1) {
-        vDepend[k] = vDepList[k].substring(0, vDepList[k].toUpperCase().indexOf('FS'));
+      else if (vDepList[k].toUpperCase().endsWith('FS')) {
+        vDepend[k] = vDepList[k].substring(0, vDepList[k].length-2);
         vDependType[k] = 'FS';
       }
       else {
