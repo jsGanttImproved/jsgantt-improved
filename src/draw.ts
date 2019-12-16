@@ -176,8 +176,8 @@ export const GanttChart = function (pDiv, pFormat) {
   this.clearDependencies = function () {
     let parent = this.getLines();
     if (
-        this.vEventsChange.line &&
-        typeof this.vEventsChange.line === 'function'
+      this.vEventsChange.line &&
+      typeof this.vEventsChange.line === 'function'
     ) {
       this.removeListener('click', this.vEventsChange.line, parent);
       this.addListener('click', this.vEventsChange.line, parent);
@@ -610,7 +610,7 @@ export const GanttChart = function (pDiv, pFormat) {
           if (!vSingleCell && !vComb) {
             vCellFormat = '';
             for (j = 0; j < vNumCols - 1; j++) {
-              if (this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
+              if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
               else vCellFormat = 'gtaskcell';
               newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0');
             }
@@ -648,7 +648,7 @@ export const GanttChart = function (pDiv, pFormat) {
             if (!vSingleCell && !vComb) {
               vCellFormat = '';
               for (j = 0; j < vNumCols - 1; j++) {
-                if (this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
+                if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
                 else vCellFormat = 'gtaskcell';
                 newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0');
               }
@@ -707,7 +707,7 @@ export const GanttChart = function (pDiv, pFormat) {
             if (!vSingleCell && !vComb) {
               vCellFormat = '';
               for (j = 0; j < vNumCols - 1; j++) {
-                if (this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
+                if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
                 else vCellFormat = 'gtaskcell';
                 newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0');
               }
