@@ -195,6 +195,12 @@ function clearTasks() {
   g.Draw()
 }
 
+function print() {
+  const tasks = g.vTaskList.map(e=>e.getAllData());
+  console.log(tasks);
+}
+
+
 function editValue(list, task, event, cell, column) {
   const found = list.find(item => item.pID == task.getOriginalID());
   if (!found) {
