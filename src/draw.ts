@@ -245,17 +245,8 @@ export const GanttChart = function (pDiv, pFormat) {
       let vTmpTBody = newNode(vTmpTab, 'tbody');
       let vTmpRow = newNode(vTmpTBody, 'tr');
       newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-      /* Add colspan on new node to cover all columns */
       let vTmpCell = newNode(vTmpRow, 'td', null, 'gspanning gtaskname', null, null, null, null, this.getColumnOrder().length + 1);
       vTmpCell.appendChild(this.drawSelector('top'));
-
-      /* Remove empty columns for colspan to work
-      this.getColumnOrder().forEach(column => {
-        if (this[column] == 1 || column === 'vAdditionalHeaders') {
-          draw_list_headings(column, vTmpRow, this.vAdditionalHeaders);
-        }
-      }); */
-
 
       vTmpRow = newNode(vTmpTBody, 'tr');
       newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
