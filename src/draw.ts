@@ -245,15 +245,8 @@ export const GanttChart = function (pDiv, pFormat) {
       let vTmpTBody = newNode(vTmpTab, 'tbody');
       let vTmpRow = newNode(vTmpTBody, 'tr');
       newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-      let vTmpCell = newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
+      let vTmpCell = newNode(vTmpRow, 'td', null, 'gspanning gtaskname', null, null, null, null, this.getColumnOrder().length + 1);
       vTmpCell.appendChild(this.drawSelector('top'));
-
-      this.getColumnOrder().forEach(column => {
-        if (this[column] == 1 || column === 'vAdditionalHeaders') {
-          draw_list_headings(column, vTmpRow, this.vAdditionalHeaders);
-        }
-      });
-
 
       vTmpRow = newNode(vTmpTBody, 'tr');
       newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -559,7 +552,6 @@ export const GanttChart = function (pDiv, pFormat) {
       for (i = 0; i < this.vTaskList.length; i++) {
         let curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
         let curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
-        if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
 
         vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends);
         vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends);
@@ -570,8 +562,6 @@ export const GanttChart = function (pDiv, pFormat) {
         curTaskPlanEnd = this.vTaskList[i].getPlanEnd();
 
         if (curTaskPlanStart && curTaskPlanEnd) {
-          if ((curTaskPlanEnd.getTime() - (curTaskPlanEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) curTaskPlanEnd = new Date(curTaskPlanEnd.getFullYear(), curTaskPlanEnd.getMonth(), curTaskPlanEnd.getDate() + 1, curTaskPlanEnd.getHours(), curTaskPlanEnd.getMinutes(), curTaskPlanEnd.getSeconds()); // add 1 day here to simplify calculations below
-
           vTaskPlanLeftPx = getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends);
           vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends);
         } else {
