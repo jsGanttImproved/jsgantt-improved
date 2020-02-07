@@ -207,6 +207,11 @@ span.gfoldercollapse {
   border-collapse: collapse;
 }
 
+.gcharttable,
+.gcharttableh {
+  table-layout: fixed;
+}
+
 .gcharttable {
   border: #efefef 1px solid;
 }
@@ -738,6 +743,7 @@ td.gspanning div {
   position: absolute;
   top: 0px;
   left: 0px;
+  z-index: 1px;
 }
 
 .gantt-inputtable {
