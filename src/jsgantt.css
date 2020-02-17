@@ -207,6 +207,11 @@ span.gfoldercollapse {
   border-collapse: collapse;
 }
 
+.gcharttable,
+.gcharttableh {
+  table-layout: fixed;
+}
+
 .gcharttable {
   border: #efefef 1px solid;
 }
