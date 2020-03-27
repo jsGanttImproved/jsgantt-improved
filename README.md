@@ -37,7 +37,7 @@ You can view a Solo live example at:
 
 Or use a live coding example at Codenpen:
 
-* https://codepen.io/mariomol/pen/mQzBPV
+* https://jsfiddle.net/luccasr73/5zvqo9nh/
 
 
 ## Easy to Use
