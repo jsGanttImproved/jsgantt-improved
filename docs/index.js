@@ -94,15 +94,15 @@ function start(e) {
         }
       },
       vEventsChange: {
-        taskname: editValue.bind(this, jsonObj),
-        res: editValue.bind(this, jsonObj),
-        dur: editValue.bind(this, jsonObj),
-        comp: editValue.bind(this, jsonObj),
-        start: editValue.bind(this, jsonObj),
-        end: editValue.bind(this, jsonObj),
-        planstart: editValue.bind(this, jsonObj),
-        planend: editValue.bind(this, jsonObj),
-        cost: editValue.bind(this, jsonObj)
+        taskname: editValue, // if you need to use the this scope, do: editValue.bind(this)
+        res: editValue,
+        dur: editValue,
+        comp: editValue,
+        start: editValue,
+        end: editValue,
+        planstart: editValue,
+        planend: editValue,
+        cost: editValue
       },
       vResources: [
         { id: 0, name: 'Anybody' },
@@ -196,6 +196,7 @@ function clearTasks() {
 }
 
 function editValue(list, task, event, cell, column) {
+  console.log(list, task, event, cell, column)
   const found = list.find(item => item.pID == task.getOriginalID());
   if (!found) {
     return;

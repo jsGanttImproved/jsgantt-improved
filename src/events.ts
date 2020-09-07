@@ -197,7 +197,7 @@ export const addListener = function (eventName, handler, control) {
   }
 };
 
-export const removeListener = function(eventName, handler, control) {
+export const removeListener = function (eventName, handler, control) {
   // Check if control is a string
   if (control === String(control)) control = findObj(control);
   if (control.removeEventListener) {
@@ -311,8 +311,8 @@ export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {
   }, vTmpCell);
 }
 
-export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw = null, event = 'blur') {
-
+export const addListenerInputCell = function (vTmpCell, vEventsChange, callback, tasks, index, column, draw = null, event = 'blur') {
+  const task = tasks[index];
   if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
     const tagName = vTmpCell.children[0].children[0].tagName;
     const selectInputOrButton = tagName === 'SELECT' || tagName === 'INPUT' || tagName === 'BUTTON';
@@ -322,7 +322,7 @@ export const addListenerInputCell = function (vTmpCell, vEventsChange, callback,
           callback(task, e);
         }
         if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
-          const q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
+          const q = vEventsChange[column](tasks, task, e, vTmpCell, vColumnsNames[column]);
           if (q && q.then) {
             q.then(e => draw());
           } else {

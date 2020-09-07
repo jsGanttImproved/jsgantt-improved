@@ -318,7 +318,7 @@ export const GanttChart = function (pDiv, pFormat) {
             // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
             // vTmpDiv.appendChild(document.createNode(text));
             const callback = (task, e) => task.setName(e.target.value);
-            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'taskname', this.Draw.bind(this));
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList, i, 'taskname', this.Draw.bind(this));
             addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i], 'taskname');
           }
           else {
@@ -326,7 +326,7 @@ export const GanttChart = function (pDiv, pFormat) {
             const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
             vTmpDiv = newNode(vTmpCell, 'div', null, null, vCellContents + text);
             const callback = (task, e) => task.setName(e.target.value);
-            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList[i], 'taskname', this.Draw.bind(this));
+            addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList, i, 'taskname', this.Draw.bind(this));
             addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'taskname');
           }
 
@@ -850,6 +850,6 @@ export const GanttChart = function (pDiv, pFormat) {
     }
   }; //this.draw
 
-  if (this.vDiv && this.vDiv.nodeName.toLowerCase() == 'div') this.vDivId = this.vDiv.id;
+  if (this.vDiv && this.vDiv.nodeName && this.vDiv.nodeName.toLowerCase() == 'div') this.vDivId = this.vDiv.id;
 }; //GanttChart
 

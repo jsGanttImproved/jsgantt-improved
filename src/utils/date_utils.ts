@@ -130,6 +130,10 @@ export const parseDateStr = function (pDateStr, pFormatStr) {
 };
 
 export const formatDateStr = function (pDate, pDateFormatArr, pL) {
+  // Fix on issue #303 - getXMLTask is passing null as pDates
+  if (!pDate) {
+    return;
+  }
   let vDateStr = '';
 
   let vYear2Str = pDate.getFullYear().toString().substring(2, 4);
