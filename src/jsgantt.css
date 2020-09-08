@@ -493,7 +493,7 @@ div.gtaskbarcontainer {
 .JSGanttToolTip {
   position: absolute;
   display: block;
-  z-index: 2;
+  z-index: 10000;
 }
 
 .JSGanttToolTipcont {
