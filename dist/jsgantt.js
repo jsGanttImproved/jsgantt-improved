@@ -614,8 +614,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                             this.vTaskList[i].setTaskDiv(vTmpDiv2);
                         }
                         // PLANNED
-                        // If they are different, show plan bar... show if there is no real vStart as well (just plan dates)
-                        if (vTaskPlanLeftPx && (vTaskPlanLeftPx != vTaskLeftPx || !this.vTaskList[i].getStartVar())) {
+                        // If exist and one of them are different, show plan bar... show if there is no real vStart as well (just plan dates)
+                        if (vTaskPlanLeftPx && ((vTaskPlanLeftPx != vTaskLeftPx || vTaskPlanRightPx != vTaskRightPx) || !this.vTaskList[i].getStartVar())) {
                             var vTmpPlanDiv = draw_utils_1.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
                             var vTmpPlanDiv2 = draw_utils_1.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
                             this.vTaskList[i].setPlanTaskDiv(vTmpPlanDiv2);
@@ -822,8 +822,8 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
     }
     if ('vShowStartDate' === column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gstartdate');
-        var v = date_utils_1.formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]);
-        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getStart());
+        var v = date_utils_1.formatDateStr(vTaskList[i].getStartVar(), vDateTaskTableDisplayFormat, vLangs[vLang]);
+        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getStartVar());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setStart(e.target.value); };
         events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'start', Draw);
@@ -831,8 +831,8 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
     }
     if ('vShowEndDate' === column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'genddate');
-        var v = date_utils_1.formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]);
-        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getEnd());
+        var v = date_utils_1.formatDateStr(vTaskList[i].getEndVar(), vDateTaskTableDisplayFormat, vLangs[vLang]);
+        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getEndVar());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setEnd(e.target.value); };
         events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'end', Draw);
@@ -3241,6 +3241,9 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         }
         else
             return new Date();
+    };
+    this.getEndVar = function () {
+        return vEnd;
     };
     this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
     this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
