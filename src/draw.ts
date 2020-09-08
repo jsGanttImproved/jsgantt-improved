@@ -326,7 +326,7 @@ export const GanttChart = function (pDiv, pFormat) {
           this.getColumnOrder().forEach(column => {
             if (this[column] == 1 || column === 'vAdditionalHeaders') {
               draw_header(column, i, vTmpRow, this.vTaskList, this.vEditable, this.vEventsChange, this.vEvents,
-                this.vDateTaskTableDisplayFormat, this.vAdditionalHeaders, this.vFormat, this.vLangs, this.vLang, this.vResources, this.Draw);
+                this.vDateTaskTableDisplayFormat, this.vAdditionalHeaders, this.vFormat, this.vLangs, this.vLang, this.vResources, this.Draw.bind(this));
             }
           });
 

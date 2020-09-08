@@ -367,7 +367,6 @@ const toggleDependencies = function (e, vLineOptions) {
   }
 }
 
-// "pID": 122
 const vColumnsNames = {
   taskname: 'pName',
   res: 'pRes',

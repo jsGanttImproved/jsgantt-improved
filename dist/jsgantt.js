@@ -300,7 +300,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     }
                     this_1.getColumnOrder().forEach(function (column) {
                         if (_this[column] == 1 || column === 'vAdditionalHeaders') {
-                            draw_columns_1.draw_header(column, i_1, vTmpRow_1, _this.vTaskList, _this.vEditable, _this.vEventsChange, _this.vEvents, _this.vDateTaskTableDisplayFormat, _this.vAdditionalHeaders, _this.vFormat, _this.vLangs, _this.vLang, _this.vResources, _this.Draw);
+                            draw_columns_1.draw_header(column, i_1, vTmpRow_1, _this.vTaskList, _this.vEditable, _this.vEventsChange, _this.vEvents, _this.vDateTaskTableDisplayFormat, _this.vAdditionalHeaders, _this.vFormat, _this.vLangs, _this.vLang, _this.vResources, _this.Draw.bind(_this));
                         }
                     });
                     vNumRows++;
@@ -1417,7 +1417,6 @@ var toggleDependencies = function (e, vLineOptions) {
         // });
     }
 };
-// "pID": 122
 var vColumnsNames = {
     taskname: 'pName',
     res: 'pRes',
@@ -3295,57 +3294,65 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         if (vMile) {
             vDuration = '-';
         }
+        else if (!vEnd && !vStart && vPlanStart && vPlanEnd) {
+            return calculateVDuration(pFormat, pLang, this.getPlanStart(), this.getPlanEnd());
+        }
         else if (!vEnd && vDuration) {
             return vDuration;
         }
         else {
-            var vUnits = null;
-            switch (pFormat) {
-                case 'week':
-                    vUnits = 'day';
-                    break;
-                case 'month':
-                    vUnits = 'week';
-                    break;
-                case 'quarter':
-                    vUnits = 'month';
-                    break;
-                default:
-                    vUnits = pFormat;
-                    break;
-            }
-            // let vTaskEnd = new Date(this.getEnd().getTime());
-            // if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
-            //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
-            // }
-            // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-            var hours = (this.getEnd().getTime() - this.getStart().getTime()) / 1000 / 60 / 60;
-            var tmpPer = void 0;
-            switch (vUnits) {
-                case 'hour':
-                    tmpPer = Math.round(hours);
-                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']);
-                    break;
-                case 'day':
-                    tmpPer = Math.round(hours / 24);
-                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']);
-                    break;
-                case 'week':
-                    tmpPer = Math.round(hours / 24 / 7);
-                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']);
-                    break;
-                case 'month':
-                    tmpPer = Math.round(hours / 24 / 7 / 30);
-                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']);
-                    break;
-                case 'quarter':
-                    tmpPer = Math.round(hours / 24 / 7 / 30 / 3);
-                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']);
-                    break;
-            }
+            vDuration = calculateVDuration(pFormat, pLang, this.getStart(), this.getEnd());
         }
         return vDuration;
     };
+    function calculateVDuration(pFormat, pLang, start, end) {
+        var vDuration;
+        var vUnits = null;
+        switch (pFormat) {
+            case 'week':
+                vUnits = 'day';
+                break;
+            case 'month':
+                vUnits = 'week';
+                break;
+            case 'quarter':
+                vUnits = 'month';
+                break;
+            default:
+                vUnits = pFormat;
+                break;
+        }
+        // let vTaskEnd = new Date(this.getEnd().getTime());
+        // if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
+        //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
+        // }
+        // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
+        var hours = (end.getTime() - start.getTime()) / 1000 / 60 / 60;
+        var tmpPer;
+        switch (vUnits) {
+            case 'hour':
+                tmpPer = Math.round(hours);
+                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']);
+                break;
+            case 'day':
+                tmpPer = Math.round(hours / 24);
+                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']);
+                break;
+            case 'week':
+                tmpPer = Math.round(hours / 24 / 7);
+                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']);
+                break;
+            case 'month':
+                tmpPer = Math.round(hours / 24 / 7 / 30);
+                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']);
+                break;
+            case 'quarter':
+                tmpPer = Math.round(hours / 24 / 7 / 30 / 3);
+                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']);
+                break;
+        }
+        return vDuration;
+    }
     this.getBarText = function () { return vBarText; };
     this.getParent = function () { return vParent; };
     this.getGroup = function () { return vGroup; };
