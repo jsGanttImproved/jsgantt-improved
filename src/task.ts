@@ -218,6 +218,9 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     }
     else return new Date();
   };
+  this.getEndVar = function () {
+    return vEnd;
+  };
   this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
   this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
   this.getCost = function () { return vCost; };

@@ -48,8 +48,8 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
   }
   if ('vShowStartDate' === column) {
     vTmpCell = newNode(vTmpRow, 'td', null, 'gstartdate');
-    const v = formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]);
-    const text = makeInput(v, vEditable, 'date', vTaskList[i].getStart());
+    const v = formatDateStr(vTaskList[i].getStartVar(), vDateTaskTableDisplayFormat, vLangs[vLang]);
+    const text = makeInput(v, vEditable, 'date', vTaskList[i].getStartVar());
     vTmpDiv = newNode(vTmpCell, 'div', null, null, text);
     const callback = (task, e) => task.setStart(e.target.value);
     addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'start', Draw);
@@ -57,8 +57,8 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
   }
   if ('vShowEndDate' === column) {
     vTmpCell = newNode(vTmpRow, 'td', null, 'genddate');
-    const v = formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]);
-    const text = makeInput(v, vEditable, 'date', vTaskList[i].getEnd());
+    const v = formatDateStr(vTaskList[i].getEndVar(), vDateTaskTableDisplayFormat, vLangs[vLang]);
+    const text = makeInput(v, vEditable, 'date', vTaskList[i].getEndVar());
     vTmpDiv = newNode(vTmpCell, 'div', null, null, text);
     const callback = (task, e) => task.setEnd(e.target.value);
     addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'end', Draw);
