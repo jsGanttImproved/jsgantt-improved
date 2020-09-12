@@ -287,7 +287,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
                         // vTmpDiv.appendChild(document.createNode(text));
                         var callback = function (task, e) { return task.setName(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList, i_1, 'taskname', this_1.Draw.bind(this_1));
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'taskname', this_1.Draw.bind(this_1));
                         events_1.addListenerClickCell(vTmpDiv, this_1.vEvents, this_1.vTaskList[i_1], 'taskname');
                     }
                     else {
@@ -295,12 +295,12 @@ exports.GanttChart = function (pDiv, pFormat) {
                         var text = draw_utils_1.makeInput(this_1.vTaskList[i_1].getName(), this_1.vEditable, 'text');
                         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, vCellContents + text);
                         var callback = function (task, e) { return task.setName(e.target.value); };
-                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList, i_1, 'taskname', this_1.Draw.bind(this_1));
+                        events_1.addListenerInputCell(vTmpCell, this_1.vEventsChange, callback, this_1.vTaskList[i_1], 'taskname', this_1.Draw.bind(this_1));
                         events_1.addListenerClickCell(vTmpCell, this_1.vEvents, this_1.vTaskList[i_1], 'taskname');
                     }
                     this_1.getColumnOrder().forEach(function (column) {
                         if (_this[column] == 1 || column === 'vAdditionalHeaders') {
-                            draw_columns_1.draw_header(column, i_1, vTmpRow_1, _this.vTaskList, _this.vEditable, _this.vEventsChange, _this.vEvents, _this.vDateTaskTableDisplayFormat, _this.vAdditionalHeaders, _this.vFormat, _this.vLangs, _this.vLang, _this.vResources, _this.Draw.bind(_this));
+                            draw_columns_1.draw_header(column, i_1, vTmpRow_1, _this.vTaskList, _this.vEditable, _this.vEventsChange, _this.vEvents, _this.vDateTaskTableDisplayFormat, _this.vAdditionalHeaders, _this.vFormat, _this.vLangs, _this.vLang, _this.vResources, _this.Draw);
                         }
                     });
                     vNumRows++;
@@ -614,8 +614,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                             this.vTaskList[i].setTaskDiv(vTmpDiv2);
                         }
                         // PLANNED
-                        // If exist and one of them are different, show plan bar... show if there is no real vStart as well (just plan dates)
-                        if (vTaskPlanLeftPx && ((vTaskPlanLeftPx != vTaskLeftPx || vTaskPlanRightPx != vTaskRightPx) || !this.vTaskList[i].getStartVar())) {
+                        // If they are different, show plan bar... show if there is no real vStart as well (just plan dates)
+                        if (vTaskPlanLeftPx && (vTaskPlanLeftPx != vTaskLeftPx || !this.vTaskList[i].getStartVar())) {
                             var vTmpPlanDiv = draw_utils_1.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
                             var vTmpPlanDiv2 = draw_utils_1.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
                             this.vTaskList[i].setPlanTaskDiv(vTmpPlanDiv2);
@@ -771,7 +771,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             this.vEvents.afterDraw();
         }
     }; //this.draw
-    if (this.vDiv && this.vDiv.nodeName && this.vDiv.nodeName.toLowerCase() == 'div')
+    if (this.vDiv && this.vDiv.nodeName.toLowerCase() == 'div')
         this.vDivId = this.vDiv.id;
 }; //GanttChart
 
@@ -796,86 +796,86 @@ exports.COLUMN_ORDER = [
 ];
 exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsChange, vEvents, vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw) {
     var vTmpCell, vTmpDiv;
-    if ('vShowRes' === column) {
+    if ('vShowRes' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gresource');
         var text = draw_utils_1.makeInput(vTaskList[i].getResource(), vEditable, 'resource', vTaskList[i].getResource(), vResources);
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setResource(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'res', Draw, 'change');
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'res', Draw, 'change');
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'res');
     }
-    if ('vShowDur' === column) {
+    if ('vShowDur' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gduration');
         var text = draw_utils_1.makeInput(vTaskList[i].getDuration(vFormat, vLangs[vLang]), vEditable, 'text', vTaskList[i].getDuration());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setDuration(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'dur', Draw);
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'dur', Draw);
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'dur');
     }
-    if ('vShowComp' === column) {
+    if ('vShowComp' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gpccomplete');
         var text = draw_utils_1.makeInput(vTaskList[i].getCompStr(), vEditable, 'percentage', vTaskList[i].getCompVal());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { task.setComp(e.target.value); task.setCompVal(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'comp', Draw);
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'comp', Draw);
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'comp');
     }
-    if ('vShowStartDate' === column) {
+    if ('vShowStartDate' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gstartdate');
-        var v = date_utils_1.formatDateStr(vTaskList[i].getStartVar(), vDateTaskTableDisplayFormat, vLangs[vLang]);
-        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getStartVar());
+        var v = date_utils_1.formatDateStr(vTaskList[i].getStart(), vDateTaskTableDisplayFormat, vLangs[vLang]);
+        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getStart());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setStart(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'start', Draw);
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'start', Draw);
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'start');
     }
-    if ('vShowEndDate' === column) {
+    if ('vShowEndDate' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'genddate');
-        var v = date_utils_1.formatDateStr(vTaskList[i].getEndVar(), vDateTaskTableDisplayFormat, vLangs[vLang]);
-        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getEndVar());
+        var v = date_utils_1.formatDateStr(vTaskList[i].getEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]);
+        var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getEnd());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setEnd(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'end', Draw);
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'end', Draw);
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'end');
     }
-    if ('vShowPlanStartDate' === column) {
+    if ('vShowPlanStartDate' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gplanstartdate');
         var v = vTaskList[i].getPlanStart() ? date_utils_1.formatDateStr(vTaskList[i].getPlanStart(), vDateTaskTableDisplayFormat, vLangs[vLang]) : '';
         var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getPlanStart());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setPlanStart(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'planstart', Draw);
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'planstart', Draw);
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'planstart');
     }
-    if ('vShowPlanEndDate' === column) {
+    if ('vShowPlanEndDate' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gplanenddate');
         var v = vTaskList[i].getPlanEnd() ? date_utils_1.formatDateStr(vTaskList[i].getPlanEnd(), vDateTaskTableDisplayFormat, vLangs[vLang]) : '';
         var text = draw_utils_1.makeInput(v, vEditable, 'date', vTaskList[i].getPlanEnd());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setPlanEnd(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'planend', Draw);
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'planend', Draw);
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'planend');
     }
-    if ('vShowCost' === column) {
+    if ('vShowCost' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gcost');
         var text = draw_utils_1.makeInput(vTaskList[i].getCost(), vEditable, 'cost');
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setCost(e.target.value); };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'cost', Draw);
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'cost', Draw);
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'cost');
     }
-    if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
+    if ('vAdditionalHeaders' == column && vAdditionalHeaders) {
         for (var key in vAdditionalHeaders) {
             var header = vAdditionalHeaders[key];
             var css = header.class ? header.class : "gadditional-" + key;
             var data = vTaskList[i].getDataObject();
             vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
             // const callback = (task, e) => task.setCost(e.target.value);
-            // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'costdate');
+            // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'costdate');
             vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
         }
     }
-    if ('vShowAddEntries' === column) {
+    if ('vShowAddEntries' == column) {
         vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gaddentries');
         var button = "<button>+</button>";
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, button);
@@ -884,82 +884,82 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
                 vParent: task.getParent()
             });
         };
-        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'addentries', Draw.bind(this));
+        events_1.addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList[i], 'addentries', Draw.bind(this));
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'addentries');
     }
 };
 exports.draw_bottom = function (column, vTmpRow, vAdditionalHeaders) {
-    if ('vShowRes' === column)
+    if ('vShowRes' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-    if ('vShowDur' === column)
+    if ('vShowDur' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-    if ('vShowComp' === column)
+    if ('vShowComp' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-    if ('vShowStartDate' === column)
+    if ('vShowStartDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-    if ('vShowEndDate' === column)
+    if ('vShowEndDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
-    if ('vShowPlanStartDate' === column)
+    if ('vShowPlanStartDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
-    if ('vShowPlanEndDate' === column)
+    if ('vShowPlanEndDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
-    if ('vShowCost' === column)
+    if ('vShowCost' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
-    if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
+    if ('vAdditionalHeaders' == column && vAdditionalHeaders) {
         for (var key in vAdditionalHeaders) {
             var header = vAdditionalHeaders[key];
             var css = header.class ? header.class : "gadditional-" + key;
             draw_utils_1.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
         }
     }
-    if ('vShowAddEntries' === column)
+    if ('vShowAddEntries' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
 };
 exports.draw_list_headings = function (column, vTmpRow, vAdditionalHeaders) {
-    if ('vShowRes' === column)
+    if ('vShowRes' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-    if ('vShowDur' === column)
+    if ('vShowDur' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-    if ('vShowComp' === column)
+    if ('vShowComp' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-    if ('vShowStartDate' === column)
+    if ('vShowStartDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-    if ('vShowEndDate' === column)
+    if ('vShowEndDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
-    if ('vShowPlanStartDate' === column)
+    if ('vShowPlanStartDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-    if ('vShowPlanEndDate' === column)
+    if ('vShowPlanEndDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
-    if ('vShowCost' === column)
+    if ('vShowCost' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
-    if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
+    if ('vAdditionalHeaders' == column && vAdditionalHeaders) {
         for (var key in vAdditionalHeaders) {
             var header = vAdditionalHeaders[key];
             var css = header.class ? header.class : "gadditional-" + key;
             draw_utils_1.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
         }
     }
-    if ('vShowAddEntries' === column)
+    if ('vShowAddEntries' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
 };
 exports.draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAdditionalHeaders) {
-    if ('vShowRes' === column)
+    if ('vShowRes' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gresource', vLangs[vLang]['resource']);
-    if ('vShowDur' === column)
+    if ('vShowDur' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gduration', vLangs[vLang]['duration']);
-    if ('vShowComp' === column)
+    if ('vShowComp' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', vLangs[vLang]['comp']);
-    if ('vShowStartDate' === column)
+    if ('vShowStartDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', vLangs[vLang]['startdate']);
-    if ('vShowEndDate' === column)
+    if ('vShowEndDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', vLangs[vLang]['enddate']);
-    if ('vShowPlanStartDate' === column)
+    if ('vShowPlanStartDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gplanstartdate', vLangs[vLang]['planstartdate']);
-    if ('vShowPlanEndDate' === column)
+    if ('vShowPlanEndDate' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', vLangs[vLang]['planenddate']);
-    if ('vShowCost' === column)
+    if ('vShowCost' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gcost', vLangs[vLang]['cost']);
-    if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
+    if ('vAdditionalHeaders' == column && vAdditionalHeaders) {
         for (var key in vAdditionalHeaders) {
             var header = vAdditionalHeaders[key];
             var text = header.translate ? vLangs[vLang][header.translate] : header.title;
@@ -967,7 +967,7 @@ exports.draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAddition
             draw_utils_1.newNode(vTmpRow, 'td', null, "gtaskheading gadditional " + css, text);
         }
     }
-    if ('vShowAddEntries' === column)
+    if ('vShowAddEntries' == column)
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gaddentries', vLangs[vLang]['addentries']);
 };
 
@@ -1360,10 +1360,9 @@ exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
         }
     }, vTmpCell);
 };
-exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, tasks, index, column, draw, event) {
+exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task, column, draw, event) {
     if (draw === void 0) { draw = null; }
     if (event === void 0) { event = 'blur'; }
-    var task = tasks[index];
     if (vTmpCell.children[0] && vTmpCell.children[0].children && vTmpCell.children[0].children[0]) {
         var tagName = vTmpCell.children[0].children[0].tagName;
         var selectInputOrButton = tagName === 'SELECT' || tagName === 'INPUT' || tagName === 'BUTTON';
@@ -1373,7 +1372,7 @@ exports.addListenerInputCell = function (vTmpCell, vEventsChange, callback, task
                     callback(task, e);
                 }
                 if (vEventsChange[column] && typeof vEventsChange[column] === 'function') {
-                    var q = vEventsChange[column](tasks, task, e, vTmpCell, vColumnsNames[column]);
+                    var q = vEventsChange[column](task, e, vTmpCell, vColumnsNames[column]);
                     if (q && q.then) {
                         q.then(function (e) { return draw(); });
                     }
@@ -1417,6 +1416,7 @@ var toggleDependencies = function (e, vLineOptions) {
         // });
     }
 };
+// "pID": 122
 var vColumnsNames = {
     taskname: 'pName',
     res: 'pRes',
@@ -2741,80 +2741,6 @@ var hu = {
     'tooltipLoading': 'Belöltés...'
 };
 exports.hu = hu;
-var ko = {
-    'format': '구분',
-    'hour': '시',
-    'day': '일',
-    'week': '주',
-    'month': '월',
-    'quarter': '분기',
-    'hours': '시',
-    'days': '일',
-    'weeks': '주',
-    'months': '월',
-    'quarters': '분기',
-    'hr': '시',
-    'dy': '일',
-    'wk': '주',
-    'mth': '월',
-    'qtr': '분기',
-    'hrs': '시',
-    'dys': '일',
-    'wks': '주',
-    'mths': '월',
-    'qtrs': '분기',
-    'resource': '이름',
-    'duration': '기간',
-    'comp': '% ',
-    'completion': '완료',
-    'startdate': '시작일자',
-    'planstartdate': '계획 시작일자',
-    'enddate': '종료일자',
-    'planenddate': '계획 종료일자',
-    'cost': '비용',
-    'moreinfo': '더 많은 정보',
-    'notes': '비고',
-    'january': '1월',
-    'february': '2월',
-    'march': '3월',
-    'april': '4월',
-    'maylong': '5월',
-    'june': '6월',
-    'july': '7월',
-    'august': '8월',
-    'september': '9월',
-    'october': '10월',
-    'november': '11월',
-    'december': '12월',
-    'jan': '1',
-    'feb': '2',
-    'mar': '3',
-    'apr': '4',
-    'may': '5',
-    'jun': '6',
-    'jul': '7',
-    'aug': '8',
-    'sep': '9',
-    'oct': '10',
-    'nov': '11',
-    'dec': '12',
-    'sunday': '일요일',
-    'monday': '월요일',
-    'tuesday': '화요일',
-    'wednesday': '수요일',
-    'thursday': '목요일',
-    'friday': '금요일',
-    'saturday': '토요일',
-    'sun': '일',
-    'mon': '월',
-    'tue': '화',
-    'wed': '수',
-    'thu': '목',
-    'fri': '금',
-    'sat': '토',
-    'tooltipLoading': '로딩중...'
-};
-exports.ko = ko;
 
 },{}],9:[function(require,module,exports){
 "use strict";
@@ -3242,9 +3168,6 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         else
             return new Date();
     };
-    this.getEndVar = function () {
-        return vEnd;
-    };
     this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
     this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
     this.getCost = function () { return vCost; };
@@ -3297,65 +3220,57 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         if (vMile) {
             vDuration = '-';
         }
-        else if (!vEnd && !vStart && vPlanStart && vPlanEnd) {
-            return calculateVDuration(pFormat, pLang, this.getPlanStart(), this.getPlanEnd());
-        }
         else if (!vEnd && vDuration) {
             return vDuration;
         }
         else {
-            vDuration = calculateVDuration(pFormat, pLang, this.getStart(), this.getEnd());
+            var vUnits = null;
+            switch (pFormat) {
+                case 'week':
+                    vUnits = 'day';
+                    break;
+                case 'month':
+                    vUnits = 'week';
+                    break;
+                case 'quarter':
+                    vUnits = 'month';
+                    break;
+                default:
+                    vUnits = pFormat;
+                    break;
+            }
+            // let vTaskEnd = new Date(this.getEnd().getTime());
+            // if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
+            //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
+            // }
+            // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
+            var hours = (this.getEnd().getTime() - this.getStart().getTime()) / 1000 / 60 / 60;
+            var tmpPer = void 0;
+            switch (vUnits) {
+                case 'hour':
+                    tmpPer = Math.round(hours);
+                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']);
+                    break;
+                case 'day':
+                    tmpPer = Math.round(hours / 24);
+                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']);
+                    break;
+                case 'week':
+                    tmpPer = Math.round(hours / 24 / 7);
+                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']);
+                    break;
+                case 'month':
+                    tmpPer = Math.round(hours / 24 / 7 / 30);
+                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']);
+                    break;
+                case 'quarter':
+                    tmpPer = Math.round(hours / 24 / 7 / 30 / 3);
+                    vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']);
+                    break;
+            }
         }
         return vDuration;
     };
-    function calculateVDuration(pFormat, pLang, start, end) {
-        var vDuration;
-        var vUnits = null;
-        switch (pFormat) {
-            case 'week':
-                vUnits = 'day';
-                break;
-            case 'month':
-                vUnits = 'week';
-                break;
-            case 'quarter':
-                vUnits = 'month';
-                break;
-            default:
-                vUnits = pFormat;
-                break;
-        }
-        // let vTaskEnd = new Date(this.getEnd().getTime());
-        // if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
-        //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
-        // }
-        // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
-        var hours = (end.getTime() - start.getTime()) / 1000 / 60 / 60;
-        var tmpPer;
-        switch (vUnits) {
-            case 'hour':
-                tmpPer = Math.round(hours);
-                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']);
-                break;
-            case 'day':
-                tmpPer = Math.round(hours / 24);
-                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']);
-                break;
-            case 'week':
-                tmpPer = Math.round(hours / 24 / 7);
-                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']);
-                break;
-            case 'month':
-                tmpPer = Math.round(hours / 24 / 7 / 30);
-                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']);
-                break;
-            case 'quarter':
-                tmpPer = Math.round(hours / 24 / 7 / 30 / 3);
-                vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']);
-                break;
-        }
-        return vDuration;
-    }
     this.getBarText = function () { return vBarText; };
     this.getParent = function () { return vParent; };
     this.getGroup = function () { return vGroup; };
@@ -3852,15 +3767,14 @@ exports.parseDateStr = function (pDateStr, pFormatStr) {
             case 'yyyy-mm-dd':
                 vDate = new Date(vDateParts[0], vDateParts[1] - 1, vDateParts[2], vDateParts[3], vDateParts[4]);
                 break;
+            case 'yyyy-mm-dd HH:MI:SS':
+                vDate = new Date(vDateParts[0], vDateParts[1] - 1, vDateParts[2], vDateParts[3], vDateParts[4], vDateParts[5]);
+                break;
         }
     }
     return (vDate);
 };
 exports.formatDateStr = function (pDate, pDateFormatArr, pL) {
-    // Fix on issue #303 - getXMLTask is passing null as pDates
-    if (!pDate) {
-        return;
-    }
     var vDateStr = '';
     var vYear2Str = pDate.getFullYear().toString().substring(2, 4);
     var vMonthStr = (pDate.getMonth() + 1) + '';
@@ -3922,6 +3836,12 @@ exports.formatDateStr = function (pDate, pDateFormatArr, pL) {
                     vDateStr += '0'; // now fall through
             case 'mi':
                 vDateStr += pDate.getMinutes();
+                break;
+            case 'SS':
+                if (pDate.getSeconds() < 10)
+                    vDateStr += '0'; // now fall through
+            case 'ss':
+                vDateStr += pDate.getSeconds();
                 break;
             case 'pm':
                 vDateStr += ((pDate.getHours()) < 12) ? 'am' : 'pm';
@@ -4190,6 +4110,102 @@ exports.internalPropertiesLang = {
     'pPlanStart': 'planstartdate',
     'pPlanEnd': 'planenddate'
 };
+exports.getMinDate = function (pList, pFormat, pMinDate) {
+    var vDate = new Date();
+    if (pList.length <= 0)
+        return pMinDate || vDate;
+    vDate.setTime((pMinDate && pMinDate.getTime()) || pList[0].getStart().getTime());
+    // Parse all Task Start dates to find min
+    for (var i = 0; i < pList.length; i++) {
+        if (pList[i].getStart().getTime() < vDate.getTime())
+            vDate.setTime(pList[i].getStart().getTime());
+    }
+    // Adjust min date to specific format boundaries (first of week or first of month)
+    if (pFormat == 'day') {
+        vDate.setDate(vDate.getDate() - 1);
+        while (vDate.getDay() % 7 != 1)
+            vDate.setDate(vDate.getDate() - 1);
+    }
+    else if (pFormat == 'week') {
+        vDate.setDate(vDate.getDate() - 1);
+        while (vDate.getDay() % 7 != 1)
+            vDate.setDate(vDate.getDate() - 1);
+    }
+    else if (pFormat == 'month') {
+        vDate.setDate(vDate.getDate() - 15);
+        while (vDate.getDate() > 1)
+            vDate.setDate(vDate.getDate() - 1);
+    }
+    else if (pFormat == 'quarter') {
+        vDate.setDate(vDate.getDate() - 31);
+        if (vDate.getMonth() == 0 || vDate.getMonth() == 1 || vDate.getMonth() == 2)
+            vDate.setFullYear(vDate.getFullYear(), 0, 1);
+        else if (vDate.getMonth() == 3 || vDate.getMonth() == 4 || vDate.getMonth() == 5)
+            vDate.setFullYear(vDate.getFullYear(), 3, 1);
+        else if (vDate.getMonth() == 6 || vDate.getMonth() == 7 || vDate.getMonth() == 8)
+            vDate.setFullYear(vDate.getFullYear(), 6, 1);
+        else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
+            vDate.setFullYear(vDate.getFullYear(), 9, 1);
+    }
+    else if (pFormat == 'hour') {
+        vDate.setHours(vDate.getHours() - 1);
+        while (vDate.getHours() % 6 != 0)
+            vDate.setHours(vDate.getHours() - 1);
+    }
+    if (pFormat == 'hour')
+        vDate.setMinutes(0, 0);
+    else
+        vDate.setHours(0, 0, 0);
+    return (vDate);
+};
+exports.getMaxDate = function (pList, pFormat, pMaxDate) {
+    var vDate = new Date();
+    if (pList.length <= 0)
+        return pMaxDate || vDate;
+    vDate.setTime((pMaxDate && pMaxDate.getTime()) || pList[0].getEnd().getTime());
+    // Parse all Task End dates to find max
+    for (var i = 0; i < pList.length; i++) {
+        if (pList[i].getEnd().getTime() > vDate.getTime())
+            vDate.setTime(pList[i].getEnd().getTime());
+    }
+    // Adjust max date to specific format boundaries (end of week or end of month)
+    if (pFormat == 'day') {
+        vDate.setDate(vDate.getDate() + 1);
+        while (vDate.getDay() % 7 != 0)
+            vDate.setDate(vDate.getDate() + 1);
+    }
+    else if (pFormat == 'week') {
+        //For weeks, what is the last logical boundary?
+        vDate.setDate(vDate.getDate() + 1);
+        while (vDate.getDay() % 7 != 0)
+            vDate.setDate(vDate.getDate() + 1);
+    }
+    else if (pFormat == 'month') {
+        // Set to last day of current Month
+        while (vDate.getDate() > 1)
+            vDate.setDate(vDate.getDate() + 1);
+        vDate.setDate(vDate.getDate() - 1);
+    }
+    else if (pFormat == 'quarter') {
+        // Set to last day of current Quarter
+        if (vDate.getMonth() == 0 || vDate.getMonth() == 1 || vDate.getMonth() == 2)
+            vDate.setFullYear(vDate.getFullYear(), 2, 31);
+        else if (vDate.getMonth() == 3 || vDate.getMonth() == 4 || vDate.getMonth() == 5)
+            vDate.setFullYear(vDate.getFullYear(), 5, 30);
+        else if (vDate.getMonth() == 6 || vDate.getMonth() == 7 || vDate.getMonth() == 8)
+            vDate.setFullYear(vDate.getFullYear(), 8, 30);
+        else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
+            vDate.setFullYear(vDate.getFullYear(), 11, 31);
+    }
+    else if (pFormat == 'hour') {
+        if (vDate.getHours() == 0)
+            vDate.setDate(vDate.getDate() + 1);
+        vDate.setHours(vDate.getHours() + 1);
+        while (vDate.getHours() % 6 != 5)
+            vDate.setHours(vDate.getHours() + 1);
+    }
+    return (vDate);
+};
 exports.findObj = function (theObj, theDoc) {
     if (theDoc === void 0) { theDoc = null; }
     var p, i, foundObj;
@@ -4204,6 +4220,167 @@ exports.changeFormat = function (pFormat, ganttObj) {
         ganttObj.setFormat(pFormat);
     else
         alert('Chart undefined');
+};
+exports.coerceDate = function (date) {
+    if (date instanceof Date) {
+        return date;
+    }
+    else {
+        var temp = new Date(date);
+        if (temp instanceof Date && !isNaN(temp.valueOf())) {
+            return temp;
+        }
+    }
+};
+exports.parseDateStr = function (pDateStr, pFormatStr) {
+    var vDate = new Date();
+    var vDateParts = pDateStr.split(/[^0-9]/);
+    if (pDateStr.length >= 10 && vDateParts.length >= 3) {
+        while (vDateParts.length < 5)
+            vDateParts.push(0);
+        switch (pFormatStr) {
+            case 'mm/dd/yyyy':
+                vDate = new Date(vDateParts[2], vDateParts[0] - 1, vDateParts[1], vDateParts[3], vDateParts[4]);
+                break;
+            case 'dd/mm/yyyy':
+                vDate = new Date(vDateParts[2], vDateParts[1] - 1, vDateParts[0], vDateParts[3], vDateParts[4]);
+                break;
+            case 'yyyy-mm-dd':
+                vDate = new Date(vDateParts[0], vDateParts[1] - 1, vDateParts[2], vDateParts[3], vDateParts[4]);
+                break;
+            case 'yyyy-mm-dd HH:MI:SS':
+                vDate = new Date(vDateParts[0], vDateParts[1] - 1, vDateParts[2], vDateParts[3], vDateParts[4], vDateParts[5]);
+                break;
+        }
+    }
+    return (vDate);
+};
+exports.formatDateStr = function (pDate, pDateFormatArr, pL) {
+    var vDateStr = '';
+    var vYear2Str = pDate.getFullYear().toString().substring(2, 4);
+    var vMonthStr = (pDate.getMonth() + 1) + '';
+    var vMonthArr = new Array(pL['january'], pL['february'], pL['march'], pL['april'], pL['maylong'], pL['june'], pL['july'], pL['august'], pL['september'], pL['october'], pL['november'], pL['december']);
+    var vDayArr = new Array(pL['sunday'], pL['monday'], pL['tuesday'], pL['wednesday'], pL['thursday'], pL['friday'], pL['saturday']);
+    var vMthArr = new Array(pL['jan'], pL['feb'], pL['mar'], pL['apr'], pL['may'], pL['jun'], pL['jul'], pL['aug'], pL['sep'], pL['oct'], pL['nov'], pL['dec']);
+    var vDyArr = new Array(pL['sun'], pL['mon'], pL['tue'], pL['wed'], pL['thu'], pL['fri'], pL['sat']);
+    for (var i = 0; i < pDateFormatArr.length; i++) {
+        switch (pDateFormatArr[i]) {
+            case 'dd':
+                if (pDate.getDate() < 10)
+                    vDateStr += '0'; // now fall through
+            case 'd':
+                vDateStr += pDate.getDate();
+                break;
+            case 'day':
+                vDateStr += vDyArr[pDate.getDay()];
+                break;
+            case 'DAY':
+                vDateStr += vDayArr[pDate.getDay()];
+                break;
+            case 'mm':
+                if (parseInt(vMonthStr, 10) < 10)
+                    vDateStr += '0'; // now fall through
+            case 'm':
+                vDateStr += vMonthStr;
+                break;
+            case 'mon':
+                vDateStr += vMthArr[pDate.getMonth()];
+                break;
+            case 'month':
+                vDateStr += vMonthArr[pDate.getMonth()];
+                break;
+            case 'yyyy':
+                vDateStr += pDate.getFullYear();
+                break;
+            case 'yy':
+                vDateStr += vYear2Str;
+                break;
+            case 'qq':
+                vDateStr += pL['qtr']; // now fall through
+            case 'q':
+                vDateStr += Math.floor(pDate.getMonth() / 3) + 1;
+                break;
+            case 'hh':
+                if ((((pDate.getHours() % 12) == 0) ? 12 : pDate.getHours() % 12) < 10)
+                    vDateStr += '0'; // now fall through
+            case 'h':
+                vDateStr += ((pDate.getHours() % 12) == 0) ? 12 : pDate.getHours() % 12;
+                break;
+            case 'HH':
+                if ((pDate.getHours()) < 10)
+                    vDateStr += '0'; // now fall through
+            case 'H':
+                vDateStr += (pDate.getHours());
+                break;
+            case 'MI':
+                if (pDate.getMinutes() < 10)
+                    vDateStr += '0'; // now fall through
+            case 'mi':
+                vDateStr += pDate.getMinutes();
+                break;
+            case 'SS':
+                if (pDate.getSeconds() < 10)
+                    vDateStr += '0'; // now fall through
+            case 'ss':
+                vDateStr += pDate.getSeconds();
+                break;
+            case 'pm':
+                vDateStr += ((pDate.getHours()) < 12) ? 'am' : 'pm';
+                break;
+            case 'PM':
+                vDateStr += ((pDate.getHours()) < 12) ? 'AM' : 'PM';
+                break;
+            case 'ww':
+                if (exports.getIsoWeek(pDate) < 10)
+                    vDateStr += '0'; // now fall through
+            case 'w':
+                vDateStr += exports.getIsoWeek(pDate);
+                break;
+            case 'week':
+                var vWeekNum = exports.getIsoWeek(pDate);
+                var vYear = pDate.getFullYear();
+                var vDayOfWeek = (pDate.getDay() == 0) ? 7 : pDate.getDay();
+                if (vWeekNum >= 52 && parseInt(vMonthStr, 10) === 1)
+                    vYear--;
+                if (vWeekNum == 1 && parseInt(vMonthStr, 10) === 12)
+                    vYear++;
+                if (vWeekNum < 10)
+                    vWeekNum = parseInt('0' + vWeekNum, 10);
+                vDateStr += vYear + '-W' + vWeekNum + '-' + vDayOfWeek;
+                break;
+            default:
+                if (pL[pDateFormatArr[i].toLowerCase()])
+                    vDateStr += pL[pDateFormatArr[i].toLowerCase()];
+                else
+                    vDateStr += pDateFormatArr[i];
+                break;
+        }
+    }
+    return vDateStr;
+};
+exports.parseDateFormatStr = function (pFormatStr) {
+    var vComponantStr = '';
+    var vCurrChar = '';
+    var vSeparators = new RegExp('[\/\\ -.,\'":]');
+    var vDateFormatArray = new Array();
+    for (var i = 0; i < pFormatStr.length; i++) {
+        vCurrChar = pFormatStr.charAt(i);
+        if ((vCurrChar.match(vSeparators)) || (i + 1 == pFormatStr.length)) // separator or end of string
+         {
+            if ((i + 1 == pFormatStr.length) && (!(vCurrChar.match(vSeparators)))) // at end of string add any non-separator chars to the current component
+             {
+                vComponantStr += vCurrChar;
+            }
+            vDateFormatArray.push(vComponantStr);
+            if (vCurrChar.match(vSeparators))
+                vDateFormatArray.push(vCurrChar);
+            vComponantStr = '';
+        }
+        else {
+            vComponantStr += vCurrChar;
+        }
+    }
+    return vDateFormatArray;
 };
 exports.stripIds = function (pNode) {
     for (var i = 0; i < pNode.childNodes.length; i++) {
@@ -4245,6 +4422,26 @@ exports.benchMark = function (pItem) {
     var vEndTime = new Date().getTime();
     alert(pItem + ': Elapsed time: ' + ((vEndTime - this.vBenchTime) / 1000) + ' seconds.');
     this.vBenchTime = new Date().getTime();
+};
+exports.getIsoWeek = function (pDate) {
+    // We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
+    // 60*60*24*1000=86400000
+    var dayMiliseconds = 86400000;
+    var keyDay = new Date(pDate.getFullYear(), 0, 4, 0, 0, 0);
+    var keyDayOfWeek = (keyDay.getDay() == 0) ? 6 : keyDay.getDay() - 1; // define monday as 0
+    var firstMondayYearTime = keyDay.getTime() - (keyDayOfWeek * dayMiliseconds);
+    var thisDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate(), 0, 0, 0); // This at 00:00:00
+    var thisTime = thisDate.getTime();
+    var daysFromFirstMonday = Math.round(((thisTime - firstMondayYearTime) / dayMiliseconds));
+    var lastWeek = 99;
+    var thisWeek = 99;
+    var firstMondayYear = new Date(firstMondayYearTime);
+    thisWeek = Math.ceil((daysFromFirstMonday + 1) / 7);
+    if (thisWeek <= 0)
+        thisWeek = exports.getIsoWeek(new Date(pDate.getFullYear() - 1, 11, 31, 0, 0, 0));
+    else if (thisWeek == 53 && (new Date(pDate.getFullYear(), 0, 1, 0, 0, 0)).getDay() != 4 && (new Date(pDate.getFullYear(), 11, 31, 0, 0, 0)).getDay() != 4)
+        thisWeek = 1;
+    return thisWeek;
 };
 exports.getScrollPositions = function () {
     var vScrollLeft = window.pageXOffset;
@@ -4897,7 +5094,7 @@ exports.getXMLTask = function (pID, pIdx) {
     var i = 0;
     var vIdx = -1;
     var vTask = '';
-    var vOutFrmt = date_utils_1.parseDateFormatStr(this.getDateInputFormat() + ' HH:MI');
+    var vOutFrmt = date_utils_1.parseDateFormatStr(this.getDateInputFormat() + ' HH:MI:SS');
     if (pIdx === true)
         vIdx = pID;
     else {
