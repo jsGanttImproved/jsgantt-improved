@@ -3852,6 +3852,9 @@ exports.parseDateStr = function (pDateStr, pFormatStr) {
             case 'yyyy-mm-dd':
                 vDate = new Date(vDateParts[0], vDateParts[1] - 1, vDateParts[2], vDateParts[3], vDateParts[4]);
                 break;
+            case 'yyyy-mm-dd HH:MI:SS':
+                vDate = new Date(vDateParts[0], vDateParts[1] - 1, vDateParts[2], vDateParts[3], vDateParts[4], vDateParts[5]);
+                break;
         }
     }
     return (vDate);
@@ -3922,6 +3925,12 @@ exports.formatDateStr = function (pDate, pDateFormatArr, pL) {
                     vDateStr += '0'; // now fall through
             case 'mi':
                 vDateStr += pDate.getMinutes();
+                break;
+            case 'SS':
+                if (pDate.getSeconds() < 10)
+                    vDateStr += '0'; // now fall through
+            case 'ss':
+                vDateStr += pDate.getSeconds();
                 break;
             case 'pm':
                 vDateStr += ((pDate.getHours()) < 12) ? 'am' : 'pm';
@@ -4897,7 +4906,7 @@ exports.getXMLTask = function (pID, pIdx) {
     var i = 0;
     var vIdx = -1;
     var vTask = '';
-    var vOutFrmt = date_utils_1.parseDateFormatStr(this.getDateInputFormat() + ' HH:MI');
+    var vOutFrmt = date_utils_1.parseDateFormatStr(this.getDateInputFormat() + ' HH:MI:SS');
     if (pIdx === true)
         vIdx = pID;
     else {

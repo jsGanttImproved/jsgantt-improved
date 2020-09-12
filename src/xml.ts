@@ -280,7 +280,7 @@ export const getXMLTask = function (pID, pIdx) {
   let i = 0;
   let vIdx = -1;
   let vTask = '';
-  let vOutFrmt = parseDateFormatStr(this.getDateInputFormat() + ' HH:MI');
+  let vOutFrmt = parseDateFormatStr(this.getDateInputFormat() + ' HH:MI:SS');
   if (pIdx === true) vIdx = pID;
   else {
     for (i = 0; i < this.vTaskList.length; i++) {
