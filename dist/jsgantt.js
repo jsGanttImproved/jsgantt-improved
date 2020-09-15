@@ -3108,6 +3108,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vPlanEnd = null;
     var vGroupMinStart = null;
     var vGroupMinEnd = null;
+    var vGroupMinPlanStart = null;
+    var vGroupMinPlanEnd = null;
     var vClass = document.createTextNode(pClass).data;
     var vLink = document.createTextNode(pLink).data;
     var vMile = parseInt(document.createTextNode(pMile).data);
@@ -3160,11 +3162,11 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     }
     if (pPlanStart != null && pPlanStart != '') {
         vPlanStart = (pPlanStart instanceof Date) ? pPlanStart : date_utils_1.parseDateStr(document.createTextNode(pPlanStart).data, vGantt.getDateInputFormat());
-        vGroupMinStart = vPlanStart;
+        vGroupMinPlanStart = vPlanStart;
     }
     if (pPlanEnd != null && pPlanEnd != '') {
         vPlanEnd = (pPlanEnd instanceof Date) ? pPlanEnd : date_utils_1.parseDateStr(document.createTextNode(pPlanEnd).data, vGantt.getDateInputFormat());
-        vGroupMinEnd = vPlanEnd;
+        vGroupMinPlanEnd = vPlanEnd;
     }
     if (pDepend != null) {
         var vDependStr = pDepend + '';
@@ -3250,6 +3252,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.getCost = function () { return vCost; };
     this.getGroupMinStart = function () { return vGroupMinStart; };
     this.getGroupMinEnd = function () { return vGroupMinEnd; };
+    this.getGroupMinPlanStart = function () { return vGroupMinPlanStart; };
+    this.getGroupMinPlanEnd = function () { return vGroupMinPlanEnd; };
     this.getClass = function () { return vClass; };
     this.getLink = function () { return vLink; };
     this.getMile = function () { return vMile; };
@@ -3622,13 +3626,17 @@ exports.ClearTasks = function () {
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
 exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebug) {
     if (vDebug === void 0) { vDebug = false; }
-    var vMinDate = new Date();
-    var vMaxDate = new Date();
+    var vMinDate = null;
+    var vMaxDate = null;
+    var vMinPlanDate = null;
+    var vMaxPlanDate = null;
     var vVisible = pOpen;
     var vCurItem = null;
     var vCompSum = 0;
     var vMinSet = 0;
     var vMaxSet = 0;
+    var vMinPlanSet = 0;
+    var vMaxPlanSet = 0;
     var vNumKid = 0;
     var vWeight = 0;
     var vLevel = pLevel;
@@ -3661,13 +3669,21 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebu
                     pList[i].setGroup(2);
                 exports.processRows(vList, pList[i].getID(), i, vLevel + 1, vVisible, 0);
             }
-            if (vMinSet == 0 || pList[i].getStart() < vMinDate) {
-                vMinDate = pList[i].getStart();
+            if (pList[i].getStartVar() && (vMinSet == 0 || pList[i].getStartVar() < vMinDate)) {
+                vMinDate = pList[i].getStartVar();
                 vMinSet = 1;
             }
-            if (vMaxSet == 0 || pList[i].getEnd() > vMaxDate) {
-                vMaxDate = pList[i].getEnd();
+            if (pList[i].getEndVar() && (vMaxSet == 0 || pList[i].getEndVar() > vMaxDate)) {
+                vMaxDate = pList[i].getEndVar();
                 vMaxSet = 1;
+            }
+            if (vMinPlanSet == 0 || pList[i].getPlanStart() < vMinPlanDate) {
+                vMinPlanDate = pList[i].getPlanStart();
+                vMinPlanSet = 1;
+            }
+            if (vMaxPlanSet == 0 || pList[i].getPlanEnd() > vMaxPlanDate) {
+                vMaxPlanDate = pList[i].getPlanEnd();
+                vMaxPlanSet = 1;
             }
             vNumKid++;
             vWeight += pList[i].getEnd() - pList[i].getStart() + 1;
@@ -3682,8 +3698,20 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebu
         if (pList[pRow].getGroupMinEnd() != null && pList[pRow].getGroupMinEnd() > vMaxDate) {
             vMaxDate = pList[pRow].getGroupMinEnd();
         }
-        pList[pRow].setStart(vMinDate);
-        pList[pRow].setEnd(vMaxDate);
+        if (vMinDate) {
+            pList[pRow].setStart(vMinDate);
+        }
+        if (vMaxDate) {
+            pList[pRow].setEnd(vMaxDate);
+        }
+        if (pList[pRow].getGroupMinPlanStart() != null && pList[pRow].getGroupMinPlanStart() < vMinPlanDate) {
+            vMinPlanDate = pList[pRow].getGroupMinPlanStart();
+        }
+        if (pList[pRow].getGroupMinPlanEnd() != null && pList[pRow].getGroupMinPlanEnd() > vMaxPlanDate) {
+            vMaxPlanDate = pList[pRow].getGroupMinPlanEnd();
+        }
+        pList[pRow].setPlanStart(vMinPlanDate);
+        pList[pRow].setPlanEnd(vMaxPlanDate);
         pList[pRow].setNumKid(vNumKid);
         pList[pRow].setWeight(vWeight);
         pList[pRow].setCompVal(Math.ceil(vCompSum / vWeight));

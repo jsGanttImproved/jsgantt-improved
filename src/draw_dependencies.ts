@@ -65,11 +65,11 @@ export const DrawDependencies = function (vDebug = false) {
                 console.log(`init drawDependency `, vList[vTask].getID(), new Date());
               }
               var cssClass = 'gDepId' + vList[vTask].getID() +
-                  ' ' + 'gDepNextId' + vList[i].getID();
+                ' ' + 'gDepNextId' + vList[i].getID();
 
               var dependedData = vList[vTask].getDataObject();
               var nextDependedData = vList[i].getDataObject();
-              if(dependedData && dependedData.pID && nextDependedData && nextDependedData.pID) {
+              if (dependedData && dependedData.pID && nextDependedData && nextDependedData.pID) {
                 cssClass += ' gDepDataId' + dependedData.pID + ' ' + 'gDepNextDataId' + nextDependedData.pID;
               }
 
