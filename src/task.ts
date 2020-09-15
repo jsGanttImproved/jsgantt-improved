@@ -87,6 +87,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vPlanEnd = null;
   let vGroupMinStart = null;
   let vGroupMinEnd = null;
+  let vGroupMinPlanStart = null;
+  let vGroupMinPlanEnd = null;
   let vClass = document.createTextNode(pClass).data;
   let vLink = document.createTextNode(pLink).data;
   let vMile = parseInt(document.createTextNode(pMile).data);
@@ -146,12 +148,12 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
 
   if (pPlanStart != null && pPlanStart != '') {
     vPlanStart = (pPlanStart instanceof Date) ? pPlanStart : parseDateStr(document.createTextNode(pPlanStart).data, vGantt.getDateInputFormat());
-    vGroupMinStart = vPlanStart;
+    vGroupMinPlanStart = vPlanStart;
   }
 
   if (pPlanEnd != null && pPlanEnd != '') {
     vPlanEnd = (pPlanEnd instanceof Date) ? pPlanEnd : parseDateStr(document.createTextNode(pPlanEnd).data, vGantt.getDateInputFormat());
-    vGroupMinEnd = vPlanEnd;
+    vGroupMinPlanEnd = vPlanEnd;
   }
 
   if (pDepend != null) {
@@ -226,6 +228,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getCost = function () { return vCost; };
   this.getGroupMinStart = function () { return vGroupMinStart; };
   this.getGroupMinEnd = function () { return vGroupMinEnd; };
+  this.getGroupMinPlanStart = function () { return vGroupMinPlanStart; };
+  this.getGroupMinPlanEnd = function () { return vGroupMinPlanEnd; };
   this.getClass = function () { return vClass; };
   this.getLink = function () { return vLink; };
   this.getMile = function () { return vMile; };
@@ -531,13 +535,17 @@ export const ClearTasks = function () {
 
 // Recursively process task tree ... set min, max dates of parent tasks and identfy task level.
 export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebug = false) {
-  let vMinDate = new Date();
-  let vMaxDate = new Date();
+  let vMinDate = null;
+  let vMaxDate = null;
+  let vMinPlanDate = null;
+  let vMaxPlanDate = null;
   let vVisible = pOpen;
   let vCurItem = null;
   let vCompSum = 0;
   let vMinSet = 0;
   let vMaxSet = 0;
+  let vMinPlanSet = 0;
+  let vMaxPlanSet = 0;
   let vNumKid = 0;
   let vWeight = 0;
   let vLevel = pLevel;
@@ -573,14 +581,24 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, 
         processRows(vList, pList[i].getID(), i, vLevel + 1, vVisible, 0);
       }
 
-      if (vMinSet == 0 || pList[i].getStart() < vMinDate) {
-        vMinDate = pList[i].getStart();
+      if (pList[i].getStartVar() && (vMinSet == 0 || pList[i].getStartVar() < vMinDate)) {
+        vMinDate = pList[i].getStartVar();
         vMinSet = 1;
       }
 
-      if (vMaxSet == 0 || pList[i].getEnd() > vMaxDate) {
-        vMaxDate = pList[i].getEnd();
+      if (pList[i].getEndVar() && (vMaxSet == 0 || pList[i].getEndVar() > vMaxDate)) {
+        vMaxDate = pList[i].getEndVar();
         vMaxSet = 1;
+      }
+
+      if (vMinPlanSet == 0 || pList[i].getPlanStart() < vMinPlanDate) {
+        vMinPlanDate = pList[i].getPlanStart();
+        vMinPlanSet = 1;
+      }
+
+      if (vMaxPlanSet == 0 || pList[i].getPlanEnd() > vMaxPlanDate) {
+        vMaxPlanDate = pList[i].getPlanEnd();
+        vMaxPlanSet = 1;
       }
 
       vNumKid++;
@@ -598,8 +616,22 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, 
     if (pList[pRow].getGroupMinEnd() != null && pList[pRow].getGroupMinEnd() > vMaxDate) {
       vMaxDate = pList[pRow].getGroupMinEnd();
     }
-    pList[pRow].setStart(vMinDate);
-    pList[pRow].setEnd(vMaxDate);
+    if (vMinDate) {
+      pList[pRow].setStart(vMinDate);
+    }
+    if (vMaxDate) {
+      pList[pRow].setEnd(vMaxDate);
+    }
+
+    if (pList[pRow].getGroupMinPlanStart() != null && pList[pRow].getGroupMinPlanStart() < vMinPlanDate) {
+      vMinPlanDate = pList[pRow].getGroupMinPlanStart();
+    }
+
+    if (pList[pRow].getGroupMinPlanEnd() != null && pList[pRow].getGroupMinPlanEnd() > vMaxPlanDate) {
+      vMaxPlanDate = pList[pRow].getGroupMinPlanEnd();
+    }
+    pList[pRow].setPlanStart(vMinPlanDate);
+    pList[pRow].setPlanEnd(vMaxPlanDate);    
     pList[pRow].setNumKid(vNumKid);
     pList[pRow].setWeight(vWeight);
     pList[pRow].setCompVal(Math.ceil(vCompSum / vWeight));
