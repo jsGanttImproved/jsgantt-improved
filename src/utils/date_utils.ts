@@ -4,7 +4,6 @@
  */
 export const getMinDate = function (pList, pFormat, pMinDate) {
   let vDate = new Date();
-
   if (pList.length <= 0) return pMinDate || vDate;
 
   vDate.setTime((pMinDate && pMinDate.getTime()) || pList[0].getStart().getTime());
@@ -12,7 +11,7 @@ export const getMinDate = function (pList, pFormat, pMinDate) {
   // Parse all Task Start dates to find min
   for (let i = 0; i < pList.length; i++) {
     if (pList[i].getStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getStart().getTime());
-    if (pList[i].getPlanStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getPlanStart().getTime());
+    else if (pList[i].getPlanStart() && pList[i].getPlanStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getPlanStart().getTime());
   }
 
   // Adjust min date to specific format boundaries (first of week or first of month)
@@ -59,13 +58,12 @@ export const getMaxDate = function (pList, pFormat, pMaxDate) {
   // Parse all Task End dates to find max
   for (let i = 0; i < pList.length; i++) {
     if (pList[i].getEnd().getTime() > vDate.getTime()) vDate.setTime(pList[i].getEnd().getTime());
-    if (pList[i].getPlanEnd().getTime() > vDate.getTime()) vDate.setTime(pList[i].getPlanEnd().getTime());
+    else if (pList[i].getPlanEnd() && pList[i].getPlanEnd().getTime() > vDate.getTime()) vDate.setTime(pList[i].getPlanEnd().getTime());
   }
 
   // Adjust max date to specific format boundaries (end of week or end of month)
   if (pFormat == 'day') {
     vDate.setDate(vDate.getDate() + 1);
-
     while (vDate.getDay() % 7 != 0) vDate.setDate(vDate.getDate() + 1);
   }
   else if (pFormat == 'week') {
@@ -202,8 +200,8 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
         if (pDate.getSeconds() < 10)
           vDateStr += '0'; // now fall through
       case 'ss':
-          vDateStr += pDate.getSeconds();
-          break;
+        vDateStr += pDate.getSeconds();
+        break;
       case 'pm':
         vDateStr += ((pDate.getHours()) < 12) ? 'am' : 'pm';
         break;

@@ -197,7 +197,7 @@ function clearTasks() {
 }
 
 function print() {
-  const tasks = g.vTaskList.map(e=> ({ ...e.getAllData(), ...e.getDataObject() }));
+  const tasks = g.vTaskList.map(e => ({ ...e.getAllData(), ...e.getDataObject() }));
   console.log(tasks);
 }
 
