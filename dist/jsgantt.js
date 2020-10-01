@@ -3766,6 +3766,8 @@ exports.getMinDate = function (pList, pFormat, pMinDate) {
     for (var i = 0; i < pList.length; i++) {
         if (pList[i].getStart().getTime() < vDate.getTime())
             vDate.setTime(pList[i].getStart().getTime());
+        if (pList[i].getPlanStart().getTime() < vDate.getTime())
+            vDate.setTime(pList[i].getPlanStart().getTime());
     }
     // Adjust min date to specific format boundaries (first of week or first of month)
     if (pFormat == 'day') {
@@ -3814,6 +3816,8 @@ exports.getMaxDate = function (pList, pFormat, pMaxDate) {
     for (var i = 0; i < pList.length; i++) {
         if (pList[i].getEnd().getTime() > vDate.getTime())
             vDate.setTime(pList[i].getEnd().getTime());
+        if (pList[i].getPlanEnd().getTime() > vDate.getTime())
+            vDate.setTime(pList[i].getPlanEnd().getTime());
     }
     // Adjust max date to specific format boundaries (end of week or end of month)
     if (pFormat == 'day') {
