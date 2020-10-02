@@ -18,9 +18,11 @@ var draw_utils_1 = require("./utils/draw_utils");
 var draw_dependencies_1 = require("./draw_dependencies");
 var options_1 = require("./options");
 var date_utils_1 = require("./utils/date_utils");
-// function that loads the main gantt chart properties and functions
-// pDiv: (required) this is a div object created in HTML
-// pFormat: (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
+/**
+ * function that loads the main gantt chart properties and functions
+ * @param pDiv (required) this is a div object created in HTML
+ * @param pFormat (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
+ */
 exports.GanttChart = function (pDiv, pFormat) {
     this.vDiv = pDiv;
     this.vFormat = pFormat;
@@ -287,6 +289,11 @@ exports.GanttChart = function (pDiv, pFormat) {
             vTmpContentTabWrapper: vTmpContentTabWrapper
         };
     };
+    /**
+     *
+     * DRAW CHAR HEAD
+     *
+     */
     this.drawChartHead = function (vMinDate, vMaxDate, vColWidth, vNumRows) {
         var vRightHeader = document.createDocumentFragment();
         var vTmpDiv = draw_utils_1.newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
@@ -431,14 +438,16 @@ exports.GanttChart = function (pDiv, pFormat) {
         vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
         var vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
         var vSingleCell = false;
-        if (this.vUseSingleCell != 0 && this.vUseSingleCell < (vNumCols * vNumRows))
-            vSingleCell = true;
+        console.log((vNumCols * vNumRows), this.vUseSingleCell, vNumCols, vNumRows);
+        // if (this.vUseSingleCell !== 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
         draw_utils_1.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
         vTmpDiv = draw_utils_1.newNode(vRightHeader, 'div', null, 'glabelfooter');
         return { gChartLbl: gChartLbl, vTaskLeftPx: vTaskLeftPx, vSingleCell: vSingleCell, vDateRow: vDateRow, vRightHeader: vRightHeader, vNumCols: vNumCols };
     };
     /**
+     *
      * DRAW CHART BODY
+     *
      */
     this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl, vMinDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
         var vRightTable = document.createDocumentFragment();
@@ -485,8 +494,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                 var vTmpRow = draw_utils_1.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
                 this.vTaskList[i].setChildRow(vTmpRow);
                 events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-                var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell s4443', null, null, null, null, vNumCols);
-                console.log('T ----->', vNumCols);
+                // console.log('T ----->', vNumCols)
+                var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellmile', null, vColWidth, null, null, null);
                 vTmpDiv_1 = draw_utils_1.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                 vTmpDiv_1 = draw_utils_1.newNode(vTmpDiv_1, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx_1 + vTaskRightPx - 6);
                 this.vTaskList[i].setBarDiv(vTmpDiv_1);
@@ -500,15 +509,9 @@ exports.GanttChart = function (pDiv, pFormat) {
                     draw_utils_1.newNode(vTmpDiv2, 'div', null, 'gmdbottom');
                 }
                 vCaptClass = 'gmilecaption';
+                console.log(vSingleCell, vComb);
                 if (!vSingleCell && !vComb) {
-                    vCellFormat = '';
-                    for (j = 0; j < vNumCols - 1; j++) {
-                        if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
-                            vCellFormat = 'gtaskcellwkend';
-                        else
-                            vCellFormat = 'gtaskcell';
-                        draw_utils_1.newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
-                    }
+                    this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
                 }
             }
             else {
@@ -521,8 +524,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                     var vTmpRow = draw_utils_1.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, ((this.vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
                     this.vTaskList[i].setChildRow(vTmpRow);
                     events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-                    console.log('F ----->', vNumCols);
-                    var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell', null, null, null, null, vNumCols);
+                    // console.log('F ----->', vNumCols)
+                    var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellbar', null, vColWidth, null, null);
                     vTmpDiv_1 = draw_utils_1.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                     this.vTaskList[i].setCellDiv(vTmpDiv_1);
                     if (this.vTaskList[i].getGroup() == 1) {
@@ -537,14 +540,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vCaptClass = 'ggroupcaption';
                     }
                     if (!vSingleCell && !vComb) {
-                        vCellFormat = '';
-                        for (j = 0; j < vNumCols - 1; j++) {
-                            if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
-                                vCellFormat = 'gtaskcellwkend';
-                            else
-                                vCellFormat = 'gtaskcell';
-                            draw_utils_1.newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
-                        }
+                        this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
                     }
                 }
                 else {
@@ -561,7 +557,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpRow = draw_utils_1.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'glineitem gitem' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
                         this.vTaskList[i].setChildRow(vTmpRow);
                         events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-                        var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell', null, taskCellWidth, null, null, vNumCols);
+                        // console.log('F ----->', vNumCols)
+                        var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellcolorbar', null, taskCellWidth, null, null);
                         vTmpDivCell = vTmpDiv_1 = draw_utils_1.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                     }
                     // DRAW TASK BAR
@@ -594,14 +591,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vCaptClass = 'gcaption';
                     // Background cells
                     if (!vSingleCell && !vComb) {
-                        vCellFormat = '';
-                        for (j = 0; j < vNumCols - 1; j++) {
-                            if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
-                                vCellFormat = 'gtaskcellwkend';
-                            else
-                                vCellFormat = 'gtaskcell';
-                            draw_utils_1.newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0');
-                        }
+                        if (vTmpRow)
+                            this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
                     }
                 }
             }
@@ -638,34 +629,35 @@ exports.GanttChart = function (pDiv, pFormat) {
                 events_1.addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
             }
         }
-        // if (!vSingleCell) {
+        // Include the footer with the days/week/month...
         vTmpTBody.appendChild(vDateRow.cloneNode(true));
-        // }
-        // else if (this.vFormat == 'day') {
-        // vTmpTBody.appendChild(document.createElement('tr'));
-        // }
         return { vRightTable: vRightTable };
+    };
+    this.drawColsChart = function (vNumCols, vTmpRow, taskCellWidth) {
+        var vCellFormat = '';
+        for (var j = 0; j < vNumCols - 1; j++) {
+            if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
+                vCellFormat = 'gtaskcellwkend';
+            else
+                vCellFormat = 'gtaskcell gtaskcellcols';
+            draw_utils_1.newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
+        }
     };
     /**
      *
      *
-     * DRAW GANTT
+     * DRAWING PROCESS
      *
-     *
+     *  vTaskRightPx,vTaskWidth,vTaskPlanLeftPx,vTaskPlanRightPx,vID
      */
     this.Draw = function () {
-        if (this.vEvents && this.vEvents.beforeDraw) {
-            this.vEvents.beforeDraw();
-        }
-        //     let vTaskRightPx = 0;
-        // let vTaskWidth = 1;
-        // let vTaskPlanLeftPx = 0;
-        // let vTaskPlanRightPx = 0;
-        // let vID = 0;
         var vMaxDate = new Date();
         var vMinDate = new Date();
         var vColWidth = 0;
         var bd;
+        if (this.vEvents && this.vEvents.beforeDraw) {
+            this.vEvents.beforeDraw();
+        }
         if (this.vDebug) {
             bd = new Date();
             console.info('before draw', bd);
@@ -735,7 +727,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         }
         vTmpDiv2.style.visibility = 'hidden';
         this.setLines(vTmpDiv2);
-        /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
+        /* Quick hack to show the generated HTML on older browsers
               let tmpGenSrc=document.createElement('textarea');
               tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
               vDiv.appendChild(tmpGenSrc);
@@ -782,6 +774,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         }
         this.DrawDependencies(this.vDebug);
         events_1.addListenerDependencies(this.vLineOptions);
+        // EVENTS
         if (this.vEvents && typeof this.vEvents.afterLineDraw === 'function') {
             this.vEvents.afterLineDraw();
         }
@@ -790,7 +783,10 @@ exports.GanttChart = function (pDiv, pFormat) {
             console.info('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
         }
         this.drawComplete(vMinDate, vColWidth, bd);
-    }; //this.draw
+    };
+    /**
+     * Actions after all the render process
+     */
     this.drawComplete = function (vMinDate, vColWidth, bd) {
         if (this.vDebug) {
             var ad = new Date();
@@ -4059,9 +4055,12 @@ exports.parseDateFormatStr = function (pFormatStr) {
     }
     return vDateFormatArray;
 };
+/**
+ * We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
+ * 60*60*24*1000=86400000
+ * @param pDate
+ */
 exports.getIsoWeek = function (pDate) {
-    // We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
-    // 60*60*24*1000=86400000
     var dayMiliseconds = 86400000;
     var keyDay = new Date(pDate.getFullYear(), 0, 4, 0, 0, 0);
     var keyDayOfWeek = (keyDay.getDay() == 0) ? 6 : keyDay.getDay() - 1; // define monday as 0

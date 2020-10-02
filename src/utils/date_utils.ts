@@ -258,10 +258,12 @@ export const parseDateFormatStr = function (pFormatStr) {
   return vDateFormatArray;
 };
 
-
+/**
+ * We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
+ * 60*60*24*1000=86400000
+ * @param pDate 
+ */
 export const getIsoWeek = function (pDate) {
-  // We have to compare against the monday of the first week of the year containing 04 jan *not* 01/01
-  // 60*60*24*1000=86400000
   let dayMiliseconds = 86400000;
   let keyDay = new Date(pDate.getFullYear(), 0, 4, 0, 0, 0);
   let keyDayOfWeek = (keyDay.getDay() == 0) ? 6 : keyDay.getDay() - 1; // define monday as 0

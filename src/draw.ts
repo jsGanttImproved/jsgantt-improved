@@ -27,9 +27,11 @@ import { includeGetSet } from './options';
 import { parseDateFormatStr, getMinDate, coerceDate, getMaxDate, formatDateStr, parseDateStr } from './utils/date_utils';
 
 
-// function that loads the main gantt chart properties and functions
-// pDiv: (required) this is a div object created in HTML
-// pFormat: (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
+/**
+ * function that loads the main gantt chart properties and functions
+ * @param pDiv (required) this is a div object created in HTML
+ * @param pFormat (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
+ */
 export const GanttChart = function (pDiv, pFormat) {
   this.vDiv = pDiv;
   this.vFormat = pFormat;
@@ -312,6 +314,11 @@ export const GanttChart = function (pDiv, pFormat) {
     };
   }
 
+  /**
+   * 
+   * DRAW CHAR HEAD
+   * 
+   */
   this.drawChartHead = function (vMinDate, vMaxDate, vColWidth, vNumRows) {
     let vRightHeader = document.createDocumentFragment();
     let vTmpDiv = newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
@@ -465,9 +472,10 @@ export const GanttChart = function (pDiv, pFormat) {
       vTaskLeftPx += 2;
     }
     vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
-    const vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
+    // const vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
     let vSingleCell = false;
-    if (this.vUseSingleCell != 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
+    
+    if (this.vUseSingleCell !== 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
 
     newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
 
@@ -477,7 +485,9 @@ export const GanttChart = function (pDiv, pFormat) {
   }
 
   /**
+   * 
    * DRAW CHART BODY
+   * 
    */
   this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl,
     vMinDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
@@ -533,8 +543,9 @@ export const GanttChart = function (pDiv, pFormat) {
         let vTmpRow = newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
         this.vTaskList[i].setChildRow(vTmpRow);
         addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-        const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell s4443', null, null, null, null, vNumCols);
-        console.log('T ----->', vNumCols)
+
+        const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellmile', null, vColWidth, null, null, null);
+
         vTmpDiv = newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
         vTmpDiv = newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx + vTaskRightPx - 6);
 
@@ -551,14 +562,8 @@ export const GanttChart = function (pDiv, pFormat) {
         }
 
         vCaptClass = 'gmilecaption';
-
         if (!vSingleCell && !vComb) {
-          vCellFormat = '';
-          for (j = 0; j < vNumCols - 1; j++) {
-            if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
-            else vCellFormat = 'gtaskcell';
-            newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
-          }
+          this.drawColsChart(vNumCols, vTmpRow, taskCellWidth)
         }
       }
       else {
@@ -573,8 +578,9 @@ export const GanttChart = function (pDiv, pFormat) {
           const vTmpRow = newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, ((this.vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
           this.vTaskList[i].setChildRow(vTmpRow);
           addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-          console.log('F ----->', vNumCols)
-          const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell', null, null, null, null, vNumCols);
+
+          const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellbar', null, vColWidth, null, null);
+
           vTmpDiv = newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
           this.vTaskList[i].setCellDiv(vTmpDiv);
           if (this.vTaskList[i].getGroup() == 1) {
@@ -592,12 +598,7 @@ export const GanttChart = function (pDiv, pFormat) {
           }
 
           if (!vSingleCell && !vComb) {
-            vCellFormat = '';
-            for (j = 0; j < vNumCols - 1; j++) {
-              if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
-              else vCellFormat = 'gtaskcell';
-              newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
-            }
+            this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
           }
         }
         else {
@@ -616,7 +617,8 @@ export const GanttChart = function (pDiv, pFormat) {
             vTmpRow = newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'glineitem gitem' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
             this.vTaskList[i].setChildRow(vTmpRow);
             addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-            const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell', null, taskCellWidth, null, null, vNumCols);
+
+            const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellcolorbar', null, taskCellWidth, null, null);
             vTmpDivCell = vTmpDiv = newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
           }
 
@@ -654,12 +656,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
           // Background cells
           if (!vSingleCell && !vComb) {
-            vCellFormat = '';
-            for (j = 0; j < vNumCols - 1; j++) {
-              if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
-              else vCellFormat = 'gtaskcell';
-              newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0');
-            }
+           if(vTmpRow) this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
           }
         }
       }
@@ -690,36 +687,41 @@ export const GanttChart = function (pDiv, pFormat) {
         addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
       }
     }
-    // if (!vSingleCell) {
+
+    // Include the footer with the days/week/month...
     vTmpTBody.appendChild(vDateRow.cloneNode(true));
-    // }
-    // else if (this.vFormat == 'day') {
-    // vTmpTBody.appendChild(document.createElement('tr'));
-    // }
+
     return { vRightTable }
+  }
+
+  this.drawColsChart = function(vNumCols, vTmpRow, taskCellWidth){
+    let vCellFormat = '';
+    for (let j = 0; j < vNumCols - 1; j++) {
+      if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
+      else vCellFormat = 'gtaskcell gtaskcellcols';
+      newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
+    }
+
+    
   }
 
   /**
    * 
    * 
-   * DRAW GANTT
+   * DRAWING PROCESS
    * 
-   * 
+   *  vTaskRightPx,vTaskWidth,vTaskPlanLeftPx,vTaskPlanRightPx,vID
    */
   this.Draw = function () {
-    if (this.vEvents && this.vEvents.beforeDraw) {
-      this.vEvents.beforeDraw();
-    }
-    //     let vTaskRightPx = 0;
-    // let vTaskWidth = 1;
-
-    // let vTaskPlanLeftPx = 0;
-    // let vTaskPlanRightPx = 0;
-    // let vID = 0;
     let vMaxDate = new Date();
     let vMinDate = new Date();
     let vColWidth = 0;
     let bd;
+    
+    if (this.vEvents && this.vEvents.beforeDraw) {
+      this.vEvents.beforeDraw();
+    }
+
     if (this.vDebug) {
       bd = new Date();
       console.info('before draw', bd);
@@ -780,7 +782,6 @@ export const GanttChart = function (pDiv, pFormat) {
       console.info('after tasks loop', ad, (ad.getTime() - bd.getTime()));
     }
 
-
     // MAIN VIEW: Appending all generated components to main view
     while (this.vDiv.hasChildNodes()) this.vDiv.removeChild(this.vDiv.firstChild);
     const vTmpDiv = newNode(this.vDiv, 'div', null, 'gchartcontainer');
@@ -806,7 +807,7 @@ export const GanttChart = function (pDiv, pFormat) {
     vTmpDiv2.style.visibility = 'hidden';
     this.setLines(vTmpDiv2);
 
-    /* Quick hack to show the generated HTML on older browsers - add a '/' to the begining of this line to activate
+    /* Quick hack to show the generated HTML on older browsers
           let tmpGenSrc=document.createElement('textarea');
           tmpGenSrc.appendChild(document.createTextNode(vTmpDiv.innerHTML));
           vDiv.appendChild(tmpGenSrc);
@@ -854,6 +855,8 @@ export const GanttChart = function (pDiv, pFormat) {
     }
     this.DrawDependencies(this.vDebug);
     addListenerDependencies(this.vLineOptions);
+
+    // EVENTS
     if (this.vEvents && typeof this.vEvents.afterLineDraw === 'function') {
       this.vEvents.afterLineDraw();
     }
@@ -863,9 +866,11 @@ export const GanttChart = function (pDiv, pFormat) {
     }
 
     this.drawComplete(vMinDate, vColWidth, bd);
-  }; //this.draw
+  };
 
-
+  /**
+   * Actions after all the render process
+   */
   this.drawComplete = function (vMinDate, vColWidth, bd) {
     if (this.vDebug) {
       const ad = new Date();
