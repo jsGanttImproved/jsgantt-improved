@@ -641,12 +641,12 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, 
     let bd;
     if (vDebug) {
       bd = new Date();
-      console.log('before afterTasks', bd);
+      console.info('before afterTasks', bd);
     }
     sortTasks(pList, 0, 0);
     if (vDebug) {
       const ad = new Date();
-      console.log('after afterTasks', ad, (ad.getTime() - bd.getTime()));
+      console.info('after afterTasks', ad, (ad.getTime() - bd.getTime()));
     }
     pList.sort(function (a, b) { return a.getSortIdx() - b.getSortIdx(); });
   }
@@ -658,12 +658,12 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, 
         let bd;
         if (vDebug) {
           bd = new Date();
-          console.log('before sortTasks', bd);
+          console.info('before sortTasks', bd);
         }
         sortTasks(pList, pList[i].getID(), pList[i].getSortIdx() + 1);
         if (vDebug) {
           const ad = new Date();
-          console.log('after sortTasks', ad, (ad.getTime() - bd.getTime()));
+          console.info('after sortTasks', ad, (ad.getTime() - bd.getTime()));
         }
       }
     }

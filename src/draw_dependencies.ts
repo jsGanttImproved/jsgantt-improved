@@ -62,7 +62,7 @@ export const DrawDependencies = function (vDebug = false) {
           if (vTask >= 0 && vList[vTask].getGroup() != 2) {
             if (vList[vTask].getVisible() == 1) {
               if (vDebug) {
-                console.log(`init drawDependency `, vList[vTask].getID(), new Date());
+                console.info(`init drawDependency `, vList[vTask].getID(), new Date());
               }
               var cssClass = 'gDepId' + vList[vTask].getID() +
                 ' ' + 'gDepNextId' + vList[i].getID();

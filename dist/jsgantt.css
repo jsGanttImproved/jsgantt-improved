@@ -65,7 +65,7 @@ div.gantt {
 }
 
 td.gtaskcell {
-  text-align: left
+  text-align: left;
 }
 
 td.gspanning {

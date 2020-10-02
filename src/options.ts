@@ -117,9 +117,13 @@ export const includeGetSet = function () {
     }
   };
   this.setTotalHeight = function (pVal) { this.vTotalHeight = pVal; };
+
+  // EVENTS
   this.setEvents = function (pEvents) { this.vEvents = pEvents; };
   this.setEventsChange = function (pEventsChange) { this.vEventsChange = pEventsChange; };
   this.setEventClickRow = function (fn) { this.vEventClickRow = fn; };
+  this.setEventClickCollapse = function (fn) { this.vEventClickCollapse = fn; };
+
   this.setResources = function (resources) { this.vResources = resources; };
   this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
   this.setColumnOrder = function (order) { this.vColumnOrder = order; };
@@ -189,9 +193,13 @@ export const includeGetSet = function () {
   this.getMaxDate = function () { return this.vMaxDate; };
   this.getTooltipDelay = function () { return this.vTooltipDelay; };
   this.getList = function () { return this.vTaskList; };
+
+  //EVENTS
   this.getEventsClickCell = function () { return this.vEvents; };
   this.getEventsChange = function () { return this.vEventsChange; };
   this.getEventClickRow = function () { return this.vEventClickRow; };
+  this.getEventClickCollapse = function () { return this.vEventClickCollapse; };
+
   this.getResources = function () { return this.vResources; };
   this.getAdditionalHeaders = function () { return this.vAdditionalHeaders; };
   this.getColumnOrder = function () { return this.vColumnOrder || COLUMN_ORDER; };

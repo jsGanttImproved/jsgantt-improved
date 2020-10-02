@@ -11,12 +11,12 @@ export const parseJSON = async function (pFile, pGanttVar, vDebug = false, redra
   let bd;
   if (vDebug) {
     bd = new Date();
-    console.log('before jsonparse', bd);
+    console.info('before jsonparse', bd);
   }
   addJSONTask(pGanttVar, jsonObj);
   if (this.vDebug) {
     const ad = new Date();
-    console.log('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
+    console.info('after addJSONTask', ad, (ad.getTime() - bd.getTime()));
   }
   if(redrawAfter){
     pGanttVar.Draw();

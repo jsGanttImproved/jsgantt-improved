@@ -75,6 +75,7 @@ function start(e) {
       vTotalHeight,
       vMinDate,
       vMaxDate,
+      // EVENTs
       vEvents: {
         taskname: console.log,
         res: console.log,
@@ -104,13 +105,16 @@ function start(e) {
         planend: editValue,
         cost: editValue
       },
+      vEventClickRow: console.log,
+      vEventClickCollapse: console.log,
+
       vResources: [
         { id: 0, name: 'Anybody' },
         { id: 1, name: 'Mario' },
         { id: 2, name: 'Henrique' },
         { id: 3, name: 'Pedro' }
       ],
-      vEventClickRow: console.log,
+     
       vShowTaskInfoLink, // Show link in tool tip (0/1)
       vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vShowWeekends, // Show weekends days in the vFormat day

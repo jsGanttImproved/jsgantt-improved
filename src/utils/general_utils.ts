@@ -426,7 +426,7 @@ export const makeRequestOldBrowsers = (pFile, vDebug = false) => {
     let bd;
     if (vDebug) {
       bd = new Date();
-      console.log('before jsonparse', bd);
+      console.info('before jsonparse', bd);
     }
 
     let xhttp;
@@ -450,7 +450,7 @@ export const makeRequestOldBrowsers = (pFile, vDebug = false) => {
 
         if (vDebug) {
           bd = new Date();
-          console.log('before jsonparse', bd);
+          console.info('before jsonparse', bd);
         }
         resolve(xhttp);
       }

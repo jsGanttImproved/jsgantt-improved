@@ -34,12 +34,12 @@ export const folder = function (pID, ganttObj) {
   let bd;
   if (this.vDebug) {
     bd = new Date();
-    console.log('after drawDependency', bd);
+    console.info('after drawDependency', bd);
   }
   ganttObj.DrawDependencies(this.vDebug);
   if (this.vDebug) {
     const ad = new Date();
-    console.log('after drawDependency', ad, (ad.getTime() - bd.getTime()));
+    console.info('after drawDependency', ad, (ad.getTime() - bd.getTime()));
   }
 };
 
