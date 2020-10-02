@@ -436,10 +436,10 @@ exports.GanttChart = function (pDiv, pFormat) {
             vTaskLeftPx += 2;
         }
         vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
-        var vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
+        // const vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
         var vSingleCell = false;
-        console.log((vNumCols * vNumRows), this.vUseSingleCell, vNumCols, vNumRows);
-        // if (this.vUseSingleCell !== 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
+        if (this.vUseSingleCell !== 0 && this.vUseSingleCell < (vNumCols * vNumRows))
+            vSingleCell = true;
         draw_utils_1.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
         vTmpDiv = draw_utils_1.newNode(vRightHeader, 'div', null, 'glabelfooter');
         return { gChartLbl: gChartLbl, vTaskLeftPx: vTaskLeftPx, vSingleCell: vSingleCell, vDateRow: vDateRow, vRightHeader: vRightHeader, vNumCols: vNumCols };
@@ -494,7 +494,6 @@ exports.GanttChart = function (pDiv, pFormat) {
                 var vTmpRow = draw_utils_1.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
                 this.vTaskList[i].setChildRow(vTmpRow);
                 events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-                // console.log('T ----->', vNumCols)
                 var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellmile', null, vColWidth, null, null, null);
                 vTmpDiv_1 = draw_utils_1.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                 vTmpDiv_1 = draw_utils_1.newNode(vTmpDiv_1, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx_1 + vTaskRightPx - 6);
@@ -509,7 +508,6 @@ exports.GanttChart = function (pDiv, pFormat) {
                     draw_utils_1.newNode(vTmpDiv2, 'div', null, 'gmdbottom');
                 }
                 vCaptClass = 'gmilecaption';
-                console.log(vSingleCell, vComb);
                 if (!vSingleCell && !vComb) {
                     this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
                 }
@@ -524,7 +522,6 @@ exports.GanttChart = function (pDiv, pFormat) {
                     var vTmpRow = draw_utils_1.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, ((this.vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
                     this.vTaskList[i].setChildRow(vTmpRow);
                     events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-                    // console.log('F ----->', vNumCols)
                     var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellbar', null, vColWidth, null, null);
                     vTmpDiv_1 = draw_utils_1.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                     this.vTaskList[i].setCellDiv(vTmpDiv_1);
@@ -557,7 +554,6 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vTmpRow = draw_utils_1.newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'glineitem gitem' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
                         this.vTaskList[i].setChildRow(vTmpRow);
                         events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
-                        // console.log('F ----->', vNumCols)
                         var vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellcolorbar', null, taskCellWidth, null, null);
                         vTmpDivCell = vTmpDiv_1 = draw_utils_1.newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
                     }
@@ -3799,7 +3795,7 @@ exports.getMinDate = function (pList, pFormat, pMinDate) {
     for (var i = 0; i < pList.length; i++) {
         if (pList[i].getStart().getTime() < vDate.getTime())
             vDate.setTime(pList[i].getStart().getTime());
-        else if (pList[i].getPlanStart() && pList[i].getPlanStart().getTime() < vDate.getTime())
+        if (pList[i].getPlanStart() && pList[i].getPlanStart().getTime() < vDate.getTime())
             vDate.setTime(pList[i].getPlanStart().getTime());
     }
     // Adjust min date to specific format boundaries (first of week or first of month)
@@ -3849,7 +3845,7 @@ exports.getMaxDate = function (pList, pFormat, pMaxDate) {
     for (var i = 0; i < pList.length; i++) {
         if (pList[i].getEnd().getTime() > vDate.getTime())
             vDate.setTime(pList[i].getEnd().getTime());
-        else if (pList[i].getPlanEnd() && pList[i].getPlanEnd().getTime() > vDate.getTime())
+        if (pList[i].getPlanEnd() && pList[i].getPlanEnd().getTime() > vDate.getTime())
             vDate.setTime(pList[i].getPlanEnd().getTime());
     }
     // Adjust max date to specific format boundaries (end of week or end of month)
