@@ -630,8 +630,12 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, 
     if (pList[pRow].getGroupMinPlanEnd() != null && pList[pRow].getGroupMinPlanEnd() > vMaxPlanDate) {
       vMaxPlanDate = pList[pRow].getGroupMinPlanEnd();
     }
-    pList[pRow].setPlanStart(vMinPlanDate);
-    pList[pRow].setPlanEnd(vMaxPlanDate);    
+    if (vMinPlanDate) {    
+      pList[pRow].setPlanStart(vMinPlanDate);
+    }
+    if (vMaxPlanDate) {
+      pList[pRow].setPlanEnd(vMaxPlanDate);    
+    }
     pList[pRow].setNumKid(vNumKid);
     pList[pRow].setWeight(vWeight);
     pList[pRow].setCompVal(Math.ceil(vCompSum / vWeight));
