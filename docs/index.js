@@ -4,7 +4,7 @@ let g;
 
 function start(e) {
 
-  g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
+  g = new JSGantt.JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
   if (g.getDivId() != null) {
 
     const newDataurl = document.getElementById('dataurl').value ? document.getElementById('dataurl').value : './fixes/data.json';
@@ -153,10 +153,10 @@ function start(e) {
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
     if (dataurl !== newDataurl) {
       dataurl = newDataurl;
-      JSGantt.parseJSON(dataurl, g, vDebug)
+      JSGantt.JSGantt.parseJSON(dataurl, g, vDebug)
         .then(j => jsonObj = j);
     } else {
-      JSGantt.addJSONTask(g, jsonObj)
+      JSGantt.JSGantt.addJSONTask(g, jsonObj)
     }
     /* 
     // Add Custom tasks programatically
