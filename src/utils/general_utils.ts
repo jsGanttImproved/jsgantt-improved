@@ -242,7 +242,7 @@ export const hashString = function (key) {
 }
 
 export const hashKey = function (key) {
-  return this.hashString(key);
+  return hashString(key);
 }
 
 export const criticalPath = function (tasks) {
