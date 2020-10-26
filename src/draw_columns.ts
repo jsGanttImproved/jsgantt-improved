@@ -3,7 +3,6 @@ import { AddTaskItemObject } from "./task";
 import { addListenerInputCell, addListenerClickCell } from "./events";
 import { newNode, makeInput } from "./utils/draw_utils";
 
-
 export const COLUMN_ORDER = [
   'vShowRes',
   'vShowDur',
@@ -16,7 +15,6 @@ export const COLUMN_ORDER = [
   'vAdditionalHeaders',
   'vShowAddEntries'
 ];
-
 
 export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsChange, vEvents,
   vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw) {
@@ -141,7 +139,6 @@ export const draw_bottom = function (column, vTmpRow, vAdditionalHeaders) {
 }
 
 export const draw_list_headings = function (column, vTmpRow, vAdditionalHeaders) {
-
   if ('vShowRes' === column) newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
   if ('vShowDur' === column) newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
   if ('vShowComp' === column) newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
@@ -161,7 +158,6 @@ export const draw_list_headings = function (column, vTmpRow, vAdditionalHeaders)
 }
 
 export const draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAdditionalHeaders) {
-
   if ('vShowRes' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gresource', vLangs[vLang]['resource']);
   if ('vShowDur' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gduration', vLangs[vLang]['duration']);
   if ('vShowComp' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', vLangs[vLang]['comp']);
