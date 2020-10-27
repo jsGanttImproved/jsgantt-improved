@@ -315,9 +315,9 @@ export const GanttChart = function (pDiv, pFormat) {
   }
 
   /**
-   * 
+   *
    * DRAW CHAR HEAD
-   * 
+   *
    */
   this.drawChartHead = function (vMinDate, vMaxDate, vColWidth, vNumRows) {
     let vRightHeader = document.createDocumentFragment();
@@ -474,7 +474,7 @@ export const GanttChart = function (pDiv, pFormat) {
     vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
     // const vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
     let vSingleCell = false;
-    
+
     if (this.vUseSingleCell !== 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
 
     newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
@@ -485,9 +485,9 @@ export const GanttChart = function (pDiv, pFormat) {
   }
 
   /**
-   * 
+   *
    * DRAW CHART BODY
-   * 
+   *
    */
   this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl,
     vMinDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
@@ -498,6 +498,7 @@ export const GanttChart = function (pDiv, pFormat) {
     this.setChartTable(vTmpTab);
     newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
     const vTmpTBody = newNode(vTmpTab, 'tbody');
+    const vTmpTFoot = newNode(vTmpTab, 'tfoot');
 
     syncScroll([vTmpContentTabWrapper, vTmpDiv], 'scrollTop');
     syncScroll([gChartLbl, vTmpDiv], 'scrollLeft');
@@ -569,7 +570,7 @@ export const GanttChart = function (pDiv, pFormat) {
       else {
         let vTaskWidth = vTaskRightPx;
 
-        // Draw Group Bar which has outer div with inner group div 
+        // Draw Group Bar which has outer div with inner group div
         // and several small divs to left and right to create angled-end indicators
         if (this.vTaskList[i].getGroup()) {
           vTaskWidth = (vTaskWidth > this.vMinGpLen && vTaskWidth < this.vMinGpLen * 2) ? this.vMinGpLen * 2 : vTaskWidth; // Expand to show two end points
@@ -689,7 +690,15 @@ export const GanttChart = function (pDiv, pFormat) {
     }
 
     // Include the footer with the days/week/month...
-    vTmpTBody.appendChild(vDateRow.cloneNode(true));
+    if (vSingleCell) {
+      const vTmpTFootTRow =  newNode(vTmpTFoot, 'tr');
+      const vTmpTFootTCell =  newNode(vTmpTFootTRow, 'td', null, null, null, '100%');
+      const vTmpTFootTCellTable =  newNode(vTmpTFootTCell, 'table', null, 'gcharttableh', null, '100%');
+      const vTmpTFootTCellTableTBody =  newNode(vTmpTFootTCellTable, 'tbody');
+      vTmpTFootTCellTableTBody.appendChild(vDateRow.cloneNode(true));
+    } else {
+      vTmpTFoot.appendChild(vDateRow.cloneNode(true));
+    }
 
     return { vRightTable }
   }
@@ -702,14 +711,14 @@ export const GanttChart = function (pDiv, pFormat) {
       newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
     }
 
-    
+
   }
 
   /**
-   * 
-   * 
+   *
+   *
    * DRAWING PROCESS
-   * 
+   *
    *  vTaskRightPx,vTaskWidth,vTaskPlanLeftPx,vTaskPlanRightPx,vID
    */
   this.Draw = function () {
@@ -717,7 +726,7 @@ export const GanttChart = function (pDiv, pFormat) {
     let vMinDate = new Date();
     let vColWidth = 0;
     let bd;
-    
+
     if (this.vEvents && this.vEvents.beforeDraw) {
       this.vEvents.beforeDraw();
     }
@@ -752,7 +761,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
 
     /**
-     * LIST HEAD 
+     * LIST HEAD
     */
     const gListLbl = this.drawListHead(vLeftHeader);
 
@@ -889,4 +898,3 @@ export const GanttChart = function (pDiv, pFormat) {
 
   if (this.vDiv && this.vDiv.nodeName && this.vDiv.nodeName.toLowerCase() == 'div') this.vDivId = this.vDiv.id;
 }; //GanttChart
-

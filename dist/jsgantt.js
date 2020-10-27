@@ -457,6 +457,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         this.setChartTable(vTmpTab);
         draw_utils_1.newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
         var vTmpTBody = draw_utils_1.newNode(vTmpTab, 'tbody');
+        var vTmpTFoot = draw_utils_1.newNode(vTmpTab, 'tfoot');
         events_1.syncScroll([vTmpContentTabWrapper, vTmpDiv], 'scrollTop');
         events_1.syncScroll([gChartLbl, vTmpDiv], 'scrollLeft');
         events_1.syncScroll([vTmpContentTabWrapper, gListLbl], 'scrollLeft');
@@ -514,7 +515,7 @@ exports.GanttChart = function (pDiv, pFormat) {
             }
             else {
                 var vTaskWidth = vTaskRightPx;
-                // Draw Group Bar which has outer div with inner group div 
+                // Draw Group Bar which has outer div with inner group div
                 // and several small divs to left and right to create angled-end indicators
                 if (this.vTaskList[i].getGroup()) {
                     vTaskWidth = (vTaskWidth > this.vMinGpLen && vTaskWidth < this.vMinGpLen * 2) ? this.vMinGpLen * 2 : vTaskWidth; // Expand to show two end points
@@ -626,7 +627,16 @@ exports.GanttChart = function (pDiv, pFormat) {
             }
         }
         // Include the footer with the days/week/month...
-        vTmpTBody.appendChild(vDateRow.cloneNode(true));
+        if (vSingleCell) {
+            var vTmpTFootTRow = draw_utils_1.newNode(vTmpTFoot, 'tr');
+            var vTmpTFootTCell = draw_utils_1.newNode(vTmpTFootTRow, 'td', null, null, null, '100%');
+            var vTmpTFootTCellTable = draw_utils_1.newNode(vTmpTFootTCell, 'table', null, 'gcharttableh', null, '100%');
+            var vTmpTFootTCellTableTBody = draw_utils_1.newNode(vTmpTFootTCellTable, 'tbody');
+            vTmpTFootTCellTableTBody.appendChild(vDateRow.cloneNode(true));
+        }
+        else {
+            vTmpTFoot.appendChild(vDateRow.cloneNode(true));
+        }
         return { vRightTable: vRightTable };
     };
     this.drawColsChart = function (vNumCols, vTmpRow, taskCellWidth) {
@@ -3739,8 +3749,12 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebu
         if (pList[pRow].getGroupMinPlanEnd() != null && pList[pRow].getGroupMinPlanEnd() > vMaxPlanDate) {
             vMaxPlanDate = pList[pRow].getGroupMinPlanEnd();
         }
-        pList[pRow].setPlanStart(vMinPlanDate);
-        pList[pRow].setPlanEnd(vMaxPlanDate);
+        if (vMinPlanDate) {
+            pList[pRow].setPlanStart(vMinPlanDate);
+        }
+        if (vMaxPlanDate) {
+            pList[pRow].setPlanEnd(vMaxPlanDate);
+        }
         pList[pRow].setNumKid(vNumKid);
         pList[pRow].setWeight(vWeight);
         pList[pRow].setCompVal(Math.ceil(vCompSum / vWeight));
