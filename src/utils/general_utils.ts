@@ -315,6 +315,10 @@ export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
   let vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
   let vNewX = vMouseX;
   let vNewY = vMouseY;
+  let screenX = screen.availWidth || window.innerWidth;
+  let screenY = screen.availHeight || window.innerHeight;
+  let vOldX = parseInt(pGanttChartObj.vTool.style.left);
+  let vOldY = parseInt(pGanttChartObj.vTool.style.top);
 
   if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
     // the clientX and clientY properties include the left and top borders of the client area
@@ -363,8 +367,9 @@ export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
 	}
 	else vNewY=vMouseY+vScrollPos.y-vCurTopBuf-pGanttChartObj.vTool.offsetHeight;
 	*/
+  let outViewport = Math.abs(vOldX - vNewX) > screenX || Math.abs(vOldY - vNewY) > screenY
 
-  if (pGanttChartObj.getUseMove()) {
+  if (pGanttChartObj.getUseMove() && !outViewport) {
     clearInterval(pGanttChartObj.vTool.moveInterval);
     pGanttChartObj.vTool.moveInterval = setInterval(function () { moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer); }, pTimer);
   }
