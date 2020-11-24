@@ -88,9 +88,9 @@ td.gspanning {
 .gtaskheading,
 .gname,
 .gtaskname,
-.gresource,
-.gduration,
-.gpccomplete,
+.gres,
+.gdur,
+.gcomp,
 .gstartdate,
 .gplanstartdate,
 .gplanenddate,
@@ -104,9 +104,9 @@ td.gspanning {
 .gtaskheading div,
 .gname div,
 .gtaskname div,
-.gresource div,
-.gduration div,
-.gpccomplete div,
+.gres div,
+.gdur div,
+.gcomp div,
 .gstartdate div,
 .gplanstartdate div,
 .gplanenddate div,
@@ -762,9 +762,9 @@ td.gspanning div {
 }
 
 .gadditional,
-.gresource,
-.gduration,
-.gpccomplete,
+.gres,
+.gdur,
+.gcomp,
 .gcost {
   text-align: center;
   width: 70px;

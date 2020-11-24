@@ -21,7 +21,7 @@ import {
 import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
 
 import { getXMLProject, getXMLTask } from './xml';
-import { COLUMN_ORDER, draw_list_headings, draw_header, draw_bottom, draw_task_headings } from './draw_columns';
+import { COLUMN_ORDER, draw_header, draw_bottom, draw_task_headings } from './draw_columns';
 import { newNode, makeInput, getArrayLocationByID, CalcTaskXY, sLine, drawSelector } from './utils/draw_utils';
 import { drawDependency, DrawDependencies } from './draw_dependencies';
 import { includeGetSet } from './options';
@@ -209,7 +209,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
     this.getColumnOrder().forEach(column => {
       if (this[column] == 1 || column === 'vAdditionalHeaders') {
-        draw_task_headings(column, vTmpRow, this.vLangs, this.vLang, this.vAdditionalHeaders);
+        draw_task_headings(column, vTmpRow, this.vLangs, this.vLang, this.vAdditionalHeaders, this.vEvents);
       }
     });
     return gListLbl;
