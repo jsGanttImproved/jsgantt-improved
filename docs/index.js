@@ -86,6 +86,7 @@ function start(e) {
         planstart: console.log,
         planend: console.log,
         cost: console.log,
+        additional_category: console.log,
         beforeDraw: () => console.log('before draw listener'),
         afterDraw: () => {
           console.log('after draw listener');

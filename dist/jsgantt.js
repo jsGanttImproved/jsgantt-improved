@@ -939,9 +939,10 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
             var css = header.class ? header.class : "gadditional-" + key;
             var data = vTaskList[i].getDataObject();
             vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
+            vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
+            events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], "additional_" + key);
             // const callback = (task, e) => task.setCost(e.target.value);
             // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'costdate');
-            vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
         }
     }
     if ('vShowAddEntries' === column) {
@@ -1387,7 +1388,7 @@ exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
     exports.addListener('click', function (e) {
         if (e.target.classList.contains('gfoldercollapse') === false &&
             vEvents[column] && typeof vEvents[column] === 'function') {
-            vEvents[column](task, e, vTmpCell);
+            vEvents[column](task, e, vTmpCell, column);
         }
     }, vTmpCell);
 };

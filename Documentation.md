@@ -505,6 +505,7 @@ g.setOptions({
     planstart: console.log,
     planend: console.log,
     cost: console.log,
+    additional_category: console.log, // for additional fields
     beforeDraw: ()=>console.log('before draw listener'),
     afterDraw: ()=>console.log('before after listener')
   },

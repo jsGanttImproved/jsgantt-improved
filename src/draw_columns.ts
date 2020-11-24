@@ -108,9 +108,10 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
       const css = header.class ? header.class : `gadditional-${key}`;
       const data = vTaskList[i].getDataObject();
       vTmpCell = newNode(vTmpRow, 'td', null, `gadditional ${css}`);
+      vTmpDiv = newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
+      addListenerClickCell(vTmpCell, vEvents, vTaskList[i], `additional_${key}`);
       // const callback = (task, e) => task.setCost(e.target.value);
       // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'costdate');
-      vTmpDiv = newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
     }
   }
 
