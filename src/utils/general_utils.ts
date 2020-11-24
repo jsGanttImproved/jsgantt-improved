@@ -110,6 +110,12 @@ export const getScrollbarWidth = function () {
   return scrollbarWidth;
 }
 
+export const calculateCurrentDateOffset = function(curTaskStart, curTaskEnd){
+  let tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
+  let tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
+  return (tmpTaskEnd - tmpTaskStart);
+}
+
 export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
   const DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
   const WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
@@ -121,10 +127,10 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pSh
   let curTaskStart = new Date(pStartDate.getTime());
   let curTaskEnd = new Date(pEndDate.getTime());
   let vTaskRightPx = 0;
-  let tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
-  let tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
-  const oneHour = 3600000
-  let vTaskRight = (tmpTaskEnd - tmpTaskStart) / oneHour; // Length of task in hours
+
+  // Length of task in hours
+  const oneHour = 3600000;
+  let vTaskRight = calculateCurrentDateOffset(curTaskStart, curTaskEnd) / oneHour ;
 
   let vPosTmpDate;
   if (pFormat == 'day') {

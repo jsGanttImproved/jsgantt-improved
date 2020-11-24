@@ -15,6 +15,7 @@ import {
   removeListener
 } from './events';
 import {
+  calculateCurrentDateOffset,
   getOffset, getScrollbarWidth
 } from './utils/general_utils';
 import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
@@ -490,7 +491,7 @@ export const GanttChart = function (pDiv, pFormat) {
    *
    */
   this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl,
-    vMinDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
+    vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
     let vRightTable = document.createDocumentFragment();
     const vTmpDiv = newNode(vRightTable, 'div', this.vDivId + 'gchartbody', 'gchartgrid gcontainercol');
     this.setChartBody(vTmpDiv);
@@ -564,7 +565,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
         vCaptClass = 'gmilecaption';
         if (!vSingleCell && !vComb) {
-          this.drawColsChart(vNumCols, vTmpRow, taskCellWidth)
+          this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate)
         }
       }
       else {
@@ -599,7 +600,7 @@ export const GanttChart = function (pDiv, pFormat) {
           }
 
           if (!vSingleCell && !vComb) {
-            this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
+            this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate);
           }
         }
         else {
@@ -656,8 +657,8 @@ export const GanttChart = function (pDiv, pFormat) {
           if (!vComb || (vComb && this.vTaskList[i].getParItem().getEnd() == this.vTaskList[i].getEnd())) vCaptClass = 'gcaption';
 
           // Background cells
-          if (!vSingleCell && !vComb) {
-           if(vTmpRow) this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
+          if (!vSingleCell && !vComb && vTmpRow) {
+            this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate);
           }
         }
       }
@@ -691,10 +692,10 @@ export const GanttChart = function (pDiv, pFormat) {
 
     // Include the footer with the days/week/month...
     if (vSingleCell) {
-      const vTmpTFootTRow =  newNode(vTmpTFoot, 'tr');
-      const vTmpTFootTCell =  newNode(vTmpTFootTRow, 'td', null, null, null, '100%');
-      const vTmpTFootTCellTable =  newNode(vTmpTFootTCell, 'table', null, 'gcharttableh', null, '100%');
-      const vTmpTFootTCellTableTBody =  newNode(vTmpTFootTCellTable, 'tbody');
+      const vTmpTFootTRow = newNode(vTmpTFoot, 'tr');
+      const vTmpTFootTCell = newNode(vTmpTFootTRow, 'td', null, null, null, '100%');
+      const vTmpTFootTCellTable = newNode(vTmpTFootTCell, 'table', null, 'gcharttableh', null, '100%');
+      const vTmpTFootTCellTableTBody = newNode(vTmpTFootTCellTable, 'tbody');
       vTmpTFootTCellTableTBody.appendChild(vDateRow.cloneNode(true));
     } else {
       vTmpTFoot.appendChild(vDateRow.cloneNode(true));
@@ -703,15 +704,34 @@ export const GanttChart = function (pDiv, pFormat) {
     return { vRightTable }
   }
 
-  this.drawColsChart = function(vNumCols, vTmpRow, taskCellWidth){
-    let vCellFormat = '';
-    for (let j = 0; j < vNumCols - 1; j++) {
-      if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) vCellFormat = 'gtaskcellwkend';
-      else vCellFormat = 'gtaskcell gtaskcellcols';
-      newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
+  this.drawColsChart = function (vNumCols, vTmpRow, taskCellWidth, pStartDate = null, pEndDate = null) {
+    let columnCurrentDay = null;
+    // Find the Current day cell to put a different class
+    if (this.vShowWeekends !== false && pStartDate && pEndDate && (
+      this.vFormat == 'day' || this.vFormat == 'week'
+    )) {
+      let curTaskStart = new Date(pStartDate.getTime());
+      let curTaskEnd = new Date();
+      let onePeriod = 3600000;
+      if (this.vFormat == 'day') {
+        onePeriod *= 24;
+      } else if (this.vFormat == 'week') {
+        onePeriod *= 24 * 7;
+      }
+      columnCurrentDay = Math.floor(calculateCurrentDateOffset(curTaskStart, curTaskEnd) / onePeriod) - 1;
     }
 
-
+    for (let j = 0; j < vNumCols - 1; j++) {
+      let vCellFormat = 'gtaskcell gtaskcellcols';
+      if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) {
+        vCellFormat = 'gtaskcellwkend';
+      }
+      //When is the column is the current day/week,give a different class
+      else if ((this.vFormat == 'week' || this.vFormat == 'day') && j === columnCurrentDay) {
+        vCellFormat = 'gtaskcellcurrent';
+      }
+      newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
+    }
   }
 
   /**
@@ -784,7 +804,7 @@ export const GanttChart = function (pDiv, pFormat) {
      * CHART GRID
      */
     const { vRightTable } = this.drawCharBody(vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl,
-      vMinDate, vSingleCell, vNumCols, vColWidth, vDateRow)
+      vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow)
 
     if (this.vDebug) {
       const ad = new Date();
@@ -850,8 +870,9 @@ export const GanttChart = function (pDiv, pFormat) {
       this.getChartBody().scrollLeft = vScrollPx;
     }
 
-    if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends);
-    else this.vTodayPx = -1;
+    if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) {
+      this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends);
+    } else this.vTodayPx = -1;
 
     // DEPENDENCIES: Draw lines of Dependencies
     let bdd;

@@ -25,6 +25,7 @@ div.gantt {
 .gminorheading,
 .gminorheadingwkend,
 .gtaskcell,
+.gtaskcellcurrent,
 .gtaskcellwkend {
   height: 19px;
   font-size: 12px;
@@ -57,11 +58,16 @@ div.gantt {
 }
 
 .gtaskcellwkend,
+.gtaskcellcurrent,
 .gminorheadingwkend {
   background-color: #f7f7f7;
   font-weight: bold;
   font-size: 9px;
   white-space: nowrap;
+}
+
+.gtaskcellcurrent {
+  background-color: #e1e0f7;
 }
 
 td.gtaskcell {
