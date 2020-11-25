@@ -44,6 +44,9 @@ div.gantt {
   border-right: none;
 }
 
+.gtasknolist-label{
+  padding: 10px 50px;
+}
 /* all three width values set just to make sure - helps resizing code */
 
 /* Additional values for some cell elements */

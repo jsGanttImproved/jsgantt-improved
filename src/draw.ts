@@ -292,6 +292,19 @@ export const GanttChart = function (pDiv, pFormat) {
       }
     }
 
+    // Render no daa in the chart
+    if (this.vTaskList.length == 0) {
+
+      let totalColumns = this.getColumnOrder()
+        .filter(column => this[column] == 1 || column === 'vAdditionalHeaders')
+        .length
+      let vTmpRow = newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_', 'gname ');
+      // this.vTaskList[i].setListChildRow(vTmpRow);
+      let vTmpCell = newNode(vTmpRow, 'td', null, 'gtasknolist', '', null, null, null, totalColumns);
+      let vOutput = document.createDocumentFragment();
+      newNode(vOutput, 'div', null, 'gtasknolist-label', this.vLangs[this.vLang]['nodata'] + '.');
+      vTmpCell.appendChild(vOutput);
+    }
     // DRAW the date format selector at bottom left.
     let vTmpRow = newNode(vTmpContentTBody, 'tr');
     newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -758,11 +771,6 @@ export const GanttChart = function (pDiv, pFormat) {
     if (this.vDebug) {
       bd = new Date();
       console.info('before draw', bd);
-    }
-
-    if (this.vTaskList.length === 0) {
-      this.drawComplete(vMinDate, vColWidth, bd);
-      return;
     }
 
     // Process all tasks, reset parent date and completion % if task list has altered

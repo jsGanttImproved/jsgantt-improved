@@ -270,6 +270,18 @@ exports.GanttChart = function (pDiv, pFormat) {
         for (var i = 0; i < this.vTaskList.length; i++) {
             _loop_1(i);
         }
+        // Render no daa in the chart
+        if (this.vTaskList.length == 0) {
+            var totalColumns = this.getColumnOrder()
+                .filter(function (column) { return _this[column] == 1 || column === 'vAdditionalHeaders'; })
+                .length;
+            var vTmpRow_2 = draw_utils_1.newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_', 'gname ');
+            // this.vTaskList[i].setListChildRow(vTmpRow);
+            var vTmpCell_2 = draw_utils_1.newNode(vTmpRow_2, 'td', null, 'gtasknolist', '', null, null, null, totalColumns);
+            var vOutput = document.createDocumentFragment();
+            draw_utils_1.newNode(vOutput, 'div', null, 'gtasknolist-label', this.vLangs[this.vLang]['nodata'] + '.');
+            vTmpCell_2.appendChild(vOutput);
+        }
         // DRAW the date format selector at bottom left.
         var vTmpRow = draw_utils_1.newNode(vTmpContentTBody, 'tr');
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
@@ -689,10 +701,6 @@ exports.GanttChart = function (pDiv, pFormat) {
         if (this.vDebug) {
             bd = new Date();
             console.info('before draw', bd);
-        }
-        if (this.vTaskList.length === 0) {
-            this.drawComplete(vMinDate, vColWidth, bd);
-            return;
         }
         // Process all tasks, reset parent date and completion % if task list has altered
         if (this.vProcessNeeded)
@@ -1805,6 +1813,7 @@ var es = {
     'enddate': 'Fin',
     'planenddate': 'Fin Planificado',
     'moreinfo': 'Más Información',
+    'nodata': 'No tasks found',
     'notes': 'Notas',
     'format': 'Formato',
     'hour': 'Hora',
@@ -1862,6 +1871,7 @@ var en = {
     'planenddate': 'Plan End Date',
     'cost': 'Cost',
     'moreinfo': 'More Information',
+    'nodata': 'No tasks found',
     'notes': 'Notes',
     'january': 'January',
     'february': 'February',
@@ -1936,6 +1946,7 @@ var de = {
     'planenddate': 'Plan Letzte Buchung',
     'cost': 'Cost',
     'moreinfo': 'Weitere Infos',
+    'nodata': 'No tasks found',
     'notes': 'Anmerkung',
     'january': 'Jänner',
     'february': 'Februar',
@@ -1997,6 +2008,7 @@ var pt = {
     'completion': 'Terminado',
     'comp': '% Completado',
     'moreinfo': 'Mais informações',
+    'nodata': 'Sem atividades',
     'notes': 'Notas',
     'res': 'Responsável',
     'dur': 'Duração',
@@ -2086,6 +2098,7 @@ var ru = {
     'planenddate': 'Plan Кон. дата',
     'cost': 'Cost',
     'moreinfo': 'Детали',
+    'nodata': 'No tasks found',
     'notes': 'Заметки',
     'format': 'Формат',
     'hour': 'Час',
@@ -2111,9 +2124,11 @@ var ru = {
     'tooltipLoading': 'Загрузка...'
 };
 exports.ru = ru;
+/**
+ * Mois : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3619
+   Jours : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3617
+ */
 var fr = {
-    // Mois : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3619
-    // Jours : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3617
     'january': 'Janvier',
     'february': 'Février',
     'march': 'Mars',
@@ -2162,6 +2177,7 @@ var fr = {
     'planenddate': 'Plan Fin',
     'cost': 'Cost',
     'moreinfo': "Plus d'informations",
+    'nodata': 'No tasks found',
     'notes': 'Notes',
     'format': 'Format',
     'hour': 'Heure',
@@ -2235,6 +2251,7 @@ var cn = {
     'planenddate': '計劃截止日期',
     'cost': '成本',
     'moreinfo': "更多資訊",
+    'nodata': 'No tasks found',
     'notes': '備註',
     'format': '格式',
     'hour': '時',
@@ -2291,6 +2308,7 @@ var sv = {
     'planenddate': 'Planerad slutdatum',
     'cost': 'Kostnad',
     'moreinfo': 'Mer Information',
+    'nodata': 'No tasks found',
     'notes': 'Notes',
     'january': 'januari',
     'february': 'februari',
@@ -2364,6 +2382,7 @@ var nl = {
     'planenddate': 'Geplande einddatum',
     'cost': 'Kosten',
     'moreinfo': 'Meer informatie',
+    'nodata': 'No tasks found',
     'notes': 'Notities',
     'january': 'januari',
     'february': 'februari',
@@ -2437,6 +2456,7 @@ var id = {
     'planenddate': 'Perencanaan Tanggal Akhir',
     'cost': 'Biaya',
     'moreinfo': 'Informasi Lebih Lanjut',
+    'nodata': 'No tasks found',
     'notes': 'Catatan',
     'january': 'Januari',
     'february': 'Februari',
@@ -2510,6 +2530,7 @@ var tr = {
     'planenddate': 'Plan Bitiş Tarihi',
     'cost': 'Tutar',
     'moreinfo': 'Daha Fazla Bilgi',
+    'nodata': 'No tasks found',
     'notes': 'Notlar',
     'january': 'Ocak',
     'february': 'Şubat',
@@ -2583,6 +2604,7 @@ var ja = {
     'planenddate': '予定期日',
     'cost': 'コスト',
     'moreinfo': '詳細',
+    'nodata': 'No tasks found',
     'notes': 'ノート',
     'january': '1月',
     'february': '2月',
@@ -2657,6 +2679,7 @@ var cs = {
     'planenddate': 'Plánovaný konec',
     'cost': 'Náklady',
     'moreinfo': 'Více informací',
+    'nodata': 'No tasks found',
     'notes': 'Poznámky',
     'january': 'Leden',
     'february': 'Únor',
@@ -2731,6 +2754,7 @@ var hu = {
     'planenddate': 'Tervezett befejezés',
     'cost': 'Költség',
     'moreinfo': 'További információ',
+    'nodata': 'No tasks found',
     'notes': 'Jegyzetek',
     'january': 'Január',
     'february': 'Február',
@@ -2805,6 +2829,7 @@ var ko = {
     'planenddate': '계획 종료일자',
     'cost': '비용',
     'moreinfo': '더 많은 정보',
+    'nodata': 'No tasks found',
     'notes': '비고',
     'january': '1월',
     'february': '2월',
