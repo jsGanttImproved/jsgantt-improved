@@ -187,7 +187,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskname', '\u00A0');
         this.getColumnOrder().forEach(function (column) {
             if (_this[column] == 1 || column === 'vAdditionalHeaders') {
-                draw_columns_1.draw_task_headings(column, vTmpRow, _this.vLangs, _this.vLang, _this.vAdditionalHeaders);
+                draw_columns_1.draw_task_headings(column, vTmpRow, _this.vLangs, _this.vLang, _this.vAdditionalHeaders, _this.vEvents);
             }
         });
         return gListLbl;
@@ -269,6 +269,18 @@ exports.GanttChart = function (pDiv, pFormat) {
         var this_1 = this;
         for (var i = 0; i < this.vTaskList.length; i++) {
             _loop_1(i);
+        }
+        // Render no daa in the chart
+        if (this.vTaskList.length == 0) {
+            var totalColumns = this.getColumnOrder()
+                .filter(function (column) { return _this[column] == 1 || column === 'vAdditionalHeaders'; })
+                .length;
+            var vTmpRow_2 = draw_utils_1.newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_', 'gname ');
+            // this.vTaskList[i].setListChildRow(vTmpRow);
+            var vTmpCell_2 = draw_utils_1.newNode(vTmpRow_2, 'td', null, 'gtasknolist', '', null, null, null, totalColumns);
+            var vOutput = document.createDocumentFragment();
+            draw_utils_1.newNode(vOutput, 'div', null, 'gtasknolist-label', this.vLangs[this.vLang]['nodata'] + '.');
+            vTmpCell_2.appendChild(vOutput);
         }
         // DRAW the date format selector at bottom left.
         var vTmpRow = draw_utils_1.newNode(vTmpContentTBody, 'tr');
@@ -449,7 +461,7 @@ exports.GanttChart = function (pDiv, pFormat) {
      * DRAW CHART BODY
      *
      */
-    this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl, vMinDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
+    this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl, vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
         var vRightTable = document.createDocumentFragment();
         var vTmpDiv = draw_utils_1.newNode(vRightTable, 'div', this.vDivId + 'gchartbody', 'gchartgrid gcontainercol');
         this.setChartBody(vTmpDiv);
@@ -510,7 +522,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                 }
                 vCaptClass = 'gmilecaption';
                 if (!vSingleCell && !vComb) {
-                    this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
+                    this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate);
                 }
             }
             else {
@@ -538,7 +550,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         vCaptClass = 'ggroupcaption';
                     }
                     if (!vSingleCell && !vComb) {
-                        this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
+                        this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate);
                     }
                 }
                 else {
@@ -587,9 +599,8 @@ exports.GanttChart = function (pDiv, pFormat) {
                     if (!vComb || (vComb && this.vTaskList[i].getParItem().getEnd() == this.vTaskList[i].getEnd()))
                         vCaptClass = 'gcaption';
                     // Background cells
-                    if (!vSingleCell && !vComb) {
-                        if (vTmpRow)
-                            this.drawColsChart(vNumCols, vTmpRow, taskCellWidth);
+                    if (!vSingleCell && !vComb && vTmpRow) {
+                        this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate);
                     }
                 }
             }
@@ -615,14 +626,18 @@ exports.GanttChart = function (pDiv, pFormat) {
             if (this.vTaskList[i].getTaskDiv() && vTmpDiv_1) {
                 var vTmpDiv2 = draw_utils_1.newNode(vTmpDiv_1, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
                 var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _a.component, callback = _a.callback;
-                vTmpDiv2.appendChild(component);
+                var el = document.createElement('div');
+                el.appendChild(component);
+                vTmpDiv2.setAttribute('data-tooltip', el.innerHTML);
                 events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
             }
             // Add Plan Task Info div for tooltip
             if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv_1) {
                 var vTmpDiv2 = draw_utils_1.newNode(vTmpDiv_1, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
                 var _b = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _b.component, callback = _b.callback;
-                vTmpDiv2.appendChild(component);
+                var el = document.createElement('div');
+                el.appendChild(component);
+                vTmpDiv2.setAttribute('data-tooltip', el.innerHTML);
                 events_1.addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
             }
         }
@@ -639,13 +654,32 @@ exports.GanttChart = function (pDiv, pFormat) {
         }
         return { vRightTable: vRightTable };
     };
-    this.drawColsChart = function (vNumCols, vTmpRow, taskCellWidth) {
-        var vCellFormat = '';
+    this.drawColsChart = function (vNumCols, vTmpRow, taskCellWidth, pStartDate, pEndDate) {
+        if (pStartDate === void 0) { pStartDate = null; }
+        if (pEndDate === void 0) { pEndDate = null; }
+        var columnCurrentDay = null;
+        // Find the Current day cell to put a different class
+        if (this.vShowWeekends !== false && pStartDate && pEndDate && (this.vFormat == 'day' || this.vFormat == 'week')) {
+            var curTaskStart = new Date(pStartDate.getTime());
+            var curTaskEnd = new Date();
+            var onePeriod = 3600000;
+            if (this.vFormat == 'day') {
+                onePeriod *= 24;
+            }
+            else if (this.vFormat == 'week') {
+                onePeriod *= 24 * 7;
+            }
+            columnCurrentDay = Math.floor(general_utils_1.calculateCurrentDateOffset(curTaskStart, curTaskEnd) / onePeriod) - 1;
+        }
         for (var j = 0; j < vNumCols - 1; j++) {
-            if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
+            var vCellFormat = 'gtaskcell gtaskcellcols';
+            if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) {
                 vCellFormat = 'gtaskcellwkend';
-            else
-                vCellFormat = 'gtaskcell gtaskcellcols';
+            }
+            //When is the column is the current day/week,give a different class
+            else if ((this.vFormat == 'week' || this.vFormat == 'day') && j === columnCurrentDay) {
+                vCellFormat = 'gtaskcellcurrent';
+            }
             draw_utils_1.newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
         }
     };
@@ -667,10 +701,6 @@ exports.GanttChart = function (pDiv, pFormat) {
         if (this.vDebug) {
             bd = new Date();
             console.info('before draw', bd);
-        }
-        if (this.vTaskList.length === 0) {
-            this.drawComplete(vMinDate, vColWidth, bd);
-            return;
         }
         // Process all tasks, reset parent date and completion % if task list has altered
         if (this.vProcessNeeded)
@@ -707,7 +737,7 @@ exports.GanttChart = function (pDiv, pFormat) {
         /**
          * CHART GRID
          */
-        var vRightTable = this.drawCharBody(vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl, vMinDate, vSingleCell, vNumCols, vColWidth, vDateRow).vRightTable;
+        var vRightTable = this.drawCharBody(vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl, vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow).vRightTable;
         if (this.vDebug) {
             var ad = new Date();
             console.info('after tasks loop', ad, (ad.getTime() - bd.getTime()));
@@ -765,8 +795,9 @@ exports.GanttChart = function (pDiv, pFormat) {
             }
             this.getChartBody().scrollLeft = vScrollPx;
         }
-        if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime())
+        if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) {
             this.vTodayPx = general_utils_1.getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends);
+        }
         else
             this.vTodayPx = -1;
         // DEPENDENCIES: Draw lines of Dependencies
@@ -829,10 +860,21 @@ exports.COLUMN_ORDER = [
     'vAdditionalHeaders',
     'vShowAddEntries'
 ];
+var COLUMNS_TYPES = {
+    'vShowRes': 'res',
+    'vShowDur': 'dur',
+    'vShowComp': 'comp',
+    'vShowStartDate': 'startdate',
+    'vShowEndDate': 'enddate',
+    'vShowPlanStartDate': 'planstartdate',
+    'vShowPlanEndDate': 'planenddate',
+    'vShowCost': 'cost',
+    'vShowAddEntries': 'addentries'
+};
 exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsChange, vEvents, vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw) {
     var vTmpCell, vTmpDiv;
     if ('vShowRes' === column) {
-        vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gresource');
+        vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gres');
         var text = draw_utils_1.makeInput(vTaskList[i].getResource(), vEditable, 'resource', vTaskList[i].getResource(), vResources);
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setResource(e.target.value); };
@@ -840,7 +882,7 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'res');
     }
     if ('vShowDur' === column) {
-        vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gduration');
+        vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gdur');
         var text = draw_utils_1.makeInput(vTaskList[i].getDuration(vFormat, vLangs[vLang]), vEditable, 'text', vTaskList[i].getDuration());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setDuration(e.target.value); };
@@ -848,7 +890,7 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
         events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'dur');
     }
     if ('vShowComp' === column) {
-        vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gpccomplete');
+        vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, 'gcomp');
         var text = draw_utils_1.makeInput(vTaskList[i].getCompStr(), vEditable, 'percentage', vTaskList[i].getCompVal());
         vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { task.setComp(e.target.value); task.setCompVal(e.target.value); };
@@ -905,9 +947,10 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
             var css = header.class ? header.class : "gadditional-" + key;
             var data = vTaskList[i].getDataObject();
             vTmpCell = draw_utils_1.newNode(vTmpRow, 'td', null, "gadditional " + css);
+            vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
+            events_1.addListenerClickCell(vTmpCell, vEvents, vTaskList[i], "additional_" + key);
             // const callback = (task, e) => task.setCost(e.target.value);
             // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'costdate');
-            vTmpDiv = draw_utils_1.newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
         }
     }
     if ('vShowAddEntries' === column) {
@@ -924,22 +967,6 @@ exports.draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEvent
     }
 };
 exports.draw_bottom = function (column, vTmpRow, vAdditionalHeaders) {
-    if ('vShowRes' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-    if ('vShowDur' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-    if ('vShowComp' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-    if ('vShowStartDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-    if ('vShowEndDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
-    if ('vShowPlanStartDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
-    if ('vShowPlanEndDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
-    if ('vShowCost' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
     if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
         for (var key in vAdditionalHeaders) {
             var header = vAdditionalHeaders[key];
@@ -947,63 +974,40 @@ exports.draw_bottom = function (column, vTmpRow, vAdditionalHeaders) {
             draw_utils_1.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
         }
     }
-    if ('vShowAddEntries' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
-};
-exports.draw_list_headings = function (column, vTmpRow, vAdditionalHeaders) {
-    if ('vShowRes' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-    if ('vShowDur' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-    if ('vShowComp' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-    if ('vShowStartDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-    if ('vShowEndDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
-    if ('vShowPlanStartDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-    if ('vShowPlanEndDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
-    if ('vShowCost' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
-    if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
-        for (var key in vAdditionalHeaders) {
-            var header = vAdditionalHeaders[key];
-            var css = header.class ? header.class : "gadditional-" + key;
-            draw_utils_1.newNode(vTmpRow, 'td', null, "gspanning gadditional " + css, '\u00A0');
-        }
+    else {
+        var type = COLUMNS_TYPES[column];
+        draw_utils_1.newNode(vTmpRow, 'td', null, "gspanning g" + type, '\u00A0');
     }
-    if ('vShowAddEntries' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
 };
-exports.draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAdditionalHeaders) {
-    if ('vShowRes' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gresource', vLangs[vLang]['resource']);
-    if ('vShowDur' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gduration', vLangs[vLang]['duration']);
-    if ('vShowComp' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', vLangs[vLang]['comp']);
-    if ('vShowStartDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', vLangs[vLang]['startdate']);
-    if ('vShowEndDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading genddate', vLangs[vLang]['enddate']);
-    if ('vShowPlanStartDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gplanstartdate', vLangs[vLang]['planstartdate']);
-    if ('vShowPlanEndDate' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', vLangs[vLang]['planenddate']);
-    if ('vShowCost' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gcost', vLangs[vLang]['cost']);
+// export const draw_list_headings = function (column, vTmpRow, vAdditionalHeaders, vEvents) {
+//   let nodeCreated;
+//   if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
+//     for (const key in vAdditionalHeaders) {
+//       const header = vAdditionalHeaders[key];
+//       const css = header.class ? header.class : `gadditional-${key}`;
+//       newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
+//     }
+//   } else {
+//     const type = COLUMNS_TYPES[column];
+//     nodeCreated = newNode(vTmpRow, 'td', null, `gspanning g${type}`, '\u00A0');
+//     addListenerClickCell(nodeCreated, vEvents, { hader: true, column }, type);
+//   }
+// }
+exports.draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAdditionalHeaders, vEvents) {
+    var nodeCreated;
     if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
         for (var key in vAdditionalHeaders) {
             var header = vAdditionalHeaders[key];
             var text = header.translate ? vLangs[vLang][header.translate] : header.title;
             var css = header.class ? header.class : "gadditional-" + key;
-            draw_utils_1.newNode(vTmpRow, 'td', null, "gtaskheading gadditional " + css, text);
+            nodeCreated = draw_utils_1.newNode(vTmpRow, 'td', null, "gtaskheading gadditional " + css, text);
         }
     }
-    if ('vShowAddEntries' === column)
-        draw_utils_1.newNode(vTmpRow, 'td', null, 'gtaskheading gaddentries', vLangs[vLang]['addentries']);
+    else {
+        var type = COLUMNS_TYPES[column];
+        nodeCreated = draw_utils_1.newNode(vTmpRow, 'td', null, "gtaskheading g" + type, vLangs[vLang][type]);
+        events_1.addListenerClickCell(nodeCreated, vEvents, { hader: true, column: column }, type);
+    }
 };
 
 },{"./events":5,"./task":10,"./utils/date_utils":11,"./utils/draw_utils":12}],4:[function(require,module,exports){
@@ -1097,8 +1101,9 @@ exports.DrawDependencies = function (vDebug) {
         }
     }
     // draw the current date line
-    if (this.vTodayPx >= 0)
+    if (this.vTodayPx >= 0) {
         this.sLine(this.vTodayPx, 0, this.vTodayPx, this.getChartTable().offsetHeight - 1, 'gCurDate');
+    }
 };
 
 },{}],5:[function(require,module,exports){
@@ -1239,9 +1244,9 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
             this.addListener('mouseout', function () { general_utils_1.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
         }
         clearTimeout(pGanttChartObj.vTool.delayTimeout);
-        var newHTML = pContents.innerHTML;
+        var newHTML = pContents.getAttribute('data-tooltip');
         if (pGanttChartObj.vTool.vToolCont.getAttribute("content") !== newHTML) {
-            pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
+            pGanttChartObj.vTool.vToolCont.innerHTML = pContents.getAttribute('data-tooltip');
             // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
             general_utils_1.stripIds(pGanttChartObj.vTool.vToolCont);
             pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);
@@ -1391,7 +1396,7 @@ exports.addListenerClickCell = function (vTmpCell, vEvents, task, column) {
     exports.addListener('click', function (e) {
         if (e.target.classList.contains('gfoldercollapse') === false &&
             vEvents[column] && typeof vEvents[column] === 'function') {
-            vEvents[column](task, e, vTmpCell);
+            vEvents[column](task, e, vTmpCell, column);
         }
     }, vTmpCell);
 };
@@ -1798,8 +1803,8 @@ var es = {
     'thu': '	Jue',
     'fri': '	Vie',
     'sat': '	Sab',
-    'resource': 'Recurso',
-    'duration': 'Duración',
+    'res': 'Recurso',
+    'dur': 'Duración',
     'comp': '% Compl.',
     'completion': 'Completado',
     'startdate': 'Inicio',
@@ -1808,6 +1813,7 @@ var es = {
     'enddate': 'Fin',
     'planenddate': 'Fin Planificado',
     'moreinfo': 'Más Información',
+    'nodata': 'No tasks found',
     'notes': 'Notas',
     'format': 'Formato',
     'hour': 'Hora',
@@ -1855,8 +1861,8 @@ var en = {
     'wks': 'Wks',
     'mths': 'Mths',
     'qtrs': 'Qtrs',
-    'resource': 'Resource',
-    'duration': 'Duration',
+    'res': 'Resource',
+    'dur': 'Duration',
     'comp': '% Comp.',
     'completion': 'Completion',
     'startdate': 'Start Date',
@@ -1865,6 +1871,7 @@ var en = {
     'planenddate': 'Plan End Date',
     'cost': 'Cost',
     'moreinfo': 'More Information',
+    'nodata': 'No tasks found',
     'notes': 'Notes',
     'january': 'January',
     'february': 'February',
@@ -1929,8 +1936,8 @@ var de = {
     'wks': 'Wochen',
     'mths': 'Monate',
     'qtrs': 'Quartal',
-    'resource': 'Resource',
-    'duration': 'Dauer',
+    'res': 'Resource',
+    'dur': 'Dauer',
     'comp': '%Fertig',
     'completion': 'Fertigstellung',
     'startdate': 'Erste Buchu',
@@ -1939,6 +1946,7 @@ var de = {
     'planenddate': 'Plan Letzte Buchung',
     'cost': 'Cost',
     'moreinfo': 'Weitere Infos',
+    'nodata': 'No tasks found',
     'notes': 'Anmerkung',
     'january': 'Jänner',
     'february': 'Februar',
@@ -2000,9 +2008,10 @@ var pt = {
     'completion': 'Terminado',
     'comp': '% Completado',
     'moreinfo': 'Mais informações',
+    'nodata': 'Sem atividades',
     'notes': 'Notas',
-    'resource': 'Responsável',
-    'duration': 'Duração',
+    'res': 'Responsável',
+    'dur': 'Duração',
     'startdate': 'Data inicial',
     'planstartdate': 'Plan Data inicial',
     'enddate': 'Data final',
@@ -2079,8 +2088,8 @@ var ru = {
     'thu': '	Чт',
     'fri': '	Пт',
     'sat': '	Сб',
-    'resource': 'Ресурс',
-    'duration': 'Длительность',
+    'res': 'Ресурс',
+    'dur': 'Длительность',
     'comp': '% выполнения',
     'completion': 'Выполнено',
     'startdate': 'Нач. дата',
@@ -2089,6 +2098,7 @@ var ru = {
     'planenddate': 'Plan Кон. дата',
     'cost': 'Cost',
     'moreinfo': 'Детали',
+    'nodata': 'No tasks found',
     'notes': 'Заметки',
     'format': 'Формат',
     'hour': 'Час',
@@ -2114,9 +2124,11 @@ var ru = {
     'tooltipLoading': 'Загрузка...'
 };
 exports.ru = ru;
+/**
+ * Mois : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3619
+   Jours : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3617
+ */
 var fr = {
-    // Mois : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3619
-    // Jours : http://bdl.oqlf.gouv.qc.ca/bdl/gabarit_bdl.asp?id=3617
     'january': 'Janvier',
     'february': 'Février',
     'march': 'Mars',
@@ -2155,8 +2167,8 @@ var fr = {
     'thu': 'Jeu',
     'fri': 'Ven',
     'sat': 'Sam',
-    'resource': 'Ressource',
-    'duration': 'Durée',
+    'res': 'Ressource',
+    'dur': 'Durée',
     'comp': '% Term.',
     'completion': 'Terminé',
     'startdate': 'Début',
@@ -2165,6 +2177,7 @@ var fr = {
     'planenddate': 'Plan Fin',
     'cost': 'Cost',
     'moreinfo': "Plus d'informations",
+    'nodata': 'No tasks found',
     'notes': 'Notes',
     'format': 'Format',
     'hour': 'Heure',
@@ -2228,8 +2241,8 @@ var cn = {
     'thu': '星期四',
     'fri': '星期五',
     'sat': '星期六',
-    'resource': '資源',
-    'duration': '時程',
+    'res': '資源',
+    'dur': '時程',
     'comp': '達成率',
     'completion': '達成',
     'startdate': '起始日期',
@@ -2238,6 +2251,7 @@ var cn = {
     'planenddate': '計劃截止日期',
     'cost': '成本',
     'moreinfo': "更多資訊",
+    'nodata': 'No tasks found',
     'notes': '備註',
     'format': '格式',
     'hour': '時',
@@ -2284,8 +2298,8 @@ var sv = {
     'wks': 'Veckor',
     'mths': 'Månader',
     'qtrs': 'Q',
-    'resource': 'Resurs',
-    'duration': 'Tidsåtgång',
+    'res': 'Resurs',
+    'dur': 'Tidsåtgång',
     'comp': '% klart',
     'completion': 'Klart',
     'startdate': 'Startdatum',
@@ -2294,6 +2308,7 @@ var sv = {
     'planenddate': 'Planerad slutdatum',
     'cost': 'Kostnad',
     'moreinfo': 'Mer Information',
+    'nodata': 'No tasks found',
     'notes': 'Notes',
     'january': 'januari',
     'february': 'februari',
@@ -2357,8 +2372,8 @@ var nl = {
     'wks': 'weken',
     'mths': 'maanden',
     'qtrs': 'kwartalen',
-    'resource': 'Resource',
-    'duration': 'Doorlooptijd',
+    'res': 'Resource',
+    'dur': 'Doorlooptijd',
     'comp': '% gereed',
     'completion': 'Gereed',
     'startdate': 'Startdatum',
@@ -2367,6 +2382,7 @@ var nl = {
     'planenddate': 'Geplande einddatum',
     'cost': 'Kosten',
     'moreinfo': 'Meer informatie',
+    'nodata': 'No tasks found',
     'notes': 'Notities',
     'january': 'januari',
     'february': 'februari',
@@ -2430,8 +2446,8 @@ var id = {
     'wks': 'Min',
     'mths': 'Bln',
     'qtrs': 'Krtl',
-    'resource': 'Sumber Daya',
-    'duration': 'Durasi',
+    'res': 'Sumber Daya',
+    'dur': 'Durasi',
     'comp': '% Penyelesaian',
     'completion': 'Penyelesaian',
     'startdate': 'Tanggal Mulai',
@@ -2440,6 +2456,7 @@ var id = {
     'planenddate': 'Perencanaan Tanggal Akhir',
     'cost': 'Biaya',
     'moreinfo': 'Informasi Lebih Lanjut',
+    'nodata': 'No tasks found',
     'notes': 'Catatan',
     'january': 'Januari',
     'february': 'Februari',
@@ -2503,8 +2520,8 @@ var tr = {
     'wks': 'Hft',
     'mths': 'Ay',
     'qtrs': 'Çyrk',
-    'resource': 'Kaynak',
-    'duration': 'Süre',
+    'res': 'Kaynak',
+    'dur': 'Süre',
     'comp': '% Tamamlanma.',
     'completion': 'Tamamlanma',
     'startdate': 'Başlangıç Tarihi',
@@ -2513,6 +2530,7 @@ var tr = {
     'planenddate': 'Plan Bitiş Tarihi',
     'cost': 'Tutar',
     'moreinfo': 'Daha Fazla Bilgi',
+    'nodata': 'No tasks found',
     'notes': 'Notlar',
     'january': 'Ocak',
     'february': 'Şubat',
@@ -2576,8 +2594,8 @@ var ja = {
     'wks': '週間',
     'mths': '月間',
     'qtrs': '四半期',
-    'resource': 'リソース',
-    'duration': '期間',
+    'res': 'リソース',
+    'dur': '期間',
     'comp': '進捗率',
     'completion': '進捗率',
     'startdate': '開始日',
@@ -2586,6 +2604,7 @@ var ja = {
     'planenddate': '予定期日',
     'cost': 'コスト',
     'moreinfo': '詳細',
+    'nodata': 'No tasks found',
     'notes': 'ノート',
     'january': '1月',
     'february': '2月',
@@ -2650,8 +2669,8 @@ var cs = {
     'wks': 'Tyd',
     'mths': 'Měs',
     'qtrs': 'Kvar',
-    'resource': 'Přiřazeno',
-    'duration': 'Trvání',
+    'res': 'Přiřazeno',
+    'dur': 'Trvání',
     'comp': '% Hotovo',
     'completion': 'Hotovo',
     'startdate': 'Start',
@@ -2660,6 +2679,7 @@ var cs = {
     'planenddate': 'Plánovaný konec',
     'cost': 'Náklady',
     'moreinfo': 'Více informací',
+    'nodata': 'No tasks found',
     'notes': 'Poznámky',
     'january': 'Leden',
     'february': 'Únor',
@@ -2724,8 +2744,8 @@ var hu = {
     'wks': 'Hét',
     'mths': 'Hó',
     'qtrs': 'NÉ',
-    'resource': 'Erőforrás',
-    'duration': 'Időtartam',
+    'res': 'Erőforrás',
+    'dur': 'Időtartam',
     'comp': '% Kész',
     'completion': 'Elkészült',
     'startdate': 'Kezdés',
@@ -2734,6 +2754,7 @@ var hu = {
     'planenddate': 'Tervezett befejezés',
     'cost': 'Költség',
     'moreinfo': 'További információ',
+    'nodata': 'No tasks found',
     'notes': 'Jegyzetek',
     'january': 'Január',
     'february': 'Február',
@@ -2798,8 +2819,8 @@ var ko = {
     'wks': '주',
     'mths': '월',
     'qtrs': '분기',
-    'resource': '이름',
-    'duration': '기간',
+    'res': '이름',
+    'dur': '기간',
     'comp': '% ',
     'completion': '완료',
     'startdate': '시작일자',
@@ -2808,6 +2829,7 @@ var ko = {
     'planenddate': '계획 종료일자',
     'cost': '비용',
     'moreinfo': '더 많은 정보',
+    'nodata': 'No tasks found',
     'notes': '비고',
     'january': '1월',
     'february': '2월',
@@ -4360,6 +4382,11 @@ exports.getScrollbarWidth = function () {
     outer.parentNode.removeChild(outer);
     return scrollbarWidth;
 };
+exports.calculateCurrentDateOffset = function (curTaskStart, curTaskEnd) {
+    var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
+    var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
+    return (tmpTaskEnd - tmpTaskStart);
+};
 exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
     var DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
     var WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
@@ -4370,10 +4397,9 @@ exports.getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWee
     var curTaskStart = new Date(pStartDate.getTime());
     var curTaskEnd = new Date(pEndDate.getTime());
     var vTaskRightPx = 0;
-    var tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
-    var tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
+    // Length of task in hours
     var oneHour = 3600000;
-    var vTaskRight = (tmpTaskEnd - tmpTaskStart) / oneHour; // Length of task in hours
+    var vTaskRight = exports.calculateCurrentDateOffset(curTaskStart, curTaskEnd) / oneHour;
     var vPosTmpDate;
     if (pFormat == 'day') {
         if (!pShowWeekends) {
@@ -4555,6 +4581,10 @@ exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
     var vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
     var vNewX = vMouseX;
     var vNewY = vMouseY;
+    var screenX = screen.availWidth || window.innerWidth;
+    var screenY = screen.availHeight || window.innerHeight;
+    var vOldX = parseInt(pGanttChartObj.vTool.style.left);
+    var vOldY = parseInt(pGanttChartObj.vTool.style.top);
     if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
         // the clientX and clientY properties include the left and top borders of the client area
         vMouseX -= document.documentElement.clientLeft;
@@ -4602,7 +4632,8 @@ exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
     }
     else vNewY=vMouseY+vScrollPos.y-vCurTopBuf-pGanttChartObj.vTool.offsetHeight;
     */
-    if (pGanttChartObj.getUseMove()) {
+    var outViewport = Math.abs(vOldX - vNewX) > screenX || Math.abs(vOldY - vNewY) > screenY;
+    if (pGanttChartObj.getUseMove() && !outViewport) {
         clearInterval(pGanttChartObj.vTool.moveInterval);
         pGanttChartObj.vTool.moveInterval = setInterval(function () { exports.moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer); }, pTimer);
     }

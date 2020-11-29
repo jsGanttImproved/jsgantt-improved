@@ -110,6 +110,12 @@ export const getScrollbarWidth = function () {
   return scrollbarWidth;
 }
 
+export const calculateCurrentDateOffset = function(curTaskStart, curTaskEnd){
+  let tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
+  let tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
+  return (tmpTaskEnd - tmpTaskStart);
+}
+
 export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
   const DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
   const WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
@@ -121,10 +127,10 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pSh
   let curTaskStart = new Date(pStartDate.getTime());
   let curTaskEnd = new Date(pEndDate.getTime());
   let vTaskRightPx = 0;
-  let tmpTaskStart = Date.UTC(curTaskStart.getFullYear(), curTaskStart.getMonth(), curTaskStart.getDate(), curTaskStart.getHours(), 0, 0);
-  let tmpTaskEnd = Date.UTC(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate(), curTaskEnd.getHours(), 0, 0);
-  const oneHour = 3600000
-  let vTaskRight = (tmpTaskEnd - tmpTaskStart) / oneHour; // Length of task in hours
+
+  // Length of task in hours
+  const oneHour = 3600000;
+  let vTaskRight = calculateCurrentDateOffset(curTaskStart, curTaskEnd) / oneHour ;
 
   let vPosTmpDate;
   if (pFormat == 'day') {
@@ -315,6 +321,10 @@ export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
   let vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
   let vNewX = vMouseX;
   let vNewY = vMouseY;
+  let screenX = screen.availWidth || window.innerWidth;
+  let screenY = screen.availHeight || window.innerHeight;
+  let vOldX = parseInt(pGanttChartObj.vTool.style.left);
+  let vOldY = parseInt(pGanttChartObj.vTool.style.top);
 
   if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
     // the clientX and clientY properties include the left and top borders of the client area
@@ -363,8 +373,9 @@ export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
 	}
 	else vNewY=vMouseY+vScrollPos.y-vCurTopBuf-pGanttChartObj.vTool.offsetHeight;
 	*/
+  let outViewport = Math.abs(vOldX - vNewX) > screenX || Math.abs(vOldY - vNewY) > screenY
 
-  if (pGanttChartObj.getUseMove()) {
+  if (pGanttChartObj.getUseMove() && !outViewport) {
     clearInterval(pGanttChartObj.vTool.moveInterval);
     pGanttChartObj.vTool.moveInterval = setInterval(function () { moveToolTip(vNewX, vNewY, pGanttChartObj.vTool, pTimer); }, pTimer);
   }

@@ -25,6 +25,7 @@ div.gantt {
 .gminorheading,
 .gminorheadingwkend,
 .gtaskcell,
+.gtaskcellcurrent,
 .gtaskcellwkend {
   height: 19px;
   font-size: 12px;
@@ -43,6 +44,9 @@ div.gantt {
   border-right: none;
 }
 
+.gtasknolist-label{
+  padding: 10px 50px;
+}
 /* all three width values set just to make sure - helps resizing code */
 
 /* Additional values for some cell elements */
@@ -57,11 +61,16 @@ div.gantt {
 }
 
 .gtaskcellwkend,
+.gtaskcellcurrent,
 .gminorheadingwkend {
   background-color: #f7f7f7;
   font-weight: bold;
   font-size: 9px;
   white-space: nowrap;
+}
+
+.gtaskcellcurrent {
+  background-color: #e1e0f7;
 }
 
 td.gtaskcell {
@@ -82,9 +91,9 @@ td.gspanning {
 .gtaskheading,
 .gname,
 .gtaskname,
-.gresource,
-.gduration,
-.gpccomplete,
+.gres,
+.gdur,
+.gcomp,
 .gstartdate,
 .gplanstartdate,
 .gplanenddate,
@@ -98,9 +107,9 @@ td.gspanning {
 .gtaskheading div,
 .gname div,
 .gtaskname div,
-.gresource div,
-.gduration div,
-.gpccomplete div,
+.gres div,
+.gdur div,
+.gcomp div,
 .gstartdate div,
 .gplanstartdate div,
 .gplanenddate div,
@@ -756,9 +765,9 @@ td.gspanning div {
 }
 
 .gadditional,
-.gresource,
-.gduration,
-.gpccomplete,
+.gres,
+.gdur,
+.gcomp,
 .gcost {
   text-align: center;
   width: 70px;

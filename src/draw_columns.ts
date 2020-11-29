@@ -16,12 +16,25 @@ export const COLUMN_ORDER = [
   'vShowAddEntries'
 ];
 
+
+const COLUMNS_TYPES = {
+  'vShowRes': 'res',
+  'vShowDur': 'dur',
+  'vShowComp': 'comp',
+  'vShowStartDate': 'startdate',
+  'vShowEndDate': 'enddate',
+  'vShowPlanStartDate': 'planstartdate',
+  'vShowPlanEndDate': 'planenddate',
+  'vShowCost': 'cost',
+  'vShowAddEntries': 'addentries'
+}
+
 export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsChange, vEvents,
   vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw) {
   let vTmpCell, vTmpDiv;
 
   if ('vShowRes' === column) {
-    vTmpCell = newNode(vTmpRow, 'td', null, 'gresource');
+    vTmpCell = newNode(vTmpRow, 'td', null, 'gres');
     const text = makeInput(vTaskList[i].getResource(), vEditable, 'resource', vTaskList[i].getResource(), vResources);
     vTmpDiv = newNode(vTmpCell, 'div', null, null, text);
     const callback = (task, e) => task.setResource(e.target.value);
@@ -29,7 +42,7 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
     addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'res');
   }
   if ('vShowDur' === column) {
-    vTmpCell = newNode(vTmpRow, 'td', null, 'gduration');
+    vTmpCell = newNode(vTmpRow, 'td', null, 'gdur');
     const text = makeInput(vTaskList[i].getDuration(vFormat, vLangs[vLang]), vEditable, 'text', vTaskList[i].getDuration());
     vTmpDiv = newNode(vTmpCell, 'div', null, null, text);
     const callback = (task, e) => task.setDuration(e.target.value);
@@ -37,7 +50,7 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
     addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'dur');
   }
   if ('vShowComp' === column) {
-    vTmpCell = newNode(vTmpRow, 'td', null, 'gpccomplete');
+    vTmpCell = newNode(vTmpRow, 'td', null, 'gcomp');
     const text = makeInput(vTaskList[i].getCompStr(), vEditable, 'percentage', vTaskList[i].getCompVal());
     vTmpDiv = newNode(vTmpCell, 'div', null, null, text);
     const callback = (task, e) => { task.setComp(e.target.value); task.setCompVal(e.target.value); }
@@ -89,16 +102,16 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
     addListenerClickCell(vTmpCell, vEvents, vTaskList[i], 'cost');
   }
 
-
   if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
     for (const key in vAdditionalHeaders) {
       const header = vAdditionalHeaders[key];
       const css = header.class ? header.class : `gadditional-${key}`;
       const data = vTaskList[i].getDataObject();
       vTmpCell = newNode(vTmpRow, 'td', null, `gadditional ${css}`);
+      vTmpDiv = newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
+      addListenerClickCell(vTmpCell, vEvents, vTaskList[i], `additional_${key}`);
       // const callback = (task, e) => task.setCost(e.target.value);
       // addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'costdate');
-      vTmpDiv = newNode(vTmpCell, 'div', null, null, data ? data[key] : '');
     }
   }
 
@@ -118,61 +131,46 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
 };
 
 export const draw_bottom = function (column, vTmpRow, vAdditionalHeaders) {
-  if ('vShowRes' === column) newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-  if ('vShowDur' === column) newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-  if ('vShowComp' === column) newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-  if ('vShowStartDate' === column) newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-  if ('vShowEndDate' === column) newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
-  if ('vShowPlanStartDate' === column) newNode(vTmpRow, 'td', null, 'gspanning gplanstartdate', '\u00A0');
-  if ('vShowPlanEndDate' === column) newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
-  if ('vShowCost' === column) newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
-
   if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
     for (const key in vAdditionalHeaders) {
       const header = vAdditionalHeaders[key];
       const css = header.class ? header.class : `gadditional-${key}`;
       newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
     }
+  } else {
+    const type = COLUMNS_TYPES[column];
+    newNode(vTmpRow, 'td', null, `gspanning g${type}`, '\u00A0');
   }
-
-  if ('vShowAddEntries' === column) newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
 }
 
-export const draw_list_headings = function (column, vTmpRow, vAdditionalHeaders) {
-  if ('vShowRes' === column) newNode(vTmpRow, 'td', null, 'gspanning gresource', '\u00A0');
-  if ('vShowDur' === column) newNode(vTmpRow, 'td', null, 'gspanning gduration', '\u00A0');
-  if ('vShowComp' === column) newNode(vTmpRow, 'td', null, 'gspanning gpccomplete', '\u00A0');
-  if ('vShowStartDate' === column) newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-  if ('vShowEndDate' === column) newNode(vTmpRow, 'td', null, 'gspanning genddate', '\u00A0');
-  if ('vShowPlanStartDate' === column) newNode(vTmpRow, 'td', null, 'gspanning gstartdate', '\u00A0');
-  if ('vShowPlanEndDate' === column) newNode(vTmpRow, 'td', null, 'gspanning gplanenddate', '\u00A0');
-  if ('vShowCost' === column) newNode(vTmpRow, 'td', null, 'gspanning gcost', '\u00A0');
-  if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
-    for (const key in vAdditionalHeaders) {
-      const header = vAdditionalHeaders[key];
-      const css = header.class ? header.class : `gadditional-${key}`;
-      newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
-    }
-  }
-  if ('vShowAddEntries' === column) newNode(vTmpRow, 'td', null, 'gspanning gaddentries', '\u00A0');
-}
+// export const draw_list_headings = function (column, vTmpRow, vAdditionalHeaders, vEvents) {
+//   let nodeCreated;
+//   if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
+//     for (const key in vAdditionalHeaders) {
+//       const header = vAdditionalHeaders[key];
+//       const css = header.class ? header.class : `gadditional-${key}`;
+//       newNode(vTmpRow, 'td', null, `gspanning gadditional ${css}`, '\u00A0');
+//     }
+//   } else {
+//     const type = COLUMNS_TYPES[column];
+//     nodeCreated = newNode(vTmpRow, 'td', null, `gspanning g${type}`, '\u00A0');
+//     addListenerClickCell(nodeCreated, vEvents, { hader: true, column }, type);
+//   }
+// }
 
-export const draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAdditionalHeaders) {
-  if ('vShowRes' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gresource', vLangs[vLang]['resource']);
-  if ('vShowDur' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gduration', vLangs[vLang]['duration']);
-  if ('vShowComp' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gpccomplete', vLangs[vLang]['comp']);
-  if ('vShowStartDate' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gstartdate', vLangs[vLang]['startdate']);
-  if ('vShowEndDate' === column) newNode(vTmpRow, 'td', null, 'gtaskheading genddate', vLangs[vLang]['enddate']);
-  if ('vShowPlanStartDate' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gplanstartdate', vLangs[vLang]['planstartdate']);
-  if ('vShowPlanEndDate' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gplanenddate', vLangs[vLang]['planenddate']);
-  if ('vShowCost' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gcost', vLangs[vLang]['cost']);
+export const draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAdditionalHeaders, vEvents) {
+  let nodeCreated;
   if ('vAdditionalHeaders' === column && vAdditionalHeaders) {
     for (const key in vAdditionalHeaders) {
       const header = vAdditionalHeaders[key];
       const text = header.translate ? vLangs[vLang][header.translate] : header.title;
       const css = header.class ? header.class : `gadditional-${key}`;
-      newNode(vTmpRow, 'td', null, `gtaskheading gadditional ${css}`, text);
+      nodeCreated = newNode(vTmpRow, 'td', null, `gtaskheading gadditional ${css}`, text);
     }
   }
-  if ('vShowAddEntries' === column) newNode(vTmpRow, 'td', null, 'gtaskheading gaddentries', vLangs[vLang]['addentries']);
+  else {
+    const type = COLUMNS_TYPES[column];
+    nodeCreated = newNode(vTmpRow, 'td', null, `gtaskheading g${type}`, vLangs[vLang][type]);
+    addListenerClickCell(nodeCreated, vEvents, { hader: true, column }, type);
+  }
 }
