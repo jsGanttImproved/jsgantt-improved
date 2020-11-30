@@ -143,10 +143,10 @@ export const showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTime
     }
     clearTimeout(pGanttChartObj.vTool.delayTimeout);
 
-    const newHTML = pContents.getAttribute('data-tooltip');
+    const newHTML = pContents.innerHTML;
 
     if (pGanttChartObj.vTool.vToolCont.getAttribute("content") !== newHTML) {
-      pGanttChartObj.vTool.vToolCont.innerHTML = pContents.getAttribute('data-tooltip');
+      pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
       // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
       stripIds(pGanttChartObj.vTool.vToolCont);
       pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);

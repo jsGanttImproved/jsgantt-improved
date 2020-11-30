@@ -691,18 +691,14 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
         const vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
         const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
-        const el = document.createElement('div');
-        el.appendChild(component);
-        vTmpDiv2.setAttribute('data-tooltip', el.innerHTML)
+        vTmpDiv2.appendChild(component);
         addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
       }
       // Add Plan Task Info div for tooltip
       if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv) {
         const vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
         const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
-        const el = document.createElement('div');
-        el.appendChild(component);
-        vTmpDiv2.setAttribute('data-tooltip', el.innerHTML)
+        vTmpDiv2.appendChild(component);
         addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
       }
     }
