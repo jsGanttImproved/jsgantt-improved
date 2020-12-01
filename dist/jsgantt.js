@@ -626,18 +626,14 @@ exports.GanttChart = function (pDiv, pFormat) {
             if (this.vTaskList[i].getTaskDiv() && vTmpDiv_1) {
                 var vTmpDiv2 = draw_utils_1.newNode(vTmpDiv_1, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
                 var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _a.component, callback = _a.callback;
-                var el = document.createElement('div');
-                el.appendChild(component);
-                vTmpDiv2.setAttribute('data-tooltip', el.innerHTML);
+                vTmpDiv2.appendChild(component);
                 events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
             }
             // Add Plan Task Info div for tooltip
             if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv_1) {
                 var vTmpDiv2 = draw_utils_1.newNode(vTmpDiv_1, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
                 var _b = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _b.component, callback = _b.callback;
-                var el = document.createElement('div');
-                el.appendChild(component);
-                vTmpDiv2.setAttribute('data-tooltip', el.innerHTML);
+                vTmpDiv2.appendChild(component);
                 events_1.addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
             }
         }
@@ -1244,9 +1240,9 @@ exports.showToolTip = function (pGanttChartObj, e, pContents, pWidth, pTimer) {
             this.addListener('mouseout', function () { general_utils_1.delayedHide(pGanttChartObj, pGanttChartObj.vTool, pTimer); }, pGanttChartObj.vTool);
         }
         clearTimeout(pGanttChartObj.vTool.delayTimeout);
-        var newHTML = pContents.getAttribute('data-tooltip');
+        var newHTML = pContents.innerHTML;
         if (pGanttChartObj.vTool.vToolCont.getAttribute("content") !== newHTML) {
-            pGanttChartObj.vTool.vToolCont.innerHTML = pContents.getAttribute('data-tooltip');
+            pGanttChartObj.vTool.vToolCont.innerHTML = pContents.innerHTML;
             // as we are allowing arbitrary HTML we should remove any tag ids to prevent duplication
             general_utils_1.stripIds(pGanttChartObj.vTool.vToolCont);
             pGanttChartObj.vTool.vToolCont.setAttribute("content", newHTML);

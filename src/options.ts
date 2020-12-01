@@ -2,8 +2,6 @@ import { parseDateFormatStr } from "./utils/date_utils";
 import { COLUMN_ORDER } from "./draw_columns";
 
 export const includeGetSet = function () {
-
-
   /**
    * SETTERS 
    */
@@ -127,9 +125,10 @@ export const includeGetSet = function () {
   this.setResources = function (resources) { this.vResources = resources; };
   this.setAdditionalHeaders = function (headers) { this.vAdditionalHeaders = headers; };
   this.setColumnOrder = function (order) { this.vColumnOrder = order; };
-  
+
   this.setEditable = function (editable) { this.vEditable = editable; }
   this.setDebug = function (debug) { this.vDebug = debug; }
+
   /**
    * GETTERS
    */
