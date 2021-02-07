@@ -546,6 +546,20 @@ g.Draw();
 </script>
 ```
 
+## Printing
+`g.printChart(width, height);` will set the page size (via an injected css) and trigger the browser's print.
+The default injected style can be changed by passing a different style as the 3rd parameter to `printChart`.
+
+The default style is:
+```css
+ @page {
+    size: ${width}mm ${height}mm;
+  }
+  .gchartcontainer {
+    width: ${width}mm;
+  }
+``` 
+
 
 ## Troubleshooting
 

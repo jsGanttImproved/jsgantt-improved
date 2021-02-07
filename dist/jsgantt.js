@@ -1,6 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JSGantt = void 0;
 var jsGantt = require("./src/jsgantt");
 module.exports = jsGantt.JSGantt;
 exports.JSGantt = jsGantt.JSGantt;
@@ -8,6 +9,7 @@ exports.JSGantt = jsGantt.JSGantt;
 },{"./src/jsgantt":6}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GanttChart = void 0;
 var lang = require("./lang");
 var events_1 = require("./events");
 var general_utils_1 = require("./utils/general_utils");
@@ -160,6 +162,7 @@ exports.GanttChart = function (pDiv, pFormat) {
     this.DrawDependencies = draw_dependencies_1.DrawDependencies.bind(this);
     this.getArrayLocationByID = draw_utils_1.getArrayLocationByID.bind(this);
     this.drawSelector = draw_utils_1.drawSelector.bind(this);
+    this.printChart = general_utils_1.printChart.bind(this);
     this.clearDependencies = function () {
         var parent = this.getLines();
         if (this.vEventsChange.line &&
@@ -840,6 +843,7 @@ exports.GanttChart = function (pDiv, pFormat) {
 },{"./draw_columns":3,"./draw_dependencies":4,"./events":5,"./lang":8,"./options":9,"./task":10,"./utils/date_utils":11,"./utils/draw_utils":12,"./utils/general_utils":13,"./xml":14}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.draw_task_headings = exports.draw_bottom = exports.draw_header = exports.COLUMN_ORDER = void 0;
 var date_utils_1 = require("./utils/date_utils");
 var task_1 = require("./task");
 var events_1 = require("./events");
@@ -1009,6 +1013,7 @@ exports.draw_task_headings = function (column, vTmpRow, vLangs, vLang, vAddition
 },{"./events":5,"./task":10,"./utils/date_utils":11,"./utils/draw_utils":12}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DrawDependencies = exports.drawDependency = void 0;
 exports.drawDependency = function (x1, y1, x2, y2, pType, pClass) {
     var vDir = 1;
     var vBend = false;
@@ -1105,6 +1110,7 @@ exports.DrawDependencies = function (vDebug) {
 },{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addListenerDependencies = exports.addListenerInputCell = exports.addListenerClickCell = exports.addScrollListeners = exports.addFormatListeners = exports.addFolderListeners = exports.updateGridHeaderWidth = exports.addThisRowListeners = exports.addTooltipListeners = exports.syncScroll = exports.removeListener = exports.addListener = exports.showToolTip = exports.mouseOut = exports.mouseOver = exports.show = exports.hide = exports.folder = void 0;
 var general_utils_1 = require("./utils/general_utils");
 // Function to open/close and hide/show children of specified task
 exports.folder = function (pID, ganttObj) {
@@ -1505,6 +1511,7 @@ var vColumnsNames = {
     Copyright (c) 2009, Shlomy Gantz BlueBrick Inc.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JSGantt = void 0;
 var events_1 = require("./events");
 var general_utils_1 = require("./utils/general_utils");
 var xml_1 = require("./xml");
@@ -1568,10 +1575,11 @@ exports.JSGantt.criticalPath = general_utils_1.criticalPath;
 },{"./draw":2,"./events":5,"./json":7,"./task":10,"./utils/date_utils":11,"./utils/general_utils":13,"./xml":14}],7:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -1603,6 +1611,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addJSONTask = exports.parseJSONString = exports.parseJSON = void 0;
 var task_1 = require("./task");
 var general_utils_1 = require("./utils/general_utils");
 /**
@@ -1760,6 +1769,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
 },{"./task":10,"./utils/general_utils":13}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ko = exports.hu = exports.cs = exports.ja = exports.tr = exports.id = exports.nl = exports.sv = exports.cn = exports.ru = exports.fr = exports.pt = exports.de = exports.es = exports.en = void 0;
 var es = {
     'january': 'Enero',
     'february': 'Febrero',
@@ -2872,6 +2882,7 @@ exports.ko = ko;
 },{}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.includeGetSet = void 0;
 var date_utils_1 = require("./utils/date_utils");
 var draw_columns_1 = require("./draw_columns");
 exports.includeGetSet = function () {
@@ -3094,6 +3105,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.processRows = exports.ClearTasks = exports.RemoveTaskItem = exports.AddTaskItemObject = exports.AddTaskItem = exports.createTaskInfo = exports.TaskItem = exports.TaskItemObject = exports.sortTasks = exports.taskLink = void 0;
 var general_utils_1 = require("./utils/general_utils");
 var draw_utils_1 = require("./utils/draw_utils");
 var date_utils_1 = require("./utils/date_utils");
@@ -3815,6 +3827,7 @@ exports.processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, vDebu
 },{"./utils/date_utils":11,"./utils/draw_utils":12,"./utils/general_utils":13}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getIsoWeek = exports.parseDateFormatStr = exports.formatDateStr = exports.parseDateStr = exports.coerceDate = exports.getMaxDate = exports.getMinDate = void 0;
 /**
  * DATES
  */
@@ -4110,6 +4123,7 @@ exports.getIsoWeek = function (pDate) {
 },{}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.drawSelector = exports.sLine = exports.CalcTaskXY = exports.getArrayLocationByID = exports.newNode = exports.makeInput = void 0;
 var events_1 = require("../events");
 exports.makeInput = function (formattedValue, editable, type, value, choices) {
     if (type === void 0) { type = 'text'; }
@@ -4274,6 +4288,7 @@ exports.drawSelector = function (pPos) {
 },{"../events":5}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.printChart = exports.calculateStartEndFromDepend = exports.makeRequestOldBrowsers = exports.makeRequest = exports.moveToolTip = exports.updateFlyingObj = exports.isParentElementOrSelf = exports.criticalPath = exports.hashKey = exports.hashString = exports.fadeToolTip = exports.hideToolTip = exports.isIE = exports.getOffset = exports.calculateCurrentDateOffset = exports.getScrollbarWidth = exports.getScrollPositions = exports.benchMark = exports.getZoomFactor = exports.delayedHide = exports.stripUnwanted = exports.stripIds = exports.changeFormat = exports.findObj = exports.internalPropertiesLang = exports.internalProperties = void 0;
 exports.internalProperties = ['pID', 'pName', 'pStart', 'pEnd', 'pClass', 'pLink', 'pMile', 'pRes', 'pComp', 'pGroup', 'pParent',
     'pOpen', 'pDepend', 'pCaption', 'pNotes', 'pGantt', 'pCost', 'pPlanStart', 'pPlanEnd'];
 exports.internalPropertiesLang = {
@@ -4724,10 +4739,26 @@ exports.makeRequestOldBrowsers = function (pFile, vDebug) {
 };
 exports.calculateStartEndFromDepend = function (tasksList) {
 };
+exports.printChart = function (width, height, css) {
+    if (css === void 0) { css = undefined; }
+    if (css === undefined) {
+        css = // Default injected CSS
+            "@media print {\n        @page {\n          size: " + width + "mm " + height + "mm;\n        }\n        /* set gantt container to the same width as the page */\n        .gchartcontainer {\n            width: " + width + "mm;\n        }\n    };";
+    }
+    var $container = document.querySelector('.gchartcontainer');
+    $container.insertAdjacentHTML('afterbegin', "<style>" + css + "</style>");
+    // Remove the print CSS when the print dialog is closed
+    window.addEventListener('afterprint', function () {
+        $container.removeChild($container.children[0]);
+    }, { 'once': true });
+    // Trigger the print
+    window.print();
+};
 
 },{}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getXMLTask = exports.getXMLProject = exports.AddXMLTask = exports.getXMLNodeValue = exports.findXMLNode = exports.parseXMLString = exports.parseXML = void 0;
 var task_1 = require("./task");
 var date_utils_1 = require("./utils/date_utils");
 var draw_utils_1 = require("./utils/draw_utils");

@@ -16,7 +16,7 @@ import {
 } from './events';
 import {
   calculateCurrentDateOffset,
-  getOffset, getScrollbarWidth
+  getOffset, getScrollbarWidth, printChart
 } from './utils/general_utils';
 import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
 
@@ -178,6 +178,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.DrawDependencies = DrawDependencies.bind(this);
   this.getArrayLocationByID = getArrayLocationByID.bind(this);
   this.drawSelector = drawSelector.bind(this);
+  this.printChart = printChart.bind(this);
 
   this.clearDependencies = function () {
     let parent = this.getLines();
