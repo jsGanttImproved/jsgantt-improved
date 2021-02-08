@@ -7,7 +7,7 @@ A fully featured gantt chart component built entirely in Javascript, CSS and AJA
 ![Demo Image](/docs/demo.gif)
 
 
-Start using with including the files `jsgantt.js` and `jsgantt.css` that are inside `docs/` folder.
+Start using with including the files `jsgantt.js` and `jsgantt.css` that are inside `dist/` folder.
 
 Or install and use in JS 
 
