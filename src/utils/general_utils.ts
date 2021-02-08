@@ -476,3 +476,31 @@ export const makeRequestOldBrowsers = (pFile, vDebug = false) => {
 export const calculateStartEndFromDepend = (tasksList) => {
 
 }
+
+export const printChart = ( width, height, css = undefined ) =>
+{
+  if ( css === undefined )
+  {
+    css = // Default injected CSS
+    `@media print {
+        @page {
+          size: ${width}mm ${height}mm;
+        }
+        /* set gantt container to the same width as the page */
+        .gchartcontainer {
+            width: ${width}mm;
+        }
+    };`;
+  }
+
+  const $container = document.querySelector( '.gchartcontainer' );
+  $container.insertAdjacentHTML( 'afterbegin', `<style>${css}</style>` );
+
+  // Remove the print CSS when the print dialog is closed
+  window.addEventListener( 'afterprint', () => {
+    $container.removeChild( $container.children[0] );
+  }, { 'once': true } );
+
+  // Trigger the print
+  window.print();
+};

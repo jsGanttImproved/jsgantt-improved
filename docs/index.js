@@ -201,9 +201,15 @@ function clearTasks() {
   g.Draw()
 }
 
-function print() {
+function printTasksInConsole() {
   const tasks = g.vTaskList.map(e => ({ ...e.getAllData(), ...e.getDataObject() }));
   console.log(tasks);
+}
+
+function printChart(){
+  let width, height;
+  [ width, height ] = document.querySelector('#print_page_size').value.split(',');
+  g.printChart( width, height );
 }
 
 

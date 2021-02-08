@@ -31,6 +31,11 @@
       height: 22px;
       background: #777777;
     }
+    @media print {
+      .no-print {
+        display: none;
+      }
+    }
   </style>
   <!-- External resources -->
   <!-- jQuery + Ajax [required by Bootstrap] -->
@@ -60,7 +65,7 @@
 
 <body data-spy="scroll" data-target="#my-navbar-nav" style="padding: 30px;">
 
-
+<div class="no-print">
   <div class="row">
     <h3 class="row">Hide and Show Properties</h3>
 
@@ -188,7 +193,7 @@
   <br />
 
 
-  <span>
+<!--  <span>-->
     <label>Height:</label>
     <input type="text" id="vTotalHeight" fl onchange="start(event)" />
     (CSS style height like "300px". Empty for auto height)
@@ -234,10 +239,26 @@
     </span>
 
     <span>
-      <button onclick="print()">Print data in console</button>
+      <button onclick="printTasksInConsole()">Print data in console</button>
     </span>
 
     <br />
+    
+    <select id="print_page_size">
+        <option value="210,297">A4 Portrait</option>
+        <option value="297,210">A4 Landscape</option>
+        <option value="297,420">A3 Portrait</option>
+        <option value="420,297">A3 Landscape</option>
+        <option value="420,594">A2 Portrait</option>
+        <option value="594,420">A2 Landscape</option>
+        <option value="594,841">A1 Portrait</option>
+        <option value="841,594">A1 Landscape</option>
+        <option value="841,1189">A0 Portrait</option>
+        <option value="1189,841">A0 Landscape</option>
+    </select>
+    <button onclick="printChart()">Print</button>
+
+    <br>
 
     <small>
       * Click events in table are binded to console.log for testing
@@ -245,6 +266,7 @@
 
 
     <br /><br />
+  </div>
     <div id="embedded-Gantt">
     </div>
 
