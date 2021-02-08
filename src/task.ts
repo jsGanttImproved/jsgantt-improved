@@ -204,7 +204,6 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getEnd = function () {
     if (vEnd) return vEnd;
     else if (vPlanEnd) return vPlanEnd;
-
     else if (vStart && vDuration) {
       let date = new Date(vStart)
       const vUnits = vDuration.split(' ')
@@ -630,11 +629,11 @@ export const processRows = function (pList, pID, pRow, pLevel, pOpen, pUseSort, 
     if (pList[pRow].getGroupMinPlanEnd() != null && pList[pRow].getGroupMinPlanEnd() > vMaxPlanDate) {
       vMaxPlanDate = pList[pRow].getGroupMinPlanEnd();
     }
-    if (vMinPlanDate) {    
+    if (vMinPlanDate) {
       pList[pRow].setPlanStart(vMinPlanDate);
     }
     if (vMaxPlanDate) {
-      pList[pRow].setPlanEnd(vMaxPlanDate);    
+      pList[pRow].setPlanEnd(vMaxPlanDate);
     }
     pList[pRow].setNumKid(vNumKid);
     pList[pRow].setWeight(vWeight);

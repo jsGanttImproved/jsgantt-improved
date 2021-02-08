@@ -732,8 +732,7 @@ const id = {
   'sat': 'Sab'
 }
 
-const tr =
-{
+const tr = {
   'format': 'Biçim',
   'hour': 'Saat',
   'day': 'Gün',
@@ -807,8 +806,7 @@ const tr =
   'sat': 'Cmt'
 }
 
-const ja =
-{
+const ja = {
   'format': 'タイムライン表示',
   'hour': '時',
   'day': '日',
@@ -958,8 +956,7 @@ const cs = {
   'tooltipLoading': 'Nahrávám...'
 }
 
-const hu =
-{
+const hu = {
   'format': 'Formátum',
   'hour': 'Óra',
   'day': 'Nap',
