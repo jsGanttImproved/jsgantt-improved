@@ -8,7 +8,7 @@
     "build": "tsc",
     "watch:build": "onchange 'src/**' '*.*' -- npm run build",
     "watch": "onchange 'src/**' '*.ts' -- npm run dist",
-    "watch:test": "onchange 'src/**/*.ts' '*.ts' -- npm run test",
+    "watch:test": "onchange 'src/**/*.ts' '*.ts' 'e2e/**/*.ts' -- npm run test",
     "test": "npm start & node node_modules/.bin/protractor protractor.conf.js",
     "test-unit": "mocha -r ts-node/register test/**.ts",
     "webdriver": "./node_modules/protractor/bin/webdriver-manager update",
@@ -29,7 +29,8 @@
   },
   "homepage": "https://jsganttimproved.github.io/jsgantt-improved/docs/",
   "dependencies": {
-    "@types/node": "^12.0.10"
+    "@types/node": "^12.0.10",
+    "webdriver-manager": "^12.1.8"
   },
   "devDependencies": {
     "@types/chai": "^4.1.5",

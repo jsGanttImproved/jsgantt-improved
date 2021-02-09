@@ -144,7 +144,13 @@ Its easy to get it set:
 * You can check the demo gantt that we use for testing features at: `http://127.0.0.1:8080/docs/demo.html`
 * Use `npm run watch` or do your change in `src` and restart this command refresh the changes.
 
-For testing use `npm run test` with e2e tests.
+For testing:
+* Install global dependencies: `npm i -g webdriver-manager`  
+* Install selenium webdriver: `npm run webdriver`, it will install something like node_modules/webdriver-manager/selenium/chromedriver_88.0.4324.96.zip
+* Use `npm run test` with e2e tests.
+* Or use `npm run watch:test` to keep watching the tests
+
+
 
 Or help us donating...
 

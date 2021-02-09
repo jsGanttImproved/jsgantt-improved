@@ -17,13 +17,11 @@ describe('ng-packaged App', () => {
   it('it should change language from pt to en', () => {
     page.navigateTo();
 
-    element(by.css('.gtaskheading.gresource')).getText()
+    element(by.css('.gtaskheading.gres')).getText()
     .then(t=>{
       expect(t).toEqual('Resource');
-
       element(by.cssContainingText('option', 'pt')).click();
-
-      return  element(by.css('.gtaskheading.gresource')).getText()
+      return  element(by.css('.gtaskheading.gres')).getText()
     })
     .then(t=>{
       expect(t).toEqual('Responsável');
