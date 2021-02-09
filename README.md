@@ -140,7 +140,8 @@ Its easy to get it set:
 * Clone this repo
 * Install lib dependencies: `npm i` 
 * Install global dependencies: `npm i -g browserify nodemon onchange tsc` 
-* Run the demo, This will start a `localhost:8080` with a live  example:  `npm start`. 
+* Run the demo, This will start a `localhost:8080` with a live example:  `npm start`. 
+* You can check the demo gantt that we use for testing features at: `http://127.0.0.1:8080/docs/demo.html`
 * Use `npm run watch` or do your change in `src` and restart this command refresh the changes.
 
 For testing use `npm run test` with e2e tests.

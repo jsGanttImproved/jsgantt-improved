@@ -3419,11 +3419,11 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
                 vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['wks'] : pLang['wk']);
                 break;
             case 'month':
-                tmpPer = Math.round(hours / 24 / 7 / 30);
+                tmpPer = Math.round(hours / 24 / 7 / 4.35);
                 vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['mths'] : pLang['mth']);
                 break;
             case 'quarter':
-                tmpPer = Math.round(hours / 24 / 7 / 30 / 3);
+                tmpPer = Math.round(hours / 24 / 7 / 13);
                 vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['qtrs'] : pLang['qtr']);
                 break;
         }

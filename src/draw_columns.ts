@@ -1,7 +1,7 @@
-import { formatDateStr } from "./utils/date_utils";
-import { AddTaskItemObject } from "./task";
-import { addListenerInputCell, addListenerClickCell } from "./events";
-import { newNode, makeInput } from "./utils/draw_utils";
+import { formatDateStr } from './utils/date_utils';
+import { AddTaskItemObject } from './task';
+import { addListenerInputCell, addListenerClickCell } from './events';
+import { newNode, makeInput } from './utils/draw_utils';
 
 export const COLUMN_ORDER = [
   'vShowRes',
@@ -15,7 +15,6 @@ export const COLUMN_ORDER = [
   'vAdditionalHeaders',
   'vShowAddEntries'
 ];
-
 
 const COLUMNS_TYPES = {
   'vShowRes': 'res',
