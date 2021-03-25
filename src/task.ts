@@ -450,7 +450,7 @@ export const createTaskInfo = function (pTask, templateStrOrFn = null) {
       }
       if (this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
         vTmpDiv = newNode(vTaskInfo, 'div', null, 'gTILine gTId');
-        newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['duration'] + ': ');
+        newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['dur'] + ': ');
         newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(this.vFormat, this.vLangs[this.vLang]));
       }
       if (this.vShowTaskInfoComp == 1) {
@@ -460,7 +460,7 @@ export const createTaskInfo = function (pTask, templateStrOrFn = null) {
       }
       if (this.vShowTaskInfoRes == 1) {
         vTmpDiv = newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
-        newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['resource'] + ': ');
+        newNode(vTmpDiv, 'span', null, 'gTaskLabel', this.vLangs[this.vLang]['res'] + ': ');
         newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
       }
       if (this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {

@@ -8,6 +8,7 @@ describe('ng-packaged App', () => {
 
   beforeEach(() => {
     page = new NgPackagedPage();
+    return page.navigateTo();
   });
 
   afterEach(() => {
@@ -15,8 +16,6 @@ describe('ng-packaged App', () => {
   });
 
   it('it should change language from pt to en', () => {
-    page.navigateTo();
-
     element(by.css('.gtaskheading.gres')).getText()
     .then(t=>{
       expect(t).toEqual('Resource');
@@ -27,7 +26,5 @@ describe('ng-packaged App', () => {
       expect(t).toEqual('Responsável');
     });
   });
-
-
 });
 

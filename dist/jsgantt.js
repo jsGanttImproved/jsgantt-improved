@@ -3613,7 +3613,7 @@ exports.createTaskInfo = function (pTask, templateStrOrFn) {
             }
             if (_this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
                 vTmpDiv = draw_utils_1.newNode(vTaskInfo, 'div', null, 'gTILine gTId');
-                draw_utils_1.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['duration'] + ': ');
+                draw_utils_1.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['dur'] + ': ');
                 draw_utils_1.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(_this.vFormat, _this.vLangs[_this.vLang]));
             }
             if (_this.vShowTaskInfoComp == 1) {
@@ -3623,7 +3623,7 @@ exports.createTaskInfo = function (pTask, templateStrOrFn) {
             }
             if (_this.vShowTaskInfoRes == 1) {
                 vTmpDiv = draw_utils_1.newNode(vTaskInfo, 'div', null, 'gTILine gTIr');
-                draw_utils_1.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['resource'] + ': ');
+                draw_utils_1.newNode(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['res'] + ': ');
                 draw_utils_1.newNode(vTmpDiv, 'span', null, 'gTaskText', pTask.getResource());
             }
             if (_this.vShowTaskInfoLink == 1 && pTask.getLink() != '') {
@@ -4298,7 +4298,8 @@ exports.internalPropertiesLang = {
     'pEnd': 'enddate',
     'pLink': 'link',
     'pMile': 'mile',
-    'pRes': 'resource',
+    'pRes': 'res',
+    'pDuration': 'dur',
     'pComp': 'comp',
     'pGroup': 'group',
     'pParent': 'parent',
