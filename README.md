@@ -150,6 +150,9 @@ For testing:
 * Use `npm run test` with e2e tests.
 * Or use `npm run watch:test` to keep watching the tests
 
+For new release:
+* Increment the version number on package.json
+* Run `npm run publishnpm`
 
 
 Or help us donating...
