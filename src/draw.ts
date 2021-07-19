@@ -657,7 +657,7 @@ export const GanttChart = function (pDiv, pFormat) {
           // If exist and one of them are different, show plan bar... show if there is no real vStart as well (just plan dates)
           if (vTaskPlanLeftPx && ((vTaskPlanLeftPx != vTaskLeftPx || vTaskPlanRightPx != vTaskRightPx) || !this.vTaskList[i].getStartVar())) {
             const vTmpPlanDiv = newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
-            const vTmpPlanDiv2 = newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+            const vTmpPlanDiv2 = newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getPlanClass() + ' gplan', null, vTaskPlanRightPx);
             this.vTaskList[i].setPlanTaskDiv(vTmpPlanDiv2);
           }
 

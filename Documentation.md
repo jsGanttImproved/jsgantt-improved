@@ -73,7 +73,7 @@ g.AddTaskItem(new JSGantt.TaskItem(1, 'Define Chart API','',          '',       
 
 
 Method definition:
-**TaskItem(_pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt_, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null)**
+**TaskItem(_pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt_, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null, pPlanClass = null)**
 
 This method takes only the variables defined above and explained below. You can **NOT** pass custom variables this way.
 
@@ -98,7 +98,8 @@ This method takes only the variables defined above and explained below. You can 
 |_pNotes:_|(optional) Detailed task information that will be displayed in tool tip for this task|
 |_pGantt:_|(required) javascript JSGantt.GanttChart object from which to take settings.  Defaults to "g" for backwards compatibility|
 |_pCost:_| cost of that task, numeric  
-|_pBarText:_|(optional) Use to include text inside a task bar|      
+|_pBarText:_|(optional) Use to include text inside a task bar|  
+|_pPlanClass:_|(optional) the css class for planned date of this task     
 
 <sup>*</sup> Combined group tasks show all sub-tasks on one row. The information displayed in the task list and row caption are taken from the parent task.  Tool tips are generated individually for each sub-task from its own information.  Milestones are not valid as sub-tasks of a combined group task and will not be displayed. No bounds checking of start and end dates of sub-tasks is performed therefore it is possible for these task bars to overlap. Dependencies can be set to and from sub-tasks only.
 
@@ -175,6 +176,7 @@ The structure of the native XML file:
 	<pDepend>2,24</pDepend>
 	<pCaption>A caption</pCaption>
 	<pNotes>Text - can include limited HTML</pNotes>
+  <pPlanClass>gtaskblue</pPlanClass>
 </task>
 </project>
 ```
