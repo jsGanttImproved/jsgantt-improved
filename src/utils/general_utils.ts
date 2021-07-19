@@ -1,5 +1,5 @@
 export const internalProperties = ['pID', 'pName', 'pStart', 'pEnd', 'pClass', 'pLink', 'pMile', 'pRes', 'pComp', 'pGroup', 'pParent',
-  'pOpen', 'pDepend', 'pCaption', 'pNotes', 'pGantt', 'pCost', 'pPlanStart', 'pPlanEnd'];
+  'pOpen', 'pDepend', 'pCaption', 'pNotes', 'pGantt', 'pCost', 'pPlanStart', 'pPlanEnd', 'pPlanClass'];
 
 export const internalPropertiesLang = {
   'pID': 'id',
@@ -19,7 +19,8 @@ export const internalPropertiesLang = {
   'pNotes': 'notes',
   'pCost': 'cost',
   'pPlanStart': 'planstartdate',
-  'pPlanEnd': 'planenddate'
+  'pPlanEnd': 'planenddate',
+  'pPlanClass': 'planclass'
 };
 
 export const findObj = function (theObj, theDoc = null) {

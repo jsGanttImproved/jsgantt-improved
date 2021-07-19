@@ -589,7 +589,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     // If exist and one of them are different, show plan bar... show if there is no real vStart as well (just plan dates)
                     if (vTaskPlanLeftPx && ((vTaskPlanLeftPx != vTaskLeftPx_1 || vTaskPlanRightPx != vTaskRightPx) || !this.vTaskList[i].getStartVar())) {
                         var vTmpPlanDiv = draw_utils_1.newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
-                        var vTmpPlanDiv2 = draw_utils_1.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+                        var vTmpPlanDiv2 = draw_utils_1.newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getPlanClass() + ' gplan', null, vTaskPlanRightPx);
                         this.vTaskList[i].setPlanTaskDiv(vTmpPlanDiv2);
                     }
                     // and opaque completion div
@@ -1658,6 +1658,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
         var planstart = void 0;
         var planend = void 0;
         var itemClass = void 0;
+        var planClass = void 0;
         var link = '';
         var milestone = 0;
         var resourceName = '';
@@ -1703,6 +1704,10 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
                 case 'pclass':
                 case 'class':
                     itemClass = value;
+                    break;
+                case 'pplanclass':
+                case 'planclass':
+                    planClass = value;
                     break;
                 case 'plink':
                 case 'link':
@@ -1761,7 +1766,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
             }
         }
         //if (id != undefined && !isNaN(parseInt(id)) && isFinite(id) && name && start && end && itemClass && completion != undefined && !isNaN(parseFloat(completion)) && isFinite(completion) && !isNaN(parseInt(parent)) && isFinite(parent)) {
-        pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, duration, bartext, additionalObject));
+        pGanttVar.AddTaskItem(new task_1.TaskItem(id, name_1, start, end, itemClass, link, milestone, resourceName, completion, group, parent_1, open_1, dependsOn, caption, notes, pGanttVar, cost, planstart, planend, duration, bartext, additionalObject, planClass));
         //}
     }
 };
@@ -3308,15 +3313,16 @@ exports.TaskItemObject = function (object) {
     general_utils_1.internalProperties.forEach(function (property) {
         delete pDataObject[property];
     });
-    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd, object.pDuration, object.pBarText, object);
+    return new exports.TaskItem(object.pID, object.pName, object.pStart, object.pEnd, object.pClass, object.pLink, object.pMile, object.pRes, object.pComp, object.pGroup, object.pParent, object.pOpen, object.pDepend, object.pCaption, object.pNotes, object.pGantt, object.pCost, object.pPlanStart, object.pPlanEnd, object.pDuration, object.pBarText, object, object.pPlanClass);
 };
-exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDuration, pBarText, pDataObject) {
+exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt, pCost, pPlanStart, pPlanEnd, pDuration, pBarText, pDataObject, pPlanClass) {
     if (pCost === void 0) { pCost = null; }
     if (pPlanStart === void 0) { pPlanStart = null; }
     if (pPlanEnd === void 0) { pPlanEnd = null; }
     if (pDuration === void 0) { pDuration = null; }
     if (pBarText === void 0) { pBarText = null; }
     if (pDataObject === void 0) { pDataObject = null; }
+    if (pPlanClass === void 0) { pPlanClass = null; }
     var vGantt = pGantt ? pGantt : this;
     var _id = document.createTextNode(pID).data;
     var vID = general_utils_1.hashKey(document.createTextNode(pID).data);
@@ -3330,6 +3336,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     var vGroupMinPlanStart = null;
     var vGroupMinPlanEnd = null;
     var vClass = document.createTextNode(pClass).data;
+    var vPlanClass = document.createTextNode(pPlanClass).data;
     var vLink = document.createTextNode(pLink).data;
     var vMile = parseInt(document.createTextNode(pMile).data);
     var vRes = document.createTextNode(pRes).data;
@@ -3467,6 +3474,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
         return vEnd;
     };
     this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
+    this.getPlanClass = function () { return vPlanClass && vPlanClass !== "null" ? vPlanClass : vClass; };
     this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
     this.getCost = function () { return vCost; };
     this.getGroupMinStart = function () { return vGroupMinStart; };
@@ -3602,6 +3610,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     this.setName = function (pName) { vName = pName; };
     this.setNotes = function (pNotes) { vNotes = pNotes; };
     this.setClass = function (pClass) { vClass = pClass; };
+    this.setPlanClass = function (pPlanClass) { vPlanClass = pPlanClass; };
     this.setCost = function (pCost) { vCost = pCost; };
     this.setResource = function (pRes) { vRes = pRes; };
     this.setDuration = function (pDuration) { vDuration = pDuration; };
@@ -3708,7 +3717,8 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
             pComp: vComp,
             pCost: vCost,
             pGroup: vGroup,
-            pDataObjec: vDataObject
+            pDataObjec: vDataObject,
+            pPlanClass: vPlanClass
         };
     };
 };
@@ -4440,7 +4450,7 @@ exports.drawSelector = function (pPos) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.printChart = exports.calculateStartEndFromDepend = exports.makeRequestOldBrowsers = exports.makeRequest = exports.moveToolTip = exports.updateFlyingObj = exports.isParentElementOrSelf = exports.criticalPath = exports.hashKey = exports.hashString = exports.fadeToolTip = exports.hideToolTip = exports.isIE = exports.getOffset = exports.calculateCurrentDateOffset = exports.getScrollbarWidth = exports.getScrollPositions = exports.benchMark = exports.getZoomFactor = exports.delayedHide = exports.stripUnwanted = exports.stripIds = exports.changeFormat = exports.findObj = exports.internalPropertiesLang = exports.internalProperties = void 0;
 exports.internalProperties = ['pID', 'pName', 'pStart', 'pEnd', 'pClass', 'pLink', 'pMile', 'pRes', 'pComp', 'pGroup', 'pParent',
-    'pOpen', 'pDepend', 'pCaption', 'pNotes', 'pGantt', 'pCost', 'pPlanStart', 'pPlanEnd'];
+    'pOpen', 'pDepend', 'pCaption', 'pNotes', 'pGantt', 'pCost', 'pPlanStart', 'pPlanEnd', 'pPlanClass'];
 exports.internalPropertiesLang = {
     'pID': 'id',
     'pName': 'name',
@@ -4459,7 +4469,8 @@ exports.internalPropertiesLang = {
     'pNotes': 'notes',
     'pCost': 'cost',
     'pPlanStart': 'planstartdate',
-    'pPlanEnd': 'planenddate'
+    'pPlanEnd': 'planenddate',
+    'pPlanClass': 'planclass'
 };
 exports.findObj = function (theObj, theDoc) {
     if (theDoc === void 0) { theDoc = null; }
@@ -5137,7 +5148,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 if (vSubCreated)
                     pDepend = '';
                 // Finally add the task
-                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration, undefined, undefined, pClass));
             }
         }
     }
@@ -5167,6 +5178,7 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                 var pCaption = exports.getXMLNodeValue(Task[i], 'pCaption', 2, '');
                 var pNotes = exports.getXMLNodeValue(Task[i], 'pNotes', 2, '');
                 var pClass = exports.getXMLNodeValue(Task[i], 'pClass', 2, '');
+                var pPlanClass = exports.getXMLNodeValue(Task[i], 'pPlanClass', 2, '');
                 if (typeof pClass == 'undefined') {
                     if (pGroup > 0)
                         pClass = 'ggroupblack';
@@ -5175,8 +5187,10 @@ exports.AddXMLTask = function (pGanttVar, pXmlDoc) {
                     else
                         pClass = 'gtaskblue';
                 }
+                if (typeof pPlanClass == 'undefined')
+                    pPlanClass = pClass;
                 // Finally add the task
-                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
+                pGanttVar.AddTaskItem(new task_1.TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration, undefined, undefined, pPlanClass));
             }
         }
     }
@@ -5237,6 +5251,7 @@ exports.getXMLTask = function (pID, pIdx) {
         var vTmpFrag = document.createDocumentFragment();
         var vTmpDiv = draw_utils_1.newNode(vTmpFrag, 'div', null, null, this.vTaskList[vIdx].getNotes().innerHTML);
         vTask += '<pNotes>' + vTmpDiv.innerHTML + '</pNotes>';
+        vTask += '<pPlanClass>' + this.vTaskList[vIdx].getPlanClass() + '</pPlanClass>';
         vTask += '</task>';
     }
     return vTask;
