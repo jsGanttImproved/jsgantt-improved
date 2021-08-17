@@ -395,7 +395,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       pComp: vComp,
       pCost: vCost,
       pGroup: vGroup,
-      pDataObjec: vDataObject
+      pDataObject: vDataObject
     }
   }
 };
