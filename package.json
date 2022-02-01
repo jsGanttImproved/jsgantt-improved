@@ -30,7 +30,7 @@
   "homepage": "https://jsganttimproved.github.io/jsgantt-improved/docs/",
   "dependencies": {
     "@types/node": "^12.0.10",
-    "webdriver-manager": "^12.1.8"
+    "webdriver-manager": "^13.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.5",
