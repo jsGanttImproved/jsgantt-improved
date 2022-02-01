@@ -632,7 +632,6 @@
                       if (this.vTaskList[i].getEnd() && this.vTaskList[i].getPlanEnd() && this.vTaskList[i].getStart() && this.vTaskList[i].getPlanStart())
                         if (Date.parse(this.vTaskList[i].getEnd()) !== Date.parse(this.vTaskList[i].getPlanEnd()) || Date.parse(this.vTaskList[i].getStart()) !== Date.parse(this.vTaskList[i].getPlanStart()))
                           differentDatesHighlight = "gitemdifferent ";
-                      console.log("test", this.vTaskList[i].getEnd(), this.vTaskList[i].getPlanEnd(), this.vTaskList[i].getStart(), this.vTaskList[i].getPlanStart(), differentDatesHighlight);
                       vTmpRow = draw_utils_1.newNode(vTmpTBody, "tr", this.vDivId + "childrow_" + vID, "glineitem " + differentDatesHighlight + "gitem" + this.vFormat, null, null, null, this.vTaskList[i].getVisible() == 0 ? "none" : null);
                       this.vTaskList[i].setChildRow(vTmpRow);
                       events_1.addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
