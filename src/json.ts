@@ -37,6 +37,7 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
     let planstart;
     let planend;
     let itemClass;
+    let planClass;
     let link = '';
     let milestone = 0;
     let resourceName = '';
@@ -83,6 +84,10 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
         case 'pclass':
         case 'class':
           itemClass = value;
+          break;
+        case 'pplanclass':
+        case 'planclass':
+          planClass = value;
           break;
         case 'plink':
         case 'link':
@@ -145,7 +150,7 @@ export const addJSONTask = function (pGanttVar, pJsonObj) {
     pGanttVar.AddTaskItem(new TaskItem(id, name, start, end, itemClass, link,
       milestone, resourceName, completion, group, parent, open, dependsOn,
       caption, notes, pGanttVar, cost, planstart, planend, duration, bartext,
-      additionalObject));
+      additionalObject, planClass));
     //}
   }
 };

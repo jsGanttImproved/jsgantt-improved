@@ -3,63 +3,59 @@ let jsonObj;
 let g;
 
 function start(e) {
-
-  g = new JSGantt.GanttChart(document.getElementById('embedded-Gantt'), 'week');
+  g = new JSGantt.GanttChart(document.getElementById("embedded-Gantt"), "week");
   if (g.getDivId() != null) {
-
-    const newDataurl = document.getElementById('dataurl').value ? document.getElementById('dataurl').value : './fixes/data.json';
-    const vDebug = document.querySelector('#debug:checked') ? true : false;
+    const newDataurl = document.getElementById("dataurl").value ? document.getElementById("dataurl").value : "./fixes/data.json";
+    const vDebug = document.querySelector("#debug:checked") ? true : false;
     //vDebug = true;
-    const vEditable = document.querySelector('#editable:checked') ? true : false;
-    const vUseSort = document.querySelector('#sort:checked') ? true : false;
-    const newtooltiptemplate = document.getElementById('tooltiptemplate').value ? document.getElementById('tooltiptemplate').value : null;
+    const vEditable = document.querySelector("#editable:checked") ? true : false;
+    const vUseSort = document.querySelector("#sort:checked") ? true : false;
+    const newtooltiptemplate = document.getElementById("tooltiptemplate").value ? document.getElementById("tooltiptemplate").value : null;
     let vColumnOrder;
-    if (document.querySelector('#vColumnOrder').value) {
-      vColumnOrder = document.querySelector('#vColumnOrder').value.split(',')
+    if (document.querySelector("#vColumnOrder").value) {
+      vColumnOrder = document.querySelector("#vColumnOrder").value.split(",");
     }
 
-    const vScrollTo = 'today'; // or new Date() or a Date object with a specific date
-
+    const vScrollTo = "today"; // or new Date() or a Date object with a specific date
 
     // SET LANG FROM INPUT
-    lang = e && e.target ? e.target.value : 'en';
-    delay = document.getElementById('delay').value;
+    lang = e && e.target ? e.target.value : "en";
+    delay = document.getElementById("delay").value;
 
+    vUseSingleCell = document.getElementById("useSingleCell").value;
+    vShowRes = document.querySelector("#vShowRes:checked") ? 1 : 0;
+    vShowCost = document.querySelector("#vShowCost:checked") ? 1 : 0;
+    vShowAddEntries = document.querySelector("#vShowAddEntries:checked") ? 1 : 0;
+    vShowComp = document.querySelector("#vShowComp:checked") ? 1 : 0;
+    vShowDur = document.querySelector("#vShowDur:checked") ? 1 : 0;
+    vShowStartDate = document.querySelector("#vShowStartDate:checked") ? 1 : 0;
+    vShowEndDate = document.querySelector("#vShowEndDate:checked") ? 1 : 0;
+    vShowPlanStartDate = document.querySelector("#vShowPlanStartDate:checked") ? 1 : 0;
+    vShowPlanEndDate = document.querySelector("#vShowPlanEndDate:checked") ? 1 : 0;
+    vShowTaskInfoLink = document.querySelector("#vShowTaskInfoLink:checked") ? 1 : 0;
+    vShowEndWeekDate = document.querySelector("#vShowEndWeekDate:checked") ? 1 : 0;
+    vTotalHeight = document.querySelector("#vTotalHeight").value || undefined;
 
-    vUseSingleCell = document.getElementById('useSingleCell').value;
-    vShowRes = document.querySelector('#vShowRes:checked') ? 1 : 0;
-    vShowCost = document.querySelector('#vShowCost:checked') ? 1 : 0;
-    vShowAddEntries = document.querySelector('#vShowAddEntries:checked') ? 1 : 0;
-    vShowComp = document.querySelector('#vShowComp:checked') ? 1 : 0;
-    vShowDur = document.querySelector('#vShowDur:checked') ? 1 : 0;
-    vShowStartDate = document.querySelector('#vShowStartDate:checked') ? 1 : 0;
-    vShowEndDate = document.querySelector('#vShowEndDate:checked') ? 1 : 0;
-    vShowPlanStartDate = document.querySelector('#vShowPlanStartDate:checked') ? 1 : 0;
-    vShowPlanEndDate = document.querySelector('#vShowPlanEndDate:checked') ? 1 : 0;
-    vShowTaskInfoLink = document.querySelector('#vShowTaskInfoLink:checked') ? 1 : 0;
-    vShowEndWeekDate = document.querySelector('#vShowEndWeekDate:checked') ? 1 : 0;
-    vTotalHeight = document.querySelector('#vTotalHeight').value || undefined;
+    vShowWeekends = document.querySelector("#vShowWeekends:checked") ? 1 : 0;
 
-    vShowWeekends = document.querySelector('#vShowWeekends:checked') ? 1 : 0;
-
-    vMinDate = document.querySelector('#vMinDate').value;
-    vMaxDate = document.querySelector('#vMaxDate').value;
+    vMinDate = document.querySelector("#vMinDate").value;
+    vMaxDate = document.querySelector("#vMaxDate").value;
 
     vAdditionalHeaders = {
       category: {
-        title: 'Category'
+        title: "Category",
       },
       sector: {
-        title: 'Sector'
-      }
-    }
+        title: "Sector",
+      },
+    };
 
     g.setOptions({
-      vCaptionType: 'Complete',  // Set to Show Caption : None,Caption,Resource,Duration,Complete,            
+      vCaptionType: "Complete", // Set to Show Caption : None,Caption,Resource,Duration,Complete,
       vQuarterColWidth: 36,
-      vDateTaskDisplayFormat: 'day dd month yyyy', // Shown in tool tip box
-      vDayMajorDateDisplayFormat: 'mon yyyy - Week ww',// Set format to display dates in the "Major" header of the "Day" view
-      vWeekMinorDateDisplayFormat: 'dd mon', // Set format to display dates in the "Minor" header of the "Week" view
+      vDateTaskDisplayFormat: "day dd month yyyy", // Shown in tool tip box
+      vDayMajorDateDisplayFormat: "mon yyyy - Week ww", // Set format to display dates in the "Major" header of the "Day" view
+      vWeekMinorDateDisplayFormat: "dd mon", // Set format to display dates in the "Minor" header of the "Week" view
       vLang: lang,
       vUseSingleCell, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
       vShowRes,
@@ -71,7 +67,6 @@ function start(e) {
       vShowEndDate,
       vShowPlanStartDate,
       vShowPlanEndDate,
-      vAdditionalHeaders,
       vTotalHeight,
       vMinDate,
       vMaxDate,
@@ -87,13 +82,13 @@ function start(e) {
         planend: console.log,
         cost: console.log,
         additional_category: console.log,
-        beforeDraw: () => console.log('before draw listener'),
+        beforeDraw: () => console.log("before draw listener"),
         afterDraw: () => {
-          console.log('after draw listener');
+          console.log("after draw listener");
           if (document.querySelector("#customElements:checked")) {
             drawCustomElements(g);
           }
-        }
+        },
       },
       vEventsChange: {
         taskname: editValue, // if you need to use the this scope, do: editValue.bind(this)
@@ -104,33 +99,30 @@ function start(e) {
         end: editValue,
         planstart: editValue,
         planend: editValue,
-        cost: editValue
+        cost: editValue,
       },
       vEventClickRow: console.log,
       vEventClickCollapse: console.log,
 
       vResources: [
-        { id: 0, name: 'Anybody' },
-        { id: 1, name: 'Mario' },
-        { id: 2, name: 'Henrique' },
-        { id: 3, name: 'Pedro' }
+        { id: 0, name: "Anybody" },
+        { id: 1, name: "Mario" },
+        { id: 2, name: "Henrique" },
+        { id: 3, name: "Pedro" },
       ],
-     
+
       vShowTaskInfoLink, // Show link in tool tip (0/1)
-      vShowEndWeekDate,  // Show/Hide the date for the last day of the week in header for daily view (1/0)
+      vShowEndWeekDate, // Show/Hide the date for the last day of the week in header for daily view (1/0)
       vShowWeekends, // Show weekends days in the vFormat day
       vTooltipDelay: delay,
-      vTooltipTemplate:
-        document.querySelector("#dynamicTooltip:checked") ?
-          generateTooltip :
-          newtooltiptemplate,
+      vTooltipTemplate: document.querySelector("#dynamicTooltip:checked") ? generateTooltip : newtooltiptemplate,
       vDebug,
       vEditable,
       vColumnOrder,
       vScrollTo,
       vUseSort,
-      vFormat: 'week',
-      vFormatArr: ['Day', 'Week', 'Month', 'Quarter'], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+      vFormat: "week",
+      vFormatArr: ["Day", "Week", "Month", "Quarter"], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
     });
     //DELAY FROM INPUT
 
@@ -154,10 +146,9 @@ function start(e) {
     // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pLink: pMilpMile: e, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
     if (dataurl !== newDataurl) {
       dataurl = newDataurl;
-      JSGantt.parseJSON(dataurl, g, vDebug)
-        .then(j => jsonObj = j);
+      JSGantt.parseJSON(dataurl, g, vDebug).then((j) => (jsonObj = j));
     } else {
-      JSGantt.addJSONTask(g, jsonObj)
+      JSGantt.addJSONTask(g, jsonObj);
     }
     /* 
     // Add Custom tasks programatically
@@ -170,20 +161,19 @@ function start(e) {
 
     if (vDebug) {
       bd = new Date();
-      console.log('before reloading', bd);
+      console.log("before reloading", bd);
     }
     g.Draw();
     //JSGantt.criticalPath(jsonObj)
     if (vDebug) {
       const ad = new Date();
-      console.log('after reloading: total time', ad, (ad.getTime() - bd.getTime()));
+      console.log("after reloading: total time", ad, ad.getTime() - bd.getTime());
     }
-
   } else {
     alert("Error, unable to create Gantt Chart");
   }
 
-  // document.getElementById("idMainLeft").onscroll = () => { 
+  // document.getElementById("idMainLeft").onscroll = () => {
   //   scrollingTwoMains('idMainLeft', 'idMainRight');
   // };
 
@@ -198,29 +188,27 @@ function scrollingTwoMains(mainMoving, mainMoved) {
 
 function clearTasks() {
   g.ClearTasks();
-  g.Draw()
+  g.Draw();
 }
 
 function printTasksInConsole() {
-  const tasks = g.vTaskList.map(e => ({ ...e.getAllData(), ...e.getDataObject() }));
+  const tasks = g.vTaskList.map((e) => ({ ...e.getAllData(), ...e.getDataObject() }));
   console.log(tasks);
 }
 
-function printChart(){
+function printChart() {
   let width, height;
-  [ width, height ] = document.querySelector('#print_page_size').value.split(',');
-  g.printChart( width, height );
+  [width, height] = document.querySelector("#print_page_size").value.split(",");
+  g.printChart(width, height);
 }
 
-
 function editValue(list, task, event, cell, column) {
-  console.log(list, task, event, cell, column)
-  const found = list.find(item => item.pID == task.getOriginalID());
+  console.log(list, task, event, cell, column);
+  const found = list.find((item) => item.pID == task.getOriginalID());
   if (!found) {
     return;
-  }
-  else {
-    found[column] = event ? event.target.value : '';
+  } else {
+    found[column] = event ? event.target.value : "";
   }
 }
 
@@ -229,11 +217,11 @@ function drawCustomElements(g) {
     const dataObj = item.getDataObject();
     if (dataObj && dataObj.deadline) {
       const x = g.chartRowDateToX(new Date(dataObj.deadline));
-      const td = item.getChildRow().querySelector('td');
-      td.style.position = 'relative';
-      const div = document.createElement('div');
+      const td = item.getChildRow().querySelector("td");
+      td.style.position = "relative";
+      const div = document.createElement("div");
       div.style.left = `${x}px`;
-      div.classList.add('deadline-line');
+      div.classList.add("deadline-line");
       td.appendChild(div);
     }
   }
@@ -259,7 +247,7 @@ function generateTooltip(task) {
     return `
       <dl>
         <dt>Name:</dt><dd>{{pName}}</dd>
-        <dt>Complete child tasks:</dt><dd style="color:${complete === childCount ? 'green' : 'red'}">${complete}/${childCount}</dd>
+        <dt>Complete child tasks:</dt><dd style="color:${complete === childCount ? "green" : "red"}">${complete}/${childCount}</dd>
         <dt>Tooltip generated at:</dt><dd>${new Date()}</dd>
       </dl>
     `;
@@ -275,4 +263,4 @@ function generateTooltip(task) {
   });
 }
 
-start('pt')
+start("pt");

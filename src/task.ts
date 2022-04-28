@@ -71,12 +71,13 @@ export const TaskItemObject = function (object) {
     object.pPlanEnd,
     object.pDuration,
     object.pBarText,
-    object
+    object,
+    object.pPlanClass
   );
 }
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
-  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null) {
+  pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null, pPlanClass = null) {
   let vGantt = pGantt ? pGantt : this;
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
@@ -90,6 +91,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   let vGroupMinPlanStart = null;
   let vGroupMinPlanEnd = null;
   let vClass = document.createTextNode(pClass).data;
+  let vPlanClass = document.createTextNode(pPlanClass).data;
   let vLink = document.createTextNode(pLink).data;
   let vMile = parseInt(document.createTextNode(pMile).data);
   let vRes = document.createTextNode(pRes).data;
@@ -223,6 +225,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     return vEnd;
   };
   this.getPlanStart = function () { return vPlanStart ? vPlanStart : vStart; };
+  this.getPlanClass = function () { return vPlanClass && vPlanClass !== "null" ? vPlanClass : vClass; };
   this.getPlanEnd = function () { return vPlanEnd ? vPlanEnd : vEnd; };
   this.getCost = function () { return vCost; };
   this.getGroupMinStart = function () { return vGroupMinStart; };
@@ -310,6 +313,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.setName = function (pName) { vName = pName; };
   this.setNotes = function (pNotes) { vNotes = pNotes; };
   this.setClass = function (pClass) { vClass = pClass; };
+  this.setPlanClass = function (pPlanClass) { vPlanClass = pPlanClass; };
   this.setCost = function (pCost) { vCost = pCost; };
   this.setResource = function (pRes) { vRes = pRes; };
   this.setDuration = function (pDuration) { vDuration = pDuration; };
@@ -395,7 +399,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
       pComp: vComp,
       pCost: vCost,
       pGroup: vGroup,
-      pDataObject: vDataObject
+      pDataObject: vDataObject,
+      pPlanClass: vPlanClass
     }
   }
 };

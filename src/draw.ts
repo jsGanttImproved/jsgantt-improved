@@ -1,4 +1,4 @@
-import * as lang from './lang';
+import * as lang from "./lang";
 import {
   mouseOver,
   mouseOut,
@@ -12,21 +12,17 @@ import {
   addListenerDependencies,
   syncScroll,
   updateGridHeaderWidth,
-  removeListener
-} from './events';
-import {
-  calculateCurrentDateOffset,
-  getOffset, getScrollbarWidth, printChart
-} from './utils/general_utils';
-import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from './task';
+  removeListener,
+} from "./events";
+import { calculateCurrentDateOffset, getOffset, getScrollbarWidth, printChart } from "./utils/general_utils";
+import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from "./task";
 
-import { getXMLProject, getXMLTask } from './xml';
-import { COLUMN_ORDER, draw_header, draw_bottom, draw_task_headings } from './draw_columns';
-import { newNode, makeInput, getArrayLocationByID, CalcTaskXY, sLine, drawSelector } from './utils/draw_utils';
-import { drawDependency, DrawDependencies } from './draw_dependencies';
-import { includeGetSet } from './options';
-import { parseDateFormatStr, getMinDate, coerceDate, getMaxDate, formatDateStr, parseDateStr } from './utils/date_utils';
-
+import { getXMLProject, getXMLTask } from "./xml";
+import { COLUMN_ORDER, draw_header, draw_bottom, draw_task_headings } from "./draw_columns";
+import { newNode, makeInput, getArrayLocationByID, CalcTaskXY, sLine, drawSelector } from "./utils/draw_utils";
+import { drawDependency, DrawDependencies } from "./draw_dependencies";
+import { includeGetSet } from "./options";
+import { parseDateFormatStr, getMinDate, coerceDate, getMaxDate, formatDateStr, parseDateStr } from "./utils/date_utils";
 
 /**
  * function that loads the main gantt chart properties and functions
@@ -71,7 +67,7 @@ export const GanttChart = function (pDiv, pFormat) {
     3: true,
     4: true,
     5: true,
-    6: true
+    6: true,
   };
 
   this.vEventClickCollapse = null;
@@ -91,7 +87,7 @@ export const GanttChart = function (pDiv, pFormat) {
     beforeLineDraw: null,
     afterLineDraw: null,
     onLineDraw: null,
-    onLineContainerHover: null
+    onLineContainerHover: null,
   };
   this.vEventsChange = {
     taskname: null,
@@ -103,36 +99,36 @@ export const GanttChart = function (pDiv, pFormat) {
     planstartdate: null,
     planenddate: null,
     cost: null,
-    line: null
+    line: null,
   };
   this.vResources = null;
   this.vAdditionalHeaders = {};
   this.vColumnOrder = COLUMN_ORDER;
   this.vEditable = false;
   this.vDebug = false;
-  this.vShowSelector = new Array('top');
-  this.vDateInputFormat = 'yyyy-mm-dd';
-  this.vDateTaskTableDisplayFormat = parseDateFormatStr('dd/mm/yyyy');
-  this.vDateTaskDisplayFormat = parseDateFormatStr('dd month yyyy');
-  this.vHourMajorDateDisplayFormat = parseDateFormatStr('day dd month yyyy');
-  this.vHourMinorDateDisplayFormat = parseDateFormatStr('HH');
-  this.vDayMajorDateDisplayFormat = parseDateFormatStr('dd/mm/yyyy');
-  this.vDayMinorDateDisplayFormat = parseDateFormatStr('dd');
-  this.vWeekMajorDateDisplayFormat = parseDateFormatStr('yyyy');
-  this.vWeekMinorDateDisplayFormat = parseDateFormatStr('dd/mm');
-  this.vMonthMajorDateDisplayFormat = parseDateFormatStr('yyyy');
-  this.vMonthMinorDateDisplayFormat = parseDateFormatStr('mon');
-  this.vQuarterMajorDateDisplayFormat = parseDateFormatStr('yyyy');
-  this.vQuarterMinorDateDisplayFormat = parseDateFormatStr('qq');
-  this.vUseFullYear = parseDateFormatStr('dd/mm/yyyy');
+  this.vShowSelector = new Array("top");
+  this.vDateInputFormat = "yyyy-mm-dd";
+  this.vDateTaskTableDisplayFormat = parseDateFormatStr("dd/mm/yyyy");
+  this.vDateTaskDisplayFormat = parseDateFormatStr("dd month yyyy");
+  this.vHourMajorDateDisplayFormat = parseDateFormatStr("day dd month yyyy");
+  this.vHourMinorDateDisplayFormat = parseDateFormatStr("HH");
+  this.vDayMajorDateDisplayFormat = parseDateFormatStr("dd/mm/yyyy");
+  this.vDayMinorDateDisplayFormat = parseDateFormatStr("dd");
+  this.vWeekMajorDateDisplayFormat = parseDateFormatStr("yyyy");
+  this.vWeekMinorDateDisplayFormat = parseDateFormatStr("dd/mm");
+  this.vMonthMajorDateDisplayFormat = parseDateFormatStr("yyyy");
+  this.vMonthMinorDateDisplayFormat = parseDateFormatStr("mon");
+  this.vQuarterMajorDateDisplayFormat = parseDateFormatStr("yyyy");
+  this.vQuarterMinorDateDisplayFormat = parseDateFormatStr("qq");
+  this.vUseFullYear = parseDateFormatStr("dd/mm/yyyy");
   this.vCaptionType;
   this.vDepId = 1;
   this.vTaskList = new Array();
-  this.vFormatArr = new Array('hour', 'day', 'week', 'month', 'quarter');
+  this.vFormatArr = new Array("hour", "day", "week", "month", "quarter");
   this.vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
   this.vProcessNeeded = true;
   this.vMinGpLen = 8;
-  this.vScrollTo = '';
+  this.vScrollTo = "";
   this.vHourColWidth = 18;
   this.vDayColWidth = 18;
   this.vWeekColWidth = 36;
@@ -141,7 +137,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vRowHeight = 20;
   this.vTodayPx = -1;
   this.vLangs = lang;
-  this.vLang = navigator.language && navigator.language in lang ? navigator.language : 'en';
+  this.vLang = navigator.language && navigator.language in lang ? navigator.language : "en";
   this.vChartBody = null;
   this.vChartHead = null;
   this.vListBody = null;
@@ -182,110 +178,124 @@ export const GanttChart = function (pDiv, pFormat) {
 
   this.clearDependencies = function () {
     let parent = this.getLines();
-    if (
-      this.vEventsChange.line &&
-      typeof this.vEventsChange.line === 'function'
-    ) {
-      this.removeListener('click', this.vEventsChange.line, parent);
-      this.addListener('click', this.vEventsChange.line, parent);
+    if (this.vEventsChange.line && typeof this.vEventsChange.line === "function") {
+      this.removeListener("click", this.vEventsChange.line, parent);
+      this.addListener("click", this.vEventsChange.line, parent);
     }
     while (parent.hasChildNodes()) parent.removeChild(parent.firstChild);
     this.vDepId = 1;
   };
 
   this.drawListHead = function (vLeftHeader) {
-    let vTmpDiv = newNode(vLeftHeader, 'div', this.vDivId + 'glisthead', 'glistlbl gcontainercol');
+    let vTmpDiv = newNode(vLeftHeader, "div", this.vDivId + "glisthead", "glistlbl gcontainercol");
     const gListLbl = vTmpDiv;
     this.setListBody(vTmpDiv);
-    let vTmpTab = newNode(vTmpDiv, 'table', null, 'gtasktableh');
-    let vTmpTBody = newNode(vTmpTab, 'tbody');
-    let vTmpRow = newNode(vTmpTBody, 'tr');
-    newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-    let vTmpCell = newNode(vTmpRow, 'td', null, 'gspanning gtaskname', null, null, null, null, this.getColumnOrder().length + 1);
-    vTmpCell.appendChild(this.drawSelector('top'));
+    let vTmpTab = newNode(vTmpDiv, "table", null, "gtasktableh");
+    let vTmpTBody = newNode(vTmpTab, "tbody");
+    let vTmpRow = newNode(vTmpTBody, "tr");
+    newNode(vTmpRow, "td", null, "gtasklist", "\u00A0");
+    let vTmpCell = newNode(vTmpRow, "td", null, "gspanning gtaskname", null, null, null, null, this.getColumnOrder().length + 1);
+    vTmpCell.appendChild(this.drawSelector("top"));
 
-    vTmpRow = newNode(vTmpTBody, 'tr');
-    newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-    newNode(vTmpRow, 'td', null, 'gtaskname', '\u00A0');
+    vTmpRow = newNode(vTmpTBody, "tr");
+    newNode(vTmpRow, "td", null, "gtasklist", "\u00A0");
+    newNode(vTmpRow, "td", null, "gtaskname", "\u00A0");
 
-    this.getColumnOrder().forEach(column => {
-      if (this[column] == 1 || column === 'vAdditionalHeaders') {
+    this.getColumnOrder().forEach((column) => {
+      if (this[column] == 1 || column === "vAdditionalHeaders") {
         draw_task_headings(column, vTmpRow, this.vLangs, this.vLang, this.vAdditionalHeaders, this.vEvents);
       }
     });
     return gListLbl;
-  }
+  };
 
   this.drawListBody = function (vLeftHeader) {
-    let vTmpContentTabOuterWrapper = newNode(vLeftHeader, 'div', null, 'gtasktableouterwrapper');
-    let vTmpContentTabWrapper = newNode(vTmpContentTabOuterWrapper, 'div', null, 'gtasktablewrapper');
+    let vTmpContentTabOuterWrapper = newNode(vLeftHeader, "div", null, "gtasktableouterwrapper");
+    let vTmpContentTabWrapper = newNode(vTmpContentTabOuterWrapper, "div", null, "gtasktablewrapper");
     vTmpContentTabWrapper.style.width = `calc(100% + ${getScrollbarWidth()}px)`;
-    let vTmpContentTab = newNode(vTmpContentTabWrapper, 'table', null, 'gtasktable');
-    let vTmpContentTBody = newNode(vTmpContentTab, 'tbody');
+    let vTmpContentTab = newNode(vTmpContentTabWrapper, "table", null, "gtasktable");
+    let vTmpContentTBody = newNode(vTmpContentTab, "tbody");
     let vNumRows = 0;
     for (let i = 0; i < this.vTaskList.length; i++) {
       let vBGColor;
-      if (this.vTaskList[i].getGroup() == 1) vBGColor = 'ggroupitem';
-      else vBGColor = 'glineitem';
+      if (this.vTaskList[i].getGroup() == 1) vBGColor = "ggroupitem";
+      else vBGColor = "glineitem a";
 
       let vID = this.vTaskList[i].getID();
       let vTmpRow, vTmpCell;
-      if ((!(this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2)) || this.vTaskList[i].getGroup() == 2) {
-        if (this.vTaskList[i].getVisible() == 0) vTmpRow = newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor, null, null, null, 'none');
-        else vTmpRow = newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_' + vID, 'gname ' + vBGColor);
+      if (!(this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2) || this.vTaskList[i].getGroup() == 2) {
+        if (this.vTaskList[i].getVisible() == 0) vTmpRow = newNode(vTmpContentTBody, "tr", this.vDivId + "child_" + vID, "gname " + vBGColor, null, null, null, "none");
+        else vTmpRow = newNode(vTmpContentTBody, "tr", this.vDivId + "child_" + vID, "gname " + vBGColor);
         this.vTaskList[i].setListChildRow(vTmpRow);
-        newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-        const editableClass = this.vEditable ? 'gtaskname gtaskeditable' : 'gtaskname';
-        vTmpCell = newNode(vTmpRow, 'td', null, editableClass);
+        newNode(vTmpRow, "td", null, "gtasklist", "\u00A0");
+        const editableClass = this.vEditable ? "gtaskname gtaskeditable" : "gtaskname";
+        vTmpCell = newNode(vTmpRow, "td", null, editableClass);
 
-        let vCellContents = '';
+        let vCellContents = "";
         for (let j = 1; j < this.vTaskList[i].getLevel(); j++) {
-          vCellContents += '\u00A0\u00A0\u00A0\u00A0';
+          vCellContents += "\u00A0\u00A0\u00A0\u00A0";
         }
 
         const task = this.vTaskList[i];
         const vEventClickRow = this.vEventClickRow;
         const vEventClickCollapse = this.vEventClickCollapse;
-        addListener('click', function (e) {
-          if (e.target.classList.contains('gfoldercollapse') === false) {
-            if (vEventClickRow && typeof vEventClickRow === "function") {
-              vEventClickRow(task);
+        addListener(
+          "click",
+          function (e) {
+            if (e.target.classList.contains("gfoldercollapse") === false) {
+              if (vEventClickRow && typeof vEventClickRow === "function") {
+                vEventClickRow(task);
+              }
+            } else {
+              if (vEventClickCollapse && typeof vEventClickCollapse === "function") {
+                vEventClickCollapse(task);
+              }
             }
-          } else {
-            if (vEventClickCollapse && typeof vEventClickCollapse === "function") {
-              vEventClickCollapse(task);
-            }
-          }
-        }, vTmpRow);
+          },
+          vTmpRow
+        );
 
         if (this.vTaskList[i].getGroup() == 1) {
-          let vTmpDiv = newNode(vTmpCell, 'div', null, null, vCellContents);
-          let vTmpSpan = newNode(vTmpDiv, 'span', this.vDivId + 'group_' + vID, 'gfoldercollapse', (this.vTaskList[i].getOpen() == 1) ? '-' : '+');
+          let vTmpDiv = newNode(vTmpCell, "div", null, null, vCellContents);
+          let vTmpSpan = newNode(vTmpDiv, "span", this.vDivId + "group_" + vID, "gfoldercollapse", this.vTaskList[i].getOpen() == 1 ? "-" : "+");
           this.vTaskList[i].setGroupSpan(vTmpSpan);
           addFolderListeners(this, vTmpSpan, vID);
 
-          const divTask = document.createElement('span')
-          divTask.innerHTML = '\u00A0' + this.vTaskList[i].getName()
+          const divTask = document.createElement("span");
+          divTask.innerHTML = "\u00A0" + this.vTaskList[i].getName();
           vTmpDiv.appendChild(divTask);
           // const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
           // vTmpDiv.appendChild(document.createNode(text));
           const callback = (task, e) => task.setName(e.target.value);
-          addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList, i, 'taskname', this.Draw.bind(this));
-          addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i], 'taskname');
-        }
-        else {
-          vCellContents += '\u00A0\u00A0\u00A0\u00A0';
-          const text = makeInput(this.vTaskList[i].getName(), this.vEditable, 'text');
-          let vTmpDiv = newNode(vTmpCell, 'div', null, null, vCellContents + text);
+          addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList, i, "taskname", this.Draw.bind(this));
+          addListenerClickCell(vTmpDiv, this.vEvents, this.vTaskList[i], "taskname");
+        } else {
+          vCellContents += "\u00A0\u00A0\u00A0\u00A0";
+          const text = makeInput(this.vTaskList[i].getName(), this.vEditable, "text");
+          let vTmpDiv = newNode(vTmpCell, "div", null, null, vCellContents + text);
           const callback = (task, e) => task.setName(e.target.value);
-          addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList, i, 'taskname', this.Draw.bind(this));
-          addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], 'taskname');
+          addListenerInputCell(vTmpCell, this.vEventsChange, callback, this.vTaskList, i, "taskname", this.Draw.bind(this));
+          addListenerClickCell(vTmpCell, this.vEvents, this.vTaskList[i], "taskname");
         }
 
-        this.getColumnOrder().forEach(column => {
-          if (this[column] == 1 || column === 'vAdditionalHeaders') {
-            draw_header(column, i, vTmpRow, this.vTaskList, this.vEditable, this.vEventsChange, this.vEvents,
-              this.vDateTaskTableDisplayFormat, this.vAdditionalHeaders, this.vFormat, this.vLangs, this.vLang, this.vResources, this.Draw.bind(this));
+        this.getColumnOrder().forEach((column) => {
+          if (this[column] == 1 || column === "vAdditionalHeaders") {
+            draw_header(
+              column,
+              i,
+              vTmpRow,
+              this.vTaskList,
+              this.vEditable,
+              this.vEventsChange,
+              this.vEvents,
+              this.vDateTaskTableDisplayFormat,
+              this.vAdditionalHeaders,
+              this.vFormat,
+              this.vLangs,
+              this.vLang,
+              this.vResources,
+              this.Draw.bind(this)
+            );
           }
         });
 
@@ -295,26 +305,23 @@ export const GanttChart = function (pDiv, pFormat) {
 
     // Render no daa in the chart
     if (this.vTaskList.length == 0) {
-
-      let totalColumns = this.getColumnOrder()
-        .filter(column => this[column] == 1 || column === 'vAdditionalHeaders')
-        .length
-      let vTmpRow = newNode(vTmpContentTBody, 'tr', this.vDivId + 'child_', 'gname ');
+      let totalColumns = this.getColumnOrder().filter((column) => this[column] == 1 || column === "vAdditionalHeaders").length;
+      let vTmpRow = newNode(vTmpContentTBody, "tr", this.vDivId + "child_", "gname ");
       // this.vTaskList[i].setListChildRow(vTmpRow);
-      let vTmpCell = newNode(vTmpRow, 'td', null, 'gtasknolist', '', null, null, null, totalColumns);
+      let vTmpCell = newNode(vTmpRow, "td", null, "gtasknolist", "", null, null, null, totalColumns);
       let vOutput = document.createDocumentFragment();
-      newNode(vOutput, 'div', null, 'gtasknolist-label', this.vLangs[this.vLang]['nodata'] + '.');
+      newNode(vOutput, "div", null, "gtasknolist-label", this.vLangs[this.vLang]["nodata"] + ".");
       vTmpCell.appendChild(vOutput);
     }
     // DRAW the date format selector at bottom left.
-    let vTmpRow = newNode(vTmpContentTBody, 'tr');
-    newNode(vTmpRow, 'td', null, 'gtasklist', '\u00A0');
-    let vTmpCell = newNode(vTmpRow, 'td', null, 'gspanning gtaskname');
-    vTmpCell.appendChild(this.drawSelector('bottom'));
+    let vTmpRow = newNode(vTmpContentTBody, "tr");
+    newNode(vTmpRow, "td", null, "gtasklist", "\u00A0");
+    let vTmpCell = newNode(vTmpRow, "td", null, "gspanning gtaskname");
+    vTmpCell.appendChild(this.drawSelector("bottom"));
 
-    this.getColumnOrder().forEach(column => {
-      if (this[column] == 1 || column === 'vAdditionalHeaders') {
-        draw_bottom(column, vTmpRow, this.vAdditionalHeaders)
+    this.getColumnOrder().forEach((column) => {
+      if (this[column] == 1 || column === "vAdditionalHeaders") {
+        draw_bottom(column, vTmpRow, this.vAdditionalHeaders);
       }
     });
 
@@ -325,9 +332,9 @@ export const GanttChart = function (pDiv, pFormat) {
 
     return {
       vNumRows,
-      vTmpContentTabWrapper
+      vTmpContentTabWrapper,
     };
-  }
+  };
 
   /**
    *
@@ -336,16 +343,16 @@ export const GanttChart = function (pDiv, pFormat) {
    */
   this.drawChartHead = function (vMinDate, vMaxDate, vColWidth, vNumRows) {
     let vRightHeader = document.createDocumentFragment();
-    let vTmpDiv = newNode(vRightHeader, 'div', this.vDivId + 'gcharthead', 'gchartlbl gcontainercol');
+    let vTmpDiv = newNode(vRightHeader, "div", this.vDivId + "gcharthead", "gchartlbl gcontainercol");
     const gChartLbl = vTmpDiv;
     this.setChartHead(vTmpDiv);
-    let vTmpTab = newNode(vTmpDiv, 'table', this.vDivId + 'chartTableh', 'gcharttableh');
-    let vTmpTBody = newNode(vTmpTab, 'tbody');
-    let vTmpRow = newNode(vTmpTBody, 'tr');
+    let vTmpTab = newNode(vTmpDiv, "table", this.vDivId + "chartTableh", "gcharttableh");
+    let vTmpTBody = newNode(vTmpTab, "tbody");
+    let vTmpRow = newNode(vTmpTBody, "tr");
 
     let vTmpDate = new Date();
     vTmpDate.setFullYear(vMinDate.getFullYear(), vMinDate.getMonth(), vMinDate.getDate());
-    if (this.vFormat == 'hour') vTmpDate.setHours(vMinDate.getHours());
+    if (this.vFormat == "hour") vTmpDate.setHours(vMinDate.getHours());
     else vTmpDate.setHours(0);
     vTmpDate.setMinutes(0);
     vTmpDate.setSeconds(0);
@@ -354,97 +361,89 @@ export const GanttChart = function (pDiv, pFormat) {
     let vColSpan = 1;
     // Major Date Header
     while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-      let vHeaderCellClass = 'gmajorheading';
-      let vCellContents = '';
+      let vHeaderCellClass = "gmajorheading";
+      let vCellContents = "";
 
-      if (this.vFormat == 'day') {
+      if (this.vFormat == "day") {
         let colspan = 7;
         if (!this.vShowWeekends) {
-          vHeaderCellClass += ' headweekends';
+          vHeaderCellClass += " headweekends";
           colspan = 5;
         }
 
-        let vTmpCell = newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, colspan);
+        let vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, colspan);
         vCellContents += formatDateStr(vTmpDate, this.vDayMajorDateDisplayFormat, this.vLangs[this.vLang]);
         vTmpDate.setDate(vTmpDate.getDate() + 6);
 
-        if (this.vShowEndWeekDate == 1) vCellContents += ' - ' + formatDateStr(vTmpDate, this.vDayMajorDateDisplayFormat, this.vLangs[this.vLang]);
+        if (this.vShowEndWeekDate == 1) vCellContents += " - " + formatDateStr(vTmpDate, this.vDayMajorDateDisplayFormat, this.vLangs[this.vLang]);
 
-        newNode(vTmpCell, 'div', null, null, vCellContents, vColWidth * colspan);
+        newNode(vTmpCell, "div", null, null, vCellContents, vColWidth * colspan);
 
         vTmpDate.setDate(vTmpDate.getDate() + 1);
-      }
-      else if (this.vFormat == 'week') {
-        const vTmpCell = newNode(vTmpRow, 'td', null, vHeaderCellClass, null, vColWidth);
-        newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+      } else if (this.vFormat == "week") {
+        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, vColWidth);
+        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
         vTmpDate.setDate(vTmpDate.getDate() + 7);
-      }
-      else if (this.vFormat == 'month') {
-        vColSpan = (12 - vTmpDate.getMonth());
-        if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= (11 - vMaxDate.getMonth());
-        const vTmpCell = newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-        newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vMonthMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+      } else if (this.vFormat == "month") {
+        vColSpan = 12 - vTmpDate.getMonth();
+        if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= 11 - vMaxDate.getMonth();
+        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vMonthMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
         vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
-      }
-      else if (this.vFormat == 'quarter') {
-        vColSpan = (4 - Math.floor(vTmpDate.getMonth() / 3));
-        if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= (3 - Math.floor(vMaxDate.getMonth() / 3));
-        const vTmpCell = newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-        newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vQuarterMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+      } else if (this.vFormat == "quarter") {
+        vColSpan = 4 - Math.floor(vTmpDate.getMonth() / 3);
+        if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= 3 - Math.floor(vMaxDate.getMonth() / 3);
+        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vQuarterMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
         vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
-      }
-      else if (this.vFormat == 'hour') {
-        vColSpan = (24 - vTmpDate.getHours());
-        if (vTmpDate.getFullYear() == vMaxDate.getFullYear() &&
-          vTmpDate.getMonth() == vMaxDate.getMonth() &&
-          vTmpDate.getDate() == vMaxDate.getDate()) vColSpan -= (23 - vMaxDate.getHours());
-        const vTmpCell = newNode(vTmpRow, 'td', null, vHeaderCellClass, null, null, null, null, vColSpan);
-        newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vHourMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+      } else if (this.vFormat == "hour") {
+        vColSpan = 24 - vTmpDate.getHours();
+        if (vTmpDate.getFullYear() == vMaxDate.getFullYear() && vTmpDate.getMonth() == vMaxDate.getMonth() && vTmpDate.getDate() == vMaxDate.getDate()) vColSpan -= 23 - vMaxDate.getHours();
+        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vHourMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
         vTmpDate.setHours(0);
         vTmpDate.setDate(vTmpDate.getDate() + 1);
       }
     }
 
-    vTmpRow = newNode(vTmpTBody, 'tr', null, 'footerdays');
+    vTmpRow = newNode(vTmpTBody, "tr", null, "footerdays");
 
     // Minor Date header and Cell Rows
     vTmpDate.setFullYear(vMinDate.getFullYear(), vMinDate.getMonth(), vMinDate.getDate()); // , vMinDate.getHours()
-    if (this.vFormat == 'hour') vTmpDate.setHours(vMinDate.getHours());
+    if (this.vFormat == "hour") vTmpDate.setHours(vMinDate.getHours());
     let vNumCols: number = 0;
 
     while (vTmpDate.getTime() <= vMaxDate.getTime()) {
-      let vMinorHeaderCellClass = 'gminorheading';
+      let vMinorHeaderCellClass = "gminorheading";
 
-      if (this.vFormat == 'day') {
+      if (this.vFormat == "day") {
         if (vTmpDate.getDay() % 6 == 0) {
           if (!this.vShowWeekends) {
             vTmpDate.setDate(vTmpDate.getDate() + 1);
             continue;
           }
-          vMinorHeaderCellClass += 'wkend';
+          vMinorHeaderCellClass += "wkend";
         }
 
         if (vTmpDate <= vMaxDate) {
-          const vTmpCell = newNode(vTmpRow, 'td', null, vMinorHeaderCellClass);
-          newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vDayMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+          const vTmpCell = newNode(vTmpRow, "td", null, vMinorHeaderCellClass);
+          newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vDayMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
           vNumCols++;
         }
 
         vTmpDate.setDate(vTmpDate.getDate() + 1);
-      }
-      else if (this.vFormat == 'week') {
+      } else if (this.vFormat == "week") {
         if (vTmpDate <= vMaxDate) {
-          const vTmpCell = newNode(vTmpRow, 'td', null, vMinorHeaderCellClass);
-          newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vWeekMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+          const vTmpCell = newNode(vTmpRow, "td", null, vMinorHeaderCellClass);
+          newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vWeekMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
           vNumCols++;
         }
 
         vTmpDate.setDate(vTmpDate.getDate() + 7);
-      }
-      else if (this.vFormat == 'month') {
+      } else if (this.vFormat == "month") {
         if (vTmpDate <= vMaxDate) {
-          const vTmpCell = newNode(vTmpRow, 'td', null, vMinorHeaderCellClass);
-          newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vMonthMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+          const vTmpCell = newNode(vTmpRow, "td", null, vMinorHeaderCellClass);
+          newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vMonthMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
           vNumCols++;
         }
 
@@ -453,24 +452,22 @@ export const GanttChart = function (pDiv, pFormat) {
         while (vTmpDate.getDate() > 1) {
           vTmpDate.setDate(vTmpDate.getDate() + 1);
         }
-      }
-      else if (this.vFormat == 'quarter') {
+      } else if (this.vFormat == "quarter") {
         if (vTmpDate <= vMaxDate) {
-          const vTmpCell = newNode(vTmpRow, 'td', null, vMinorHeaderCellClass);
-          newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vQuarterMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+          const vTmpCell = newNode(vTmpRow, "td", null, vMinorHeaderCellClass);
+          newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vQuarterMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
           vNumCols++;
         }
 
         vTmpDate.setDate(vTmpDate.getDate() + 81);
 
         while (vTmpDate.getDate() > 1) vTmpDate.setDate(vTmpDate.getDate() + 1);
-      }
-      else if (this.vFormat == 'hour') {
+      } else if (this.vFormat == "hour") {
         for (let i = vTmpDate.getHours(); i < 24; i++) {
-          vTmpDate.setHours(i);//works around daylight savings but may look a little odd on days where the clock goes forward
+          vTmpDate.setHours(i); //works around daylight savings but may look a little odd on days where the clock goes forward
           if (vTmpDate <= vMaxDate) {
-            const vTmpCell = newNode(vTmpRow, 'td', null, vMinorHeaderCellClass);
-            newNode(vTmpCell, 'div', null, null, formatDateStr(vTmpDate, this.vHourMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+            const vTmpCell = newNode(vTmpRow, "td", null, vMinorHeaderCellClass);
+            newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vHourMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
             vNumCols++;
           }
         }
@@ -481,43 +478,42 @@ export const GanttChart = function (pDiv, pFormat) {
     const vDateRow = vTmpRow;
 
     // Calculate size of grids  : Plus 3 because 1 border left + 2 of paddings
-    let vTaskLeftPx = (vNumCols * (vColWidth + 3)) + 1;
+    let vTaskLeftPx = vNumCols * (vColWidth + 3) + 1;
     // Fix a small space at the end for day
-    if (this.vFormat === 'day') {
+    if (this.vFormat === "day") {
       vTaskLeftPx += 2;
     }
-    vTmpTab.style.width = vTaskLeftPx + 'px'; // Ensure that the headings has exactly the same width as the chart grid
+    vTmpTab.style.width = vTaskLeftPx + "px"; // Ensure that the headings has exactly the same width as the chart grid
     // const vTaskPlanLeftPx = (vNumCols * (vColWidth + 3)) + 1;
     let vSingleCell = false;
 
-    if (this.vUseSingleCell !== 0 && this.vUseSingleCell < (vNumCols * vNumRows)) vSingleCell = true;
+    if (this.vUseSingleCell !== 0 && this.vUseSingleCell < vNumCols * vNumRows) vSingleCell = true;
 
-    newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
+    newNode(vTmpDiv, "div", null, "rhscrpad", null, null, vTaskLeftPx + 1);
 
-    vTmpDiv = newNode(vRightHeader, 'div', null, 'glabelfooter');
+    vTmpDiv = newNode(vRightHeader, "div", null, "glabelfooter");
 
-    return { gChartLbl, vTaskLeftPx, vSingleCell, vDateRow, vRightHeader, vNumCols }
-  }
+    return { gChartLbl, vTaskLeftPx, vSingleCell, vDateRow, vRightHeader, vNumCols };
+  };
 
   /**
    *
    * DRAW CHART BODY
    *
    */
-  this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl,
-    vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
+  this.drawCharBody = function (vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl, vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow) {
     let vRightTable = document.createDocumentFragment();
-    const vTmpDiv = newNode(vRightTable, 'div', this.vDivId + 'gchartbody', 'gchartgrid gcontainercol');
+    const vTmpDiv = newNode(vRightTable, "div", this.vDivId + "gchartbody", "gchartgrid gcontainercol");
     this.setChartBody(vTmpDiv);
-    const vTmpTab = newNode(vTmpDiv, 'table', this.vDivId + 'chartTable', 'gcharttable', null, vTaskLeftPx);
+    const vTmpTab = newNode(vTmpDiv, "table", this.vDivId + "chartTable", "gcharttable", null, vTaskLeftPx);
     this.setChartTable(vTmpTab);
-    newNode(vTmpDiv, 'div', null, 'rhscrpad', null, null, vTaskLeftPx + 1);
-    const vTmpTBody = newNode(vTmpTab, 'tbody');
-    const vTmpTFoot = newNode(vTmpTab, 'tfoot');
+    newNode(vTmpDiv, "div", null, "rhscrpad", null, null, vTaskLeftPx + 1);
+    const vTmpTBody = newNode(vTmpTab, "tbody");
+    const vTmpTFoot = newNode(vTmpTab, "tfoot");
 
-    syncScroll([vTmpContentTabWrapper, vTmpDiv], 'scrollTop');
-    syncScroll([gChartLbl, vTmpDiv], 'scrollLeft');
-    syncScroll([vTmpContentTabWrapper, gListLbl], 'scrollLeft');
+    syncScroll([vTmpContentTabWrapper, vTmpDiv], "scrollTop");
+    syncScroll([gChartLbl, vTmpDiv], "scrollLeft");
+    syncScroll([vTmpContentTabWrapper, gListLbl], "scrollLeft");
 
     // Draw each row
 
@@ -526,7 +522,7 @@ export const GanttChart = function (pDiv, pFormat) {
     let bd;
     if (this.vDebug) {
       bd = new Date();
-      console.info('before tasks loop', bd);
+      console.info("before tasks loop", bd);
     }
     for (i = 0; i < this.vTaskList.length; i++) {
       let curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
@@ -546,80 +542,84 @@ export const GanttChart = function (pDiv, pFormat) {
         vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends);
       }
 
-
       const vID = this.vTaskList[i].getID();
-      let vComb = (this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2);
-      let vCellFormat = '';
+      let vComb = this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2;
+      let vCellFormat = "";
       let vTmpDiv = null;
       let vTmpItem = this.vTaskList[i];
       let vCaptClass = null;
       // set cell width only for first row because of table-layout:fixed
       let taskCellWidth = i === 0 ? vColWidth : null;
       if (this.vTaskList[i].getMile() && !vComb) {
-        let vTmpRow = newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'gmileitem gmile' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
+        let vTmpRow = newNode(vTmpTBody, "tr", this.vDivId + "childrow_" + vID, "gmileitem gmile" + this.vFormat, null, null, null, this.vTaskList[i].getVisible() == 0 ? "none" : null);
         this.vTaskList[i].setChildRow(vTmpRow);
         addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
 
-        const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellmile', null, vColWidth, null, null, null);
+        const vTmpCell = newNode(vTmpRow, "td", null, "gtaskcell gtaskcellmile", null, vColWidth, null, null, null);
 
-        vTmpDiv = newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
-        vTmpDiv = newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, 12, vTaskLeftPx + vTaskRightPx - 6);
+        vTmpDiv = newNode(vTmpCell, "div", null, "gtaskcelldiv", "\u00A0\u00A0");
+        vTmpDiv = newNode(vTmpDiv, "div", this.vDivId + "bardiv_" + vID, "gtaskbarcontainer", null, 12, vTaskLeftPx + vTaskRightPx - 6);
 
         this.vTaskList[i].setBarDiv(vTmpDiv);
-        let vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, 12);
+        let vTmpDiv2 = newNode(vTmpDiv, "div", this.vDivId + "taskbar_" + vID, this.vTaskList[i].getClass(), null, 12);
         this.vTaskList[i].setTaskDiv(vTmpDiv2);
 
-        if (this.vTaskList[i].getCompVal() < 100)
-          vTmpDiv2.appendChild(document.createTextNode('\u25CA'));
+        if (this.vTaskList[i].getCompVal() < 100) vTmpDiv2.appendChild(document.createTextNode("\u25CA"));
         else {
-          vTmpDiv2 = newNode(vTmpDiv2, 'div', null, 'gmilediamond');
-          newNode(vTmpDiv2, 'div', null, 'gmdtop');
-          newNode(vTmpDiv2, 'div', null, 'gmdbottom');
+          vTmpDiv2 = newNode(vTmpDiv2, "div", null, "gmilediamond");
+          newNode(vTmpDiv2, "div", null, "gmdtop");
+          newNode(vTmpDiv2, "div", null, "gmdbottom");
         }
 
-        vCaptClass = 'gmilecaption';
+        vCaptClass = "gmilecaption";
         if (!vSingleCell && !vComb) {
-          this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate)
+          this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate);
         }
-      }
-      else {
+      } else {
         let vTaskWidth = vTaskRightPx;
 
         // Draw Group Bar which has outer div with inner group div
         // and several small divs to left and right to create angled-end indicators
         if (this.vTaskList[i].getGroup()) {
-          vTaskWidth = (vTaskWidth > this.vMinGpLen && vTaskWidth < this.vMinGpLen * 2) ? this.vMinGpLen * 2 : vTaskWidth; // Expand to show two end points
-          vTaskWidth = (vTaskWidth < this.vMinGpLen) ? this.vMinGpLen : vTaskWidth; // expand to show one end point
+          vTaskWidth = vTaskWidth > this.vMinGpLen && vTaskWidth < this.vMinGpLen * 2 ? this.vMinGpLen * 2 : vTaskWidth; // Expand to show two end points
+          vTaskWidth = vTaskWidth < this.vMinGpLen ? this.vMinGpLen : vTaskWidth; // expand to show one end point
 
-          const vTmpRow = newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, ((this.vTaskList[i].getGroup() == 2) ? 'glineitem gitem' : 'ggroupitem ggroup') + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
+          const vTmpRow = newNode(
+            vTmpTBody,
+            "tr",
+            this.vDivId + "childrow_" + vID,
+            (this.vTaskList[i].getGroup() == 2 ? "glineitem gitem" : "ggroupitem ggroup") + this.vFormat,
+            null,
+            null,
+            null,
+            this.vTaskList[i].getVisible() == 0 ? "none" : null
+          );
           this.vTaskList[i].setChildRow(vTmpRow);
           addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
 
-          const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellbar', null, vColWidth, null, null);
+          const vTmpCell = newNode(vTmpRow, "td", null, "gtaskcell gtaskcellbar", null, vColWidth, null, null);
 
-          vTmpDiv = newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
+          vTmpDiv = newNode(vTmpCell, "div", null, "gtaskcelldiv", "\u00A0\u00A0");
           this.vTaskList[i].setCellDiv(vTmpDiv);
           if (this.vTaskList[i].getGroup() == 1) {
-            vTmpDiv = newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
+            vTmpDiv = newNode(vTmpDiv, "div", this.vDivId + "bardiv_" + vID, "gtaskbarcontainer", null, vTaskWidth, vTaskLeftPx);
             this.vTaskList[i].setBarDiv(vTmpDiv);
-            const vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
+            const vTmpDiv2 = newNode(vTmpDiv, "div", this.vDivId + "taskbar_" + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
             this.vTaskList[i].setTaskDiv(vTmpDiv2);
 
-            newNode(vTmpDiv2, 'div', this.vDivId + 'complete_' + vID, this.vTaskList[i].getClass() + 'complete', null, this.vTaskList[i].getCompStr());
+            newNode(vTmpDiv2, "div", this.vDivId + "complete_" + vID, this.vTaskList[i].getClass() + "complete", null, this.vTaskList[i].getCompStr());
 
-            newNode(vTmpDiv, 'div', null, this.vTaskList[i].getClass() + 'endpointleft');
-            if (vTaskWidth >= this.vMinGpLen * 2) newNode(vTmpDiv, 'div', null, this.vTaskList[i].getClass() + 'endpointright');
+            newNode(vTmpDiv, "div", null, this.vTaskList[i].getClass() + "endpointleft");
+            if (vTaskWidth >= this.vMinGpLen * 2) newNode(vTmpDiv, "div", null, this.vTaskList[i].getClass() + "endpointright");
 
-            vCaptClass = 'ggroupcaption';
+            vCaptClass = "ggroupcaption";
           }
 
           if (!vSingleCell && !vComb) {
             this.drawColsChart(vNumCols, vTmpRow, taskCellWidth, vMinDate, vMaxDate);
           }
-        }
-        else {
-          vTaskWidth = (vTaskWidth <= 0) ? 1 : vTaskWidth;
-
+        } else {
+          vTaskWidth = vTaskWidth <= 0 ? 1 : vTaskWidth;
 
           /**
            * DRAW THE BOXES FOR GANTT
@@ -627,48 +627,49 @@ export const GanttChart = function (pDiv, pFormat) {
           let vTmpDivCell, vTmpRow;
           if (vComb) {
             vTmpDivCell = vTmpDiv = this.vTaskList[i].getParItem().getCellDiv();
-          }
-          else {
+          } else {
             // Draw Task Bar which has colored bar div
-            vTmpRow = newNode(vTmpTBody, 'tr', this.vDivId + 'childrow_' + vID, 'glineitem gitem' + this.vFormat, null, null, null, ((this.vTaskList[i].getVisible() == 0) ? 'none' : null));
+            var differentDatesHighlight = "";
+            if (this.vTaskList[i].getEnd() && this.vTaskList[i].getPlanEnd() && this.vTaskList[i].getStart() && this.vTaskList[i].getPlanStart())
+              if (Date.parse(this.vTaskList[i].getEnd()) !== Date.parse(this.vTaskList[i].getPlanEnd()) || Date.parse(this.vTaskList[i].getStart()) !== Date.parse(this.vTaskList[i].getPlanStart()))
+                differentDatesHighlight = "gitemdifferent ";
+            vTmpRow = newNode(vTmpTBody, "tr", this.vDivId + "childrow_" + vID, `glineitem ${differentDatesHighlight}gitem` + this.vFormat, null, null, null, this.vTaskList[i].getVisible() == 0 ? "none" : null);
             this.vTaskList[i].setChildRow(vTmpRow);
             addThisRowListeners(this, this.vTaskList[i].getListChildRow(), vTmpRow);
 
-            const vTmpCell = newNode(vTmpRow, 'td', null, 'gtaskcell gtaskcellcolorbar', null, taskCellWidth, null, null);
-            vTmpDivCell = vTmpDiv = newNode(vTmpCell, 'div', null, 'gtaskcelldiv', '\u00A0\u00A0');
+            const vTmpCell = newNode(vTmpRow, "td", null, "gtaskcell gtaskcellcolorbar", null, taskCellWidth, null, null);
+            vTmpDivCell = vTmpDiv = newNode(vTmpCell, "div", null, "gtaskcelldiv", "\u00A0\u00A0");
           }
 
           // DRAW TASK BAR
-          vTmpDiv = newNode(vTmpDiv, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer', null, vTaskWidth, vTaskLeftPx);
+          vTmpDiv = newNode(vTmpDiv, "div", this.vDivId + "bardiv_" + vID, "gtaskbarcontainer", null, vTaskWidth, vTaskLeftPx);
           this.vTaskList[i].setBarDiv(vTmpDiv);
           let vTmpDiv2;
           if (this.vTaskList[i].getStartVar()) {
-
             // textbar
-            vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
+            vTmpDiv2 = newNode(vTmpDiv, "div", this.vDivId + "taskbar_" + vID, this.vTaskList[i].getClass(), null, vTaskWidth);
             if (this.vTaskList[i].getBarText()) {
-              newNode(vTmpDiv2, 'span', this.vDivId + 'tasktextbar_' + vID, 'textbar', this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
+              newNode(vTmpDiv2, "span", this.vDivId + "tasktextbar_" + vID, "textbar", this.vTaskList[i].getBarText(), this.vTaskList[i].getCompRestStr());
             }
             this.vTaskList[i].setTaskDiv(vTmpDiv2);
           }
 
-
           // PLANNED
           // If exist and one of them are different, show plan bar... show if there is no real vStart as well (just plan dates)
-          if (vTaskPlanLeftPx && ((vTaskPlanLeftPx != vTaskLeftPx || vTaskPlanRightPx != vTaskRightPx) || !this.vTaskList[i].getStartVar())) {
-            const vTmpPlanDiv = newNode(vTmpDivCell, 'div', this.vDivId + 'bardiv_' + vID, 'gtaskbarcontainer gplan', null, vTaskPlanRightPx, vTaskPlanLeftPx);
-            const vTmpPlanDiv2 = newNode(vTmpPlanDiv, 'div', this.vDivId + 'taskbar_' + vID, this.vTaskList[i].getClass() + ' gplan', null, vTaskPlanRightPx);
+          if (vTaskPlanLeftPx && (vTaskPlanLeftPx != vTaskLeftPx || vTaskPlanRightPx != vTaskRightPx || !this.vTaskList[i].getStartVar())) {
+            const vTmpPlanDiv = newNode(vTmpDivCell, "div", this.vDivId + "bardiv_" + vID, "gtaskbarcontainer gplan", null, vTaskPlanRightPx, vTaskPlanLeftPx);
+            const vTmpPlanDiv2 = newNode(vTmpPlanDiv, "div", this.vDivId + "taskbar_" + vID, this.vTaskList[i].getPlanClass() + " gplan", null, vTaskPlanRightPx);
             this.vTaskList[i].setPlanTaskDiv(vTmpPlanDiv2);
           }
 
           // and opaque completion div
           if (vTmpDiv2) {
-            newNode(vTmpDiv2, 'div', this.vDivId + 'complete_' + vID, this.vTaskList[i].getClass() + 'complete', null, this.vTaskList[i].getCompStr());
+            newNode(vTmpDiv2, "div", this.vDivId + "complete_" + vID, this.vTaskList[i].getClass() + "complete", null, this.vTaskList[i].getCompStr());
           }
 
           // caption
           if (vComb) vTmpItem = this.vTaskList[i].getParItem();
-          if (!vComb || (vComb && this.vTaskList[i].getParItem().getEnd() == this.vTaskList[i].getEnd())) vCaptClass = 'gcaption';
+          if (!vComb || (vComb && this.vTaskList[i].getParItem().getEnd() == this.vTaskList[i].getEnd())) vCaptClass = "gcaption";
 
           // Background cells
           if (!vSingleCell && !vComb && vTmpRow) {
@@ -680,24 +681,32 @@ export const GanttChart = function (pDiv, pFormat) {
       if (this.getCaptionType() && vCaptClass !== null) {
         let vCaptionStr: any;
         switch (this.getCaptionType()) {
-          case 'Caption': vCaptionStr = vTmpItem.getCaption(); break;
-          case 'Resource': vCaptionStr = vTmpItem.getResource(); break;
-          case 'Duration': vCaptionStr = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang]); break;
-          case 'Complete': vCaptionStr = vTmpItem.getCompStr(); break;
+          case "Caption":
+            vCaptionStr = vTmpItem.getCaption();
+            break;
+          case "Resource":
+            vCaptionStr = vTmpItem.getResource();
+            break;
+          case "Duration":
+            vCaptionStr = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang]);
+            break;
+          case "Complete":
+            vCaptionStr = vTmpItem.getCompStr();
+            break;
         }
-        newNode(vTmpDiv, 'div', null, vCaptClass, vCaptionStr, 120, (vCaptClass == 'gmilecaption') ? 12 : 0);
+        newNode(vTmpDiv, "div", null, vCaptClass, vCaptionStr, 120, vCaptClass == "gmilecaption" ? 12 : 0);
       }
 
       // Add Task Info div for tooltip
       if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
-        const vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
+        const vTmpDiv2 = newNode(vTmpDiv, "div", this.vDivId + "tt" + vID, null, null, null, null, "none");
         const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
         vTmpDiv2.appendChild(component);
         addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
       }
       // Add Plan Task Info div for tooltip
       if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv) {
-        const vTmpDiv2 = newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
+        const vTmpDiv2 = newNode(vTmpDiv, "div", this.vDivId + "tt" + vID, null, null, null, null, "none");
         const { component, callback } = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate);
         vTmpDiv2.appendChild(component);
         addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
@@ -706,47 +715,45 @@ export const GanttChart = function (pDiv, pFormat) {
 
     // Include the footer with the days/week/month...
     if (vSingleCell) {
-      const vTmpTFootTRow = newNode(vTmpTFoot, 'tr');
-      const vTmpTFootTCell = newNode(vTmpTFootTRow, 'td', null, null, null, '100%');
-      const vTmpTFootTCellTable = newNode(vTmpTFootTCell, 'table', null, 'gcharttableh', null, '100%');
-      const vTmpTFootTCellTableTBody = newNode(vTmpTFootTCellTable, 'tbody');
+      const vTmpTFootTRow = newNode(vTmpTFoot, "tr");
+      const vTmpTFootTCell = newNode(vTmpTFootTRow, "td", null, null, null, "100%");
+      const vTmpTFootTCellTable = newNode(vTmpTFootTCell, "table", null, "gcharttableh", null, "100%");
+      const vTmpTFootTCellTableTBody = newNode(vTmpTFootTCellTable, "tbody");
       vTmpTFootTCellTableTBody.appendChild(vDateRow.cloneNode(true));
     } else {
       vTmpTFoot.appendChild(vDateRow.cloneNode(true));
     }
 
-    return { vRightTable }
-  }
+    return { vRightTable };
+  };
 
   this.drawColsChart = function (vNumCols, vTmpRow, taskCellWidth, pStartDate = null, pEndDate = null) {
     let columnCurrentDay = null;
     // Find the Current day cell to put a different class
-    if (this.vShowWeekends !== false && pStartDate && pEndDate && (
-      this.vFormat == 'day' || this.vFormat == 'week'
-    )) {
+    if (this.vShowWeekends !== false && pStartDate && pEndDate && (this.vFormat == "day" || this.vFormat == "week")) {
       let curTaskStart = new Date(pStartDate.getTime());
       let curTaskEnd = new Date();
       let onePeriod = 3600000;
-      if (this.vFormat == 'day') {
+      if (this.vFormat == "day") {
         onePeriod *= 24;
-      } else if (this.vFormat == 'week') {
+      } else if (this.vFormat == "week") {
         onePeriod *= 24 * 7;
       }
       columnCurrentDay = Math.floor(calculateCurrentDateOffset(curTaskStart, curTaskEnd) / onePeriod) - 1;
     }
 
     for (let j = 0; j < vNumCols - 1; j++) {
-      let vCellFormat = 'gtaskcell gtaskcellcols';
-      if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5))) {
-        vCellFormat = 'gtaskcellwkend';
+      let vCellFormat = "gtaskcell gtaskcellcols";
+      if (this.vShowWeekends !== false && this.vFormat == "day" && (j % 7 == 4 || j % 7 == 5)) {
+        vCellFormat = "gtaskcellwkend";
       }
       //When is the column is the current day/week,give a different class
-      else if ((this.vFormat == 'week' || this.vFormat == 'day') && j === columnCurrentDay) {
-        vCellFormat = 'gtaskcellcurrent';
+      else if ((this.vFormat == "week" || this.vFormat == "day") && j === columnCurrentDay) {
+        vCellFormat = "gtaskcellcurrent";
       }
-      newNode(vTmpRow, 'td', null, vCellFormat, '\u00A0\u00A0', taskCellWidth);
+      newNode(vTmpRow, "td", null, vCellFormat, "\u00A0\u00A0", taskCellWidth);
     }
-  }
+  };
 
   /**
    *
@@ -767,7 +774,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
     if (this.vDebug) {
       bd = new Date();
-      console.info('before draw', bd);
+      console.info("before draw", bd);
     }
 
     // Process all tasks, reset parent date and completion % if task list has altered
@@ -779,70 +786,63 @@ export const GanttChart = function (pDiv, pFormat) {
     vMaxDate = getMaxDate(this.vTaskList, this.vFormat, this.getMaxDate() && coerceDate(this.getMaxDate()));
 
     // Calculate chart width variables.
-    if (this.vFormat == 'day') vColWidth = this.vDayColWidth;
-    else if (this.vFormat == 'week') vColWidth = this.vWeekColWidth;
-    else if (this.vFormat == 'month') vColWidth = this.vMonthColWidth;
-    else if (this.vFormat == 'quarter') vColWidth = this.vQuarterColWidth;
-    else if (this.vFormat == 'hour') vColWidth = this.vHourColWidth;
+    if (this.vFormat == "day") vColWidth = this.vDayColWidth;
+    else if (this.vFormat == "week") vColWidth = this.vWeekColWidth;
+    else if (this.vFormat == "month") vColWidth = this.vMonthColWidth;
+    else if (this.vFormat == "quarter") vColWidth = this.vQuarterColWidth;
+    else if (this.vFormat == "hour") vColWidth = this.vHourColWidth;
 
     // DRAW the Left-side of the chart (names, resources, comp%)
     let vLeftHeader = document.createDocumentFragment();
 
-
     /**
      * LIST HEAD
-    */
+     */
     const gListLbl = this.drawListHead(vLeftHeader);
-
 
     /**
      * LIST BODY
-    */
-    const { vNumRows,
-      vTmpContentTabWrapper } = this.drawListBody(vLeftHeader);
-
+     */
+    const { vNumRows, vTmpContentTabWrapper } = this.drawListBody(vLeftHeader);
 
     /**
      * CHART HEAD
      */
-    const { gChartLbl, vTaskLeftPx, vSingleCell, vRightHeader,
-      vDateRow, vNumCols } = this.drawChartHead(vMinDate, vMaxDate, vColWidth, vNumRows);
-
+    const { gChartLbl, vTaskLeftPx, vSingleCell, vRightHeader, vDateRow, vNumCols } = this.drawChartHead(vMinDate, vMaxDate, vColWidth, vNumRows);
 
     /**
      * CHART GRID
      */
-    const { vRightTable } = this.drawCharBody(vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl,
-      vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow)
+    const { vRightTable } = this.drawCharBody(vTaskLeftPx, vTmpContentTabWrapper, gChartLbl, gListLbl, vMinDate, vMaxDate, vSingleCell, vNumCols, vColWidth, vDateRow);
 
     if (this.vDebug) {
       const ad = new Date();
-      console.info('after tasks loop', ad, (ad.getTime() - bd.getTime()));
+      console.info("after tasks loop", ad, ad.getTime() - bd.getTime());
     }
 
     // MAIN VIEW: Appending all generated components to main view
     while (this.vDiv.hasChildNodes()) this.vDiv.removeChild(this.vDiv.firstChild);
-    const vTmpDiv = newNode(this.vDiv, 'div', null, 'gchartcontainer');
+    const vTmpDiv = newNode(this.vDiv, "div", null, "gchartcontainer");
     vTmpDiv.style.height = this.vTotalHeight;
 
-    let leftvTmpDiv = newNode(vTmpDiv, 'div', null, 'gmain gmainleft');
+    let leftvTmpDiv = newNode(vTmpDiv, "div", null, "gmain gmainleft");
     leftvTmpDiv.appendChild(vLeftHeader);
     // leftvTmpDiv.appendChild(vLeftTable);
 
-    let rightvTmpDiv = newNode(vTmpDiv, 'div', null, 'gmain gmainright');
+    let rightvTmpDiv = newNode(vTmpDiv, "div", null, "gmain gmainright");
     rightvTmpDiv.appendChild(vRightHeader);
     rightvTmpDiv.appendChild(vRightTable);
 
     vTmpDiv.appendChild(leftvTmpDiv);
     vTmpDiv.appendChild(rightvTmpDiv);
 
-    newNode(vTmpDiv, 'div', null, 'ggridfooter');
-    const vTmpDiv2 = newNode(this.getChartBody(), 'div', this.vDivId + 'Lines', 'glinediv');
-    if (this.vEvents.onLineContainerHover && typeof this.vEvents.onLineContainerHover === 'function') {
-      addListener('mouseover', this.vEvents.onLineContainerHover, vTmpDiv2);
-      addListener('mouseout', this.vEvents.onLineContainerHover, vTmpDiv2);
+    newNode(vTmpDiv, "div", null, "ggridfooter");
+    const vTmpDiv2 = newNode(this.getChartBody(), "div", this.vDivId + "Lines", "glinediv");
+    if (this.vEvents.onLineContainerHover && typeof this.vEvents.onLineContainerHover === "function") {
+      addListener("mouseover", this.vEvents.onLineContainerHover, vTmpDiv2);
+      addListener("mouseout", this.vEvents.onLineContainerHover, vTmpDiv2);
     }
-    vTmpDiv2.style.visibility = 'hidden';
+    vTmpDiv2.style.visibility = "hidden";
     this.setLines(vTmpDiv2);
 
     /* Quick hack to show the generated HTML on older browsers
@@ -851,20 +851,18 @@ export const GanttChart = function (pDiv, pFormat) {
           vDiv.appendChild(tmpGenSrc);
     //*/
 
-
     // LISTENERS: Now all the content exists, register scroll listeners
     addScrollListeners(this);
 
     // SCROLL: now check if we are actually scrolling the pane
-    if (this.vScrollTo != '') {
+    if (this.vScrollTo != "") {
       let vScrollDate = new Date(vMinDate.getTime());
       let vScrollPx = 0;
 
-      if (this.vScrollTo.substr && this.vScrollTo.substr(0, 2) == 'px') {
+      if (this.vScrollTo.substr && this.vScrollTo.substr(0, 2) == "px") {
         vScrollPx = parseInt(this.vScrollTo.substr(2));
-      }
-      else {
-        if (this.vScrollTo === 'today') {
+      } else {
+        if (this.vScrollTo === "today") {
           vScrollDate = new Date();
         } else if (this.vScrollTo instanceof Date) {
           vScrollDate = this.vScrollTo;
@@ -872,14 +870,14 @@ export const GanttChart = function (pDiv, pFormat) {
           vScrollDate = parseDateStr(this.vScrollTo, this.getDateInputFormat());
         }
 
-        if (this.vFormat == 'hour') vScrollDate.setMinutes(0, 0, 0);
+        if (this.vFormat == "hour") vScrollDate.setMinutes(0, 0, 0);
         else vScrollDate.setHours(0, 0, 0, 0);
         vScrollPx = getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends) - 30;
       }
       this.getChartBody().scrollLeft = vScrollPx;
     }
 
-    if (vMinDate.getTime() <= (new Date()).getTime() && vMaxDate.getTime() >= (new Date()).getTime()) {
+    if (vMinDate.getTime() <= new Date().getTime() && vMaxDate.getTime() >= new Date().getTime()) {
       this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends);
     } else this.vTodayPx = -1;
 
@@ -887,21 +885,21 @@ export const GanttChart = function (pDiv, pFormat) {
     let bdd;
     if (this.vDebug) {
       bdd = new Date();
-      console.info('before DrawDependencies', bdd);
+      console.info("before DrawDependencies", bdd);
     }
-    if (this.vEvents && typeof this.vEvents.beforeLineDraw === 'function') {
+    if (this.vEvents && typeof this.vEvents.beforeLineDraw === "function") {
       this.vEvents.beforeLineDraw();
     }
     this.DrawDependencies(this.vDebug);
     addListenerDependencies(this.vLineOptions);
 
     // EVENTS
-    if (this.vEvents && typeof this.vEvents.afterLineDraw === 'function') {
+    if (this.vEvents && typeof this.vEvents.afterLineDraw === "function") {
       this.vEvents.afterLineDraw();
     }
     if (this.vDebug) {
       const ad = new Date();
-      console.info('after DrawDependencies', ad, (ad.getTime() - bdd.getTime()));
+      console.info("after DrawDependencies", ad, ad.getTime() - bdd.getTime());
     }
 
     this.drawComplete(vMinDate, vColWidth, bd);
@@ -913,18 +911,18 @@ export const GanttChart = function (pDiv, pFormat) {
   this.drawComplete = function (vMinDate, vColWidth, bd) {
     if (this.vDebug) {
       const ad = new Date();
-      console.info('after draw', ad, (ad.getTime() - bd.getTime()));
+      console.info("after draw", ad, ad.getTime() - bd.getTime());
     }
 
     updateGridHeaderWidth(this);
     this.chartRowDateToX = function (date) {
       return getOffset(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends);
-    }
+    };
 
     if (this.vEvents && this.vEvents.afterDraw) {
-      this.vEvents.afterDraw()
+      this.vEvents.afterDraw();
     }
-  }
+  };
 
-  if (this.vDiv && this.vDiv.nodeName && this.vDiv.nodeName.toLowerCase() == 'div') this.vDivId = this.vDiv.id;
+  if (this.vDiv && this.vDiv.nodeName && this.vDiv.nodeName.toLowerCase() == "div") this.vDivId = this.vDiv.id;
 }; //GanttChart

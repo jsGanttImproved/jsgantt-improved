@@ -218,7 +218,7 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
 
         // Finally add the task
         pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup,
-          pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
+          pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration, undefined, undefined, pClass));
       }
     }
   }
@@ -250,15 +250,17 @@ export const AddXMLTask = function (pGanttVar, pXmlDoc) {
         let pCaption = getXMLNodeValue(Task[i], 'pCaption', 2, '');
         let pNotes = getXMLNodeValue(Task[i], 'pNotes', 2, '');
         let pClass = getXMLNodeValue(Task[i], 'pClass', 2, '');
+        let pPlanClass = getXMLNodeValue(Task[i], 'pPlanClass', 2, '');
         if (typeof pClass == 'undefined') {
           if (pGroup > 0) pClass = 'ggroupblack';
           else if (pMile > 0) pClass = 'gmilestone';
           else pClass = 'gtaskblue';
         }
+        if (typeof pPlanClass == 'undefined') pPlanClass = pClass;
 
         // Finally add the task
         pGanttVar.AddTaskItem(new TaskItem(pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp,
-          pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration));
+          pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGanttVar, pCost, pPlanStart, pPlanEnd, pDuration, undefined, undefined, pPlanClass));
       }
     }
   }
@@ -318,6 +320,7 @@ export const getXMLTask = function (pID, pIdx) {
     let vTmpFrag = document.createDocumentFragment();
     let vTmpDiv = newNode(vTmpFrag, 'div', null, null, this.vTaskList[vIdx].getNotes().innerHTML);
     vTask += '<pNotes>' + vTmpDiv.innerHTML + '</pNotes>';
+    vTask += '<pPlanClass>' + this.vTaskList[vIdx].getPlanClass() + '</pPlanClass>';
     vTask += '</task>';
   }
   return vTask;

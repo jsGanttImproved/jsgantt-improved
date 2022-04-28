@@ -127,5 +127,6 @@
 		<pOpen>1</pOpen>
 		<pDepend>60,70</pDepend>
 		<pCaption>Eduardo</pCaption>
+		<pPlanClass>gtaskyellow</pPlanClass>
 	</task>
 </project>
