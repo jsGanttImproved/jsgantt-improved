@@ -125,6 +125,21 @@ g.Draw();
     * From external files (including experimental support for MS Project XML files)
     * From JavaScript Strings
   * Support for Internationalization 
+    * Chinese (cn)
+    * Czech (cs)
+    * Dutch (Standard)
+    * selected>English (en)
+    * French (fr)
+    * German (de)
+    * Hungarian (hu)
+    * Indonesian (id)
+    * Italian (it)
+    * Japanese (ja)
+    * Portuguese (pt)
+    * Russian (ru)
+    * Spanish (es)
+    * Swedish (sv)
+    * Turkish (tr)
 
 ## Documentation
 
@@ -139,14 +154,21 @@ Its easy to get it set:
 
 * Clone this repo
 * Install lib dependencies: `npm i` 
-* Install global dependencies: `npm i -g browserify nodemon onchange tsc` 
-* Run the demo, This will start a `localhost:8080` with a live example:  `npm start`. 
+* Install global dependencies: `npm i -g browserify nodemon onchange tsc`
+* Compile final js to be used on demo: `npm run dist`
+* Run the demo with a live example:  `npm start`. 
 * You can check the demo gantt that we use for testing features at: `http://127.0.0.1:8080/docs/demo.html`
 * Use `npm run watch` or do your change in `src` and restart this command refresh the changes.
 
 For testing:
 * Install global dependencies: `npm i -g webdriver-manager`  
 * Install selenium webdriver: `npm run webdriver`, it will install something like node_modules/webdriver-manager/selenium/chromedriver_88.0.4324.96.zip
+
+node node_modules/protractor/bin/webdriver-manager update
+apt install chromium
+
+apt install chromium-bsu
+
 * Use `npm run test` with e2e tests.
 * Or use `npm run watch:test` to keep watching the tests
 
