@@ -114,6 +114,12 @@ export const includeGetSet = function () {
       for (let vKey in this.vLangs['en']) this.vLangs[pLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : this.vLangs['en'][vKey];
     }
   };
+  this.setCustomLang = function (pVals) {
+    this.vLangs[this.vLang] = new Object();
+    for (var vKey in this.vLangs['en']) {
+      this.vLangs[this.vLang][vKey] = (pVals[vKey]) ? document.createTextNode(pVals[vKey]).data : this.vLangs['en'][vKey];
+    }
+  };
   this.setTotalHeight = function (pVal) { this.vTotalHeight = pVal; };
 
   // EVENTS
