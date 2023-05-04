@@ -4824,14 +4824,16 @@ function isParentElementOrSelf(child, parent) {
 }
 exports.isParentElementOrSelf = isParentElementOrSelf;
 exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
+    var documentElement = document.documentElement;
+    var bodyElement = document.getElementsByTagName('body')[0];
     var vCurTopBuf = 3;
     var vCurLeftBuf = 5;
     var vCurBotBuf = 3;
     var vCurRightBuf = 15;
     var vMouseX = (e) ? e.clientX : window.event.clientX;
     var vMouseY = (e) ? e.clientY : window.event.clientY;
-    var vViewportX = document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-    var vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+    var vViewportX = (documentElement === null || documentElement === void 0 ? void 0 : documentElement.clientWidth) || (bodyElement === null || bodyElement === void 0 ? void 0 : bodyElement.clientWidth);
+    var vViewportY = (documentElement === null || documentElement === void 0 ? void 0 : documentElement.clientHeight) || (bodyElement === null || bodyElement === void 0 ? void 0 : bodyElement.clientHeight);
     var vNewX = vMouseX;
     var vNewY = vMouseY;
     var screenX = screen.availWidth || window.innerWidth;
@@ -4840,8 +4842,8 @@ exports.updateFlyingObj = function (e, pGanttChartObj, pTimer) {
     var vOldY = parseInt(pGanttChartObj.vTool.style.top);
     if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
         // the clientX and clientY properties include the left and top borders of the client area
-        vMouseX -= document.documentElement.clientLeft;
-        vMouseY -= document.documentElement.clientTop;
+        vMouseX -= documentElement === null || documentElement === void 0 ? void 0 : documentElement.clientLeft;
+        vMouseY -= documentElement === null || documentElement === void 0 ? void 0 : documentElement.clientTop;
         var vZoomFactor = exports.getZoomFactor();
         if (vZoomFactor != 1) { // IE 7 at non-default zoom level
             vMouseX = Math.round(vMouseX / vZoomFactor);

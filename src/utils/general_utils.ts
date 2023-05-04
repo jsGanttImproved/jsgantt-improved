@@ -313,14 +313,16 @@ export function isParentElementOrSelf(child, parent) {
 
 
 export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
+  const documentElement = document.documentElement;
+  const bodyElement = document.getElementsByTagName('body')[0];
   let vCurTopBuf = 3;
   let vCurLeftBuf = 5;
   let vCurBotBuf = 3;
   let vCurRightBuf = 15;
   let vMouseX = (e) ? e.clientX : (<MouseEvent>window.event).clientX;
   let vMouseY = (e) ? e.clientY : (<MouseEvent>window.event).clientY;
-  let vViewportX = document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-  let vViewportY = document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+  let vViewportX = documentElement?.clientWidth || bodyElement?.clientWidth;
+  let vViewportY = documentElement?.clientHeight || bodyElement?.clientHeight;
   let vNewX = vMouseX;
   let vNewY = vMouseY;
   let screenX = screen.availWidth || window.innerWidth;
@@ -330,8 +332,8 @@ export const updateFlyingObj = function (e, pGanttChartObj, pTimer) {
 
   if (navigator.appName.toLowerCase() == 'microsoft internet explorer') {
     // the clientX and clientY properties include the left and top borders of the client area
-    vMouseX -= document.documentElement.clientLeft;
-    vMouseY -= document.documentElement.clientTop;
+    vMouseX -= documentElement?.clientLeft;
+    vMouseY -= documentElement?.clientTop;
 
     let vZoomFactor = getZoomFactor();
     if (vZoomFactor != 1) {// IE 7 at non-default zoom level
