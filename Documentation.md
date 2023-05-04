@@ -308,6 +308,7 @@ The following options take a single numeric parameter; a value of 1 will enable 
 |_setAdditionalHeaders:_ |Set object with headers values for additional columns . ex : `{ category: { title: 'Category' }` }|
 |_setColumnOrder:_ |Set order of the columns that will be displayed, the default value is : `[  'vShowRes','vShowDur','vShowComp','vShowStartDate','vShowEndDate','vShowPlanStartDate','vShowPlanEndDate','vShowCost','vAdditionalHeaders','vShowAddEntries']` }|
 |_setResources():_  |Set the list of possible resources, must be an array of objects, ex: `[{ id: 1, name: 'Mario' } , { id: 2, name: 'Henrique' }]`| 
+|_setCustomLang():_  |Set custom language vars, ex: `{'january': 'My January text'}`| 
 |_setTotalHeight():_ |Set component height as CSS height (e.g. "300px"). If set - the header is fixed and content is scrollable if needed. Otherwise component height is defined by content|
 |_setMinDate():_ |Set minimum date further than minimum task date. It doesn't trim any task if it starts before this minimum date, but can extend the chart to the left. This may be useful if you want to draw some custom elements on the chart or want to fix the time range regardless of the content|
 |_setMaxDate():_ |Similar to _setMinDate()_|

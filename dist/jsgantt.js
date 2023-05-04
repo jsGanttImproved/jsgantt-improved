@@ -2701,7 +2701,7 @@ var nl = {
     'planenddate': 'Geplande einddatum',
     'cost': 'Kosten',
     'moreinfo': 'Meer informatie',
-    'nodata': 'No tasks found',
+    'nodata': 'Geen taken gevonden',
     'notes': 'Notities',
     'january': 'januari',
     'february': 'februari',
