@@ -1773,7 +1773,7 @@ exports.addJSONTask = function (pGanttVar, pJsonObj) {
 },{"./task":10,"./utils/general_utils":13}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tr = exports.sv = exports.ru = exports.pt = exports.pl = exports.nl = exports.ko = exports.ja = exports.id = exports.it = exports.hu = exports.he = exports.fr = exports.fi = exports.de = exports.es = exports.en = exports.cs = exports.cn = exports.ar = void 0;
+exports.ua = exports.tr = exports.sv = exports.ru = exports.pt = exports.pl = exports.nl = exports.ko = exports.ja = exports.id = exports.it = exports.hu = exports.he = exports.fr = exports.fi = exports.de = exports.es = exports.en = exports.cs = exports.cn = exports.ar = void 0;
 var ar = {
     'format': 'التنسيق',
     'hour': 'ساعة',
@@ -3257,6 +3257,81 @@ var tr = {
     'sat': 'Cmt'
 };
 exports.tr = tr;
+var ua = {
+    'january': 'Січень',
+    'february': 'Лютий',
+    'march': 'Березень',
+    'april': 'Квітень',
+    'maylong': 'Травень',
+    'june': 'Червень',
+    'july': 'Липень',
+    'august': 'Серпень',
+    'september': 'Вересень',
+    'october': 'Жовтень',
+    'november': 'Листопад',
+    'december': 'Грудень',
+    'jan': 'Січ',
+    'feb': 'Лют',
+    'mar': 'Бер',
+    'apr': 'Кві',
+    'may': 'Тра',
+    'jun': 'Чер',
+    'jul': 'Лип',
+    'aug': 'Сер',
+    'sep': 'Вер',
+    'oct': 'Жов',
+    'nov': 'Лис',
+    'dec': 'Гру',
+    'sunday': 'Неділя',
+    'monday': 'Понеділок',
+    'tuesday': 'Вівторок',
+    'wednesday': 'Середа',
+    'thursday': 'Четвер',
+    'friday': 'П\'ятниця',
+    'saturday': 'Субота',
+    'sun': ' Нд',
+    'mon': 'Пн',
+    'tue': ' Вт',
+    'wed': 'Ср',
+    'thu': ' Чт',
+    'fri': ' Пт',
+    'sat': ' Сб',
+    'res': 'Ресурс',
+    'dur': 'Тривалість',
+    'comp': '% виконання',
+    'completion': 'Виконано',
+    'startdate': 'Поч. дата',
+    'planstartdate': 'План Поч. дата',
+    'enddate': 'Кін. дата',
+    'planenddate': 'План Кін. дата',
+    'cost': 'Вартість',
+    'moreinfo': 'Деталі',
+    'nodata': 'Нічого не знайдено',
+    'notes': 'Нотатки',
+    'format': 'Формат',
+    'hour': 'Година',
+    'day': 'День',
+    'week': 'Неділя',
+    'month': 'Місяць',
+    'quarter': 'Кварт',
+    'hours': 'Годин',
+    'days': 'Днів',
+    'weeks': 'Тижнів',
+    'months': 'Місяців',
+    'quarters': 'Кварталів',
+    'hr': 'г.',
+    'dy': 'дн.',
+    'wk': 'тиж.',
+    'mth': 'міс.',
+    'qtr': 'кв.',
+    'hrs': 'г.',
+    'dys': 'дн.',
+    'wks': 'тиж.',
+    'mths': 'міс.',
+    'qtrs': 'кв.',
+    'tooltipLoading': 'Загрузка...'
+};
+exports.ua = ua;
 
 },{}],9:[function(require,module,exports){
 "use strict";

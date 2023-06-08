@@ -21,9 +21,7 @@ For **Angular** use the component [ng-gantt](https://github.com/jsGanttImproved/
 
 For **React** use the component [react-jsgantt](https://github.com/jsGanttImproved/react-jsgantt) 
 
-
-For **Vue** , see this example: https://stackblitz.com/edit/vue-jsgantt
-
+For **Vue** , see this example: https://stackblitz.com/edit/vue-jsgantt-3
 
 For **.NET** , see this example: [.NET Documentation](./docs/DotNet.md)
 
@@ -124,22 +122,32 @@ g.Draw();
   * Load Gantt from JSON and XML
     * From external files (including experimental support for MS Project XML files)
     * From JavaScript Strings
-  * Support for Internationalization 
+  
+  ### Internationalization 
+
+  Support for languages below:
+  
+    * Arabic (ar)
     * Chinese (cn)
     * Czech (cs)
     * Dutch (Standard)
-    * selected>English (en)
+    * English (en)
     * French (fr)
+    * Finnish (fi)
     * German (de)
+    * Hebrew (he)
     * Hungarian (hu)
+    * Korean (ko)
     * Indonesian (id)
     * Italian (it)
     * Japanese (ja)
     * Portuguese (pt)
+    * Polish (pl)
     * Russian (ru)
     * Spanish (es)
     * Swedish (sv)
     * Turkish (tr)
+    * Ukraininan (ua)
 
 ## Documentation
 
