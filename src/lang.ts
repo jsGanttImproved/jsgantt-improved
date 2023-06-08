@@ -146,6 +146,7 @@ const scn = {
   'mths': '月',
   'qtrs': '季'
 }
+
 const cn = {
   'january': '一月',
   'february': '二月',
