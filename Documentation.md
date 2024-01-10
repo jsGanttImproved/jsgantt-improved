@@ -238,7 +238,7 @@ Method definition:
 
 | Parameter | Description |
 |:--------|:------------------------------------------------|
-|_rowID:_|(required) the unique numeric ID of the item row to be removed (`task.getID()`)|
+|_rowID:_|(required) the unique numeric ID of the item row / ID to be removed (`task.getID()`)|
 
 If the task removed is a group item, all child tasks will also be removed.
 
