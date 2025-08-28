@@ -1,6 +1,6 @@
 {
   "name": "jsgantt-improved",
-  "version": "2.8.10",
+  "version": "3.0.0",
   "description": "jsgantt-improved",
   "main": "dist/index.js",
   "scripts": {
@@ -29,21 +29,21 @@
   },
   "homepage": "https://jsganttimproved.github.io/jsgantt-improved/docs/",
   "dependencies": {
-    "@types/node": "^12.0.10",
+    "@types/node": "^24.3.0",
     "webdriver-manager": "^13.0.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.5",
-    "@types/jasmine": "^3.3.0",
-    "chai": "^4.1.2",
-    "http-server": "^0.11.1",
-    "jasmine": "^3.3.0",
-    "jasmine-core": "^3.3.0",
-    "jasmine-spec-reporter": "^4.2.1",
-    "mocha": "^5.2.0",
-    "protractor": "^5.4.1",
-    "selenium-webdriver": "^4.0.0-alpha.1",
-    "ts-node": "^7.0.1",
-    "typescript": "^3.0.3"
+    "@types/chai": "^5.2.2",
+    "@types/jasmine": "^5.1.9",
+    "chai": "^6.0.1",
+    "http-server": "^14.1.1",
+    "jasmine": "^5.9.0",
+    "jasmine-core": "^5.9.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "mocha": "^11.7.1",
+    "protractor": "^7.0.0",
+    "selenium-webdriver": "^4.35.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }
