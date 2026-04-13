@@ -1,5 +1,5 @@
 module.exports = {
   require: ['ts-node/register'],
-  spec: 'test/**/*.ts',
+  spec: 'test/unit/**/*.ts',
   timeout: 10000
 };

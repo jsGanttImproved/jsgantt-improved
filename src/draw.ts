@@ -15,7 +15,7 @@ import {
   removeListener,
 } from "./events";
 import { calculateCurrentDateOffset, getOffset, getScrollbarWidth, printChart } from "./utils/general_utils";
-import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, processRows, ClearTasks } from "./task";
+import { createTaskInfo, AddTaskItem, AddTaskItemObject, RemoveTaskItem, GetTaskByOriginalID, processRows, ClearTasks } from "./task";
 
 import { getXMLProject, getXMLTask } from "./xml";
 import { COLUMN_ORDER, draw_header, draw_bottom, draw_task_headings } from "./draw_columns";
@@ -162,6 +162,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.AddTaskItem = AddTaskItem;
   this.AddTaskItemObject = AddTaskItemObject;
   this.RemoveTaskItem = RemoveTaskItem;
+  this.GetTaskByOriginalID = GetTaskByOriginalID;
   this.ClearTasks = ClearTasks;
 
   this.getXMLProject = getXMLProject;
