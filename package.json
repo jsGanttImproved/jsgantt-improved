@@ -15,7 +15,8 @@
     "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && cp dist/jsgantt.js dist/jsgantt.css docs/ && echo 'DIST finished'",
     "publishnpm": "npm run dist && npm publish",
     "demo-full": "npm run dist && npm run start",
-    "deploy:demo": "npm run dist && mkdir -p /var/www/test/jsgantt-improved && cp -r docs/. /var/www/test/jsgantt-improved/ && cp dist/jsgantt.js dist/jsgantt.css /var/www/test/jsgantt-improved/"
+    "deploy:demo": "npm run dist && mkdir -p /var/www/test/jsgantt-improved && cp -r docs/. /var/www/test/jsgantt-improved/ && cp dist/jsgantt.js dist/jsgantt.css /var/www/test/jsgantt-improved/",
+    "test-e2e": "npx playwright test"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "@types/node": "^24.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/chai": "^4.1.5",
     "chai": "^4.1.2",
     "http-server": "^14.1.1",
