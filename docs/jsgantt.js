@@ -380,17 +380,17 @@ var GanttChart = function (pDiv, pFormat) {
                 vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
             }
             else if (this.vFormat == "year") {
-                var thisDecade = Math.floor(vTmpDate.getFullYear() / 10) * 10;
+                // Span all remaining years in one empty major cell — the minor header
+                // (individual year labels) already provides full context.
                 var countDate = new Date(vTmpDate);
                 vColSpan = 0;
-                while (countDate.getTime() <= vMaxDate.getTime() &&
-                    Math.floor(countDate.getFullYear() / 10) * 10 === thisDecade) {
+                while (countDate.getTime() <= vMaxDate.getTime()) {
                     vColSpan++;
                     countDate.setFullYear(countDate.getFullYear() + 1);
                 }
                 var vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
-                (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vYearMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
-                vTmpDate.setFullYear(thisDecade + 10, 0, 1);
+                (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, "", vColWidth * vColSpan);
+                vTmpDate.setTime(vMaxDate.getTime() + 1); // advance past max to exit loop
             }
             else if (this.vFormat == "hour") {
                 vColSpan = 24 - vTmpDate.getHours();

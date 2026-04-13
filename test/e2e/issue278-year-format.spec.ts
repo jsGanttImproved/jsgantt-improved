@@ -121,13 +121,13 @@ test.describe('Issue #278 — Year format', () => {
     }
   });
 
-  test('major header shows decade grouping (2020s)', async ({ page }) => {
+  test('major header is a single empty spanning cell (year labels in minor row are sufficient)', async ({ page }) => {
     const labels = await getMajorHeaderLabels(page);
 
-    expect(labels.length).toBeGreaterThan(0);
-    // All years 2020–2026 fall in the 2020s decade.
-    // The major header shows the decade start year ("2020") for that group.
-    expect(labels).toContain('2020');
+    // The year format renders one empty major cell spanning all columns.
+    // Individual year labels (2020, 2021, …) live in the minor header row.
+    expect(labels.length).toBe(1);
+    expect(labels[0]).toBe('');
   });
 
   test('task bars have a positive width', async ({ page }) => {
