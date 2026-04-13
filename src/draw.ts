@@ -30,7 +30,8 @@ import { parseDateFormatStr, getMinDate, coerceDate, getMaxDate, formatDateStr, 
  * @param pFormat (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
  */
 export const GanttChart = function (pDiv, pFormat) {
-  this.vDiv = pDiv;
+  // Accept either a native DOM element or a jQuery-wrapped element
+  this.vDiv = (pDiv && pDiv[0] instanceof Element) ? pDiv[0] : pDiv;
   this.vFormat = pFormat;
   this.vDivId = null;
   this.vUseFade = 1;
