@@ -57,8 +57,8 @@
   <link href="https://fonts.googleapis.com/css?family=Cookie|Satisfy|Kelly+Slab|Overlock" rel="stylesheet">
 
   <!-- jsGanttImproved App -->
-  <link href="../dist/jsgantt.css" rel="stylesheet" type="text/css" />
-  <script src="../dist/jsgantt.js" type="text/javascript"></script>
+  <link href="jsgantt.css" rel="stylesheet" type="text/css" />
+  <script src="jsgantt.js" type="text/javascript"></script>
 </head>
 
 <!-- Content -->
@@ -270,48 +270,87 @@
     </small>
 
 
-    <br /><br />
-
-    <div style="padding:12px 16px;background:#f8f9fa;border:1px solid #dee2e6;border-radius:4px;font-size:13px;font-family:monospace">
-      <strong style="font-family:sans-serif;font-size:14px">setDepend() — live demo</strong>
-      &nbsp;acting on task <em>35 "Just plan dates"</em>
-      <br><br>
-      <button onclick="
-        var idx = g.getArrayLocationByID(35);
-        g.vTaskList[idx].setDepend('32FS');
-        g.Draw();
-        document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (types: ' + g.vTaskList[idx].getDepType() + ')';
-      " style="margin-right:8px;padding:4px 10px">setDepend('32FS')</button>
-
-      <button onclick="
-        var idx = g.getArrayLocationByID(35);
-        g.vTaskList[idx].setDepend('A342,343');
-        g.Draw();
-        document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (types: ' + g.vTaskList[idx].getDepType() + ')';
-      " style="margin-right:8px;padding:4px 10px">setDepend('A342,343') — multi</button>
-
-      <button onclick="
-        var idx = g.getArrayLocationByID(35);
-        g.vTaskList[idx].setDepend(null);
-        g.Draw();
-        document.getElementById('depend-status').textContent = '(none)';
-      " style="margin-right:8px;padding:4px 10px">setDepend(null) — clear</button>
-
-      <button onclick="
-        var idx = g.getArrayLocationByID(35);
-        g.vTaskList[idx].setDepend('333');
-        g.Draw();
-        document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (types: ' + g.vTaskList[idx].getDepType() + ')';
-      " style="padding:4px 10px">Reset to original ('333')</button>
-
-      <br><br>
-      <span style="font-family:sans-serif;font-size:12px">getDepend() → </span>
-      <span id="depend-status" style="color:#0066cc">333 (types: FS)</span>
-    </div>
-
   </div>
-    <div id="embedded-Gantt">
-    </div>
+
+  <div id="embedded-Gantt"></div>
+
+  <br />
+
+  <!-- Bug scenario playground — each entry has a link to the ticket and a button to reproduce -->
+  <div style="padding:12px 16px;background:#fff8e1;border:1px solid #ffe082;border-radius:4px;font-size:13px">
+    <strong style="font-family:sans-serif;font-size:14px">Bug scenario playground</strong>
+    <span style="font-family:sans-serif;font-size:12px;color:#666;margin-left:8px">
+      Click a button to load the scenario. Use "Reset" to return to the default data.
+    </span>
+
+    <table style="margin-top:10px;border-collapse:collapse;width:100%;font-family:sans-serif;font-size:12px">
+      <thead>
+        <tr style="border-bottom:1px solid #ffe082">
+          <th style="text-align:left;padding:4px 8px;width:80px">Ticket</th>
+          <th style="text-align:left;padding:4px 8px">Description</th>
+          <th style="text-align:left;padding:4px 8px;width:120px">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:6px 8px;vertical-align:top">
+            <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/284" target="_blank" style="color:#0066cc">#284</a>
+          </td>
+          <td style="padding:6px 8px;vertical-align:top">
+            <strong>End date on last day of week renders extra empty week.</strong><br>
+            When a task ended on Sunday (with Mon-first), the chart added a blank extra week after it.
+            This scenario shows tasks whose end dates fall on Sundays — the chart should end cleanly with no trailing empty week.
+          </td>
+          <td style="padding:6px 8px;vertical-align:top">
+            <button onclick="loadBugScenario('bug284', 'week')" style="padding:4px 10px">Load #284</button>
+          </td>
+        </tr>
+        <tr style="border-top:1px solid #ffe082">
+          <td style="padding:6px 8px;vertical-align:top" colspan="3">
+            <div style="font-family:monospace">
+              <strong style="font-family:sans-serif">setDepend() — live demo</strong>
+              &nbsp;acting on task <em>35 "Just plan dates"</em> (default data only)
+              <br><br>
+              <button onclick="
+                var idx = g.getArrayLocationByID(35);
+                g.vTaskList[idx].setDepend('32FS');
+                g.Draw();
+                document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (types: ' + g.vTaskList[idx].getDepType() + ')';
+              " style="margin-right:8px;padding:4px 10px">setDepend('32FS')</button>
+
+              <button onclick="
+                var idx = g.getArrayLocationByID(35);
+                g.vTaskList[idx].setDepend('A342,343');
+                g.Draw();
+                document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (types: ' + g.vTaskList[idx].getDepType() + ')';
+              " style="margin-right:8px;padding:4px 10px">setDepend('A342,343') — multi</button>
+
+              <button onclick="
+                var idx = g.getArrayLocationByID(35);
+                g.vTaskList[idx].setDepend(null);
+                g.Draw();
+                document.getElementById('depend-status').textContent = '(none)';
+              " style="margin-right:8px;padding:4px 10px">setDepend(null) — clear</button>
+
+              <button onclick="
+                var idx = g.getArrayLocationByID(35);
+                g.vTaskList[idx].setDepend('333');
+                g.Draw();
+                document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (types: ' + g.vTaskList[idx].getDepType() + ')';
+              " style="padding:4px 10px">Reset to original ('333')</button>
+
+              <br><br>
+              <span style="font-family:sans-serif;font-size:12px">getDepend() → </span>
+              <span id="depend-status" style="color:#0066cc">333 (types: FS)</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br>
+    <button onclick="start({});" style="padding:4px 10px">Reset to default data</button>
+  </div>
 
 </body>
 <script type="text/javascript" src="index.js"></script>

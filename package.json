@@ -12,7 +12,7 @@
     "test-unit": "TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS='--loader ts-node/esm' mocha",
     "test-file": "TS_NODE_TRANSPILE_ONLY=true npx mocha --require ts-node/register",
     "browserify": "browserify dist/index.js --standalone JSGantt > dist/jsgantt.js",
-    "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && echo 'DIST finished'",
+    "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && cp dist/jsgantt.js dist/jsgantt.css docs/ && echo 'DIST finished'",
     "publishnpm": "npm run dist && npm publish",
     "demo-full": "npm run dist && npm run start",
     "deploy:demo": "npm run dist && mkdir -p /var/www/test/jsgantt-improved && cp -r docs/. /var/www/test/jsgantt-improved/ && cp dist/jsgantt.js dist/jsgantt.css /var/www/test/jsgantt-improved/"

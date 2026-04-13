@@ -257,6 +257,110 @@ describe('getMinDate — vFirstDayOfWeek', () => {
   });
 });
 
+// ── Issue #284: end date on last day of week renders extra empty week ─────────
+
+describe('getMaxDate — issue #284 (end date on last day of week)', () => {
+  // 2020-02-23 is a Sunday. With firstDayOfWeek=1 (Monday), Sunday is the last
+  // day of the week. Before the fix, getMaxDate would +1 to Monday and then
+  // advance all the way to the NEXT Sunday, causing a blank extra week.
+
+  // ── Core regression: exact date must not overshoot ────────────────────────
+
+  it('day format: end on Sunday (Mon-first) stays at that exact Sunday', () => {
+    const task = makeTask({ id: 284, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-23') });
+    const maxDate = getMaxDate([task], 'day', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate to be Sun 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  it('week format: end on Sunday (Mon-first) stays at that exact Sunday', () => {
+    const task = makeTask({ id: 285, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-23') });
+    const maxDate = getMaxDate([task], 'week', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate to be Sun 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  it('exact date: year=2020, month=Feb, date=23 (not the following Sun 2020-03-01)', () => {
+    // Regression guard: the wrong answer before the fix was 2020-03-01 (next Sunday).
+    const task = makeTask({ id: 2840, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-23') });
+    const maxDate = getMaxDate([task], 'week', undefined, 1);
+    expect(maxDate.getFullYear()).to.equal(2020);
+    expect(maxDate.getMonth()).to.equal(1, 'should be February (month index 1)');
+    expect(maxDate.getDate()).to.equal(23, 'should be the 23rd, not the 1st of March');
+  });
+
+  // ── Other firstDayOfWeek values ───────────────────────────────────────────
+
+  it('day format: end on Saturday (lastDayOfWeek for Sun-first) stays at that Saturday', () => {
+    // firstDayOfWeek=0 → lastDayOfWeek=(0+6)%7=6=Saturday. 2020-02-22 is Sat.
+    const task = makeTask({ id: 286, parent: 0, start: new Date('2020-02-16'), end: new Date('2020-02-22') });
+    const maxDate = getMaxDate([task], 'day', undefined, 0);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-22').toDateString(),
+      `Expected maxDate to be Sat 2020-02-22, got ${maxDate.toDateString()}`);
+  });
+
+  it('week format: end on Friday (lastDayOfWeek for Sat-first) stays at that Friday', () => {
+    // firstDayOfWeek=6 → lastDayOfWeek=(6+6)%7=5=Friday. 2020-02-21 is Fri.
+    const task = makeTask({ id: 2861, parent: 0, start: new Date('2020-02-17'), end: new Date('2020-02-21') });
+    const maxDate = getMaxDate([task], 'week', undefined, 6);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-21').toDateString(),
+      `Expected maxDate to be Fri 2020-02-21, got ${maxDate.toDateString()}`);
+  });
+
+  // ── Mid-week still advances correctly (regression guard) ──────────────────
+
+  it('day format: end mid-week (Wed) still advances to end of that week (Sun)', () => {
+    // 2020-02-19 is Wednesday. With Mon-first, should advance to 2020-02-23 (Sun).
+    const task = makeTask({ id: 287, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-19') });
+    const maxDate = getMaxDate([task], 'day', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate to advance to Sun 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  it('week format: end mid-week (Tue) still advances to end of that week (Sun)', () => {
+    // 2020-02-18 is Tuesday.
+    const task = makeTask({ id: 2871, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-18') });
+    const maxDate = getMaxDate([task], 'week', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate to advance to Sun 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  // ── planEnd on last day of week ────────────────────────────────────────────
+
+  it('planEnd on Sunday drives maxDate without overshooting', () => {
+    // pEnd is Wednesday, but planEnd is Sunday — planEnd wins and should not overshoot.
+    const task = makeTask({
+      id: 2881, parent: 0,
+      start: new Date('2020-02-14'), end: new Date('2020-02-19'),
+      planEnd: new Date('2020-02-23'),
+    });
+    const maxDate = getMaxDate([task], 'week', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `planEnd on Sun should set maxDate to 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  // ── Multiple tasks ─────────────────────────────────────────────────────────
+
+  it('multiple tasks: latest task ends on Sunday, maxDate stops at that Sunday', () => {
+    const t1 = makeTask({ id: 2891, parent: 0, start: new Date('2020-02-10'), end: new Date('2020-02-18') });
+    const t2 = makeTask({ id: 2892, parent: 0, start: new Date('2020-02-17'), end: new Date('2020-02-23') });
+    const maxDate = getMaxDate([t1, t2], 'week', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  it('multiple tasks: task ending on Sunday is not the latest — mid-week task drives maxDate', () => {
+    // t1 ends on Sunday (week 1), t2 ends Thursday the following week.
+    // maxDate should advance to the Sunday of the week containing t2.
+    const t1 = makeTask({ id: 2893, parent: 0, start: new Date('2020-02-10'), end: new Date('2020-02-23') });
+    const t2 = makeTask({ id: 2894, parent: 0, start: new Date('2020-02-24'), end: new Date('2020-02-27') });
+    const maxDate = getMaxDate([t1, t2], 'week', undefined, 1);
+    // 2020-02-27 is Thursday → advances to Sun 2020-03-01
+    expect(maxDate.toDateString()).to.equal(new Date('2020-03-01').toDateString(),
+      `Expected maxDate 2020-03-01 (Sun of t2's week), got ${maxDate.toDateString()}`);
+  });
+});
+
 describe('getMaxDate — vFirstDayOfWeek', () => {
   // 2025-04-09 is a Wednesday.
   const task = makeTask({ id: 110, parent: 0, start: new Date('2025-04-09'), end: new Date('2025-04-09') });

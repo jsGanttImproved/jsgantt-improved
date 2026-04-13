@@ -29,11 +29,11 @@ For **.NET** , see this example: [.NET Documentation](./docs/DotNet.md)
 ## Example
 
 
-You can view a Solo live example at:
+You can view a live example at:
 
-* https://jsganttimproved.github.io/jsgantt-improved/docs/demo.html
+* https://jsganttimproved.github.io/jsgantt-improved/demo.html
 
-Or use a live coding example at Codenpen:
+Or use a live coding example at Codepen:
 
 * https://codepen.io/mariomol/pen/mQzBPV
 
@@ -164,8 +164,7 @@ Its easy to get it set:
 * Install lib dependencies: `npm i` 
 * Install global dependencies: `npm i -g browserify nodemon onchange tsc`
 * Compile final js to be used on demo: `npm run dist`
-* Run the demo with a live example:  `npm start`. 
-* You can check the demo gantt that we use for testing features at: `http://127.0.0.1:8080/docs/demo.html`
+* Run the demo with a live example: `npm start` then open `http://127.0.0.1:8080/docs/demo.html`
 * Use `npm run watch` or do your change in `src` and restart this command refresh the changes.
 
 For testing:

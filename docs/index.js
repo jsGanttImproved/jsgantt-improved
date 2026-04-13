@@ -230,6 +230,38 @@ function drawCustomElements(g) {
   }
 }
 
+/**
+ * Load a named bug-scenario JSON file and re-draw the chart.
+ *
+ * @param {string} name - filename without extension, relative to ./fixes/
+ * @param {string} format - chart format to use ('day', 'week', 'month', ...)
+ */
+function loadBugScenario(name, format) {
+  const scenarioUrl = './fixes/' + name + '.json';
+  g = new JSGantt.GanttChart(document.getElementById("embedded-Gantt"), format || "week");
+  g.setOptions({
+    vCaptionType: "Caption",
+    vLang: "en",
+    vFormat: format || "week",
+    vFormatArr: ["Day", "Week", "Month", "Quarter"],
+    vShowRes: 0,
+    vShowCost: 0,
+    vShowComp: 1,
+    vShowDur: 0,
+    vShowStartDate: 1,
+    vShowEndDate: 1,
+    vShowPlanStartDate: 1,
+    vShowPlanEndDate: 1,
+    vShowTaskInfoLink: 1,
+    vShowEndWeekDate: 1,
+    vEditable: false,
+    vWeekMinorDateDisplayFormat: "{{dd}} {{mon}}",
+    vDayMajorDateDisplayFormat: "{{dd}} {{mon}}",
+    vWeekMajorDateDisplayFormat: "{{yyyy}}",
+  });
+  JSGantt.parseJSON(scenarioUrl, g).then(() => g.Draw());
+}
+
 function generateTooltip(task) {
   // default tooltip for level 1
   if (task.getLevel() === 1) return;
