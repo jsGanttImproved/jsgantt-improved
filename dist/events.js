@@ -27,12 +27,12 @@ var folder = function (pID, ganttObj) {
         }
     }
     var bd;
-    if (this.vDebug) {
+    if (ganttObj.vDebug) {
         bd = new Date();
         console.info('after drawDependency', bd);
     }
-    ganttObj.DrawDependencies(this.vDebug);
-    if (this.vDebug) {
+    ganttObj.DrawDependencies(ganttObj.vDebug);
+    if (ganttObj.vDebug) {
         var ad = new Date();
         console.info('after drawDependency', ad, (ad.getTime() - bd.getTime()));
     }
