@@ -10,8 +10,8 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
-exports.processRows = exports.ClearTasks = exports.RemoveTaskItem = exports.AddTaskItemObject = exports.AddTaskItem = exports.createTaskInfo = exports.TaskItem = exports.TaskItemObject = exports.sortTasks = exports.taskLink = void 0;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.processRows = exports.ClearTasks = exports.RemoveTaskItem = exports.GetTaskByOriginalID = exports.AddTaskItemObject = exports.AddTaskItem = exports.createTaskInfo = exports.TaskItem = exports.TaskItemObject = exports.sortTasks = exports.taskLink = void 0;
 var general_utils_1 = require("./utils/general_utils");
 var draw_utils_1 = require("./utils/draw_utils");
 var date_utils_1 = require("./utils/date_utils");
@@ -151,7 +151,7 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
     function parseDepend(pDep) {
         vDepend = [];
         vDependType = [];
-        if (pDep == null)
+        if (!pDep)
             return;
         var vDepList = (pDep + '').split(',');
         for (var k = 0; k < vDepList.length; k++) {
@@ -592,6 +592,7 @@ var AddTaskItem = function (value) {
         this.vTaskList.push(value);
         this.vProcessNeeded = true;
     }
+    return value.getID();
 };
 exports.AddTaskItem = AddTaskItem;
 var AddTaskItemObject = function (object) {
@@ -601,12 +602,31 @@ var AddTaskItemObject = function (object) {
     return this.AddTaskItem((0, exports.TaskItemObject)(object));
 };
 exports.AddTaskItemObject = AddTaskItemObject;
+var GetTaskByOriginalID = function (pOriginalID) {
+    var id = String(pOriginalID);
+    for (var i = 0; i < this.vTaskList.length; i++) {
+        if (this.vTaskList[i].getOriginalID() === id)
+            return this.vTaskList[i];
+    }
+    return null;
+};
+exports.GetTaskByOriginalID = GetTaskByOriginalID;
 var RemoveTaskItem = function (pID) {
+    // Accept either the internal vID or the original string ID.
+    // Resolve an original ID to its vID so the recursive child-removal still works.
+    var vID = pID;
+    var asString = String(pID);
+    for (var i = 0; i < this.vTaskList.length; i++) {
+        if (this.vTaskList[i].getOriginalID() === asString) {
+            vID = this.vTaskList[i].getID();
+            break;
+        }
+    }
     // simply mark the task for removal at this point - actually remove it next time we re-draw the chart
     for (var i = 0; i < this.vTaskList.length; i++) {
-        if (this.vTaskList[i].getID() == pID)
+        if (this.vTaskList[i].getID() == vID)
             this.vTaskList[i].setToDelete(true);
-        else if (this.vTaskList[i].getParent() == pID)
+        else if (this.vTaskList[i].getParent() == vID)
             this.RemoveTaskItem(this.vTaskList[i].getID());
     }
     this.vProcessNeeded = true;

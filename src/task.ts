@@ -517,6 +517,7 @@ export const AddTaskItem = function (value) {
     this.vTaskList.push(value);
     this.vProcessNeeded = true;
   }
+  return value.getID();
 };
 
 export const AddTaskItemObject = function (object) {
@@ -526,11 +527,29 @@ export const AddTaskItemObject = function (object) {
   return this.AddTaskItem(TaskItemObject(object));
 }
 
+export const GetTaskByOriginalID = function (pOriginalID) {
+  const id = String(pOriginalID);
+  for (let i = 0; i < this.vTaskList.length; i++) {
+    if (this.vTaskList[i].getOriginalID() === id) return this.vTaskList[i];
+  }
+  return null;
+};
+
 export const RemoveTaskItem = function (pID) {
+  // Accept either the internal vID or the original string ID.
+  // Resolve an original ID to its vID so the recursive child-removal still works.
+  let vID = pID;
+  const asString = String(pID);
+  for (let i = 0; i < this.vTaskList.length; i++) {
+    if (this.vTaskList[i].getOriginalID() === asString) {
+      vID = this.vTaskList[i].getID();
+      break;
+    }
+  }
   // simply mark the task for removal at this point - actually remove it next time we re-draw the chart
   for (let i = 0; i < this.vTaskList.length; i++) {
-    if (this.vTaskList[i].getID() == pID) this.vTaskList[i].setToDelete(true);
-    else if (this.vTaskList[i].getParent() == pID) this.RemoveTaskItem(this.vTaskList[i].getID());
+    if (this.vTaskList[i].getID() == vID) this.vTaskList[i].setToDelete(true);
+    else if (this.vTaskList[i].getParent() == vID) this.RemoveTaskItem(this.vTaskList[i].getID());
   }
   this.vProcessNeeded = true;
 };
