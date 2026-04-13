@@ -72,13 +72,14 @@ export const getMaxDate = function (pList, pFormat, pMaxDate, pFirstDayOfWeek = 
 
   // Adjust max date to specific format boundaries (end of week or end of month)
   if (pFormat == 'day') {
-    vDate.setDate(vDate.getDate() + 1);
+    // Advance to the end of the week that contains vDate.
+    // Do NOT unconditionally add 1 first — if vDate is already the last day of
+    // the week, that would push it into the next week (issue #284).
     while (vDate.getDay() != lastDayOfWeek(pFirstDayOfWeek)) vDate.setDate(vDate.getDate() + 1);
   }
   else if (pFormat == 'week') {
-    //For weeks, what is the last logical boundary?
-    vDate.setDate(vDate.getDate() + 1);
-
+    // Same logic as 'day': round up to end of the current week without
+    // overshooting when vDate is already the last day of the week (issue #284).
     while (vDate.getDay() != lastDayOfWeek(pFirstDayOfWeek)) vDate.setDate(vDate.getDate() + 1);
   }
   else if (pFormat == 'month') {

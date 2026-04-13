@@ -257,6 +257,45 @@ describe('getMinDate — vFirstDayOfWeek', () => {
   });
 });
 
+// ── Issue #284: end date on last day of week renders extra empty week ─────────
+
+describe('getMaxDate — issue #284 (end date on last day of week)', () => {
+  // 2020-02-23 is a Sunday. With firstDayOfWeek=1 (Monday), Sunday is the last
+  // day of the week. Before the fix, getMaxDate would +1 to Monday and then
+  // advance all the way to the NEXT Sunday, causing a blank extra week.
+
+  it('day format: end on Sunday (lastDayOfWeek) stays at that Sunday', () => {
+    const task = makeTask({ id: 284, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-23') });
+    const maxDate = getMaxDate([task], 'day', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate to be Sun 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  it('week format: end on Sunday (lastDayOfWeek) stays at that Sunday', () => {
+    const task = makeTask({ id: 285, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-23') });
+    const maxDate = getMaxDate([task], 'week', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate to be Sun 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+
+  it('day format: end on Saturday (lastDayOfWeek for Sunday-first) stays at that Saturday', () => {
+    // With firstDayOfWeek=0 (Sunday), lastDayOfWeek = Saturday (6).
+    // 2020-02-22 is a Saturday.
+    const task = makeTask({ id: 286, parent: 0, start: new Date('2020-02-16'), end: new Date('2020-02-22') });
+    const maxDate = getMaxDate([task], 'day', undefined, 0);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-22').toDateString(),
+      `Expected maxDate to be Sat 2020-02-22, got ${maxDate.toDateString()}`);
+  });
+
+  it('day format: end mid-week still advances to end of that week', () => {
+    // 2020-02-19 is a Wednesday. With Mon-first, should advance to 2020-02-23 (Sun).
+    const task = makeTask({ id: 287, parent: 0, start: new Date('2020-02-14'), end: new Date('2020-02-19') });
+    const maxDate = getMaxDate([task], 'day', undefined, 1);
+    expect(maxDate.toDateString()).to.equal(new Date('2020-02-23').toDateString(),
+      `Expected maxDate to advance to Sun 2020-02-23, got ${maxDate.toDateString()}`);
+  });
+});
+
 describe('getMaxDate — vFirstDayOfWeek', () => {
   // 2025-04-09 is a Wednesday.
   const task = makeTask({ id: 110, parent: 0, start: new Date('2025-04-09'), end: new Date('2025-04-09') });
