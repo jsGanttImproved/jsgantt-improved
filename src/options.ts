@@ -108,6 +108,7 @@ export const includeGetSet = function () {
   this.setTimer = function (pVal) { this.vTimer = pVal * 1; };
   this.setTooltipDelay = function (pVal) { this.vTooltipDelay = pVal * 1; };
   this.setTooltipTemplate = function (pVal) { this.vTooltipTemplate = pVal; };
+  this.setTooltipTemplateDelimiter = function (open, close) { this.vTooltipTemplateDelimiterOpen = open; this.vTooltipTemplateDelimiterClose = close; };
   this.setMinDate = function (pVal) { this.vMinDate = pVal; };
   this.setMaxDate = function (pVal) { this.vMaxDate = pVal; };
   this.addLang = function (pLang, pVals) {

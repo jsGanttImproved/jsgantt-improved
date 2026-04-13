@@ -413,7 +413,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
  *        If function(task): Promise<string>) - async per task template. Tooltip will show 'Loading...' if promise is not yet complete.
  *          Otherwise returned template will be handled in the same manner as in other cases.
  */
-export const createTaskInfo = function (pTask, templateStrOrFn = null) {
+export const createTaskInfo = function (pTask, templateStrOrFn = null, delimOpen = '{{', delimClose = '}}') {
   let vTmpDiv;
   let vTaskInfoBox = document.createDocumentFragment();
   let vTaskInfo = newNode(vTaskInfoBox, 'div', null, 'gTaskInfo');
@@ -433,11 +433,11 @@ export const createTaskInfo = function (pTask, templateStrOrFn = null) {
         }
         const val = allData[key];
 
-        template = template.replace(`{{${key}}}`, val);
+        template = template.replace(`${delimOpen}${key}${delimClose}`, val);
         if (lang) {
-          template = template.replace(`{{Lang:${key}}}`, lang);
+          template = template.replace(`${delimOpen}Lang:${key}${delimClose}`, lang);
         } else {
-          template = template.replace(`{{Lang:${key}}}`, key);
+          template = template.replace(`${delimOpen}Lang:${key}${delimClose}`, key);
         }
       });
       newNode(vTaskInfo, 'span', null, 'gTtTemplate', template);
