@@ -158,12 +158,12 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
     vGroupMinPlanEnd = vPlanEnd;
   }
 
-  if (pDepend != null) {
-    let vDependStr = pDepend + '';
-    let vDepList = vDependStr.split(',');
-    let n = vDepList.length;
-
-    for (let k = 0; k < n; k++) {
+  function parseDepend(pDep) {
+    vDepend = [];
+    vDependType = [];
+    if (!pDep) return;
+    const vDepList = (pDep + '').split(',');
+    for (let k = 0; k < vDepList.length; k++) {
       if (vDepList[k].toUpperCase().endsWith('SS')) {
         vDepend[k] = vDepList[k].substring(0, vDepList[k].length - 2);
         vDependType[k] = 'SS';
@@ -184,12 +184,13 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
         vDepend[k] = vDepList[k];
         vDependType[k] = 'FS';
       }
-
       if (vDepend[k]) {
         vDepend[k] = hashKey(vDepend[k]).toString();
       }
     }
   }
+
+  parseDepend(pDepend);
 
   this.getID = function () { return vID; };
   this.getOriginalID = function () { return _id; };
@@ -312,6 +313,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getChildRow = function () { return vChildRow; };
   this.getListChildRow = function () { return vListChildRow; };
   this.getGroupSpan = function () { return vGroupSpan; };
+  this.setDepend = function (pDepend) { parseDepend(pDepend); };
   this.setName = function (pName) { vName = pName; };
   this.setNotes = function (pNotes) { vNotes = pNotes; };
   this.setClass = function (pClass) { vClass = pClass; };

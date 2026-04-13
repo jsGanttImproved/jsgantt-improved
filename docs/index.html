@@ -169,6 +169,39 @@
           alert("Error, unable to create Gantt Chart");
         }
       </script>
+      <div style="margin:12px 0 4px;padding:12px 16px;background:#f8f9fa;border:1px solid #dee2e6;border-radius:4px;font-family:monospace;font-size:13px">
+        <strong style="font-family:sans-serif;font-size:14px">setDepend() demo</strong>
+        &nbsp;—&nbsp; acting on task&nbsp;<em>35 "Make Updates"</em>
+        <span style="font-family:sans-serif;font-size:12px;color:#666">&nbsp;(current dependency shown in label)</span>
+        <br><br>
+        <button onclick="
+          var idx = g.getArrayLocationByID(35);
+          g.vTaskList[idx].setDepend('32FS');
+          g.Draw();
+          document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (type: ' + g.vTaskList[idx].getDepType() + ')';
+        " style="margin-right:8px;padding:4px 10px">setDepend('32FS')</button>
+        <button onclick="
+          var idx = g.getArrayLocationByID(35);
+          g.vTaskList[idx].setDepend('342,343');
+          g.Draw();
+          document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (types: ' + g.vTaskList[idx].getDepType() + ')';
+        " style="margin-right:8px;padding:4px 10px">setDepend('342,343')</button>
+        <button onclick="
+          var idx = g.getArrayLocationByID(35);
+          g.vTaskList[idx].setDepend(null);
+          g.Draw();
+          document.getElementById('depend-status').textContent = '(none)';
+        " style="margin-right:8px;padding:4px 10px">setDepend(null) — clear</button>
+        <button onclick="
+          var idx = g.getArrayLocationByID(35);
+          g.vTaskList[idx].setDepend('333');
+          g.Draw();
+          document.getElementById('depend-status').textContent = g.vTaskList[idx].getDepend() + ' (type: ' + g.vTaskList[idx].getDepType() + ')';
+        " style="padding:4px 10px">Reset to original ('333')</button>
+        <br><br>
+        <span style="font-family:sans-serif;font-size:12px">getDepend() → </span>
+        <span id="depend-status" style="color:#0066cc">333 (type: FS)</span>
+      </div>
     </div>
     <div id="external-Gantt">
       <script type="text/javascript">
