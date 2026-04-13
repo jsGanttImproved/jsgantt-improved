@@ -1,8 +1,13 @@
 
 /**
+ * Returns the last day of the week (0=Sun … 6=Sat) for a given first day.
+ */
+const lastDayOfWeek = (firstDay: number): number => (firstDay + 6) % 7;
+
+/**
  * DATES
  */
-export const getMinDate = function (pList, pFormat, pMinDate) {
+export const getMinDate = function (pList, pFormat, pMinDate, pFirstDayOfWeek = 1) {
   let vDate = new Date();
   if (pList.length <= 0) return pMinDate || vDate;
 
@@ -19,11 +24,11 @@ export const getMinDate = function (pList, pFormat, pMinDate) {
   // Adjust min date to specific format boundaries (first of week or first of month)
   if (pFormat == 'day') {
     vDate.setDate(vDate.getDate() - 1);
-    while (vDate.getDay() % 7 != 1) vDate.setDate(vDate.getDate() - 1);
+    while (vDate.getDay() != pFirstDayOfWeek) vDate.setDate(vDate.getDate() - 1);
   }
   else if (pFormat == 'week') {
     vDate.setDate(vDate.getDate() - 1);
-    while (vDate.getDay() % 7 != 1) vDate.setDate(vDate.getDate() - 1);
+    while (vDate.getDay() != pFirstDayOfWeek) vDate.setDate(vDate.getDate() - 1);
   }
   else if (pFormat == 'month') {
     vDate.setDate(vDate.getDate() - 15);
@@ -50,7 +55,7 @@ export const getMinDate = function (pList, pFormat, pMinDate) {
   return (vDate);
 };
 
-export const getMaxDate = function (pList, pFormat, pMaxDate) {
+export const getMaxDate = function (pList, pFormat, pMaxDate, pFirstDayOfWeek = 1) {
   let vDate = new Date();
 
   if (pList.length <= 0) return pMaxDate || vDate;
@@ -68,13 +73,13 @@ export const getMaxDate = function (pList, pFormat, pMaxDate) {
   // Adjust max date to specific format boundaries (end of week or end of month)
   if (pFormat == 'day') {
     vDate.setDate(vDate.getDate() + 1);
-    while (vDate.getDay() % 7 != 0) vDate.setDate(vDate.getDate() + 1);
+    while (vDate.getDay() != lastDayOfWeek(pFirstDayOfWeek)) vDate.setDate(vDate.getDate() + 1);
   }
   else if (pFormat == 'week') {
     //For weeks, what is the last logical boundary?
     vDate.setDate(vDate.getDate() + 1);
 
-    while (vDate.getDay() % 7 != 0) vDate.setDate(vDate.getDate() + 1);
+    while (vDate.getDay() != lastDayOfWeek(pFirstDayOfWeek)) vDate.setDate(vDate.getDate() + 1);
   }
   else if (pFormat == 'month') {
     // Set to last day of current Month

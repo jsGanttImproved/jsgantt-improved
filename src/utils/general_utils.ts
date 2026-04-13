@@ -118,7 +118,7 @@ export const calculateCurrentDateOffset = function(curTaskStart, curTaskEnd){
   return (tmpTaskEnd - tmpTaskStart);
 }
 
-export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
+export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends, pFirstDayOfWeek = 1) {
   const DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
   const WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
   const MONTH_CELL_MARGIN_WIDTH = 3; // Cell margin for 'month' format
@@ -142,7 +142,9 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pSh
       let countWeekends = 0;
       while (start < end) {
         const day = start.getDay();
-        if (day === 6 || day == 0) {
+        const vLastDay    = (pFirstDayOfWeek + 6) % 7;
+        const vPenultDay  = (pFirstDayOfWeek + 5) % 7;
+        if (day === vLastDay || day === vPenultDay) {
           countWeekends++
         }
         start = new Date(start.getTime() + 24 * oneHour);

@@ -228,3 +228,56 @@ describe('getMaxDate', () => {
       `Expected maxDate in September or later 2025, got month ${maxDate.getMonth()}`);
   });
 });
+
+// ── Issue #379: Configurable first day of week ────────────────────────────────
+
+describe('getMinDate — vFirstDayOfWeek', () => {
+  // 2025-04-09 is a Wednesday. For 'day' format the function steps back to the
+  // start of the week, so the result depends on which day opens the week.
+  const task = makeTask({ id: 100, parent: 0, start: new Date('2025-04-09'), end: new Date('2025-04-16') });
+
+  it('default (Monday=1): min boundary is the preceding Monday', () => {
+    const minDate = getMinDate([task], 'day');
+    expect(minDate.getDay()).to.equal(1, `Expected Monday (1), got day ${minDate.getDay()} (${minDate.toDateString()})`);
+  });
+
+  it('Sunday-first (0): min boundary is the preceding Sunday', () => {
+    const minDate = getMinDate([task], 'day', undefined, 0);
+    expect(minDate.getDay()).to.equal(0, `Expected Sunday (0), got day ${minDate.getDay()} (${minDate.toDateString()})`);
+  });
+
+  it('Saturday-first (6): min boundary is the preceding Saturday', () => {
+    const minDate = getMinDate([task], 'day', undefined, 6);
+    expect(minDate.getDay()).to.equal(6, `Expected Saturday (6), got day ${minDate.getDay()} (${minDate.toDateString()})`);
+  });
+
+  it('Sunday-first (0): week format also snaps to Sunday', () => {
+    const minDate = getMinDate([task], 'week', undefined, 0);
+    expect(minDate.getDay()).to.equal(0, `Expected Sunday (0) in week format, got ${minDate.toDateString()}`);
+  });
+});
+
+describe('getMaxDate — vFirstDayOfWeek', () => {
+  // 2025-04-09 is a Wednesday.
+  const task = makeTask({ id: 110, parent: 0, start: new Date('2025-04-09'), end: new Date('2025-04-09') });
+
+  it('default (Monday=1): max boundary is the following Sunday (6)', () => {
+    const maxDate = getMaxDate([task], 'day');
+    expect(maxDate.getDay()).to.equal(0, `Expected Sunday (0), got day ${maxDate.getDay()} (${maxDate.toDateString()})`);
+  });
+
+  it('Sunday-first (0): max boundary is the following Saturday (6)', () => {
+    const maxDate = getMaxDate([task], 'day', undefined, 0);
+    expect(maxDate.getDay()).to.equal(6, `Expected Saturday (6), got day ${maxDate.getDay()} (${maxDate.toDateString()})`);
+  });
+
+  it('Saturday-first (6): max boundary is the following Friday (5)', () => {
+    const maxDate = getMaxDate([task], 'day', undefined, 6);
+    expect(maxDate.getDay()).to.equal(5, `Expected Friday (5), got day ${maxDate.getDay()} (${maxDate.toDateString()})`);
+  });
+
+  it('Sunday-first (0): week format max boundary is Saturday (6)', () => {
+    const maxDate = getMaxDate([task], 'week', undefined, 0);
+    expect(maxDate.getDay()).to.equal(6, `Expected Saturday (6) in week format, got ${maxDate.toDateString()}`);
+  });
+});

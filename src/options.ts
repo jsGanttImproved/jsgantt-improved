@@ -88,6 +88,7 @@ export const includeGetSet = function () {
     this.Draw();
   };
   this.setWorkingDays = function (workingDays) { this.vWorkingDays = workingDays; };
+  this.setFirstDayOfWeek = function (pVal) { this.vFirstDayOfWeek = parseInt(String(pVal), 10); };
   this.setMinGpLen = function (pMinGpLen) { this.vMinGpLen = pMinGpLen; };
   this.setScrollTo = function (pDate) { this.vScrollTo = pDate; };
   this.setHourColWidth = function (pWidth) { this.vHourColWidth = pWidth; };
@@ -164,6 +165,7 @@ export const includeGetSet = function () {
   this.getShowTaskInfoLink = function () { return this.vShowTaskInfoLink; };
   this.getShowEndWeekDate = function () { return this.vShowEndWeekDate; };
   this.getShowWeekends = function () { return this.vShowWeekends; };
+  this.getFirstDayOfWeek = function () { return this.vFirstDayOfWeek; };
   this.getShowSelector = function () { return this.vShowSelector; };
   this.getShowDeps = function () { return this.vShowDeps; };
   this.getDateInputFormat = function () { return this.vDateInputFormat; };
