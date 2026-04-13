@@ -453,6 +453,13 @@ span.gfoldercollapse {
   width: 0px;
 }
 
+.gtodayline {
+  border-color: #4040ff;
+  border-left-width: 2px;
+  opacity: 0.6;
+  z-index: 1;
+}
+
 .glineh {
   border-top: 1px solid;
   height: 0px;
