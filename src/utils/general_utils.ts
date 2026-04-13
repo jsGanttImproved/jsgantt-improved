@@ -118,7 +118,7 @@ export const calculateCurrentDateOffset = function(curTaskStart, curTaskEnd){
   return (tmpTaskEnd - tmpTaskStart);
 }
 
-export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends, pFirstDayOfWeek = 1) {
+export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends, pFirstDayOfWeek = 1, pWorkingDays?) {
   const DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
   const WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
   const MONTH_CELL_MARGIN_WIDTH = 3; // Cell margin for 'month' format
@@ -136,7 +136,16 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pSh
 
   let vPosTmpDate;
   if (pFormat == 'day') {
-    if (!pShowWeekends) {
+    if (pWorkingDays) {
+      let start = curTaskStart;
+      let end = curTaskEnd;
+      let countNonWorking = 0;
+      while (start < end) {
+        if (!pWorkingDays[start.getDay()]) countNonWorking++;
+        start = new Date(start.getTime() + 24 * oneHour);
+      }
+      vTaskRight -= countNonWorking * 24;
+    } else if (!pShowWeekends) {
       let start = curTaskStart;
       let end = curTaskEnd;
       let countWeekends = 0;

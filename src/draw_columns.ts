@@ -29,7 +29,7 @@ const COLUMNS_TYPES = {
 }
 
 export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsChange, vEvents,
-  vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw) {
+  vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw, vWorkingDays?) {
   let vTmpCell, vTmpDiv;
 
   if ('vShowRes' === column) {
@@ -42,7 +42,7 @@ export const draw_header = function (column, i, vTmpRow, vTaskList, vEditable, v
   }
   if ('vShowDur' === column) {
     vTmpCell = newNode(vTmpRow, 'td', null, 'gdur');
-    const text = makeInput(vTaskList[i].getDuration(vFormat, vLangs[vLang]), vEditable, 'text', vTaskList[i].getDuration());
+    const text = makeInput(vTaskList[i].getDuration(vFormat, vLangs[vLang], vWorkingDays), vEditable, 'text', vTaskList[i].getDuration());
     vTmpDiv = newNode(vTmpCell, 'div', null, null, text);
     const callback = (task, e) => task.setDuration(e.target.value);
     addListenerInputCell(vTmpCell, vEventsChange, callback, vTaskList, i, 'dur', Draw);
