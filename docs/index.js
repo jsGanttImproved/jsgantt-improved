@@ -56,8 +56,8 @@ function start(e) {
       vDateTaskDisplayFormat: "day dd month yyyy", // Shown in tool tip box
       // {{token}} syntax (issue #382): text outside {{}} is treated as a literal label.
       // "Week" and "week" stay as-is; only {{ww}}, {{mon}}, {{yyyy}} etc. are substituted.
-      vDayMajorDateDisplayFormat: "{{mon}} {{yyyy}} - Week {{ww}}", // "Week" is literal; {{ww}} → week number
-      vWeekMajorDateDisplayFormat: "{{yyyy}} - week {{ww}}",        // "week" is literal; legacy "week" token would give ISO date
+      vDayMajorDateDisplayFormat: "{{dd}} {{mon}}",                  // combined with vShowEndWeekDate gives "28 Apr - 04 May"
+      vWeekMajorDateDisplayFormat: "{{yyyy}}",                       // major heading groups all weeks in a year; show year only
       vWeekMinorDateDisplayFormat: "{{dd}} {{mon}}",                // equivalent to legacy "dd mon" but explicit
       vLang: lang,
       vUseSingleCell, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.

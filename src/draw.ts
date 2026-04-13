@@ -382,9 +382,17 @@ export const GanttChart = function (pDiv, pFormat) {
 
         vTmpDate.setDate(vTmpDate.getDate() + 1);
       } else if (this.vFormat == "week") {
-        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, vColWidth);
-        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
-        vTmpDate.setDate(vTmpDate.getDate() + 7);
+        // Group weeks by year: span all weeks whose start date falls in the same year
+        const thisYear = vTmpDate.getFullYear();
+        let countDate = new Date(vTmpDate);
+        vColSpan = 0;
+        while (countDate.getTime() <= vMaxDate.getTime() && countDate.getFullYear() === thisYear) {
+          vColSpan++;
+          countDate.setDate(countDate.getDate() + 7);
+        }
+        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+        vTmpDate.setDate(vTmpDate.getDate() + vColSpan * 7);
       } else if (this.vFormat == "month") {
         vColSpan = 12 - vTmpDate.getMonth();
         if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= 11 - vMaxDate.getMonth();
