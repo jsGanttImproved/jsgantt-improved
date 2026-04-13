@@ -297,7 +297,8 @@ export const GanttChart = function (pDiv, pFormat) {
               this.vLangs,
               this.vLang,
               this.vResources,
-              this.Draw.bind(this)
+              this.Draw.bind(this),
+              this.vWorkingDays
             );
           }
         });
@@ -541,8 +542,8 @@ export const GanttChart = function (pDiv, pFormat) {
       let curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
       let curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
 
-      const vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
-      const vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
+      const vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
+      const vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
 
       let curTaskPlanStart, curTaskPlanEnd;
 
@@ -551,8 +552,8 @@ export const GanttChart = function (pDiv, pFormat) {
       let vTaskPlanLeftPx = 0;
       let vTaskPlanRightPx = 0;
       if (curTaskPlanStart && curTaskPlanEnd) {
-        vTaskPlanLeftPx = getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
-        vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
+        vTaskPlanLeftPx = getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
+        vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
       }
 
       const vID = this.vTaskList[i].getID();
@@ -701,7 +702,7 @@ export const GanttChart = function (pDiv, pFormat) {
             vCaptionStr = vTmpItem.getResource();
             break;
           case "Duration":
-            vCaptionStr = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang]);
+            vCaptionStr = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang], this.vWorkingDays);
             break;
           case "Complete":
             vCaptionStr = vTmpItem.getCompStr();
@@ -885,13 +886,13 @@ export const GanttChart = function (pDiv, pFormat) {
 
         if (this.vFormat == "hour") vScrollDate.setMinutes(0, 0, 0);
         else vScrollDate.setHours(0, 0, 0, 0);
-        vScrollPx = getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek) - 30;
+        vScrollPx = getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays) - 30;
       }
       this.getChartBody().scrollLeft = vScrollPx;
     }
 
     if (vMinDate.getTime() <= new Date().getTime() && vMaxDate.getTime() >= new Date().getTime()) {
-      this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
+      this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
     } else this.vTodayPx = -1;
 
     // DEPENDENCIES: Draw lines of Dependencies
@@ -929,7 +930,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
     updateGridHeaderWidth(this);
     this.chartRowDateToX = function (date) {
-      return getOffset(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
+      return getOffset(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
     };
 
     if (this.vEvents && this.vEvents.afterDraw) {

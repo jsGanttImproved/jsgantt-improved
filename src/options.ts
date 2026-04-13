@@ -88,6 +88,7 @@ export const includeGetSet = function () {
     this.Draw();
   };
   this.setWorkingDays = function (workingDays) { this.vWorkingDays = workingDays; };
+  this.getWorkingDays = function () { return this.vWorkingDays; };
   this.setFirstDayOfWeek = function (pVal) { this.vFirstDayOfWeek = parseInt(String(pVal), 10); };
   this.setMinGpLen = function (pMinGpLen) { this.vMinGpLen = pMinGpLen; };
   this.setScrollTo = function (pDate) { this.vScrollTo = pDate; };

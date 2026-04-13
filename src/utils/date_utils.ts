@@ -309,3 +309,19 @@ export const getIsoWeek = function (pDate) {
   else if (thisWeek == 53 && (new Date(pDate.getFullYear(), 0, 1, 0, 0, 0)).getDay() != 4 && (new Date(pDate.getFullYear(), 11, 31, 0, 0, 0)).getDay() != 4) thisWeek = 1;
   return thisWeek;
 };
+
+/**
+ * Count the number of working days between start (inclusive) and end (exclusive).
+ * @param start - start date
+ * @param end - end date (exclusive)
+ * @param workingDays - map of day-of-week (0=Sun … 6=Sat) to boolean
+ */
+export const countWorkingDays = function (start: Date, end: Date, workingDays: { [key: number]: boolean }): number {
+  let count = 0;
+  let cur = new Date(start.getTime());
+  while (cur < end) {
+    if (workingDays[cur.getDay()]) count++;
+    cur = new Date(cur.getTime() + 86400000);
+  }
+  return count;
+};
