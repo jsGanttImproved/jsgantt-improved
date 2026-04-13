@@ -63,6 +63,7 @@ export interface TaskOpts {
   planEnd?: Date;
   group?: number;
   name?: string;
+  depend?: string;
 }
 
 export function makeTask(opts: TaskOpts): any {
@@ -79,7 +80,7 @@ export function makeTask(opts: TaskOpts): any {
     opts.group     || 0,
     opts.parent,
     1,                      // pOpen
-    '',                     // pDepend
+    opts.depend    || null, // pDepend
     '',                     // pCaption
     '',                     // pNotes
     mockGantt,

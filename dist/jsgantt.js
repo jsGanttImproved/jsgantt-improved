@@ -3807,7 +3807,7 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
     function parseDepend(pDep) {
         vDepend = [];
         vDependType = [];
-        if (pDep == null)
+        if (!pDep)
             return;
         var vDepList = (pDep + '').split(',');
         for (var k = 0; k < vDepList.length; k++) {

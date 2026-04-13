@@ -161,7 +161,7 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   function parseDepend(pDep) {
     vDepend = [];
     vDependType = [];
-    if (pDep == null) return;
+    if (!pDep) return;
     const vDepList = (pDep + '').split(',');
     for (let k = 0; k < vDepList.length; k++) {
       if (vDepList[k].toUpperCase().endsWith('SS')) {
