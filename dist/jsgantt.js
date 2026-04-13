@@ -142,6 +142,8 @@ var GanttChart = function (pDiv, pFormat) {
     this.vTimer = 20;
     this.vTooltipDelay = 1500;
     this.vTooltipTemplate = null;
+    this.vTooltipTemplateDelimiterOpen = '{{';
+    this.vTooltipTemplateDelimiterClose = '}}';
     this.vMinDate = null;
     this.vMaxDate = null;
     this.includeGetSet = options_1.includeGetSet.bind(this);
@@ -640,14 +642,14 @@ var GanttChart = function (pDiv, pFormat) {
             // Add Task Info div for tooltip
             if (this.vTaskList[i].getTaskDiv() && vTmpDiv_1) {
                 var vTmpDiv2 = (0, draw_utils_1.newNode)(vTmpDiv_1, "div", this.vDivId + "tt" + vID, null, null, null, null, "none");
-                var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _a.component, callback = _a.callback;
+                var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate, this.vTooltipTemplateDelimiterOpen, this.vTooltipTemplateDelimiterClose), component = _a.component, callback = _a.callback;
                 vTmpDiv2.appendChild(component);
                 (0, events_1.addTooltipListeners)(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
             }
             // Add Plan Task Info div for tooltip
             if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv_1) {
                 var vTmpDiv2 = (0, draw_utils_1.newNode)(vTmpDiv_1, "div", this.vDivId + "tt" + vID, null, null, null, null, "none");
-                var _b = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _b.component, callback = _b.callback;
+                var _b = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate, this.vTooltipTemplateDelimiterOpen, this.vTooltipTemplateDelimiterClose), component = _b.component, callback = _b.callback;
                 vTmpDiv2.appendChild(component);
                 (0, events_1.addTooltipListeners)(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
             }
@@ -3568,6 +3570,7 @@ var includeGetSet = function () {
     this.setTimer = function (pVal) { this.vTimer = pVal * 1; };
     this.setTooltipDelay = function (pVal) { this.vTooltipDelay = pVal * 1; };
     this.setTooltipTemplate = function (pVal) { this.vTooltipTemplate = pVal; };
+    this.setTooltipTemplateDelimiter = function (open, close) { this.vTooltipTemplateDelimiterOpen = open; this.vTooltipTemplateDelimiterClose = close; };
     this.setMinDate = function (pVal) { this.vMinDate = pVal; };
     this.setMaxDate = function (pVal) { this.vMaxDate = pVal; };
     this.addLang = function (pLang, pVals) {
@@ -4158,9 +4161,11 @@ exports.TaskItem = TaskItem;
  *        If function(task): Promise<string>) - async per task template. Tooltip will show 'Loading...' if promise is not yet complete.
  *          Otherwise returned template will be handled in the same manner as in other cases.
  */
-var createTaskInfo = function (pTask, templateStrOrFn) {
+var createTaskInfo = function (pTask, templateStrOrFn, delimOpen, delimClose) {
     var _this = this;
     if (templateStrOrFn === void 0) { templateStrOrFn = null; }
+    if (delimOpen === void 0) { delimOpen = '{{'; }
+    if (delimClose === void 0) { delimClose = '}}'; }
     var vTmpDiv;
     var vTaskInfoBox = document.createDocumentFragment();
     var vTaskInfo = (0, draw_utils_1.newNode)(vTaskInfoBox, 'div', null, 'gTaskInfo');
@@ -4177,12 +4182,12 @@ var createTaskInfo = function (pTask, templateStrOrFn) {
                     lang = key;
                 }
                 var val = allData_1[key];
-                template = template.replace("{{".concat(key, "}}"), val);
+                template = template.replace("".concat(delimOpen).concat(key).concat(delimClose), val);
                 if (lang) {
-                    template = template.replace("{{Lang:".concat(key, "}}"), lang);
+                    template = template.replace("".concat(delimOpen, "Lang:").concat(key).concat(delimClose), lang);
                 }
                 else {
-                    template = template.replace("{{Lang:".concat(key, "}}"), key);
+                    template = template.replace("".concat(delimOpen, "Lang:").concat(key).concat(delimClose), key);
                 }
             });
             (0, draw_utils_1.newNode)(vTaskInfo, 'span', null, 'gTtTemplate', template);
@@ -4842,7 +4847,8 @@ var newNode = function (pParent, pNodeType, pId, pClass, pText, pWidth, pLeft, p
     if (pDisplay === void 0) { pDisplay = null; }
     if (pColspan === void 0) { pColspan = null; }
     if (pAttribs === void 0) { pAttribs = null; }
-    var vNewNode = pParent.appendChild(document.createElement(pNodeType));
+    var vNewNode = document.createElement(pNodeType);
+    pParent.appendChild(vNewNode);
     if (pAttribs) {
         for (var i = 0; i + 1 < pAttribs.length; i += 2) {
             vNewNode.setAttribute(pAttribs[i], pAttribs[i + 1]);

@@ -369,6 +369,43 @@ function demo376Remove() {
   }
 }
 
+// ─── Issue #346 demo ─────────────────────────────────────────────────────────
+// Demonstrates setTooltipTemplateDelimiter(open, close).
+// Django and other frameworks use {{ }} in their own template engines, which
+// conflicts with jsGantt's default tooltip template syntax. This demo lets you
+// switch between the default {{ }} delimiters and a custom {[ ]} pair.
+
+function load346Demo(mode) {
+  const useCustom = mode === 'custom';
+  const open  = useCustom ? '{[' : '{{';
+  const close = useCustom ? ']}' : '}}';
+  const tmpl  = `<div><strong>${open}pName${close}</strong></div>`
+              + `<div>Resource: ${open}pRes${close}</div>`
+              + `<div>Start: ${open}pStart${close} → End: ${open}pEnd${close}</div>`;
+
+  g = new JSGantt.GanttChart(document.getElementById("embedded-Gantt"), "month");
+  g.setOptions({
+    vFormat: "month",
+    vFormatArr: ["Week", "Month"],
+    vShowRes: 1, vShowCost: 0, vShowComp: 0, vShowDur: 0,
+    vShowStartDate: 1, vShowEndDate: 1,
+    vShowTaskInfoLink: 1,
+    vEditable: false,
+    vTooltipTemplate: tmpl,
+  });
+  if (useCustom) g.setTooltipTemplateDelimiter(open, close);
+
+  g.AddTaskItem(new JSGantt.TaskItem(1, "Design",     "2026-04-01", "2026-04-14", "gtaskblue",  "", 0, "Alice",   0, 0, 0, 1, "", "", "", g));
+  g.AddTaskItem(new JSGantt.TaskItem(2, "Development","2026-04-07", "2026-04-28", "gtaskgreen", "", 0, "Bob",     0, 0, 0, 1, "1", "", "", g));
+  g.AddTaskItem(new JSGantt.TaskItem(3, "QA Review",  "2026-04-21", "2026-04-30", "gtaskyellow","", 0, "Charlie", 0, 0, 0, 1, "2", "", "", g));
+  g.Draw();
+
+  document.getElementById("demo346-info").style.display = "block";
+  document.getElementById("demo346-template").textContent = tmpl;
+  document.getElementById("demo346-delimiters").textContent =
+    useCustom ? `open="${open}"  close="${close}"  (custom — Django-safe)` : `open="${open}"  close="${close}"  (default)`;
+}
+
 function load68Demo(workingDays) {
   g = new JSGantt.GanttChart(document.getElementById("embedded-Gantt"), "day");
   g.setOptions({

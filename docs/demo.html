@@ -364,6 +364,28 @@
         </tr>
         <tr style="border-top:1px solid #ffe082">
           <td style="padding:6px 8px;vertical-align:top">
+            <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/346" target="_blank" style="color:#0066cc">#346</a>
+          </td>
+          <td style="padding:6px 8px;vertical-align:top" colspan="2">
+            <strong>Configurable tooltip template delimiters.</strong><br>
+            Django (and other frameworks) already use <code>{{ }}</code> in their template engines, conflicting with
+            the default tooltip template syntax. <code>setTooltipTemplateDelimiter(open, close)</code> lets you choose
+            any alternative pair of strings as delimiters.
+            <br><br>
+            <button onclick="load346Demo('default')" style="padding:4px 10px;margin-right:8px">Default delimiters <code>{{ }}</code></button>
+            <button onclick="load346Demo('custom')" style="padding:4px 10px;margin-right:8px">Custom delimiters <code>{[ ]}</code></button>
+            <br><br>
+            <div id="demo346-info" style="display:none;font-family:monospace;font-size:12px;line-height:1.7">
+              <span style="font-family:sans-serif">Active template: </span>
+              <span id="demo346-template" style="color:#0066cc"></span><br>
+              <span style="font-family:sans-serif">Delimiters: </span>
+              <span id="demo346-delimiters" style="color:#0066cc"></span><br>
+              <span style="font-family:sans-serif;color:#888">→ Hover over any task bar to see the tooltip.</span>
+            </div>
+          </td>
+        </tr>
+        <tr style="border-top:1px solid #ffe082">
+          <td style="padding:6px 8px;vertical-align:top">
             <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/376" target="_blank" style="color:#0066cc">#376</a>
           </td>
           <td style="padding:6px 8px;vertical-align:top" colspan="2">
