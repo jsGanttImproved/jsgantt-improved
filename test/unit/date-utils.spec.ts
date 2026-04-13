@@ -8,7 +8,8 @@
 import './helpers';   // DOM shim — must be first
 import { expect } from 'chai';
 import { makeTask } from './helpers';
-import { getMinDate, getMaxDate } from '../../src/utils/date_utils';
+import { getMinDate, getMaxDate, parseDateFormatStr, formatDateStr } from '../../src/utils/date_utils';
+import { en } from '../../src/lang';
 
 describe('getMinDate', () => {
   it('issue #355: does not anchor the chart to today when a dateless group task is present', () => {
@@ -78,6 +79,127 @@ describe('getMinDate', () => {
     const feb2024 = new Date(2024, 1, 1);
     expect(minDate.getTime()).to.be.below(feb2024.getTime(),
       `Expected minDate before Feb 2024 but got ${minDate.toDateString()}`);
+  });
+});
+
+// ── Issue #382: {{token}} delimiter syntax for date display formats ────────────
+//
+// Test date: 2024-01-05 14:30:45  (Friday, ISO week 1, Q1)
+//   dd=05  d=5   mm=01  m=1   yyyy=2024  yy=24
+//   mon=Jan  month=January  day=Fri  DAY=Friday
+//   w=1  ww=01  week=2024-W1-5
+//   q=1  qq=Qtr1
+//   H=14  HH=14  h=2  hh=02  MI=30  SS=45  pm=pm  PM=PM
+
+describe('parseDateFormatStr — {{token}} syntax', () => {
+  it('single token only: {{dd}}', () => {
+    expect(parseDateFormatStr('{{dd}}')).to.deep.equal(['dd']);
+  });
+
+  it('trailing literal text is sentinel-prefixed', () => {
+    expect(parseDateFormatStr('{{ww}} week')).to.deep.equal(['ww', '\x00 week']);
+  });
+
+  it('leading literal text is sentinel-prefixed', () => {
+    expect(parseDateFormatStr('W{{ww}}')).to.deep.equal(['\x00W', 'ww']);
+  });
+
+  it('multiple tokens with literal separators', () => {
+    expect(parseDateFormatStr('{{ww}} week - {{mon}} {{yyyy}}')).to.deep.equal(
+      ['ww', '\x00 week - ', 'mon', '\x00 ', 'yyyy']
+    );
+  });
+
+  it('adjacent tokens with no separator', () => {
+    expect(parseDateFormatStr('{{dd}}{{mm}}{{yyyy}}')).to.deep.equal(['dd', 'mm', 'yyyy']);
+  });
+
+  it('literal-only string (no tokens)', () => {
+    expect(parseDateFormatStr('{{Week}}')).to.deep.equal(['Week']);
+  });
+
+  it('separator character as literal', () => {
+    expect(parseDateFormatStr('{{dd}}/{{mm}}/{{yyyy}}')).to.deep.equal(
+      ['dd', '\x00/', 'mm', '\x00/', 'yyyy']
+    );
+  });
+
+  it('legacy path: no {{ → original split behaviour', () => {
+    expect(parseDateFormatStr('dd/mm/yyyy')).to.deep.equal(['dd', '/', 'mm', '/', 'yyyy']);
+  });
+
+  it('legacy path: space and hyphen separators unchanged', () => {
+    expect(parseDateFormatStr('mon yyyy')).to.deep.equal(['mon', ' ', 'yyyy']);
+  });
+});
+
+describe('formatDateStr — all tokens in {{token}} mode', () => {
+  // 2024-01-05 14:30:45, Friday, ISO week 1, Q1
+  const date  = new Date(2024, 0, 5, 14, 30, 45);
+  const fmt   = (s: string) => parseDateFormatStr(s);
+  const f     = (s: string) => formatDateStr(date, fmt(s), en);
+
+  // ── Day tokens ────────────────────────────────────────────────────────────
+  it('{{dd}} → zero-padded day', ()          => expect(f('{{dd}}')).to.equal('05'));
+  it('{{d}}  → unpadded day',   ()          => expect(f('{{d}}')).to.equal('5'));
+  it('{{day}} → short weekday name', ()     => expect(f('{{day}}')).to.equal('Fri'));
+  it('{{DAY}} → full weekday name', ()      => expect(f('{{DAY}}')).to.equal('Friday'));
+
+  // ── Month tokens ──────────────────────────────────────────────────────────
+  it('{{mm}} → zero-padded month', ()       => expect(f('{{mm}}')).to.equal('01'));
+  it('{{m}}  → unpadded month', ()          => expect(f('{{m}}')).to.equal('1'));
+  it('{{mon}} → 3-letter month abbrev', ()  => expect(f('{{mon}}')).to.equal('Jan'));
+  it('{{month}} → full month name', ()      => expect(f('{{month}}')).to.equal('January'));
+
+  // ── Year tokens ───────────────────────────────────────────────────────────
+  it('{{yyyy}} → 4-digit year', ()          => expect(f('{{yyyy}}')).to.equal('2024'));
+  it('{{yy}}   → 2-digit year', ()          => expect(f('{{yy}}')).to.equal('24'));
+
+  // ── Week tokens ───────────────────────────────────────────────────────────
+  it('{{w}}    → unpadded ISO week number', () => expect(f('{{w}}')).to.equal('1'));
+  it('{{ww}}   → zero-padded ISO week number', () => expect(f('{{ww}}')).to.equal('01'));
+  it('{{week}} → full ISO 8601 week date', () => expect(f('{{week}}')).to.equal('2024-W1-5'));
+
+  // ── Quarter tokens ────────────────────────────────────────────────────────
+  it('{{q}}  → quarter number', ()          => expect(f('{{q}}')).to.equal('1'));
+  it('{{qq}} → quarter label + number', ()  => expect(f('{{qq}}')).to.equal('Qtr1'));
+
+  // ── Time tokens ───────────────────────────────────────────────────────────
+  it('{{H}}  → unpadded 24-h hour', ()      => expect(f('{{H}}')).to.equal('14'));
+  it('{{HH}} → zero-padded 24-h hour', ()   => expect(f('{{HH}}')).to.equal('14'));
+  it('{{h}}  → unpadded 12-h hour', ()      => expect(f('{{h}}')).to.equal('2'));
+  it('{{hh}} → zero-padded 12-h hour', ()   => expect(f('{{hh}}')).to.equal('02'));
+  it('{{MI}} → zero-padded minutes', ()     => expect(f('{{MI}}')).to.equal('30'));
+  it('{{SS}} → zero-padded seconds', ()     => expect(f('{{SS}}')).to.equal('45'));
+  it('{{pm}} → lowercase am/pm', ()         => expect(f('{{pm}}')).to.equal('pm'));
+  it('{{PM}} → uppercase AM/PM', ()         => expect(f('{{PM}}')).to.equal('PM'));
+
+  // ── Core use-case from issue #382: "week" / "mon" as literal text ─────────
+  it('"week" in label stays literal when outside {{}}', () => {
+    expect(f('{{ww}} week - {{mon}} {{yyyy}}')).to.equal('01 week - Jan 2024');
+  });
+
+  it('"mon" in label stays literal when outside {{}}', () => {
+    // "every mon" — "mon" is literal; only {{dd}} and {{yyyy}} are substituted
+    expect(f('{{dd}} {{yyyy}} every mon')).to.equal('05 2024 every mon');
+  });
+
+  it('leading literal "W" prefix stays literal', () => {
+    expect(f('W{{ww}}/{{yyyy}}')).to.equal('W01/2024');
+  });
+
+  it('adjacent tokens with no separator', () => {
+    expect(f('{{dd}}{{mm}}{{yyyy}}')).to.equal('05012024');
+  });
+
+  // ── Legacy formats unaffected ─────────────────────────────────────────────
+  it('legacy dd/mm/yyyy unchanged', () => {
+    expect(f('dd/mm/yyyy')).to.equal('05/01/2024');
+  });
+
+  it('legacy "mon yyyy" unchanged (mon substituted, not literal)', () => {
+    // Without {{ delimiters, "mon" is still a token → "Jan 2024"
+    expect(f('mon yyyy')).to.equal('Jan 2024');
   });
 });
 

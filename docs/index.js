@@ -54,8 +54,11 @@ function start(e) {
       vCaptionType: "Complete", // Set to Show Caption : None,Caption,Resource,Duration,Complete,
       vQuarterColWidth: 36,
       vDateTaskDisplayFormat: "day dd month yyyy", // Shown in tool tip box
-      vDayMajorDateDisplayFormat: "mon yyyy - Week ww", // Set format to display dates in the "Major" header of the "Day" view
-      vWeekMinorDateDisplayFormat: "dd mon", // Set format to display dates in the "Minor" header of the "Week" view
+      // {{token}} syntax (issue #382): text outside {{}} is treated as a literal label.
+      // "Week" and "week" stay as-is; only {{ww}}, {{mon}}, {{yyyy}} etc. are substituted.
+      vDayMajorDateDisplayFormat: "{{mon}} {{yyyy}} - Week {{ww}}", // "Week" is literal; {{ww}} → week number
+      vWeekMajorDateDisplayFormat: "{{yyyy}} - week {{ww}}",        // "week" is literal; legacy "week" token would give ISO date
+      vWeekMinorDateDisplayFormat: "{{dd}} {{mon}}",                // equivalent to legacy "dd mon" but explicit
       vLang: lang,
       vUseSingleCell, // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
       vShowRes,
