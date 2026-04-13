@@ -369,4 +369,24 @@ function demo376Remove() {
   }
 }
 
+function load68Demo(workingDays) {
+  g = new JSGantt.GanttChart(document.getElementById("embedded-Gantt"), "day");
+  g.setOptions({
+    vFormat: "day",
+    vFormatArr: ["Day"],
+    vShowDur: 1,
+    vShowRes: 0, vShowCost: 0, vShowComp: 0,
+    vShowStartDate: 1, vShowEndDate: 1,
+    vEditable: false,
+  });
+  if (workingDays) g.setWorkingDays(workingDays);
+  g.AddTaskItem(new JSGantt.TaskItem(1, "Task A (Mon–Mon)", "2025-01-06", "2025-01-13", "gtaskblue", "", 0, "Me", 0, 0, 0, 1, "", "", "", g));
+  g.AddTaskItem(new JSGantt.TaskItem(2, "Task B (Mon–Fri)", "2025-01-13", "2025-01-17", "gtaskgreen", "", 0, "Me", 0, 0, 0, 1, "", "", "", g));
+  g.Draw();
+  var dur = "";
+  var cell = document.querySelector("#embedded-Gantt .gduration div");
+  if (cell) dur = cell.innerText.trim();
+  document.getElementById("demo68-status").textContent = dur || "(draw to see)";
+}
+
 start("pt");

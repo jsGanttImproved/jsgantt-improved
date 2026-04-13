@@ -347,6 +347,23 @@
         </tr>
         <tr style="border-top:1px solid #ffe082">
           <td style="padding:6px 8px;vertical-align:top">
+            <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/68" target="_blank" style="color:#0066cc">#68</a>
+          </td>
+          <td style="padding:6px 8px;vertical-align:top" colspan="2">
+            <strong>Working days: configurable duration and bar width.</strong><br>
+            <code>setWorkingDays({ 0:false, 1:true, 2:true, 3:true, 4:true, 5:true, 6:false })</code>
+            makes the gantt skip non-working days in duration counts and bar widths (Mon–Fri only in this example).
+            <br><br>
+            <button onclick="load68Demo(null)" style="padding:4px 10px;margin-right:8px">All days (default)</button>
+            <button onclick="load68Demo({0:false,1:true,2:true,3:true,4:true,5:true,6:false})" style="padding:4px 10px;margin-right:8px">Mon–Fri only</button>
+            <button onclick="load68Demo({0:false,1:true,2:true,3:true,4:true,5:true,6:true})" style="padding:4px 10px;margin-right:8px">Mon–Sat</button>
+            <br><br>
+            <span style="font-family:sans-serif;font-size:12px">Duration shown: </span>
+            <span id="demo68-status" style="color:#0066cc;font-family:monospace"></span>
+          </td>
+        </tr>
+        <tr style="border-top:1px solid #ffe082">
+          <td style="padding:6px 8px;vertical-align:top">
             <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/376" target="_blank" style="color:#0066cc">#376</a>
           </td>
           <td style="padding:6px 8px;vertical-align:top" colspan="2">
