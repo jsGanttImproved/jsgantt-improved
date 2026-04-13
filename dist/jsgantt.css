@@ -148,15 +148,21 @@ td.gspanning {
   text-align: center;
 }
 
-.gtaskname div,
+.gtaskname div:not(.gselector),
 /* needed for IE8 */
 
-.gtaskname {
+.gtaskname:not(.gselector) {
   min-width: 170px;
   max-width: 220px;
   width: 220px;
   font-size: 12px;
   border-left: none;
+}
+
+.gtaskname.gspanning {
+  min-width: unset;
+  max-width: unset;
+  width: unset;
 }
 
 .gtaskheading,
