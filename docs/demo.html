@@ -309,6 +309,44 @@
       <span id="depend-status" style="color:#0066cc">333 (types: FS)</span>
     </div>
 
+    <br />
+
+    <!-- Bug scenario playground — each entry has a link to the ticket and a button to reproduce -->
+    <div style="padding:12px 16px;background:#fff8e1;border:1px solid #ffe082;border-radius:4px;font-size:13px">
+      <strong style="font-family:sans-serif;font-size:14px">Bug scenario playground</strong>
+      <span style="font-family:sans-serif;font-size:12px;color:#666;margin-left:8px">
+        Click a button to load the scenario. Use "Reset" to return to the default data.
+      </span>
+
+      <table style="margin-top:10px;border-collapse:collapse;width:100%;font-family:sans-serif;font-size:12px">
+        <thead>
+          <tr style="border-bottom:1px solid #ffe082">
+            <th style="text-align:left;padding:4px 8px;width:80px">Ticket</th>
+            <th style="text-align:left;padding:4px 8px">Description</th>
+            <th style="text-align:left;padding:4px 8px;width:120px">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:6px 8px;vertical-align:top">
+              <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/284" target="_blank" style="color:#0066cc">#284</a>
+            </td>
+            <td style="padding:6px 8px;vertical-align:top">
+              <strong>End date on last day of week renders extra empty week.</strong><br>
+              When a task ended on Sunday (with Mon-first), the chart added a blank extra week after it.
+              This scenario shows tasks whose end dates fall on Sundays — the chart should end cleanly with no trailing empty week.
+            </td>
+            <td style="padding:6px 8px;vertical-align:top">
+              <button onclick="loadBugScenario('bug284', 'week')" style="padding:4px 10px">Load #284</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <br>
+      <button onclick="start({});" style="padding:4px 10px">Reset to default data</button>
+    </div>
+
   </div>
     <div id="embedded-Gantt">
     </div>
