@@ -298,4 +298,75 @@ function generateTooltip(task) {
   });
 }
 
+// ─── Issue #376 demo ─────────────────────────────────────────────────────────
+// Demonstrates GetTaskByOriginalID and RemoveTaskItem with original string IDs.
+// Tasks are loaded via parseXMLString so their internal vIDs differ from the
+// human-readable IDs in the source XML.
+
+const DEMO_376_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <task>
+    <pID>TASK-1</pID><pName>Alpha (group)</pName>
+    <pStart>2026-04-01</pStart><pEnd>2026-04-30</pEnd>
+    <pClass>gtaskblue</pClass><pGroup>1</pGroup><pParent>0</pParent><pOpen>1</pOpen>
+  </task>
+  <task>
+    <pID>TASK-2</pID><pName>Beta (child of TASK-1)</pName>
+    <pStart>2026-04-01</pStart><pEnd>2026-04-15</pEnd>
+    <pClass>gtaskgreen</pClass><pGroup>0</pGroup><pParent>TASK-1</pParent><pOpen>1</pOpen>
+  </task>
+  <task>
+    <pID>TASK-3</pID><pName>Gamma (standalone)</pName>
+    <pStart>2026-04-16</pStart><pEnd>2026-04-30</pEnd>
+    <pClass>gtaskred</pClass><pGroup>0</pGroup><pParent>0</pParent><pOpen>1</pOpen>
+  </task>
+</project>`;
+
+function load376Demo() {
+  g = new JSGantt.GanttChart(document.getElementById("embedded-Gantt"), "month");
+  g.setOptions({
+    vCaptionType: "Caption",
+    vLang: "en",
+    vFormat: "month",
+    vFormatArr: ["Week", "Month"],
+    vShowRes: 0, vShowCost: 0, vShowComp: 0, vShowDur: 0,
+    vShowStartDate: 1, vShowEndDate: 1,
+    vEditable: false,
+  });
+  JSGantt.parseXMLString(DEMO_376_XML, g);
+  g.Draw();
+  document.getElementById("demo376-controls").style.display = "block";
+  document.getElementById("demo376-status").textContent = "Chart loaded with TASK-1, TASK-2, TASK-3";
+}
+
+function demo376Search() {
+  const id = document.getElementById("demo376-id").value.trim();
+  const task = g.GetTaskByOriginalID(id);
+  const status = document.getElementById("demo376-status");
+  if (task) {
+    status.style.color = "#007700";
+    status.textContent = 'Found: "' + task.getName() + '" (internal vID: ' + task.getID() + ')';
+  } else {
+    status.style.color = "#cc0000";
+    status.textContent = 'No task with original ID "' + id + '"';
+  }
+}
+
+function demo376Remove() {
+  const id = document.getElementById("demo376-id").value.trim();
+  const before = g.vTaskList.filter(t => !t.getToDelete()).length;
+  g.RemoveTaskItem(id);
+  g.Draw();
+  const after = g.vTaskList.filter(t => !t.getToDelete()).length;
+  const removed = before - after;
+  const status = document.getElementById("demo376-status");
+  if (removed > 0) {
+    status.style.color = "#007700";
+    status.textContent = 'Removed ' + removed + ' task(s) with original ID "' + id + '" (including children)';
+  } else {
+    status.style.color = "#cc0000";
+    status.textContent = 'No task found with original ID "' + id + '"';
+  }
+}
+
 start("pt");

@@ -345,6 +345,31 @@
             </div>
           </td>
         </tr>
+        <tr style="border-top:1px solid #ffe082">
+          <td style="padding:6px 8px;vertical-align:top">
+            <a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/376" target="_blank" style="color:#0066cc">#376</a>
+          </td>
+          <td style="padding:6px 8px;vertical-align:top" colspan="2">
+            <strong>RemoveTaskItem / GetTaskByOriginalID accept original (pre-hash) IDs.</strong><br>
+            After tasks are loaded via <code>parseXMLString</code>, each task's public ID (e.g. <code>TASK-1</code>)
+            differs from its internal hashed vID. Previously <code>RemoveTaskItem</code> only accepted the hashed vID.
+            PR #394 lets you pass the original string ID directly — and adds <code>GetTaskByOriginalID</code> for lookups.
+            <br><br>
+            <button onclick="load376Demo()" style="padding:4px 10px;margin-right:8px">Load #376 scenario</button>
+            <span style="font-family:sans-serif;font-size:12px;color:#888">Loads 3 XML tasks: TASK-1 (group), TASK-2 (child), TASK-3 (standalone)</span>
+            <br><br>
+            <div id="demo376-controls" style="display:none">
+              <label style="font-family:sans-serif;font-size:12px">Original ID:&nbsp;</label>
+              <input id="demo376-id" type="text" value="TASK-1" style="width:100px;padding:2px 4px;font-family:monospace">
+              &nbsp;
+              <button onclick="demo376Search()" style="padding:4px 10px;margin-right:6px">Search (GetTaskByOriginalID)</button>
+              <button onclick="demo376Remove()" style="padding:4px 10px">Remove (RemoveTaskItem)</button>
+              <br><br>
+              <span style="font-family:sans-serif;font-size:12px">Result: </span>
+              <span id="demo376-status" style="color:#0066cc;font-family:monospace"></span>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
 
