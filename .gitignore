@@ -7,3 +7,6 @@ dist/src
 dist/e2e
 dist/test
 dist/index.*
+# Built assets copied into docs/ for local dev (generated, not source-controlled)
+docs/jsgantt.js
+docs/jsgantt.css
