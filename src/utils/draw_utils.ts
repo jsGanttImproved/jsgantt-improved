@@ -152,6 +152,9 @@ export const drawSelector = function (pPos) {
 
     if (this.vFormatArr.join().toLowerCase().indexOf('quarter') != -1)
       addFormatListeners(this, 'quarter', newNode(vTmpDiv, 'span', this.vDivId + 'formatquarter' + pPos, 'gformlabel' + ((this.vFormat == 'quarter') ? ' gselected' : ''), this.vLangs[this.vLang]['quarter']));
+
+    if (this.vFormatArr.join().toLowerCase().indexOf('year') != -1)
+      addFormatListeners(this, 'year', newNode(vTmpDiv, 'span', this.vDivId + 'formatyear' + pPos, 'gformlabel' + ((this.vFormat == 'year') ? ' gselected' : ''), this.vLangs[this.vLang]['year']));
   }
   else {
     newNode(vOutput, 'div', null, 'gselector');

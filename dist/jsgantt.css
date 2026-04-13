@@ -173,9 +173,6 @@ td.gspanning {
 .gselector {
   text-align: left;
   white-space: nowrap;
-  min-width: 170px;
-  max-width: 170px;
-  width: 170px;
 }
 
 .gformlabel {

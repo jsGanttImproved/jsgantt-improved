@@ -82,6 +82,78 @@ describe('getMinDate', () => {
   });
 });
 
+// ── Issue #278: Year format — getMinDate / getMaxDate boundary snapping ──────
+
+describe('getMinDate — year format', () => {
+  it('snaps to Jan 1 of the earliest task year', () => {
+    const t1 = makeTask({ id: 100, parent: 0, start: new Date('2023-07-15'), end: new Date('2023-12-31') });
+    const t2 = makeTask({ id: 101, parent: 0, start: new Date('2021-03-01'), end: new Date('2022-06-30') });
+
+    const minDate = getMinDate([t1, t2], 'year');
+
+    expect(minDate.getFullYear()).to.equal(2021, `Expected year 2021, got ${minDate.getFullYear()}`);
+    expect(minDate.getMonth()).to.equal(0, 'Expected January (month 0)');
+    expect(minDate.getDate()).to.equal(1, 'Expected 1st of month');
+  });
+
+  it('handles a single task spanning multiple years', () => {
+    const t = makeTask({ id: 102, parent: 0, start: new Date('2019-06-01'), end: new Date('2025-11-30') });
+
+    const minDate = getMinDate([t], 'year');
+
+    expect(minDate.getFullYear()).to.equal(2019);
+    expect(minDate.getMonth()).to.equal(0);
+    expect(minDate.getDate()).to.equal(1);
+  });
+
+  it('dateless group does not pull min to today in year format', () => {
+    const group = makeTask({ id: 103, parent: 0, group: 1 });
+    const leaf  = makeTask({ id: 104, parent: 103, start: new Date('2030-01-01'), end: new Date('2030-12-31') });
+
+    const minDate = getMinDate([group, leaf], 'year');
+
+    expect(minDate.getFullYear()).to.equal(2030, `Expected 2030, got ${minDate.getFullYear()}`);
+  });
+});
+
+describe('getMaxDate — year format', () => {
+  it('snaps to Dec 31 of the latest task year', () => {
+    const t1 = makeTask({ id: 110, parent: 0, start: new Date('2020-01-01'), end: new Date('2022-06-30') });
+    const t2 = makeTask({ id: 111, parent: 0, start: new Date('2023-03-01'), end: new Date('2025-09-15') });
+
+    const maxDate = getMaxDate([t1, t2], 'year');
+
+    expect(maxDate.getFullYear()).to.equal(2025, `Expected year 2025, got ${maxDate.getFullYear()}`);
+    expect(maxDate.getMonth()).to.equal(11, 'Expected December (month 11)');
+    expect(maxDate.getDate()).to.equal(31, 'Expected 31st');
+  });
+
+  it('year already ending Dec 31 stays as Dec 31', () => {
+    const t = makeTask({ id: 112, parent: 0, start: new Date('2024-01-01'), end: new Date('2024-12-31') });
+
+    const maxDate = getMaxDate([t], 'year');
+
+    expect(maxDate.getFullYear()).to.equal(2024);
+    expect(maxDate.getMonth()).to.equal(11);
+    expect(maxDate.getDate()).to.equal(31);
+  });
+
+  it('min and max dates bracket the full task range in year format', () => {
+    const tasks = [
+      makeTask({ id: 120, parent: 0, start: new Date('2018-05-01'), end: new Date('2018-08-31') }),
+      makeTask({ id: 121, parent: 0, start: new Date('2022-11-01'), end: new Date('2023-02-28') }),
+    ];
+
+    const minDate = getMinDate(tasks, 'year');
+    const maxDate = getMaxDate(tasks, 'year');
+
+    expect(minDate.getFullYear()).to.equal(2018);
+    expect(minDate.getMonth()).to.equal(0);
+    expect(maxDate.getFullYear()).to.equal(2023);
+    expect(maxDate.getMonth()).to.equal(11);
+  });
+});
+
 // ── Issue #382: {{token}} delimiter syntax for date display formats ────────────
 //
 // Test date: 2024-01-05 14:30:45  (Friday, ISO week 1, Q1)

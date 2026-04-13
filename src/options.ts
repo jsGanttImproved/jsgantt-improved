@@ -29,7 +29,7 @@ export const includeGetSet = function () {
   this.setUseSort = function (pVal) { this.vUseSort = pVal; };
   this.setUseSingleCell = function (pVal) { this.vUseSingleCell = pVal * 1; };
   this.setFormatArr = function () {
-    let vValidFormats = 'hour day week month quarter';
+    let vValidFormats = 'hour day week month quarter year';
     this.vFormatArr = new Array();
     for (let i = 0, j = 0; i < arguments.length; i++) {
       if (vValidFormats.indexOf(arguments[i].toLowerCase()) != -1 && arguments[i].length > 1) {
@@ -82,6 +82,9 @@ export const includeGetSet = function () {
   this.setMonthMinorDateDisplayFormat = function (pVal) { this.vMonthMinorDateDisplayFormat = parseDateFormatStr(pVal); };
   this.setQuarterMajorDateDisplayFormat = function (pVal) { this.vQuarterMajorDateDisplayFormat = parseDateFormatStr(pVal); };
   this.setQuarterMinorDateDisplayFormat = function (pVal) { this.vQuarterMinorDateDisplayFormat = parseDateFormatStr(pVal); };
+  this.setYearMajorDateDisplayFormat = function (pVal) { this.vYearMajorDateDisplayFormat = parseDateFormatStr(pVal); };
+  this.setYearMinorDateDisplayFormat = function (pVal) { this.vYearMinorDateDisplayFormat = parseDateFormatStr(pVal); };
+  this.setYearColWidth = function (pWidth) { this.vYearColWidth = pWidth; };
   this.setCaptionType = function (pType) { this.vCaptionType = pType; };
   this.setFormat = function (pFormat) {
     this.vFormat = pFormat;
@@ -183,6 +186,9 @@ export const includeGetSet = function () {
   this.getMonthMinorDateDisplayFormat = function () { return this.vMonthMinorDateDisplayFormat; };
   this.getQuarterMajorDateDisplayFormat = function () { return this.vQuarterMajorDateDisplayFormat; };
   this.getQuarterMinorDateDisplayFormat = function () { return this.vQuarterMinorDateDisplayFormat; };
+  this.getYearMajorDateDisplayFormat = function () { return this.vYearMajorDateDisplayFormat; };
+  this.getYearMinorDateDisplayFormat = function () { return this.vYearMinorDateDisplayFormat; };
+  this.getYearColWidth = function () { return this.vYearColWidth; };
   this.getCaptionType = function () { return this.vCaptionType; };
   this.getMinGpLen = function () { return this.vMinGpLen; };
   this.getScrollTo = function () { return this.vScrollTo; };

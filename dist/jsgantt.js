@@ -116,11 +116,13 @@ var GanttChart = function (pDiv, pFormat) {
     this.vMonthMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("mon");
     this.vQuarterMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("yyyy");
     this.vQuarterMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("qq");
+    this.vYearMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("yyyy");
+    this.vYearMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("yyyy");
     this.vUseFullYear = (0, date_utils_1.parseDateFormatStr)("dd/mm/yyyy");
     this.vCaptionType;
     this.vDepId = 1;
     this.vTaskList = new Array();
-    this.vFormatArr = new Array("hour", "day", "week", "month", "quarter");
+    this.vFormatArr = new Array("hour", "day", "week", "month", "quarter", "year");
     this.vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
     this.vProcessNeeded = true;
     this.vMinGpLen = 8;
@@ -130,6 +132,7 @@ var GanttChart = function (pDiv, pFormat) {
     this.vWeekColWidth = 36;
     this.vMonthColWidth = 36;
     this.vQuarterColWidth = 18;
+    this.vYearColWidth = 60;
     this.vRowHeight = 20;
     this.vTodayPx = -1;
     this.vLangs = lang;
@@ -376,6 +379,19 @@ var GanttChart = function (pDiv, pFormat) {
                 (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vQuarterMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
                 vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
             }
+            else if (this.vFormat == "year") {
+                // Span all remaining years in one empty major cell — the minor header
+                // (individual year labels) already provides full context.
+                var countDate = new Date(vTmpDate);
+                vColSpan = 0;
+                while (countDate.getTime() <= vMaxDate.getTime()) {
+                    vColSpan++;
+                    countDate.setFullYear(countDate.getFullYear() + 1);
+                }
+                var vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+                (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, "", vColWidth * vColSpan);
+                vTmpDate.setTime(vMaxDate.getTime() + 1); // advance past max to exit loop
+            }
             else if (this.vFormat == "hour") {
                 vColSpan = 24 - vTmpDate.getHours();
                 if (vTmpDate.getFullYear() == vMaxDate.getFullYear() && vTmpDate.getMonth() == vMaxDate.getMonth() && vTmpDate.getDate() == vMaxDate.getDate())
@@ -439,6 +455,14 @@ var GanttChart = function (pDiv, pFormat) {
                 vTmpDate.setDate(vTmpDate.getDate() + 81);
                 while (vTmpDate.getDate() > 1)
                     vTmpDate.setDate(vTmpDate.getDate() + 1);
+            }
+            else if (this.vFormat == "year") {
+                if (vTmpDate <= vMaxDate) {
+                    var vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, "td", null, vMinorHeaderCellClass);
+                    (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vYearMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+                    vNumCols++;
+                }
+                vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
             }
             else if (this.vFormat == "hour") {
                 for (var i = vTmpDate.getHours(); i < 24; i++) {
@@ -731,6 +755,8 @@ var GanttChart = function (pDiv, pFormat) {
             vColWidth = this.vMonthColWidth;
         else if (this.vFormat == "quarter")
             vColWidth = this.vQuarterColWidth;
+        else if (this.vFormat == "year")
+            vColWidth = this.vYearColWidth;
         else if (this.vFormat == "hour")
             vColWidth = this.vHourColWidth;
         // DRAW the Left-side of the chart (names, resources, comp%)
@@ -1823,6 +1849,7 @@ var ar = {
     'week': 'أسبوع',
     'month': 'شهر',
     'quarter': 'ربع',
+    'year': 'سنة',
     'hours': 'ساعات',
     'days': 'أيام',
     'weeks': 'أسابيع',
@@ -1948,6 +1975,7 @@ var scn = {
     'week': '星期',
     'month': '月',
     'quarter': '季',
+    'year': 'Annu',
     'hours': '小时',
     'days': '天',
     'weeks': '周',
@@ -2022,6 +2050,7 @@ var cn = {
     'week': '星期',
     'month': '月',
     'quarter': '季',
+    'year': '年',
     'hours': '小時',
     'days': '天',
     'weeks': '週',
@@ -2046,6 +2075,7 @@ var cs = {
     'week': 'Týden',
     'month': 'Měsíc',
     'quarter': 'Kvartál',
+    'year': 'Rok',
     'hours': 'Hodiny',
     'days': 'Dni',
     'weeks': 'Týdny',
@@ -2121,6 +2151,7 @@ var de = {
     'week': 'Woche',
     'month': 'Monat',
     'quarter': 'Quartal',
+    'year': 'Jahr',
     'hours': 'Stunden',
     'days': 'Tage',
     'weeks': 'Wochen',
@@ -2240,6 +2271,7 @@ var es = {
     'week': 'Semana',
     'month': 'Mes',
     'quarter': 'Trimestre',
+    'year': 'Año',
     'hours': 'Horas',
     'days': 'Días',
     'weeks': 'Semanas',
@@ -2265,6 +2297,7 @@ var en = {
     'week': 'Week',
     'month': 'Month',
     'quarter': 'Quarter',
+    'year': 'Year',
     'hours': 'Hours',
     'days': 'Days',
     'weeks': 'Weeks',
@@ -2340,6 +2373,7 @@ var fi = {
     'week': 'Viikko',
     'month': 'Kuukausi',
     'quarter': 'Kvartaali',
+    'year': 'Vuosi',
     'hours': 'Tunnit',
     'days': 'Päivät',
     'weeks': 'Viikot',
@@ -2469,6 +2503,7 @@ var fr = {
     'week': 'Semaine',
     'month': 'Mois',
     'quarter': 'Trimestre',
+    'year': 'Année',
     'hours': 'Heures',
     'days': 'Jours',
     'weeks': 'Semaines',
@@ -2493,6 +2528,7 @@ var he = {
     'week': 'שבוע',
     'month': 'חודש',
     'quarter': 'רבעון',
+    'year': 'שנה',
     'hours': 'שעות',
     'days': 'ימים',
     'weeks': 'שבועות',
@@ -2568,6 +2604,7 @@ var it = {
     'week': 'Settimana',
     'month': 'Mese',
     'quarter': 'Trimestre',
+    'year': 'Év',
     'hours': 'Ore',
     'days': 'Giorni',
     'weeks': 'Mesi',
@@ -2643,6 +2680,7 @@ var hu = {
     'week': 'Hét',
     'month': 'Hónap',
     'quarter': 'Negyedév ',
+    'year': 'Anno',
     'hours': 'Órák',
     'days': 'Nap',
     'weeks': 'Hét',
@@ -2718,6 +2756,7 @@ var id = {
     'week': 'Minggu',
     'month': 'Bulan',
     'quarter': 'Kuartal',
+    'year': 'Tahun',
     'hours': 'Jam',
     'days': 'Hari',
     'weeks': 'Minggu',
@@ -2792,6 +2831,7 @@ var ja = {
     'week': '週',
     'month': '月',
     'quarter': '四半期',
+    'year': '年',
     'hours': '時間',
     'days': '日間',
     'weeks': '週間',
@@ -2867,6 +2907,7 @@ var ko = {
     'week': '주',
     'month': '월',
     'quarter': '분기',
+    'year': '년',
     'hours': '시',
     'days': '일',
     'weeks': '주',
@@ -2942,6 +2983,7 @@ var nl = {
     'week': 'Week',
     'month': 'Maand',
     'quarter': 'Kwartaal',
+    'year': 'Jaar',
     'hours': 'Uren',
     'days': 'Dagen',
     'weeks': 'Weken',
@@ -3016,6 +3058,7 @@ var pl = {
     'week': 'Tydzień',
     'month': 'Miesiąc',
     'quarter': 'Kwartał',
+    'year': 'Rok',
     'hours': 'Godziny',
     'days': 'Dni',
     'weeks': 'Tygodni',
@@ -3096,6 +3139,7 @@ var pt = {
     'week': 'Semana',
     'month': 'Mês',
     'quarter': 'Trimestre',
+    'year': 'Ano',
     'hr': 'hr',
     'dy': 'dia',
     'wk': 'sem.',
@@ -3207,6 +3251,7 @@ var ru = {
     'week': 'Неделя',
     'month': 'Месяц',
     'quarter': 'Кварт',
+    'year': 'Год',
     'hours': 'Часов',
     'days': 'Дней',
     'weeks': 'Недель',
@@ -3232,6 +3277,7 @@ var sv = {
     'week': 'Vecka',
     'month': 'Månad',
     'quarter': 'Kvartal',
+    'year': 'År',
     'hours': 'Timmar',
     'days': 'Dagar',
     'weeks': 'Veckor',
@@ -3306,6 +3352,7 @@ var tr = {
     'week': 'Hafta',
     'month': 'Ay',
     'quarter': 'Çeyrek Yıl',
+    'year': 'Yıl',
     'hours': 'Saat',
     'days': 'Gün',
     'weeks': 'Hafta',
@@ -3430,6 +3477,7 @@ var ua = {
     'week': 'Тиждень',
     'month': 'Місяць',
     'quarter': 'Кварт',
+    'year': 'Рік',
     'hours': 'Годин',
     'days': 'Днів',
     'weeks': 'Тижнів',
@@ -3485,7 +3533,7 @@ var includeGetSet = function () {
     this.setUseSort = function (pVal) { this.vUseSort = pVal; };
     this.setUseSingleCell = function (pVal) { this.vUseSingleCell = pVal * 1; };
     this.setFormatArr = function () {
-        var vValidFormats = 'hour day week month quarter';
+        var vValidFormats = 'hour day week month quarter year';
         this.vFormatArr = new Array();
         for (var i = 0, j = 0; i < arguments.length; i++) {
             if (vValidFormats.indexOf(arguments[i].toLowerCase()) != -1 && arguments[i].length > 1) {
@@ -3538,6 +3586,9 @@ var includeGetSet = function () {
     this.setMonthMinorDateDisplayFormat = function (pVal) { this.vMonthMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
     this.setQuarterMajorDateDisplayFormat = function (pVal) { this.vQuarterMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
     this.setQuarterMinorDateDisplayFormat = function (pVal) { this.vQuarterMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
+    this.setYearMajorDateDisplayFormat = function (pVal) { this.vYearMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
+    this.setYearMinorDateDisplayFormat = function (pVal) { this.vYearMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
+    this.setYearColWidth = function (pWidth) { this.vYearColWidth = pWidth; };
     this.setCaptionType = function (pType) { this.vCaptionType = pType; };
     this.setFormat = function (pFormat) {
         this.vFormat = pFormat;
@@ -3642,6 +3693,9 @@ var includeGetSet = function () {
     this.getMonthMinorDateDisplayFormat = function () { return this.vMonthMinorDateDisplayFormat; };
     this.getQuarterMajorDateDisplayFormat = function () { return this.vQuarterMajorDateDisplayFormat; };
     this.getQuarterMinorDateDisplayFormat = function () { return this.vQuarterMinorDateDisplayFormat; };
+    this.getYearMajorDateDisplayFormat = function () { return this.vYearMajorDateDisplayFormat; };
+    this.getYearMinorDateDisplayFormat = function () { return this.vYearMinorDateDisplayFormat; };
+    this.getYearColWidth = function () { return this.vYearColWidth; };
     this.getCaptionType = function () { return this.vCaptionType; };
     this.getMinGpLen = function () { return this.vMinGpLen; };
     this.getScrollTo = function () { return this.vScrollTo; };
@@ -4497,6 +4551,9 @@ var getMinDate = function (pList, pFormat, pMinDate, pFirstDayOfWeek) {
         else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
             vDate.setFullYear(vDate.getFullYear(), 9, 1);
     }
+    else if (pFormat == 'year') {
+        vDate.setFullYear(vDate.getFullYear(), 0, 1);
+    }
     else if (pFormat == 'hour') {
         vDate.setHours(vDate.getHours() - 1);
         while (vDate.getHours() % 6 != 0)
@@ -4555,6 +4612,9 @@ var getMaxDate = function (pList, pFormat, pMaxDate, pFirstDayOfWeek) {
             vDate.setFullYear(vDate.getFullYear(), 8, 30);
         else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
             vDate.setFullYear(vDate.getFullYear(), 11, 31);
+    }
+    else if (pFormat == 'year') {
+        vDate.setFullYear(vDate.getFullYear(), 11, 31);
     }
     else if (pFormat == 'hour') {
         if (vDate.getHours() == 0)
@@ -4959,6 +5019,8 @@ var drawSelector = function (pPos) {
             (0, events_1.addFormatListeners)(this, 'month', (0, exports.newNode)(vTmpDiv, 'span', this.vDivId + 'formatmonth' + pPos, 'gformlabel' + ((this.vFormat == 'month') ? ' gselected' : ''), this.vLangs[this.vLang]['month']));
         if (this.vFormatArr.join().toLowerCase().indexOf('quarter') != -1)
             (0, events_1.addFormatListeners)(this, 'quarter', (0, exports.newNode)(vTmpDiv, 'span', this.vDivId + 'formatquarter' + pPos, 'gformlabel' + ((this.vFormat == 'quarter') ? ' gselected' : ''), this.vLangs[this.vLang]['quarter']));
+        if (this.vFormatArr.join().toLowerCase().indexOf('year') != -1)
+            (0, events_1.addFormatListeners)(this, 'year', (0, exports.newNode)(vTmpDiv, 'span', this.vDivId + 'formatyear' + pPos, 'gformlabel' + ((this.vFormat == 'year') ? ' gselected' : ''), this.vLangs[this.vLang]['year']));
     }
     else {
         (0, exports.newNode)(vOutput, 'div', null, 'gselector');
@@ -5152,6 +5214,11 @@ var getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekend
         vPosTmpDate.setDate(curTaskStart.getDate());
         var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
         vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + QUARTER_CELL_MARGIN_WIDTH) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
+    }
+    else if (pFormat == 'year') {
+        var YEAR_CELL_MARGIN_WIDTH = 3;
+        // vTaskRight is in hours; divide by hours-per-average-year for fractional years
+        vTaskRightPx = Math.ceil((vTaskRight / (24 * 365.25)) * (pColWidth + YEAR_CELL_MARGIN_WIDTH) - 1);
     }
     else if (pFormat == 'hour') {
         // can't just calculate sum because of daylight savings changes
