@@ -125,7 +125,7 @@ function start(e) {
       vScrollTo,
       vUseSort,
       vFormat: "week",
-      vFormatArr: ["Day", "Week", "Month", "Quarter"], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+      vFormatArr: ["Day", "Week", "Month", "Quarter", "Year"], // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
     });
     //DELAY FROM INPUT
 
@@ -243,7 +243,7 @@ function loadBugScenario(name, format) {
     vCaptionType: "Caption",
     vLang: "en",
     vFormat: format || "week",
-    vFormatArr: ["Day", "Week", "Month", "Quarter"],
+    vFormatArr: ["Day", "Week", "Month", "Quarter", "Year"],
     vShowRes: 0,
     vShowCost: 0,
     vShowComp: 1,

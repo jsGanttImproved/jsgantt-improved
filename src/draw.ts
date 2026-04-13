@@ -122,11 +122,13 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vMonthMinorDateDisplayFormat = parseDateFormatStr("mon");
   this.vQuarterMajorDateDisplayFormat = parseDateFormatStr("yyyy");
   this.vQuarterMinorDateDisplayFormat = parseDateFormatStr("qq");
+  this.vYearMajorDateDisplayFormat = parseDateFormatStr("yyyy");
+  this.vYearMinorDateDisplayFormat = parseDateFormatStr("yyyy");
   this.vUseFullYear = parseDateFormatStr("dd/mm/yyyy");
   this.vCaptionType;
   this.vDepId = 1;
   this.vTaskList = new Array();
-  this.vFormatArr = new Array("hour", "day", "week", "month", "quarter");
+  this.vFormatArr = new Array("hour", "day", "week", "month", "quarter", "year");
   this.vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
   this.vProcessNeeded = true;
   this.vMinGpLen = 8;
@@ -136,6 +138,7 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vWeekColWidth = 36;
   this.vMonthColWidth = 36;
   this.vQuarterColWidth = 18;
+  this.vYearColWidth = 60;
   this.vRowHeight = 20;
   this.vTodayPx = -1;
   this.vLangs = lang;
@@ -410,6 +413,18 @@ export const GanttChart = function (pDiv, pFormat) {
         const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
         newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vQuarterMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
         vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
+      } else if (this.vFormat == "year") {
+        const thisDecade = Math.floor(vTmpDate.getFullYear() / 10) * 10;
+        let countDate = new Date(vTmpDate);
+        vColSpan = 0;
+        while (countDate.getTime() <= vMaxDate.getTime() &&
+               Math.floor(countDate.getFullYear() / 10) * 10 === thisDecade) {
+          vColSpan++;
+          countDate.setFullYear(countDate.getFullYear() + 1);
+        }
+        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vYearMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+        vTmpDate.setFullYear(thisDecade + 10, 0, 1);
       } else if (this.vFormat == "hour") {
         vColSpan = 24 - vTmpDate.getHours();
         if (vTmpDate.getFullYear() == vMaxDate.getFullYear() && vTmpDate.getMonth() == vMaxDate.getMonth() && vTmpDate.getDate() == vMaxDate.getDate()) vColSpan -= 23 - vMaxDate.getHours();
@@ -478,6 +493,13 @@ export const GanttChart = function (pDiv, pFormat) {
         vTmpDate.setDate(vTmpDate.getDate() + 81);
 
         while (vTmpDate.getDate() > 1) vTmpDate.setDate(vTmpDate.getDate() + 1);
+      } else if (this.vFormat == "year") {
+        if (vTmpDate <= vMaxDate) {
+          const vTmpCell = newNode(vTmpRow, "td", null, vMinorHeaderCellClass);
+          newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vYearMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+          vNumCols++;
+        }
+        vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
       } else if (this.vFormat == "hour") {
         for (let i = vTmpDate.getHours(); i < 24; i++) {
           vTmpDate.setHours(i); //works around daylight savings but may look a little odd on days where the clock goes forward
@@ -806,6 +828,7 @@ export const GanttChart = function (pDiv, pFormat) {
     else if (this.vFormat == "week") vColWidth = this.vWeekColWidth;
     else if (this.vFormat == "month") vColWidth = this.vMonthColWidth;
     else if (this.vFormat == "quarter") vColWidth = this.vQuarterColWidth;
+    else if (this.vFormat == "year") vColWidth = this.vYearColWidth;
     else if (this.vFormat == "hour") vColWidth = this.vHourColWidth;
 
     // DRAW the Left-side of the chart (names, resources, comp%)

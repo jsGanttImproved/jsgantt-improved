@@ -116,11 +116,13 @@ var GanttChart = function (pDiv, pFormat) {
     this.vMonthMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("mon");
     this.vQuarterMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("yyyy");
     this.vQuarterMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("qq");
+    this.vYearMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("yyyy");
+    this.vYearMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)("yyyy");
     this.vUseFullYear = (0, date_utils_1.parseDateFormatStr)("dd/mm/yyyy");
     this.vCaptionType;
     this.vDepId = 1;
     this.vTaskList = new Array();
-    this.vFormatArr = new Array("hour", "day", "week", "month", "quarter");
+    this.vFormatArr = new Array("hour", "day", "week", "month", "quarter", "year");
     this.vMonthDaysArr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
     this.vProcessNeeded = true;
     this.vMinGpLen = 8;
@@ -130,6 +132,7 @@ var GanttChart = function (pDiv, pFormat) {
     this.vWeekColWidth = 36;
     this.vMonthColWidth = 36;
     this.vQuarterColWidth = 18;
+    this.vYearColWidth = 60;
     this.vRowHeight = 20;
     this.vTodayPx = -1;
     this.vLangs = lang;
@@ -376,6 +379,19 @@ var GanttChart = function (pDiv, pFormat) {
                 (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vQuarterMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
                 vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
             }
+            else if (this.vFormat == "year") {
+                var thisDecade = Math.floor(vTmpDate.getFullYear() / 10) * 10;
+                var countDate = new Date(vTmpDate);
+                vColSpan = 0;
+                while (countDate.getTime() <= vMaxDate.getTime() &&
+                    Math.floor(countDate.getFullYear() / 10) * 10 === thisDecade) {
+                    vColSpan++;
+                    countDate.setFullYear(countDate.getFullYear() + 1);
+                }
+                var vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+                (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vYearMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+                vTmpDate.setFullYear(thisDecade + 10, 0, 1);
+            }
             else if (this.vFormat == "hour") {
                 vColSpan = 24 - vTmpDate.getHours();
                 if (vTmpDate.getFullYear() == vMaxDate.getFullYear() && vTmpDate.getMonth() == vMaxDate.getMonth() && vTmpDate.getDate() == vMaxDate.getDate())
@@ -439,6 +455,14 @@ var GanttChart = function (pDiv, pFormat) {
                 vTmpDate.setDate(vTmpDate.getDate() + 81);
                 while (vTmpDate.getDate() > 1)
                     vTmpDate.setDate(vTmpDate.getDate() + 1);
+            }
+            else if (this.vFormat == "year") {
+                if (vTmpDate <= vMaxDate) {
+                    var vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, "td", null, vMinorHeaderCellClass);
+                    (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vYearMinorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
+                    vNumCols++;
+                }
+                vTmpDate.setFullYear(vTmpDate.getFullYear() + 1, 0, 1);
             }
             else if (this.vFormat == "hour") {
                 for (var i = vTmpDate.getHours(); i < 24; i++) {
@@ -731,6 +755,8 @@ var GanttChart = function (pDiv, pFormat) {
             vColWidth = this.vMonthColWidth;
         else if (this.vFormat == "quarter")
             vColWidth = this.vQuarterColWidth;
+        else if (this.vFormat == "year")
+            vColWidth = this.vYearColWidth;
         else if (this.vFormat == "hour")
             vColWidth = this.vHourColWidth;
         // DRAW the Left-side of the chart (names, resources, comp%)
@@ -3485,7 +3511,7 @@ var includeGetSet = function () {
     this.setUseSort = function (pVal) { this.vUseSort = pVal; };
     this.setUseSingleCell = function (pVal) { this.vUseSingleCell = pVal * 1; };
     this.setFormatArr = function () {
-        var vValidFormats = 'hour day week month quarter';
+        var vValidFormats = 'hour day week month quarter year';
         this.vFormatArr = new Array();
         for (var i = 0, j = 0; i < arguments.length; i++) {
             if (vValidFormats.indexOf(arguments[i].toLowerCase()) != -1 && arguments[i].length > 1) {
@@ -3538,6 +3564,9 @@ var includeGetSet = function () {
     this.setMonthMinorDateDisplayFormat = function (pVal) { this.vMonthMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
     this.setQuarterMajorDateDisplayFormat = function (pVal) { this.vQuarterMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
     this.setQuarterMinorDateDisplayFormat = function (pVal) { this.vQuarterMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
+    this.setYearMajorDateDisplayFormat = function (pVal) { this.vYearMajorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
+    this.setYearMinorDateDisplayFormat = function (pVal) { this.vYearMinorDateDisplayFormat = (0, date_utils_1.parseDateFormatStr)(pVal); };
+    this.setYearColWidth = function (pWidth) { this.vYearColWidth = pWidth; };
     this.setCaptionType = function (pType) { this.vCaptionType = pType; };
     this.setFormat = function (pFormat) {
         this.vFormat = pFormat;
@@ -3642,6 +3671,9 @@ var includeGetSet = function () {
     this.getMonthMinorDateDisplayFormat = function () { return this.vMonthMinorDateDisplayFormat; };
     this.getQuarterMajorDateDisplayFormat = function () { return this.vQuarterMajorDateDisplayFormat; };
     this.getQuarterMinorDateDisplayFormat = function () { return this.vQuarterMinorDateDisplayFormat; };
+    this.getYearMajorDateDisplayFormat = function () { return this.vYearMajorDateDisplayFormat; };
+    this.getYearMinorDateDisplayFormat = function () { return this.vYearMinorDateDisplayFormat; };
+    this.getYearColWidth = function () { return this.vYearColWidth; };
     this.getCaptionType = function () { return this.vCaptionType; };
     this.getMinGpLen = function () { return this.vMinGpLen; };
     this.getScrollTo = function () { return this.vScrollTo; };
@@ -4497,6 +4529,9 @@ var getMinDate = function (pList, pFormat, pMinDate, pFirstDayOfWeek) {
         else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
             vDate.setFullYear(vDate.getFullYear(), 9, 1);
     }
+    else if (pFormat == 'year') {
+        vDate.setFullYear(vDate.getFullYear(), 0, 1);
+    }
     else if (pFormat == 'hour') {
         vDate.setHours(vDate.getHours() - 1);
         while (vDate.getHours() % 6 != 0)
@@ -4555,6 +4590,9 @@ var getMaxDate = function (pList, pFormat, pMaxDate, pFirstDayOfWeek) {
             vDate.setFullYear(vDate.getFullYear(), 8, 30);
         else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
             vDate.setFullYear(vDate.getFullYear(), 11, 31);
+    }
+    else if (pFormat == 'year') {
+        vDate.setFullYear(vDate.getFullYear(), 11, 31);
     }
     else if (pFormat == 'hour') {
         if (vDate.getHours() == 0)
@@ -5152,6 +5190,11 @@ var getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekend
         vPosTmpDate.setDate(curTaskStart.getDate());
         var vDaysCrctn = (curTaskEnd.getTime() - vPosTmpDate.getTime()) / (86400000);
         vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + QUARTER_CELL_MARGIN_WIDTH) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
+    }
+    else if (pFormat == 'year') {
+        var YEAR_CELL_MARGIN_WIDTH = 3;
+        // vTaskRight is in hours; divide by hours-per-average-year for fractional years
+        vTaskRightPx = Math.ceil((vTaskRight / (24 * 365.25)) * (pColWidth + YEAR_CELL_MARGIN_WIDTH) - 1);
     }
     else if (pFormat == 'hour') {
         // can't just calculate sum because of daylight savings changes

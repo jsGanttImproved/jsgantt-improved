@@ -181,6 +181,11 @@ export const getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pSh
 
     vTaskRightPx = Math.ceil((vMonthsDiff * ((pColWidth + QUARTER_CELL_MARGIN_WIDTH) / 3)) + (vDaysCrctn * (pColWidth / 90)) - 1);
   }
+  else if (pFormat == 'year') {
+    const YEAR_CELL_MARGIN_WIDTH = 3;
+    // vTaskRight is in hours; divide by hours-per-average-year for fractional years
+    vTaskRightPx = Math.ceil((vTaskRight / (24 * 365.25)) * (pColWidth + YEAR_CELL_MARGIN_WIDTH) - 1);
+  }
   else if (pFormat == 'hour') {
     // can't just calculate sum because of daylight savings changes
     vPosTmpDate = new Date(curTaskEnd.getTime());

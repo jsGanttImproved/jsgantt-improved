@@ -45,6 +45,9 @@ export const getMinDate = function (pList, pFormat, pMinDate, pFirstDayOfWeek = 
     else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
       vDate.setFullYear(vDate.getFullYear(), 9, 1);
   }
+  else if (pFormat == 'year') {
+    vDate.setFullYear(vDate.getFullYear(), 0, 1);
+  }
   else if (pFormat == 'hour') {
     vDate.setHours(vDate.getHours() - 1);
     while (vDate.getHours() % 6 != 0) vDate.setHours(vDate.getHours() - 1);
@@ -97,6 +100,9 @@ export const getMaxDate = function (pList, pFormat, pMaxDate, pFirstDayOfWeek = 
       vDate.setFullYear(vDate.getFullYear(), 8, 30);
     else if (vDate.getMonth() == 9 || vDate.getMonth() == 10 || vDate.getMonth() == 11)
       vDate.setFullYear(vDate.getFullYear(), 11, 31);
+  }
+  else if (pFormat == 'year') {
+    vDate.setFullYear(vDate.getFullYear(), 11, 31);
   }
   else if (pFormat == 'hour') {
     if (vDate.getHours() == 0) vDate.setDate(vDate.getDate() + 1);
