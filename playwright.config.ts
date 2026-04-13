@@ -6,7 +6,7 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://test.counbo.com/jsgantt-improved/',
+    baseURL: process.env.JSGANTT_E2E_BASE_URL ?? 'http://localhost:8080',
     headless: true,
     viewport: { width: 1400, height: 900 },
   },
