@@ -1,12 +1,13 @@
 
 export const getMinDate = function (pList, pFormat) {
-  var vDate = new Date();
-  vDate.setTime(pList[0].getStart().getTime());
+  var vDate = null;
 
-  // Parse all Task End dates to find min
+  // Parse all Task Start dates to find min, skipping tasks with no explicit date
   for (var i = 0; i < pList.length; i++) {
-    if (pList[i].getStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getStart().getTime());
+    if (!pList[i].hasStart()) continue;
+    if (!vDate || pList[i].getStart().getTime() < vDate.getTime()) vDate = new Date(pList[i].getStart().getTime());
   }
+  if (!vDate) vDate = new Date();
 
   // Adjust min date to specific format boundaries (first of week or first of month)
   if (pFormat == 'day') {
@@ -43,14 +44,14 @@ export const getMinDate = function (pList, pFormat) {
 };
 
 export const getMaxDate = function (pList, pFormat) {
-  var vDate = new Date();
+  var vDate = null;
 
-  vDate.setTime(pList[0].getEnd().getTime());
-
-  // Parse all Task End dates to find max
+  // Parse all Task End dates to find max, skipping tasks with no explicit date
   for (var i = 0; i < pList.length; i++) {
-    if (pList[i].getEnd().getTime() > vDate.getTime()) vDate.setTime(pList[i].getEnd().getTime());
+    if (!pList[i].hasEnd()) continue;
+    if (!vDate || pList[i].getEnd().getTime() > vDate.getTime()) vDate = new Date(pList[i].getEnd().getTime());
   }
+  if (!vDate) vDate = new Date();
 
   // Adjust max date to specific format boundaries (end of week or end of month)
   if (pFormat == 'day') {

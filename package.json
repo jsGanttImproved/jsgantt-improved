@@ -9,7 +9,7 @@
     "watch": "onchange 'src/**' '*.*' -- npm run build",
     "watch:dist": "onchange 'src/**' '*.ts' -- npm run dist",
     "watch:test": "onchange 'src/**/*.ts' '*.ts' -- npm run test-unit",
-    "test-unit": "TS_NODE_TRANSPILE_ONLY=true mocha -r ts-node/register 'test/**/*.ts'",
+    "test-unit": "TS_NODE_TRANSPILE_ONLY=true mocha -r ts-node/register 'test/unit/**/*.spec.ts'",
     "browserify": "browserify dist/index.js --standalone JSGantt > jsgantt.js",
     "dist": "npm run build && npm run browserify && cp src/jsgantt.css dist/ && cp jsgantt.js dist/ && cp jsgantt.js docs/ && cp src/jsgantt.css docs/ && echo 'DIST finished'",
     "publish-npm": "npm run dist && npm publish",
