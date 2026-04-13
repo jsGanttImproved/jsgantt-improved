@@ -203,6 +203,8 @@ export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile
   this.getStartVar = function () {
     return vStart;
   };
+  this.hasStart = function () { return !!(vStart || vPlanStart); };
+  this.hasEnd = function () { return !!(vEnd || vPlanEnd || (vStart && vDuration)); };
   this.getEnd = function () {
     if (vEnd) return vEnd;
     else if (vPlanEnd) return vPlanEnd;

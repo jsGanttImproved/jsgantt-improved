@@ -6,10 +6,12 @@ export const getMinDate = function (pList, pFormat, pMinDate) {
   let vDate = new Date();
   if (pList.length <= 0) return pMinDate || vDate;
 
-  vDate.setTime((pMinDate && pMinDate.getTime()) || pList[0].getStart().getTime());
+  const firstWithDate = pList.find(t => !t.hasStart || t.hasStart());
+  vDate.setTime((pMinDate && pMinDate.getTime()) || (firstWithDate ? firstWithDate.getStart().getTime() : vDate.getTime()));
 
-  // Parse all Task Start dates to find min
+  // Parse all Task Start dates to find min, skipping tasks with no explicit date
   for (let i = 0; i < pList.length; i++) {
+    if (pList[i].hasStart && !pList[i].hasStart()) continue;
     if (pList[i].getStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getStart().getTime());
     if (pList[i].getPlanStart() && pList[i].getPlanStart().getTime() < vDate.getTime()) vDate.setTime(pList[i].getPlanStart().getTime());
   }
@@ -53,10 +55,12 @@ export const getMaxDate = function (pList, pFormat, pMaxDate) {
 
   if (pList.length <= 0) return pMaxDate || vDate;
 
-  vDate.setTime((pMaxDate && pMaxDate.getTime()) || pList[0].getEnd().getTime());
+  const firstWithDate = pList.find(t => !t.hasEnd || t.hasEnd());
+  vDate.setTime((pMaxDate && pMaxDate.getTime()) || (firstWithDate ? firstWithDate.getEnd().getTime() : vDate.getTime()));
 
-  // Parse all Task End dates to find max
+  // Parse all Task End dates to find max, skipping tasks with no explicit date
   for (let i = 0; i < pList.length; i++) {
+    if (pList[i].hasEnd && !pList[i].hasEnd()) continue;
     if (pList[i].getEnd().getTime() > vDate.getTime()) vDate.setTime(pList[i].getEnd().getTime());
     if (pList[i].getPlanEnd() && pList[i].getPlanEnd().getTime() > vDate.getTime()) vDate.setTime(pList[i].getPlanEnd().getTime());
   }
