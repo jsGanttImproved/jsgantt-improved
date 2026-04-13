@@ -670,7 +670,7 @@ var GanttChart = function (pDiv, pFormat) {
         if (pEndDate === void 0) { pEndDate = null; }
         var columnCurrentDay = null;
         // Find the Current day cell to put a different class
-        if (this.vShowWeekends !== false && pStartDate && pEndDate && (this.vFormat == "day" || this.vFormat == "week")) {
+        if (this.vShowWeekends && pStartDate && pEndDate && (this.vFormat == "day" || this.vFormat == "week")) {
             var curTaskStart = new Date(pStartDate.getTime());
             var curTaskEnd = new Date();
             var onePeriod = 3600000;
@@ -684,7 +684,7 @@ var GanttChart = function (pDiv, pFormat) {
         }
         for (var j = 0; j < vNumCols - 1; j++) {
             var vCellFormat = "gtaskcell gtaskcellcols";
-            if (this.vShowWeekends !== false && this.vFormat == "day" && (j % 7 == 4 || j % 7 == 5)) {
+            if (this.vShowWeekends && this.vFormat == "day" && (j % 7 == 4 || j % 7 == 5)) {
                 vCellFormat = "gtaskcellwkend";
             }
             //When is the column is the current day/week,give a different class
