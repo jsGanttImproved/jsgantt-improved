@@ -26,7 +26,8 @@ var date_utils_1 = require("./utils/date_utils");
  * @param pFormat (required) - used to indicate whether chart should be drawn in "hour", "day", "week", "month", or "quarter" format
  */
 var GanttChart = function (pDiv, pFormat) {
-    this.vDiv = pDiv;
+    // Accept either a native DOM element or a jQuery-wrapped element
+    this.vDiv = (pDiv && pDiv[0] instanceof Element) ? pDiv[0] : pDiv;
     this.vFormat = pFormat;
     this.vDivId = null;
     this.vUseFade = 1;
@@ -64,6 +65,7 @@ var GanttChart = function (pDiv, pFormat) {
         5: true,
         6: true,
     };
+    this.vFirstDayOfWeek = 1; // 0=Sunday, 1=Monday (default), …, 6=Saturday
     this.vEventClickCollapse = null;
     this.vEventClickRow = null;
     this.vEvents = {
@@ -152,6 +154,7 @@ var GanttChart = function (pDiv, pFormat) {
     this.AddTaskItem = task_1.AddTaskItem;
     this.AddTaskItemObject = task_1.AddTaskItemObject;
     this.RemoveTaskItem = task_1.RemoveTaskItem;
+    this.GetTaskByOriginalID = task_1.GetTaskByOriginalID;
     this.ClearTasks = task_1.ClearTasks;
     this.getXMLProject = xml_1.getXMLProject;
     this.getXMLTask = xml_1.getXMLTask;
@@ -262,7 +265,7 @@ var GanttChart = function (pDiv, pFormat) {
                 }
                 this_1.getColumnOrder().forEach(function (column) {
                     if (_this[column] == 1 || column === "vAdditionalHeaders") {
-                        (0, draw_columns_1.draw_header)(column, i, vTmpRow_1, _this.vTaskList, _this.vEditable, _this.vEventsChange, _this.vEvents, _this.vDateTaskTableDisplayFormat, _this.vAdditionalHeaders, _this.vFormat, _this.vLangs, _this.vLang, _this.vResources, _this.Draw.bind(_this));
+                        (0, draw_columns_1.draw_header)(column, i, vTmpRow_1, _this.vTaskList, _this.vEditable, _this.vEventsChange, _this.vEvents, _this.vDateTaskTableDisplayFormat, _this.vAdditionalHeaders, _this.vFormat, _this.vLangs, _this.vLang, _this.vResources, _this.Draw.bind(_this), _this.vWorkingDays);
                     }
                 });
                 vNumRows++;
@@ -343,9 +346,17 @@ var GanttChart = function (pDiv, pFormat) {
                 vTmpDate.setDate(vTmpDate.getDate() + 1);
             }
             else if (this.vFormat == "week") {
-                var vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, "td", null, vHeaderCellClass, null, vColWidth);
-                (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
-                vTmpDate.setDate(vTmpDate.getDate() + 7);
+                // Group weeks by year: span all weeks whose start date falls in the same year
+                var thisYear = vTmpDate.getFullYear();
+                var countDate = new Date(vTmpDate);
+                vColSpan = 0;
+                while (countDate.getTime() <= vMaxDate.getTime() && countDate.getFullYear() === thisYear) {
+                    vColSpan++;
+                    countDate.setDate(countDate.getDate() + 7);
+                }
+                var vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+                (0, draw_utils_1.newNode)(vTmpCell, "div", null, null, (0, date_utils_1.formatDateStr)(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+                vTmpDate.setDate(vTmpDate.getDate() + vColSpan * 7);
             }
             else if (this.vFormat == "month") {
                 vColSpan = 12 - vTmpDate.getMonth();
@@ -382,7 +393,9 @@ var GanttChart = function (pDiv, pFormat) {
         while (vTmpDate.getTime() <= vMaxDate.getTime()) {
             var vMinorHeaderCellClass = "gminorheading";
             if (this.vFormat == "day") {
-                if (vTmpDate.getDay() % 6 == 0) {
+                var vWkLastDay = (this.vFirstDayOfWeek + 6) % 7;
+                var vWkPenultDay = (this.vFirstDayOfWeek + 5) % 7;
+                if (vTmpDate.getDay() === vWkLastDay || vTmpDate.getDay() === vWkPenultDay) {
                     if (!this.vShowWeekends) {
                         vTmpDate.setDate(vTmpDate.getDate() + 1);
                         continue;
@@ -482,16 +495,16 @@ var GanttChart = function (pDiv, pFormat) {
         for (i = 0; i < this.vTaskList.length; i++) {
             var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
             var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
-            var vTaskLeftPx_1 = (0, general_utils_1.getOffset)(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends);
-            var vTaskRightPx = (0, general_utils_1.getOffset)(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends);
+            var vTaskLeftPx_1 = (0, general_utils_1.getOffset)(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
+            var vTaskRightPx = (0, general_utils_1.getOffset)(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
             var curTaskPlanStart = void 0, curTaskPlanEnd = void 0;
             curTaskPlanStart = this.vTaskList[i].getPlanStart();
             curTaskPlanEnd = this.vTaskList[i].getPlanEnd();
             var vTaskPlanLeftPx = 0;
             var vTaskPlanRightPx = 0;
             if (curTaskPlanStart && curTaskPlanEnd) {
-                vTaskPlanLeftPx = (0, general_utils_1.getOffset)(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends);
-                vTaskPlanRightPx = (0, general_utils_1.getOffset)(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends);
+                vTaskPlanLeftPx = (0, general_utils_1.getOffset)(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
+                vTaskPlanRightPx = (0, general_utils_1.getOffset)(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
             }
             var vID = this.vTaskList[i].getID();
             var vComb = this.vTaskList[i].getParItem() && this.vTaskList[i].getParItem().getGroup() == 2;
@@ -616,7 +629,7 @@ var GanttChart = function (pDiv, pFormat) {
                         vCaptionStr = vTmpItem.getResource();
                         break;
                     case "Duration":
-                        vCaptionStr = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang]);
+                        vCaptionStr = vTmpItem.getDuration(this.vFormat, this.vLangs[this.vLang], this.vWorkingDays);
                         break;
                     case "Complete":
                         vCaptionStr = vTmpItem.getCompStr();
@@ -657,7 +670,7 @@ var GanttChart = function (pDiv, pFormat) {
         if (pEndDate === void 0) { pEndDate = null; }
         var columnCurrentDay = null;
         // Find the Current day cell to put a different class
-        if (this.vShowWeekends !== false && pStartDate && pEndDate && (this.vFormat == "day" || this.vFormat == "week")) {
+        if (this.vShowWeekends && pStartDate && pEndDate && (this.vFormat == "day" || this.vFormat == "week")) {
             var curTaskStart = new Date(pStartDate.getTime());
             var curTaskEnd = new Date();
             var onePeriod = 3600000;
@@ -671,7 +684,7 @@ var GanttChart = function (pDiv, pFormat) {
         }
         for (var j = 0; j < vNumCols - 1; j++) {
             var vCellFormat = "gtaskcell gtaskcellcols";
-            if (this.vShowWeekends !== false && this.vFormat == "day" && (j % 7 == 4 || j % 7 == 5)) {
+            if (this.vShowWeekends && this.vFormat == "day" && (j % 7 == 4 || j % 7 == 5)) {
                 vCellFormat = "gtaskcellwkend";
             }
             //When is the column is the current day/week,give a different class
@@ -705,8 +718,8 @@ var GanttChart = function (pDiv, pFormat) {
             (0, task_1.processRows)(this.vTaskList, 0, -1, 1, 1, this.getUseSort(), this.vDebug);
         this.vProcessNeeded = false;
         // get overall min/max dates plus padding
-        vMinDate = (0, date_utils_1.getMinDate)(this.vTaskList, this.vFormat, this.getMinDate() && (0, date_utils_1.coerceDate)(this.getMinDate()));
-        vMaxDate = (0, date_utils_1.getMaxDate)(this.vTaskList, this.vFormat, this.getMaxDate() && (0, date_utils_1.coerceDate)(this.getMaxDate()));
+        vMinDate = (0, date_utils_1.getMinDate)(this.vTaskList, this.vFormat, this.getMinDate() && (0, date_utils_1.coerceDate)(this.getMinDate()), this.vFirstDayOfWeek);
+        vMaxDate = (0, date_utils_1.getMaxDate)(this.vTaskList, this.vFormat, this.getMaxDate() && (0, date_utils_1.coerceDate)(this.getMaxDate()), this.vFirstDayOfWeek);
         // Calculate chart width variables.
         if (this.vFormat == "day")
             vColWidth = this.vDayColWidth;
@@ -789,12 +802,12 @@ var GanttChart = function (pDiv, pFormat) {
                     vScrollDate.setMinutes(0, 0, 0);
                 else
                     vScrollDate.setHours(0, 0, 0, 0);
-                vScrollPx = (0, general_utils_1.getOffset)(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends) - 30;
+                vScrollPx = (0, general_utils_1.getOffset)(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays) - 30;
             }
             this.getChartBody().scrollLeft = vScrollPx;
         }
         if (vMinDate.getTime() <= new Date().getTime() && vMaxDate.getTime() >= new Date().getTime()) {
-            this.vTodayPx = (0, general_utils_1.getOffset)(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends);
+            this.vTodayPx = (0, general_utils_1.getOffset)(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
         }
         else
             this.vTodayPx = -1;
@@ -829,7 +842,7 @@ var GanttChart = function (pDiv, pFormat) {
         }
         (0, events_1.updateGridHeaderWidth)(this);
         this.chartRowDateToX = function (date) {
-            return (0, general_utils_1.getOffset)(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends);
+            return (0, general_utils_1.getOffset)(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
         };
         if (this.vEvents && this.vEvents.afterDraw) {
             this.vEvents.afterDraw();
@@ -871,7 +884,7 @@ var COLUMNS_TYPES = {
     'vShowCost': 'cost',
     'vShowAddEntries': 'addentries'
 };
-var draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsChange, vEvents, vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw) {
+var draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsChange, vEvents, vDateTaskTableDisplayFormat, vAdditionalHeaders, vFormat, vLangs, vLang, vResources, Draw, vWorkingDays) {
     var vTmpCell, vTmpDiv;
     if ('vShowRes' === column) {
         vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, 'td', null, 'gres');
@@ -883,7 +896,7 @@ var draw_header = function (column, i, vTmpRow, vTaskList, vEditable, vEventsCha
     }
     if ('vShowDur' === column) {
         vTmpCell = (0, draw_utils_1.newNode)(vTmpRow, 'td', null, 'gdur');
-        var text = (0, draw_utils_1.makeInput)(vTaskList[i].getDuration(vFormat, vLangs[vLang]), vEditable, 'text', vTaskList[i].getDuration());
+        var text = (0, draw_utils_1.makeInput)(vTaskList[i].getDuration(vFormat, vLangs[vLang], vWorkingDays), vEditable, 'text', vTaskList[i].getDuration());
         vTmpDiv = (0, draw_utils_1.newNode)(vTmpCell, 'div', null, null, text);
         var callback = function (task, e) { return task.setDuration(e.target.value); };
         (0, events_1.addListenerInputCell)(vTmpCell, vEventsChange, callback, vTaskList, i, 'dur', Draw);
@@ -1142,12 +1155,12 @@ var folder = function (pID, ganttObj) {
         }
     }
     var bd;
-    if (this.vDebug) {
+    if (ganttObj.vDebug) {
         bd = new Date();
         console.info('after drawDependency', bd);
     }
-    ganttObj.DrawDependencies(this.vDebug);
-    if (this.vDebug) {
+    ganttObj.DrawDependencies(ganttObj.vDebug);
+    if (ganttObj.vDebug) {
         var ad = new Date();
         console.info('after drawDependency', ad, (ad.getTime() - bd.getTime()));
     }
@@ -3529,6 +3542,8 @@ var includeGetSet = function () {
         this.Draw();
     };
     this.setWorkingDays = function (workingDays) { this.vWorkingDays = workingDays; };
+    this.getWorkingDays = function () { return this.vWorkingDays; };
+    this.setFirstDayOfWeek = function (pVal) { this.vFirstDayOfWeek = parseInt(String(pVal), 10); };
     this.setMinGpLen = function (pMinGpLen) { this.vMinGpLen = pMinGpLen; };
     this.setScrollTo = function (pDate) { this.vScrollTo = pDate; };
     this.setHourColWidth = function (pWidth) { this.vHourColWidth = pWidth; };
@@ -3608,6 +3623,7 @@ var includeGetSet = function () {
     this.getShowTaskInfoLink = function () { return this.vShowTaskInfoLink; };
     this.getShowEndWeekDate = function () { return this.vShowEndWeekDate; };
     this.getShowWeekends = function () { return this.vShowWeekends; };
+    this.getFirstDayOfWeek = function () { return this.vFirstDayOfWeek; };
     this.getShowSelector = function () { return this.vShowSelector; };
     this.getShowDeps = function () { return this.vShowDeps; };
     this.getDateInputFormat = function () { return this.vDateInputFormat; };
@@ -3667,7 +3683,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processRows = exports.ClearTasks = exports.RemoveTaskItem = exports.AddTaskItemObject = exports.AddTaskItem = exports.createTaskInfo = exports.TaskItem = exports.TaskItemObject = exports.sortTasks = exports.taskLink = void 0;
+exports.processRows = exports.ClearTasks = exports.RemoveTaskItem = exports.GetTaskByOriginalID = exports.AddTaskItemObject = exports.AddTaskItem = exports.createTaskInfo = exports.TaskItem = exports.TaskItemObject = exports.sortTasks = exports.taskLink = void 0;
 var general_utils_1 = require("./utils/general_utils");
 var draw_utils_1 = require("./utils/draw_utils");
 var date_utils_1 = require("./utils/date_utils");
@@ -3804,11 +3820,13 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
         vPlanEnd = (pPlanEnd instanceof Date) ? pPlanEnd : (0, date_utils_1.parseDateStr)(document.createTextNode(pPlanEnd).data, vGantt.getDateInputFormat());
         vGroupMinPlanEnd = vPlanEnd;
     }
-    if (pDepend != null) {
-        var vDependStr = pDepend + '';
-        var vDepList = vDependStr.split(',');
-        var n = vDepList.length;
-        for (var k = 0; k < n; k++) {
+    function parseDepend(pDep) {
+        vDepend = [];
+        vDependType = [];
+        if (!pDep)
+            return;
+        var vDepList = (pDep + '').split(',');
+        for (var k = 0; k < vDepList.length; k++) {
             if (vDepList[k].toUpperCase().endsWith('SS')) {
                 vDepend[k] = vDepList[k].substring(0, vDepList[k].length - 2);
                 vDependType[k] = 'SS';
@@ -3834,6 +3852,7 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
             }
         }
     }
+    parseDepend(pDepend);
     this.getID = function () { return vID; };
     this.getOriginalID = function () { return _id; };
     this.getGantt = function () { return vGantt; };
@@ -3936,22 +3955,22 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
     this.getNotes = function () { return vNotes; };
     this.getSortIdx = function () { return vSortIdx; };
     this.getToDelete = function () { return vToDelete; };
-    this.getDuration = function (pFormat, pLang) {
+    this.getDuration = function (pFormat, pLang, pWorkingDays) {
         if (vMile) {
             vDuration = '-';
         }
         else if (!vEnd && !vStart && vPlanStart && vPlanEnd) {
-            return calculateVDuration(pFormat, pLang, this.getPlanStart(), this.getPlanEnd());
+            return calculateVDuration(pFormat, pLang, this.getPlanStart(), this.getPlanEnd(), pWorkingDays);
         }
         else if (!vEnd && vDuration) {
             return vDuration;
         }
         else {
-            vDuration = calculateVDuration(pFormat, pLang, this.getStart(), this.getEnd());
+            vDuration = calculateVDuration(pFormat, pLang, this.getStart(), this.getEnd(), pWorkingDays);
         }
         return vDuration;
     };
-    function calculateVDuration(pFormat, pLang, start, end) {
+    function calculateVDuration(pFormat, pLang, start, end, pWorkingDays) {
         var vDuration;
         var vUnits = null;
         switch (pFormat) {
@@ -3968,11 +3987,6 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
                 vUnits = pFormat;
                 break;
         }
-        // let vTaskEnd = new Date(this.getEnd().getTime());
-        // if ((vTaskEnd.getTime() - (vTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0) {
-        //   vTaskEnd = new Date(vTaskEnd.getFullYear(), vTaskEnd.getMonth(), vTaskEnd.getDate() + 1, vTaskEnd.getHours(), vTaskEnd.getMinutes(), vTaskEnd.getSeconds());
-        // }
-        // let tmpPer = (getOffset(this.getStart(), vTaskEnd, 999, vUnits)) / 1000;
         var hours = (end.getTime() - start.getTime()) / 1000 / 60 / 60;
         var tmpPer;
         switch (vUnits) {
@@ -3981,7 +3995,7 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
                 vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['hrs'] : pLang['hr']);
                 break;
             case 'day':
-                tmpPer = Math.round(hours / 24);
+                tmpPer = pWorkingDays ? (0, date_utils_1.countWorkingDays)(start, end, pWorkingDays) : Math.round(hours / 24);
                 vDuration = tmpPer + ' ' + ((tmpPer != 1) ? pLang['dys'] : pLang['dy']);
                 break;
             case 'week':
@@ -4019,6 +4033,7 @@ var TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, p
     this.getChildRow = function () { return vChildRow; };
     this.getListChildRow = function () { return vListChildRow; };
     this.getGroupSpan = function () { return vGroupSpan; };
+    this.setDepend = function (pDepend) { parseDepend(pDepend); };
     this.setName = function (pName) { vName = pName; };
     this.setNotes = function (pNotes) { vNotes = pNotes; };
     this.setClass = function (pClass) { vClass = pClass; };
@@ -4187,7 +4202,7 @@ var createTaskInfo = function (pTask, templateStrOrFn) {
             if (_this.vShowTaskInfoDur == 1 && !pTask.getMile()) {
                 vTmpDiv = (0, draw_utils_1.newNode)(vTaskInfo, 'div', null, 'gTILine gTId');
                 (0, draw_utils_1.newNode)(vTmpDiv, 'span', null, 'gTaskLabel', _this.vLangs[_this.vLang]['dur'] + ': ');
-                (0, draw_utils_1.newNode)(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(_this.vFormat, _this.vLangs[_this.vLang]));
+                (0, draw_utils_1.newNode)(vTmpDiv, 'span', null, 'gTaskText', pTask.getDuration(_this.vFormat, _this.vLangs[_this.vLang], _this.vWorkingDays));
             }
             if (_this.vShowTaskInfoComp == 1) {
                 vTmpDiv = (0, draw_utils_1.newNode)(vTaskInfo, 'div', null, 'gTILine gTIc');
@@ -4244,6 +4259,7 @@ var AddTaskItem = function (value) {
         this.vTaskList.push(value);
         this.vProcessNeeded = true;
     }
+    return value.getID();
 };
 exports.AddTaskItem = AddTaskItem;
 var AddTaskItemObject = function (object) {
@@ -4253,12 +4269,31 @@ var AddTaskItemObject = function (object) {
     return this.AddTaskItem((0, exports.TaskItemObject)(object));
 };
 exports.AddTaskItemObject = AddTaskItemObject;
+var GetTaskByOriginalID = function (pOriginalID) {
+    var id = String(pOriginalID);
+    for (var i = 0; i < this.vTaskList.length; i++) {
+        if (this.vTaskList[i].getOriginalID() === id)
+            return this.vTaskList[i];
+    }
+    return null;
+};
+exports.GetTaskByOriginalID = GetTaskByOriginalID;
 var RemoveTaskItem = function (pID) {
+    // Accept either the internal vID or the original string ID.
+    // Resolve an original ID to its vID so the recursive child-removal still works.
+    var vID = pID;
+    var asString = String(pID);
+    for (var i = 0; i < this.vTaskList.length; i++) {
+        if (this.vTaskList[i].getOriginalID() === asString) {
+            vID = this.vTaskList[i].getID();
+            break;
+        }
+    }
     // simply mark the task for removal at this point - actually remove it next time we re-draw the chart
     for (var i = 0; i < this.vTaskList.length; i++) {
-        if (this.vTaskList[i].getID() == pID)
+        if (this.vTaskList[i].getID() == vID)
             this.vTaskList[i].setToDelete(true);
-        else if (this.vTaskList[i].getParent() == pID)
+        else if (this.vTaskList[i].getParent() == vID)
             this.RemoveTaskItem(this.vTaskList[i].getID());
     }
     this.vProcessNeeded = true;
@@ -4406,11 +4441,16 @@ exports.processRows = processRows;
 },{"./utils/date_utils":11,"./utils/draw_utils":12,"./utils/general_utils":13}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIsoWeek = exports.parseDateFormatStr = exports.formatDateStr = exports.parseDateStr = exports.coerceDate = exports.getMaxDate = exports.getMinDate = void 0;
+exports.countWorkingDays = exports.getIsoWeek = exports.parseDateFormatStr = exports.formatDateStr = exports.parseDateStr = exports.coerceDate = exports.getMaxDate = exports.getMinDate = void 0;
+/**
+ * Returns the last day of the week (0=Sun … 6=Sat) for a given first day.
+ */
+var lastDayOfWeek = function (firstDay) { return (firstDay + 6) % 7; };
 /**
  * DATES
  */
-var getMinDate = function (pList, pFormat, pMinDate) {
+var getMinDate = function (pList, pFormat, pMinDate, pFirstDayOfWeek) {
+    if (pFirstDayOfWeek === void 0) { pFirstDayOfWeek = 1; }
     var vDate = new Date();
     if (pList.length <= 0)
         return pMinDate || vDate;
@@ -4428,12 +4468,12 @@ var getMinDate = function (pList, pFormat, pMinDate) {
     // Adjust min date to specific format boundaries (first of week or first of month)
     if (pFormat == 'day') {
         vDate.setDate(vDate.getDate() - 1);
-        while (vDate.getDay() % 7 != 1)
+        while (vDate.getDay() != pFirstDayOfWeek)
             vDate.setDate(vDate.getDate() - 1);
     }
     else if (pFormat == 'week') {
         vDate.setDate(vDate.getDate() - 1);
-        while (vDate.getDay() % 7 != 1)
+        while (vDate.getDay() != pFirstDayOfWeek)
             vDate.setDate(vDate.getDate() - 1);
     }
     else if (pFormat == 'month') {
@@ -4464,7 +4504,8 @@ var getMinDate = function (pList, pFormat, pMinDate) {
     return (vDate);
 };
 exports.getMinDate = getMinDate;
-var getMaxDate = function (pList, pFormat, pMaxDate) {
+var getMaxDate = function (pList, pFormat, pMaxDate, pFirstDayOfWeek) {
+    if (pFirstDayOfWeek === void 0) { pFirstDayOfWeek = 1; }
     var vDate = new Date();
     if (pList.length <= 0)
         return pMaxDate || vDate;
@@ -4481,14 +4522,16 @@ var getMaxDate = function (pList, pFormat, pMaxDate) {
     }
     // Adjust max date to specific format boundaries (end of week or end of month)
     if (pFormat == 'day') {
-        vDate.setDate(vDate.getDate() + 1);
-        while (vDate.getDay() % 7 != 0)
+        // Advance to the end of the week that contains vDate.
+        // Do NOT unconditionally add 1 first — if vDate is already the last day of
+        // the week, that would push it into the next week (issue #284).
+        while (vDate.getDay() != lastDayOfWeek(pFirstDayOfWeek))
             vDate.setDate(vDate.getDate() + 1);
     }
     else if (pFormat == 'week') {
-        //For weeks, what is the last logical boundary?
-        vDate.setDate(vDate.getDate() + 1);
-        while (vDate.getDay() % 7 != 0)
+        // Same logic as 'day': round up to end of the current week without
+        // overshooting when vDate is already the last day of the week (issue #284).
+        while (vDate.getDay() != lastDayOfWeek(pFirstDayOfWeek))
             vDate.setDate(vDate.getDate() + 1);
     }
     else if (pFormat == 'month') {
@@ -4729,6 +4772,23 @@ var getIsoWeek = function (pDate) {
     return thisWeek;
 };
 exports.getIsoWeek = getIsoWeek;
+/**
+ * Count the number of working days between start (inclusive) and end (exclusive).
+ * @param start - start date
+ * @param end - end date (exclusive)
+ * @param workingDays - map of day-of-week (0=Sun … 6=Sat) to boolean
+ */
+var countWorkingDays = function (start, end, workingDays) {
+    var count = 0;
+    var cur = new Date(start.getTime());
+    while (cur < end) {
+        if (workingDays[cur.getDay()])
+            count++;
+        cur = new Date(cur.getTime() + 86400000);
+    }
+    return count;
+};
+exports.countWorkingDays = countWorkingDays;
 
 },{}],12:[function(require,module,exports){
 "use strict";
@@ -5026,7 +5086,8 @@ var calculateCurrentDateOffset = function (curTaskStart, curTaskEnd) {
     return (tmpTaskEnd - tmpTaskStart);
 };
 exports.calculateCurrentDateOffset = calculateCurrentDateOffset;
-var getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends) {
+var getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekends, pFirstDayOfWeek, pWorkingDays) {
+    if (pFirstDayOfWeek === void 0) { pFirstDayOfWeek = 1; }
     var DAY_CELL_MARGIN_WIDTH = 3; // Cell margin for 'day' format
     var WEEK_CELL_MARGIN_WIDTH = 3; // Cell margin for 'week' format
     var MONTH_CELL_MARGIN_WIDTH = 3; // Cell margin for 'month' format
@@ -5041,13 +5102,26 @@ var getOffset = function (pStartDate, pEndDate, pColWidth, pFormat, pShowWeekend
     var vTaskRight = (0, exports.calculateCurrentDateOffset)(curTaskStart, curTaskEnd) / oneHour;
     var vPosTmpDate;
     if (pFormat == 'day') {
-        if (!pShowWeekends) {
+        if (pWorkingDays) {
+            var start = curTaskStart;
+            var end = curTaskEnd;
+            var countNonWorking = 0;
+            while (start < end) {
+                if (!pWorkingDays[start.getDay()])
+                    countNonWorking++;
+                start = new Date(start.getTime() + 24 * oneHour);
+            }
+            vTaskRight -= countNonWorking * 24;
+        }
+        else if (!pShowWeekends) {
             var start = curTaskStart;
             var end = curTaskEnd;
             var countWeekends = 0;
             while (start < end) {
                 var day = start.getDay();
-                if (day === 6 || day == 0) {
+                var vLastDay = (pFirstDayOfWeek + 6) % 7;
+                var vPenultDay = (pFirstDayOfWeek + 5) % 7;
+                if (day === vLastDay || day === vPenultDay) {
                     countWeekends++;
                 }
                 start = new Date(start.getTime() + 24 * oneHour);
