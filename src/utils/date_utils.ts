@@ -151,6 +151,10 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
   let vDyArr = new Array(pL['sun'], pL['mon'], pL['tue'], pL['wed'], pL['thu'], pL['fri'], pL['sat']);
 
   for (let i = 0; i < pDateFormatArr.length; i++) {
+    if (pDateFormatArr[i].charCodeAt(0) === 0) {
+      vDateStr += pDateFormatArr[i].slice(1);
+      continue;
+    }
     switch (pDateFormatArr[i]) {
       case 'dd':
         if (pDate.getDate() < 10) vDateStr += '0'; // now fall through
@@ -237,6 +241,19 @@ export const formatDateStr = function (pDate, pDateFormatArr, pL) {
 };
 
 export const parseDateFormatStr = function (pFormatStr) {
+  if (pFormatStr.includes('{{')) {
+    const result: string[] = [];
+    const parts = pFormatStr.split(/({{[^}]+}})/);
+    for (const part of parts) {
+      if (part.startsWith('{{') && part.endsWith('}}')) {
+        result.push(part.slice(2, -2));
+      } else if (part.length > 0) {
+        result.push('\x00' + part);
+      }
+    }
+    return result;
+  }
+
   let vComponantStr = '';
   let vCurrChar = '';
   let vSeparators = new RegExp('[\/\\ -.,\'":]');
