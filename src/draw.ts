@@ -69,6 +69,7 @@ export const GanttChart = function (pDiv, pFormat) {
     5: true,
     6: true,
   };
+  this.vFirstDayOfWeek = 1; // 0=Sunday, 1=Monday (default), …, 6=Saturday
 
   this.vEventClickCollapse = null;
   this.vEventClickRow = null;
@@ -381,9 +382,17 @@ export const GanttChart = function (pDiv, pFormat) {
 
         vTmpDate.setDate(vTmpDate.getDate() + 1);
       } else if (this.vFormat == "week") {
-        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, vColWidth);
-        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth);
-        vTmpDate.setDate(vTmpDate.getDate() + 7);
+        // Group weeks by year: span all weeks whose start date falls in the same year
+        const thisYear = vTmpDate.getFullYear();
+        let countDate = new Date(vTmpDate);
+        vColSpan = 0;
+        while (countDate.getTime() <= vMaxDate.getTime() && countDate.getFullYear() === thisYear) {
+          vColSpan++;
+          countDate.setDate(countDate.getDate() + 7);
+        }
+        const vTmpCell = newNode(vTmpRow, "td", null, vHeaderCellClass, null, null, null, null, vColSpan);
+        newNode(vTmpCell, "div", null, null, formatDateStr(vTmpDate, this.vWeekMajorDateDisplayFormat, this.vLangs[this.vLang]), vColWidth * vColSpan);
+        vTmpDate.setDate(vTmpDate.getDate() + vColSpan * 7);
       } else if (this.vFormat == "month") {
         vColSpan = 12 - vTmpDate.getMonth();
         if (vTmpDate.getFullYear() == vMaxDate.getFullYear()) vColSpan -= 11 - vMaxDate.getMonth();
@@ -417,7 +426,9 @@ export const GanttChart = function (pDiv, pFormat) {
       let vMinorHeaderCellClass = "gminorheading";
 
       if (this.vFormat == "day") {
-        if (vTmpDate.getDay() % 6 == 0) {
+        const vWkLastDay   = (this.vFirstDayOfWeek + 6) % 7;
+        const vWkPenultDay = (this.vFirstDayOfWeek + 5) % 7;
+        if (vTmpDate.getDay() === vWkLastDay || vTmpDate.getDay() === vWkPenultDay) {
           if (!this.vShowWeekends) {
             vTmpDate.setDate(vTmpDate.getDate() + 1);
             continue;
@@ -528,8 +539,8 @@ export const GanttChart = function (pDiv, pFormat) {
       let curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
       let curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
 
-      const vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends);
-      const vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends);
+      const vTaskLeftPx = getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
+      const vTaskRightPx = getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
 
       let curTaskPlanStart, curTaskPlanEnd;
 
@@ -538,8 +549,8 @@ export const GanttChart = function (pDiv, pFormat) {
       let vTaskPlanLeftPx = 0;
       let vTaskPlanRightPx = 0;
       if (curTaskPlanStart && curTaskPlanEnd) {
-        vTaskPlanLeftPx = getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends);
-        vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends);
+        vTaskPlanLeftPx = getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
+        vTaskPlanRightPx = getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
       }
 
       const vID = this.vTaskList[i].getID();
@@ -782,8 +793,8 @@ export const GanttChart = function (pDiv, pFormat) {
     this.vProcessNeeded = false;
 
     // get overall min/max dates plus padding
-    vMinDate = getMinDate(this.vTaskList, this.vFormat, this.getMinDate() && coerceDate(this.getMinDate()));
-    vMaxDate = getMaxDate(this.vTaskList, this.vFormat, this.getMaxDate() && coerceDate(this.getMaxDate()));
+    vMinDate = getMinDate(this.vTaskList, this.vFormat, this.getMinDate() && coerceDate(this.getMinDate()), this.vFirstDayOfWeek);
+    vMaxDate = getMaxDate(this.vTaskList, this.vFormat, this.getMaxDate() && coerceDate(this.getMaxDate()), this.vFirstDayOfWeek);
 
     // Calculate chart width variables.
     if (this.vFormat == "day") vColWidth = this.vDayColWidth;
@@ -872,13 +883,13 @@ export const GanttChart = function (pDiv, pFormat) {
 
         if (this.vFormat == "hour") vScrollDate.setMinutes(0, 0, 0);
         else vScrollDate.setHours(0, 0, 0, 0);
-        vScrollPx = getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends) - 30;
+        vScrollPx = getOffset(vMinDate, vScrollDate, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek) - 30;
       }
       this.getChartBody().scrollLeft = vScrollPx;
     }
 
     if (vMinDate.getTime() <= new Date().getTime() && vMaxDate.getTime() >= new Date().getTime()) {
-      this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends);
+      this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
     } else this.vTodayPx = -1;
 
     // DEPENDENCIES: Draw lines of Dependencies
@@ -916,7 +927,7 @@ export const GanttChart = function (pDiv, pFormat) {
 
     updateGridHeaderWidth(this);
     this.chartRowDateToX = function (date) {
-      return getOffset(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends);
+      return getOffset(vMinDate, date, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek);
     };
 
     if (this.vEvents && this.vEvents.afterDraw) {
