@@ -47,6 +47,8 @@ var GanttChart = function (pDiv, pFormat) {
     this.vShowAddEntries = 0;
     this.vShowEndWeekDate = 1;
     this.vShowWeekends = 1;
+    this.vShowCurrentDateLine = 0;
+    this.vCurrentDate = null;
     this.vShowTaskInfoRes = 1;
     this.vShowTaskInfoDur = 1;
     this.vShowTaskInfoComp = 1;
@@ -834,8 +836,9 @@ var GanttChart = function (pDiv, pFormat) {
             }
             this.getChartBody().scrollLeft = vScrollPx;
         }
-        if (vMinDate.getTime() <= new Date().getTime() && vMaxDate.getTime() >= new Date().getTime()) {
-            this.vTodayPx = (0, general_utils_1.getOffset)(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
+        var vCurrentDate = this.getCurrentDate();
+        if (vMinDate.getTime() <= vCurrentDate.getTime() && vMaxDate.getTime() >= vCurrentDate.getTime()) {
+            this.vTodayPx = (0, general_utils_1.getOffset)(vMinDate, vCurrentDate, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
         }
         else
             this.vTodayPx = -1;
@@ -850,6 +853,13 @@ var GanttChart = function (pDiv, pFormat) {
         }
         this.DrawDependencies(this.vDebug);
         (0, events_1.addListenerDependencies)(this.vLineOptions);
+        // TODAY LINE: Draw vertical current-date line if enabled and in range
+        if (this.vShowCurrentDateLine && this.vTodayPx >= 0) {
+            var vLineHeight = this.getLines().parentElement ? this.getLines().parentElement.offsetHeight : 0;
+            if (vLineHeight > 0) {
+                this.sLine(this.vTodayPx, 0, this.vTodayPx, vLineHeight, 'gtodayline');
+            }
+        }
         // EVENTS
         if (this.vEvents && typeof this.vEvents.afterLineDraw === "function") {
             this.vEvents.afterLineDraw();
@@ -3561,6 +3571,8 @@ var includeGetSet = function () {
     this.setShowTaskInfoLink = function (pVal) { this.vShowTaskInfoLink = pVal; };
     this.setShowEndWeekDate = function (pVal) { this.vShowEndWeekDate = pVal; };
     this.setShowWeekends = function (pVal) { this.vShowWeekends = pVal; };
+    this.setShowCurrentDateLine = function (pVal) { this.vShowCurrentDateLine = pVal; };
+    this.setCurrentDate = function (pVal) { this.vCurrentDate = pVal instanceof Date ? pVal : new Date(pVal); };
     this.setShowSelector = function () {
         var vValidSelectors = 'top bottom';
         this.vShowSelector = new Array();
@@ -3677,6 +3689,8 @@ var includeGetSet = function () {
     this.getShowTaskInfoLink = function () { return this.vShowTaskInfoLink; };
     this.getShowEndWeekDate = function () { return this.vShowEndWeekDate; };
     this.getShowWeekends = function () { return this.vShowWeekends; };
+    this.getShowCurrentDateLine = function () { return this.vShowCurrentDateLine; };
+    this.getCurrentDate = function () { return this.vCurrentDate || new Date(); };
     this.getFirstDayOfWeek = function () { return this.vFirstDayOfWeek; };
     this.getShowSelector = function () { return this.vShowSelector; };
     this.getShowDeps = function () { return this.vShowDeps; };

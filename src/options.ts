@@ -57,6 +57,8 @@ export const includeGetSet = function () {
   this.setShowTaskInfoLink = function (pVal) { this.vShowTaskInfoLink = pVal; };
   this.setShowEndWeekDate = function (pVal) { this.vShowEndWeekDate = pVal; };
   this.setShowWeekends = function (pVal) { this.vShowWeekends = pVal; };
+  this.setShowCurrentDateLine = function (pVal) { this.vShowCurrentDateLine = pVal; };
+  this.setCurrentDate = function (pVal) { this.vCurrentDate = pVal instanceof Date ? pVal : new Date(pVal); };
   this.setShowSelector = function () {
     let vValidSelectors = 'top bottom';
     this.vShowSelector = new Array();
@@ -170,6 +172,8 @@ export const includeGetSet = function () {
   this.getShowTaskInfoLink = function () { return this.vShowTaskInfoLink; };
   this.getShowEndWeekDate = function () { return this.vShowEndWeekDate; };
   this.getShowWeekends = function () { return this.vShowWeekends; };
+  this.getShowCurrentDateLine = function () { return this.vShowCurrentDateLine; };
+  this.getCurrentDate = function () { return this.vCurrentDate || new Date(); };
   this.getFirstDayOfWeek = function () { return this.vFirstDayOfWeek; };
   this.getShowSelector = function () { return this.vShowSelector; };
   this.getShowDeps = function () { return this.vShowDeps; };

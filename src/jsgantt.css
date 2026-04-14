@@ -148,15 +148,21 @@ td.gspanning {
   text-align: center;
 }
 
-.gtaskname div,
+.gtaskname div:not(.gselector),
 /* needed for IE8 */
 
-.gtaskname {
+.gtaskname:not(.gselector) {
   min-width: 170px;
   max-width: 220px;
   width: 220px;
   font-size: 12px;
   border-left: none;
+}
+
+.gtaskname.gspanning {
+  min-width: unset;
+  max-width: unset;
+  width: unset;
 }
 
 .gtaskheading,
@@ -445,6 +451,13 @@ span.gfoldercollapse {
 .glinev {
   border-left: 1px solid;
   width: 0px;
+}
+
+.gtodayline {
+  border-color: #4040ff;
+  border-left-width: 2px;
+  opacity: 0.6;
+  z-index: 1;
 }
 
 .glineh {

@@ -18,9 +18,13 @@
     ],
     "paths": {
       "jsgantt-improved": [ "dist/jsgantt-improved" ]
-    }
+    },
+    "skipLibCheck": true
   },
   "exclude": [
-    ".ng_build"
+    ".ng_build",
+    "node_modules",
+    "test",
+    "e2e"
   ]
 }

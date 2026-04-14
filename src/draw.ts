@@ -51,6 +51,8 @@ export const GanttChart = function (pDiv, pFormat) {
   this.vShowAddEntries = 0;
   this.vShowEndWeekDate = 1;
   this.vShowWeekends = 1;
+  this.vShowCurrentDateLine = 0;
+  this.vCurrentDate = null;
   this.vShowTaskInfoRes = 1;
   this.vShowTaskInfoDur = 1;
   this.vShowTaskInfoComp = 1;
@@ -916,8 +918,9 @@ export const GanttChart = function (pDiv, pFormat) {
       this.getChartBody().scrollLeft = vScrollPx;
     }
 
-    if (vMinDate.getTime() <= new Date().getTime() && vMaxDate.getTime() >= new Date().getTime()) {
-      this.vTodayPx = getOffset(vMinDate, new Date(), vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
+    const vCurrentDate = this.getCurrentDate();
+    if (vMinDate.getTime() <= vCurrentDate.getTime() && vMaxDate.getTime() >= vCurrentDate.getTime()) {
+      this.vTodayPx = getOffset(vMinDate, vCurrentDate, vColWidth, this.vFormat, this.vShowWeekends, this.vFirstDayOfWeek, this.vWorkingDays);
     } else this.vTodayPx = -1;
 
     // DEPENDENCIES: Draw lines of Dependencies
@@ -931,6 +934,14 @@ export const GanttChart = function (pDiv, pFormat) {
     }
     this.DrawDependencies(this.vDebug);
     addListenerDependencies(this.vLineOptions);
+
+    // TODAY LINE: Draw vertical current-date line if enabled and in range
+    if (this.vShowCurrentDateLine && this.vTodayPx >= 0) {
+      const vLineHeight = this.getLines().parentElement ? this.getLines().parentElement.offsetHeight : 0;
+      if (vLineHeight > 0) {
+        this.sLine(this.vTodayPx, 0, this.vTodayPx, vLineHeight, 'gtodayline');
+      }
+    }
 
     // EVENTS
     if (this.vEvents && typeof this.vEvents.afterLineDraw === "function") {
