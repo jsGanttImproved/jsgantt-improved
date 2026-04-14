@@ -296,11 +296,35 @@ export const addFormatListeners = function (pGanttChart, pFormat, pObj) {
   addListener('click', function () { changeFormat(pFormat, pGanttChart); }, pObj);
 };
 
+export const syncTaskNameHeaderWidth = function (pGanttChart) {
+  const listBody = pGanttChart.getListBody();
+  if (!listBody) return;
+  const bodyCell = listBody.querySelector('table.gtasktable td.gtaskname');
+  const headerCell = listBody.querySelector('table.gtasktableh tr:nth-child(2) td.gtaskname');
+  if (bodyCell && headerCell) {
+    headerCell.style.minWidth = bodyCell.getBoundingClientRect().width + 'px';
+  }
+};
+
 export const addScrollListeners = function (pGanttChart) {
   addListener('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
   addListener('resize', function () {
     pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
   }, window);
+
+  // Sync header gtaskname column width when the left panel is resized
+  if (typeof ResizeObserver !== 'undefined') {
+    const listBody = pGanttChart.getListBody();
+    if (listBody) {
+      const leftPanel = listBody.closest('.gmainleft');
+      if (leftPanel) {
+        const observer = new ResizeObserver(function () {
+          syncTaskNameHeaderWidth(pGanttChart);
+        });
+        observer.observe(leftPanel);
+      }
+    }
+  }
 };
 
 export const addListenerClickCell = function (vTmpCell, vEvents, task, column) {

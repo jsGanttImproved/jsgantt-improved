@@ -1166,7 +1166,7 @@ exports.DrawDependencies = DrawDependencies;
 },{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addListenerDependencies = exports.addListenerInputCell = exports.addListenerClickCell = exports.addScrollListeners = exports.addFormatListeners = exports.addFolderListeners = exports.updateGridHeaderWidth = exports.addThisRowListeners = exports.addTooltipListeners = exports.syncScroll = exports.removeListener = exports.addListener = exports.showToolTip = exports.mouseOut = exports.mouseOver = exports.show = exports.hide = exports.folder = void 0;
+exports.addListenerDependencies = exports.addListenerInputCell = exports.addListenerClickCell = exports.addScrollListeners = exports.syncTaskNameHeaderWidth = exports.addFormatListeners = exports.addFolderListeners = exports.updateGridHeaderWidth = exports.addThisRowListeners = exports.addTooltipListeners = exports.syncScroll = exports.removeListener = exports.addListener = exports.showToolTip = exports.mouseOut = exports.mouseOver = exports.show = exports.hide = exports.folder = void 0;
 var general_utils_1 = require("./utils/general_utils");
 // Function to open/close and hide/show children of specified task
 var folder = function (pID, ganttObj) {
@@ -1458,11 +1458,35 @@ var addFormatListeners = function (pGanttChart, pFormat, pObj) {
     (0, exports.addListener)('click', function () { (0, general_utils_1.changeFormat)(pFormat, pGanttChart); }, pObj);
 };
 exports.addFormatListeners = addFormatListeners;
+var syncTaskNameHeaderWidth = function (pGanttChart) {
+    var listBody = pGanttChart.getListBody();
+    if (!listBody)
+        return;
+    var bodyCell = listBody.querySelector('table.gtasktable td.gtaskname');
+    var headerCell = listBody.querySelector('table.gtasktableh tr:nth-child(2) td.gtaskname');
+    if (bodyCell && headerCell) {
+        headerCell.style.minWidth = bodyCell.getBoundingClientRect().width + 'px';
+    }
+};
+exports.syncTaskNameHeaderWidth = syncTaskNameHeaderWidth;
 var addScrollListeners = function (pGanttChart) {
     (0, exports.addListener)('resize', function () { pGanttChart.getChartHead().scrollLeft = pGanttChart.getChartBody().scrollLeft; }, window);
     (0, exports.addListener)('resize', function () {
         pGanttChart.getListBody().scrollTop = pGanttChart.getChartBody().scrollTop;
     }, window);
+    // Sync header gtaskname column width when the left panel is resized
+    if (typeof ResizeObserver !== 'undefined') {
+        var listBody = pGanttChart.getListBody();
+        if (listBody) {
+            var leftPanel = listBody.closest('.gmainleft');
+            if (leftPanel) {
+                var observer = new ResizeObserver(function () {
+                    (0, exports.syncTaskNameHeaderWidth)(pGanttChart);
+                });
+                observer.observe(leftPanel);
+            }
+        }
+    }
 };
 exports.addScrollListeners = addScrollListeners;
 var addListenerClickCell = function (vTmpCell, vEvents, task, column) {
